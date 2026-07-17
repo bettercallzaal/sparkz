@@ -1,8 +1,36 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
 
+export const revalidate = 60
+
 export const metadata: Metadata = {
   title: 'Sparkz — Start with a spark, not a token',
+}
+
+type BoostrStats = {
+  activeContributorsCount: number
+  allTimeContributorsCount: number
+  totalLikesGenerated: number
+}
+
+async function fetchZoostrStats(): Promise<BoostrStats | null> {
+  try {
+    const res = await fetch('https://boostr.itscashless.com/api/zabaal/stats', {
+      headers: { Accept: 'application/json' },
+      next: { revalidate: 60 },
+    })
+    if (!res.ok) return null
+    const raw = await res.json()
+    if (!raw.success || !raw.stats) return null
+    const s = raw.stats
+    return {
+      activeContributorsCount: s.activeContributorsCount ?? 0,
+      allTimeContributorsCount: s.allTimeContributorsCount ?? 0,
+      totalLikesGenerated: s.totalLikesGenerated ?? 0,
+    }
+  } catch {
+    return null
+  }
 }
 
 const USE_CASES = [
@@ -103,7 +131,9 @@ const GUARDRAILS = [
   'ZAO-curated, not a permissionless farm',
 ]
 
-export default function HomePage() {
+export default async function HomePage() {
+  const zoostrStats = await fetchZoostrStats()
+
   return (
     <main className="min-h-screen bg-zao-dark">
       {/* Nav */}
@@ -168,6 +198,68 @@ export default function HomePage() {
           </p>
         </div>
       </section>
+
+      {/* First spark — live proof */}
+      {zoostrStats && (
+        <section className="max-w-5xl mx-auto px-4 pb-16">
+          <div className="card-dark p-6 sm:p-8 border-gold-500/20">
+            <div className="flex items-center gap-2 mb-5">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+              </span>
+              <span className="text-xs font-bold text-green-400 uppercase tracking-widest">
+                First spark — live now
+              </span>
+            </div>
+            <div className="flex flex-wrap items-start justify-between gap-6">
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-2xl">🟡</span>
+                  <h3 className="text-xl font-black text-white">
+                    Zoostr{' '}
+                    <span className="text-gold-400 text-base font-semibold">$ZOOSTR</span>
+                  </h3>
+                </div>
+                <p className="text-sm text-slate-400 max-w-sm">
+                  ZABAL × Boostr. 50% of every trading fee to the leaderboard by points.
+                  Weekly, on-chain, automatic.
+                </p>
+              </div>
+              <div className="flex gap-6">
+                <div>
+                  <div className="text-2xl font-black text-gold-400">
+                    {zoostrStats.activeContributorsCount}
+                  </div>
+                  <div className="text-xs text-slate-600 mt-0.5">active boosters</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-black text-gold-400">
+                    {zoostrStats.totalLikesGenerated.toLocaleString()}
+                  </div>
+                  <div className="text-xs text-slate-600 mt-0.5">total likes</div>
+                </div>
+              </div>
+            </div>
+            <div className="mt-5 pt-5 border-t border-zao-border flex flex-wrap items-center gap-4">
+              <Link
+                href="/launches/zoostr"
+                className="text-sm font-semibold text-gold-400 hover:text-gold-300 transition-colors"
+              >
+                See live leaderboard + split config →
+              </Link>
+              <a
+                href="https://zoostr.xyz"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-slate-500 hover:text-slate-400 transition-colors"
+              >
+                zoostr.xyz ↗
+              </a>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Use cases */}
       <section className="max-w-5xl mx-auto px-4 pb-16">

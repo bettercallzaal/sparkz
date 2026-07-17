@@ -55,6 +55,22 @@ const USE_CASES = [
     href: '/vetted',
   },
   {
+    emoji: '📖',
+    title: 'Spark examples',
+    description:
+      '5 concrete templates: leaderboard community, music collab, group crowdfund, PFP/NFT community, and light DAO. Each shows the no-token starting action, the split config, and when to add a token.',
+    cta: 'Browse templates',
+    href: '/examples',
+  },
+  {
+    emoji: '🎵',
+    title: 'Audius integration',
+    description:
+      'Connect your Audius catalog. Stream plays, favorites, and reposts become the community engagement metric — the fans who engage most with your music earn the most from your fee pool.',
+    cta: 'Connect Audius',
+    href: '/audius',
+  },
+  {
     emoji: '💰',
     title: 'Fee splits — if and when you launch',
     description:
@@ -82,11 +98,11 @@ export default function HomePage() {
             <span className="text-white">KZ</span>
           </span>
           <div className="flex items-center gap-3">
+            <Link href="/examples" className="text-sm text-slate-400 hover:text-white transition-colors hidden sm:inline">
+              Examples
+            </Link>
             <Link href="/launches" className="text-sm text-slate-400 hover:text-white transition-colors hidden sm:inline">
               Launches
-            </Link>
-            <Link href="/tiers" className="text-sm text-slate-400 hover:text-white transition-colors hidden sm:inline">
-              Tiers
             </Link>
             <Link href="/vetted" className="text-sm text-gold-400 hover:text-gold-300 transition-colors hidden sm:inline font-semibold">
               🏅 Get vetted

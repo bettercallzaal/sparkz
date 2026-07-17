@@ -71,6 +71,14 @@ const USE_CASES = [
     href: '/audius',
   },
   {
+    emoji: '🎖',
+    title: 'Collectables — proof you built it',
+    description:
+      'Every weekly fee distribution mints an on-chain receipt for every contributor who earned a share. Not a badge you bought — a permanent record: week, points, percentage, payout. ERC-1155, non-transferable, SVG on-chain.',
+    cta: 'See how collectables work',
+    href: '/collectables',
+  },
+  {
     emoji: '💰',
     title: 'Fee splits — if and when you launch',
     description:

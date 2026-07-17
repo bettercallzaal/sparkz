@@ -1,6 +1,6 @@
 # Sparkz
 
-**Sparkz is a creator-coin launcher with an AI advisor that configures your entire raise for you - fee split, governance, community stake, and holder perks - with smart defaults on the Clanker rail, so a token launch becomes "back the album," not "buy a coin."** The AI walks the creator through every choice, and ZAO holds an aligned locked stake instead of taking a fee.
+**Sparkz is a creator-coin launcher with an AI advisor that configures a monetization mechanism for creators - fee split, governance, community stake, and holder perks - with smart defaults on the Clanker rail, so it's "back the album," not "buy a coin."** The AI walks the creator through every choice, and ZAO holds an aligned locked stake instead of taking a fee.
 
 ## How it works
 
@@ -15,7 +15,7 @@ Smart defaults everywhere: a first-time creator can launch safely, a power user 
 
 ## Why
 
-Crypto already knows how to move value. Sparkz makes launching a creator economy legible and safe - the raise funds the work, the community shares the upside, and the language stays "back the album," never "buy a coin."
+Crypto already knows how to move value. Sparkz gives creators a monetization mechanism that is legible and safe - a way to get paid for their work alongside their community, where the language stays "back the album," never "buy a coin." Perks are what holders enjoy today, not promises.
 
 ## Status
 

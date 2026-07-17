@@ -24,13 +24,26 @@ export default function BackingForm() {
     if (!email.trim()) return
     setState('submitting')
     try {
-      // Waitlist / early access endpoint — Stripe integration is wired in production
-      // For now: POST to /api/back-waitlist (to be built when Stripe keys are set)
-      await new Promise((r) => setTimeout(r, 800)) // simulate network
+      const res = await fetch('/api/back', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tier, email: email.trim(), farcaster: handle.trim() || undefined }),
+      })
+      if (!res.ok) {
+        const j = await res.json()
+        throw new Error(j.error ?? `HTTP ${res.status}`)
+      }
+      const data = await res.json()
+      if (data.checkoutUrl) {
+        // Stripe is live — redirect to checkout
+        window.location.href = data.checkoutUrl
+        return
+      }
+      // Waitlist mode (no Stripe key set)
       setState('success')
-    } catch {
+    } catch (err) {
       setState('error')
-      setErrorMsg('Something went wrong. Please try again.')
+      setErrorMsg(err instanceof Error ? err.message : 'Something went wrong. Please try again.')
     }
   }
 
@@ -113,12 +126,12 @@ export default function BackingForm() {
         disabled={state === 'submitting' || !email.trim()}
         className="btn-gold w-full py-4 text-base disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {state === 'submitting' ? 'Joining…' : `Join early access at ${tier} →`}
+        {state === 'submitting' ? 'Processing…' : `Back the work at ${tier} →`}
       </button>
 
       <p className="text-xs text-slate-600 text-center">
-        Card payment not charged yet — this is early access signup. We&rsquo;ll email you when the
-        backing flow goes live.
+        Perks are what backers enjoy today — not guarantees. Not financial advice or an investment.
+        You will be redirected to a secure payment page.
       </p>
     </form>
   )

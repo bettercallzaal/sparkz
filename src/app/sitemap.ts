@@ -26,6 +26,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/vetted`, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${BASE}/launches`, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${BASE}/lifecycle`, changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${BASE}/settings`, changeFrequency: 'monthly', priority: 0.4 },
     { url: `${BASE}/collectables`, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE}/how-it-works`, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE}/examples`, changeFrequency: 'weekly', priority: 0.7 },

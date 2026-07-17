@@ -8,7 +8,14 @@ export const metadata: Metadata = {
     'Answer 3 questions and get a recommended split configuration — community pool, creator pool, treasury, ZAO stake, and whether to launch a token now or later.',
 }
 
-export default function AdvisorPage() {
+export default async function AdvisorPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ via?: string }>
+}) {
+  const { via } = await searchParams
+  const viaViniapp = via === 'viniapp'
+
   return (
     <main className="min-h-screen bg-zao-dark">
       <nav className="border-b border-zao-border bg-zao-card/80 backdrop-blur sticky top-0 z-50">
@@ -17,7 +24,14 @@ export default function AdvisorPage() {
             <span className="text-gradient-gold">SPAR</span>
             <span className="text-white">KZ</span>
           </a>
-          <span className="text-sm text-slate-500">Split advisor</span>
+          <div className="flex items-center gap-3">
+            {viaViniapp && (
+              <span className="text-xs px-2.5 py-1 rounded-full border border-zao-violet/30 bg-zao-violet/10 text-zao-violet font-semibold">
+                via Viniapp
+              </span>
+            )}
+            <span className="text-sm text-slate-500">Split advisor</span>
+          </div>
         </div>
       </nav>
       <div className="max-w-3xl mx-auto px-4 pt-10 pb-24">

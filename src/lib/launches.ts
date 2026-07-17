@@ -10,11 +10,16 @@ export type Launch = {
   type: 'leaderboard' | 'collab' | 'crowdfund' | 'pfp' | 'dao'
   status: LaunchStatus
   siteUrl?: string
+  receiptUrl?: string
+  leaderboardUrl?: string
   tokenUrl?: string
   communityUrl?: string
   communityPool: number
   zaoVetted: boolean
   quarter: string
+  boostrStatsUrl?: string
+  splitConfig: { communityPool: number; creatorPool: number; treasury: number; zaoStake: number }
+  feeModel: string
 }
 
 export const LAUNCHES: Launch[] = [
@@ -29,10 +34,15 @@ export const LAUNCHES: Launch[] = [
     type: 'leaderboard',
     status: 'live',
     siteUrl: 'https://zoostr.xyz',
+    receiptUrl: 'https://zoostr.xyz/receipt',
+    leaderboardUrl: 'https://zoostr.xyz/leaderboard',
     communityUrl: 'https://boostr.itscashless.com',
+    boostrStatsUrl: 'https://boostr.itscashless.com/api/zabaal/stats',
     communityPool: 50,
     zaoVetted: true,
     quarter: 'Q3 2026',
+    splitConfig: { communityPool: 50, creatorPool: 25, treasury: 25, zaoStake: 5 },
+    feeModel: 'Clanker v4 · 1% fee tier · 0xSplits as fee recipient',
   },
 ]
 

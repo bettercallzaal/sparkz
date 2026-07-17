@@ -91,12 +91,9 @@ export default function LaunchesPage() {
 }
 
 function LaunchCard({ launch }: { launch: import('@/lib/launches').Launch }) {
-  const url = launch.siteUrl ?? `/launches/${launch.slug}`
   return (
     <a
-      href={url}
-      target={launch.siteUrl ? '_blank' : undefined}
-      rel={launch.siteUrl ? 'noopener noreferrer' : undefined}
+      href={`/launches/${launch.slug}`}
       className="card-dark p-6 flex flex-col gap-3 hover:border-gold-500/30 transition-colors block"
     >
       <div className="flex items-start justify-between gap-2">

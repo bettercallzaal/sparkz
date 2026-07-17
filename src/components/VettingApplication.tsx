@@ -42,12 +42,23 @@ export default function VettingApplication() {
     if (!canSubmit) return
     setState('submitting')
     try {
-      // POST to /api/vetted-application when backend is wired
-      await new Promise((r) => setTimeout(r, 1000))
+      const res = await fetch('/api/vetted-application', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      if (!res.ok) {
+        const j = await res.json()
+        throw new Error(j.error ?? `HTTP ${res.status}`)
+      }
       setState('success')
-    } catch {
+    } catch (err) {
       setState('error')
-      setError('Something went wrong. DM @bettercallzaal on Farcaster directly.')
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Something went wrong. DM @bettercallzaal on Farcaster directly.'
+      )
     }
   }
 

@@ -47,12 +47,12 @@ function getRecommendation(answers: Answers): Recommendation | null {
         'Two or more artists each have skin in the game. The creator pool splits among collaborators by role (configured in the split wizard). A 20% treasury gives the community something to govern together.',
     },
     solo: {
-      communityPool: 40,
-      creatorPool: 35,
-      treasury: 25,
-      headline: 'Solo artist: 40% community, 35% creator',
+      communityPool: 1,
+      creatorPool: 97,
+      treasury: 2,
+      headline: 'Creator-first: you keep 97% — grow the community share as they show up',
       rationale:
-        'You built this. A higher creator share (35%) sustains your work long-term. The community pool (40%) is still meaningful enough to attract and retain your most loyal supporters.',
+        'The default is creator-first. You keep 97% of every fee; 1% goes to the community treasury (yours to govern); 1% goes to ZOL compute upkeep (or bring your own AI key and that 1% stays in treasury too). When real supporters start showing up — a leaderboard, a boost program, NFT holders — move community pool up from 1% to wherever it earns their loyalty. Don\'t give away share before the community exists.',
     },
   }
 
@@ -280,8 +280,14 @@ export default function AdvisorFlow() {
                 </div>
               </div>
             ))}
-            <div className="text-xs text-slate-600 pt-1">
-              ZAO stake: {recommendation.zaoStake}% of token supply (not a fee slice)
+            <div className="text-xs text-slate-600 pt-1 space-y-0.5">
+              <div>ZAO stake: {recommendation.zaoStake}% of token supply (not a fee slice)</div>
+              {answers.situation === 'solo' && (
+                <div className="text-slate-700">
+                  Treasury = 1% community governance + 1% ZOL compute upkeep.{' '}
+                  <span className="text-slate-600">Bring your own AI key (BYOK) and the compute 1% folds back into your treasury.</span>
+                </div>
+              )}
             </div>
           </div>
 

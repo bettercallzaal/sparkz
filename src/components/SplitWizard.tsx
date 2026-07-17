@@ -57,9 +57,9 @@ const PROJECT_TYPE_OPTIONS: { value: ProjectType; label: string; description: st
 ]
 
 const DEFAULT_SPLIT_CONFIG: SplitConfig = {
-  communityPool: 50,
-  creatorPool: 25,
-  treasury: 25,
+  communityPool: 1,
+  creatorPool: 97,
+  treasury: 2,
   zaoStake: 5,
   launchToken: false,
 }
@@ -404,6 +404,11 @@ export default function SplitWizard() {
                 : `Total is ${totalFeeAlloc}% — must reach 100%.`}
             </div>
           )}
+
+          {/* Creator-first note */}
+          <div className="text-xs text-slate-600 leading-relaxed px-1">
+            <strong className="text-slate-500">Default is creator-first (97/2/1).</strong> Increase the community pool as real contributors show up — don&rsquo;t give away share before the community exists. Treasury minimum = 2%: 1% for community governance + 1% ZOL compute upkeep. Bring your own AI key (BYOK) and the compute 1% folds back into treasury.
+          </div>
 
           {/* ZAO stake */}
           <div className="card-dark p-4 border-zao-violet/30">

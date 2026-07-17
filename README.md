@@ -18,6 +18,17 @@ Most "creator coin" tools make you launch a coin on day one. Sparkz flips it: yo
 
 Wherever there is a coin, there is speculation. So Sparkz leads with the work, not the coin: **back the album.** Perks are what backers enjoy today, not promises. If a token ever comes, it is plumbing - never the pitch.
 
+## Principles
+
+Learned from watching creator coins fail (speculation-as-the-product, forced tokenization, zero-utility tokens, extraction dressed as "for creators"):
+
+- **No auto-mint.** Tokenization is an explicit creator choice, later - never a throwaway coin on day one.
+- **Monetization tool, not a security.** Splits are revenue share (utility), not "shares in the creator." No moon talk, no promises.
+- **Retention before token.** Real engagement first - collabs, backing, community - not holder count.
+- **Generative, not extractive. Symbiotic, not parasitic.**
+
+The frame: back the work, build the collective, earn transparently - no token hype required.
+
 ## Collabs
 
 Built to work with the ecosystem: ZAO, Kismet, Podia, POIDH, Empire, and more.

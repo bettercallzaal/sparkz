@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0a0a0f;
+  --foreground: #f8f8f2;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+@layer components {
+  .card-dark {
+    @apply bg-zao-card border border-zao-border rounded-xl;
+  }
+  .text-gradient-gold {
+    @apply bg-gradient-to-r from-gold-400 to-gold-600 bg-clip-text text-transparent;
+  }
+  .btn-gold {
+    @apply px-6 py-3 rounded-xl bg-gold-500 text-black font-bold hover:bg-gold-400 transition-colors;
+  }
+  .btn-outline {
+    @apply px-6 py-3 rounded-xl border border-zao-border text-slate-300 hover:border-gold-500/50 hover:text-white transition-colors;
+  }
+}

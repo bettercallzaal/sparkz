@@ -4,6 +4,21 @@ import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
+const RELATED_EXAMPLES: Record<string, { slug: string; emoji: string; title: string; tagline: string }[]> = {
+  solo: [
+    { slug: 'leaderboard-boost', emoji: '🏆', title: 'Community leaderboard', tagline: 'Your superfans earn fee share just by showing up.' },
+    { slug: 'pfp-nft-community', emoji: '🎨', title: 'PFP / NFT community', tagline: 'Holders earn fee share. The NFT becomes the membership card.' },
+  ],
+  collab: [
+    { slug: 'music-collab', emoji: '🎵', title: 'Music collab', tagline: 'Two artists, one split. Both incentivized to share.' },
+    { slug: 'dao-staking', emoji: '🏛', title: 'Light DAO', tagline: 'Stake to vote, earn while staked.' },
+  ],
+  crowdfund: [
+    { slug: 'group-crowdfund', emoji: '🌐', title: 'Group crowdfund', tagline: 'A community backs a shared project. Backers share the pool.' },
+    { slug: 'dao-staking', emoji: '🏛', title: 'Light DAO', tagline: 'Stake to vote, earn while staked.' },
+  ],
+}
+
 type SituationType = 'crowdfund' | 'collab' | 'solo'
 type TokenTiming = 'now' | 'later' | 'never'
 type FeeModel = 'low' | 'medium' | 'high'
@@ -342,6 +357,34 @@ export default function AdvisorFlow() {
             This is a starting point, not a locked config. Adjust in the split wizard. The actual
             deploy is always a human decision — the advisor prepares, never deploys.
           </p>
+
+          {/* Related spark examples */}
+          {answers.situation && RELATED_EXAMPLES[answers.situation] && (
+            <div className="border-t border-zao-border pt-5">
+              <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">
+                See it in action
+              </div>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {RELATED_EXAMPLES[answers.situation].map((ex) => (
+                  <Link
+                    key={ex.slug}
+                    href={`/examples/${ex.slug}`}
+                    className="card-dark p-4 hover:border-gold-500/30 transition-colors block"
+                  >
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-lg">{ex.emoji}</span>
+                      <span className="text-sm font-bold text-white">{ex.title}</span>
+                    </div>
+                    <p className="text-xs text-slate-500">{ex.tagline}</p>
+                    <span className="text-xs text-gold-400 mt-2 inline-block">See example →</span>
+                  </Link>
+                ))}
+              </div>
+              <Link href="/examples" className="text-xs text-slate-600 hover:text-slate-400 transition-colors mt-3 inline-block">
+                All spark templates →
+              </Link>
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -40,7 +40,7 @@ export const SPARK_EXAMPLES: SparkExample[] = [
       creatorPool: 25,
       treasury: 25,
       zaoStake: 5,
-      note: 'Community pool distributed weekly by points. Creator pool = creator wallet. Treasury = community governed.',
+      note: 'This is the evolved split — after 30+ real boosters have shown up for weeks. Start creator-first (97% creator, 2% treasury, 1% community). Increase community pool to 50% once the leaderboard has proven itself. The advisor starts you at 97/2/1; this is where Zoostr arrived.',
     },
     perks: [
       'Fee share proportional to boost points (no claiming — lands in wallet)',

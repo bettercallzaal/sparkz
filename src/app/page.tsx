@@ -99,6 +99,14 @@ const USE_CASES = [
     href: '/lifecycle',
   },
   {
+    emoji: '◎',
+    title: 'Culture Circles',
+    description:
+      'Sparks back other sparks. A creator with a growing community boosts an established spark, earns from its fee pool, and builds proof-of-contribution before their own token exists. When they launch, both communities cross-boost.',
+    cta: 'How circles work',
+    href: '/circles',
+  },
+  {
     emoji: '🎵',
     title: 'Audius integration',
     description:

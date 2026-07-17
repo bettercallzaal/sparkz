@@ -63,6 +63,14 @@ const USE_CASES = [
     href: '/examples',
   },
   {
+    emoji: '🔁',
+    title: 'The spark lifecycle',
+    description:
+      '5 stages: Proposed → Emerging → Verified → Established → Federated. Know exactly where you are, what\'s available today, and what the next step looks like — before committing to anything on-chain.',
+    cta: 'Find your stage',
+    href: '/lifecycle',
+  },
+  {
     emoji: '🎵',
     title: 'Audius integration',
     description:

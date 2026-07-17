@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { SPARK_EXAMPLES } from '@/lib/spark-examples'
+import { LAUNCHES } from '@/lib/launches'
 
 const BASE = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://sparkz.xyz'
 
@@ -10,6 +11,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }))
 
+  const launchPages: MetadataRoute.Sitemap = LAUNCHES.map((l) => ({
+    url: `${BASE}/launches/${l.slug}`,
+    changeFrequency: 'hourly' as const,
+    priority: 0.8,
+  }))
+
   return [
     { url: BASE, changeFrequency: 'daily', priority: 1 },
     { url: `${BASE}/advisor`, changeFrequency: 'weekly', priority: 0.9 },
@@ -17,11 +24,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/tiers`, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${BASE}/back`, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${BASE}/vetted`, changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${BASE}/launches`, changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${BASE}/lifecycle`, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE}/collectables`, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE}/how-it-works`, changeFrequency: 'monthly', priority: 0.7 },
-    { url: `${BASE}/launches`, changeFrequency: 'weekly', priority: 0.7 },
     { url: `${BASE}/examples`, changeFrequency: 'weekly', priority: 0.7 },
     { url: `${BASE}/audius`, changeFrequency: 'monthly', priority: 0.6 },
+    ...launchPages,
     ...examplePages,
   ]
 }

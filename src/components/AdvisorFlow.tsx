@@ -313,12 +313,20 @@ export default function AdvisorFlow() {
               Next: set up your split sheet
             </div>
             <p className="text-sm text-slate-400 mb-3">{recommendation.splitWizardHint}</p>
-            <Link
-              href={`/split-wizard?communityPool=${recommendation.communityPool}&creatorPool=${recommendation.creatorPool}&treasury=${recommendation.treasury}&type=${answers.situation ?? 'solo'}`}
-              className="btn-gold inline-block text-sm py-2 px-4"
-            >
-              Open split wizard →
-            </Link>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href={`/split-wizard?communityPool=${recommendation.communityPool}&creatorPool=${recommendation.creatorPool}&treasury=${recommendation.treasury}&type=${answers.situation ?? 'solo'}`}
+                className="btn-gold inline-block text-sm py-2 px-4"
+              >
+                Open split wizard →
+              </Link>
+              <Link
+                href="/vetted"
+                className="inline-block text-sm py-2 px-4 rounded-lg border border-zao-border text-slate-400 hover:text-gold-400 hover:border-gold-500/30 transition-colors"
+              >
+                🏅 Apply for ZAO vetting
+              </Link>
+            </div>
           </div>
 
           <p className="text-xs text-slate-600">

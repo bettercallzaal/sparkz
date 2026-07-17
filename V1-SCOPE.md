@@ -24,9 +24,13 @@
 
 ### Lifecycle + education (all live)
 - `/lifecycle` — 5-stage spark lifecycle (Proposed → Emerging → Verified → Established → Federated)
+- `/circles` — Culture Circles mechanic (sparks back other sparks; mutual backing before any token)
 - `/how-it-works` — 0xSplits → Clanker technical walkthrough
 - `/collectables` — ERC-1155 proof-of-contribution collectables spec
 - `/audius` — Audius catalog → engagement metric connector
+
+### API (server-side)
+- `POST /api/advisor` — returns a full recommendation JSON from `{ situation, tokenTiming, feeModel }`; optional `x-relay-key` header for Viniapp Phase 2 integration
 
 ### Economics (settled, locked)
 - Creator-first 1/1/98 default: creator 97%, treasury 2%, community 1% (grows from there)

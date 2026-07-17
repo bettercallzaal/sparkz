@@ -26,6 +26,12 @@ Built to work with the ecosystem: ZAO, Kismet, Podia, POIDH, Empire, and more.
 
 Early build. First spark: Zoostr (ZABAL x Boostr). Part of the ZAO ecosystem.
 
+## For AIs
+
+Point any AI at this context box to load the full Sparkz picture and give grounded, actionable advice:
+
+    https://useicm.com/api/objects/icm_Lr30gogWivu6uzio4l02MQ/llm.txt
+
 ## Feedback
 
 This is public on purpose - if someone wants to take the idea and run, go for it. I would rather learn from others and hear real suggestions.

@@ -31,12 +31,28 @@ const USE_CASES = [
     href: 'https://zoostr.xyz',
   },
   {
+    emoji: '🎟',
+    title: 'Patronage tiers',
+    description:
+      'Set up $5/$25/$100 recurring memberships with custom perks — no token required. Preview your fan page, export the config. 88% of community builders monetize this way before any token.',
+    cta: 'Set up your tiers',
+    href: '/tiers',
+  },
+  {
     emoji: '⚡',
     title: 'Split advisor',
     description:
       '3 questions → recommended split + token timing + fee model. Crowdfunding? Collab? Solo with producers? The advisor gives you a concrete starting point, not a blank form.',
     cta: 'Get my recommended split',
     href: '/advisor',
+  },
+  {
+    emoji: '🏅',
+    title: 'Vetted by ZAO',
+    description:
+      '50 launch slots per quarter. If you get one, ZAO stands behind your launch publicly — badge, ZOL marketing support, aligned token stake, and the full Sparkz stack pre-built.',
+    cta: 'Apply for a slot',
+    href: '/vetted',
   },
   {
     emoji: '💰',
@@ -66,8 +82,14 @@ export default function HomePage() {
             <span className="text-white">KZ</span>
           </span>
           <div className="flex items-center gap-3">
+            <Link href="/tiers" className="text-sm text-slate-400 hover:text-white transition-colors hidden sm:inline">
+              Tiers
+            </Link>
             <Link href="/split-wizard" className="text-sm text-slate-400 hover:text-white transition-colors hidden sm:inline">
               Split wizard
+            </Link>
+            <Link href="/vetted" className="text-sm text-slate-400 hover:text-white transition-colors hidden sm:inline">
+              🏅 Get vetted
             </Link>
             <Link href="/back" className="btn-gold text-sm py-2 px-4">
               Back the work ↗

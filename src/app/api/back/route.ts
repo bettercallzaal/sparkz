@@ -22,7 +22,8 @@ export async function POST(request: Request) {
 
   const stripeKey = process.env.STRIPE_SECRET_KEY
   if (!stripeKey) {
-    // Simulation mode — no Stripe key set (dev / pre-launch)
+    // Pre-launch waitlist mode — notify Zaal by email if Resend is configured
+    void notifyWaitlist({ tier, email, farcaster })
     return NextResponse.json({ waitlist: true, tier, email })
   }
 
@@ -62,4 +63,29 @@ export async function POST(request: Request) {
 
   const session = await stripeRes.json()
   return NextResponse.json({ checkoutUrl: session.url, tier, email })
+}
+
+async function notifyWaitlist({
+  tier,
+  email,
+  farcaster,
+}: {
+  tier: string
+  email: string
+  farcaster?: string
+}) {
+  const resendKey = process.env.RESEND_API_KEY
+  if (!resendKey) return
+  const notifyEmail = process.env.ZAO_NOTIFY_EMAIL ?? 'zaalp99@gmail.com'
+  const fromEmail = process.env.RESEND_FROM_EMAIL ?? 'sparkz@sparkz.xyz'
+  await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      from: fromEmail,
+      to: [notifyEmail],
+      subject: `[Sparkz Waitlist] ${tier} — ${email}`,
+      html: `<p><strong>${email}</strong> joined the waitlist at the <strong>${tier}</strong> tier.</p>${farcaster ? `<p>Farcaster: ${farcaster}</p>` : ''}<p style="color:#888;font-size:12px;">sparkz.xyz/back</p>`,
+    }),
+  }).catch((e) => console.error('[notifyWaitlist] Resend error:', e))
 }

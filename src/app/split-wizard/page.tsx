@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import SplitWizard from '@/components/SplitWizard'
 
 export const metadata: Metadata = {
@@ -30,7 +31,9 @@ export default function SplitWizardPage() {
             there&rsquo;s a permanent record of what was agreed.
           </p>
         </div>
-        <SplitWizard />
+        <Suspense>
+          <SplitWizard />
+        </Suspense>
       </div>
     </main>
   )

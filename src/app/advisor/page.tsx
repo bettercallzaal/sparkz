@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import AdvisorFlow from '@/components/AdvisorFlow'
 
 export const metadata: Metadata = {
@@ -30,7 +31,9 @@ export default function AdvisorPage() {
             a sustainable fee model based on real Clanker data.
           </p>
         </div>
-        <AdvisorFlow />
+        <Suspense>
+          <AdvisorFlow />
+        </Suspense>
       </div>
     </main>
   )

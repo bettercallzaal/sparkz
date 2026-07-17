@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
+import { useSearchParams } from 'next/navigation'
 
 type ProjectType = 'solo' | 'collab' | 'crowdfund'
 
@@ -143,14 +144,25 @@ function CollabRow({
 }
 
 export default function SplitWizard() {
+  const searchParams = useSearchParams()
+
+  const initialSplitConfig = useMemo<SplitConfig>(() => {
+    const communityPool = Number(searchParams.get('communityPool')) || DEFAULT_SPLIT_CONFIG.communityPool
+    const creatorPool = Number(searchParams.get('creatorPool')) || DEFAULT_SPLIT_CONFIG.creatorPool
+    const treasury = Number(searchParams.get('treasury')) || DEFAULT_SPLIT_CONFIG.treasury
+    return { ...DEFAULT_SPLIT_CONFIG, communityPool, creatorPool, treasury }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const initialType = (searchParams.get('type') as ProjectType | null) ?? 'collab'
+
   const [step, setStep] = useState<Step>('type')
-  const [projectType, setProjectType] = useState<ProjectType>('collab')
+  const [projectType, setProjectType] = useState<ProjectType>(initialType)
   const [projectName, setProjectName] = useState('')
   const [collabs, setCollabs] = useState<Collaborator[]>([
     { id: uid(), role: 'Artist', name: '', address: '', percent: 60 },
     { id: uid(), role: 'Producer', name: '', address: '', percent: 40 },
   ])
-  const [splitConfig, setSplitConfig] = useState<SplitConfig>(DEFAULT_SPLIT_CONFIG)
+  const [splitConfig, setSplitConfig] = useState<SplitConfig>(initialSplitConfig)
   const [copied, setCopied] = useState(false)
 
   const updateCollab = useCallback(

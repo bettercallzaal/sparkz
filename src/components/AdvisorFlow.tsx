@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
 type SituationType = 'crowdfund' | 'collab' | 'solo'
@@ -164,11 +165,28 @@ function OptionButton<T extends string>({
 }
 
 export default function AdvisorFlow() {
+  const searchParams = useSearchParams()
+
   const [answers, setAnswers] = useState<Answers>({
     situation: null,
     tokenTiming: null,
     feeModel: null,
   })
+
+  // Pre-fill from URL params (e.g. from /examples/[slug] deep-link)
+  useEffect(() => {
+    const situation = searchParams.get('situation') as SituationType | null
+    const tokenTiming = searchParams.get('token') as TokenTiming | null
+    const feeModel = searchParams.get('fee') as FeeModel | null
+    if (situation || tokenTiming || feeModel) {
+      setAnswers((a) => ({
+        situation: situation ?? a.situation,
+        tokenTiming: tokenTiming ?? a.tokenTiming,
+        feeModel: feeModel ?? a.feeModel,
+      }))
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const recommendation = getRecommendation(answers)
   const allAnswered = answers.situation && answers.tokenTiming && answers.feeModel
@@ -295,7 +313,10 @@ export default function AdvisorFlow() {
               Next: set up your split sheet
             </div>
             <p className="text-sm text-slate-400 mb-3">{recommendation.splitWizardHint}</p>
-            <Link href="/split-wizard" className="btn-gold inline-block text-sm py-2 px-4">
+            <Link
+              href={`/split-wizard?communityPool=${recommendation.communityPool}&creatorPool=${recommendation.creatorPool}&treasury=${recommendation.treasury}&type=${answers.situation ?? 'solo'}`}
+              className="btn-gold inline-block text-sm py-2 px-4"
+            >
               Open split wizard →
             </Link>
           </div>

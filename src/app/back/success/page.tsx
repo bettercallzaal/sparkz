@@ -27,9 +27,14 @@ export default async function BackSuccessPage({
           Perks are what backers enjoy today — not guarantees. Not financial advice.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link href="/" className="btn-gold text-sm py-2 px-5">
-            Back to Sparkz →
-          </Link>
+          <a
+            href="https://zoostr.xyz"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-gold text-sm py-2 px-5 inline-block"
+          >
+            See the launch → zoostr.xyz ↗
+          </a>
           <Link href="/examples" className="btn-outline text-sm py-2 px-5">
             Browse spark examples
           </Link>

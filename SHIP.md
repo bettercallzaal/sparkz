@@ -28,6 +28,9 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 7 | `feat/lifecycle-page` | /lifecycle 5-stage spark model + sitemap fix for /launches/[slug] |
 | 8 | `feat/byok-settings` | /settings BYOK page + Viniapp ?via= attribution badge on /advisor |
 | 9 | `feat/v1-scope` | V1-SCOPE.md locked scope doc |
+| 10 | `feat/circles-page` | /circles Culture Circles page + homepage stats card + lifecycle Stage 5 CTA |
+| 11 | `feat/advisor-examples` | Advisor "See it in action" related-example cards |
+| 12 | `feat/advisor-api` | `/api/advisor` POST endpoint + shared `lib/advisor.ts` (Viniapp Phase 2 relay) |
 
 ---
 
@@ -41,6 +44,7 @@ After merging all PRs, set these in Vercel → Project → Settings → Environm
 | `STRIPE_SECRET_KEY` | `sk_live_...` | When Stripe account is ready; omit to run in waitlist mode |
 | `RESEND_API_KEY` | `re_...` | When Resend account is ready; omit to skip email |
 | `RESEND_TO_EMAIL` | `zaalp99@gmail.com` | Where vetting applications and backing notifications go |
+| `VINIAPP_RELAY_KEY` | any secret string | When Chris Dolinski is ready to connect Viniapp → `/api/advisor`; omit to leave endpoint open (POST still validates inputs) |
 
 Without Stripe/Resend keys, the site runs in waitlist mode:
 - `/back` — collects email + tier preference, shows "You're on the list" (no charge)
@@ -63,7 +67,9 @@ After Vercel deploys:
 - [ ] `https://sparkz.xyz/examples` — 5 template cards visible
 - [ ] `https://sparkz.xyz/lifecycle` — 5-stage timeline visible
 - [ ] `https://sparkz.xyz/settings` — BYOK form renders
+- [ ] `https://sparkz.xyz/circles` — Culture Circles mechanic page visible
 - [ ] `https://sparkz.xyz/sitemap.xml` — all routes listed
+- [ ] `POST https://sparkz.xyz/api/advisor` with `{"situation":"solo","tokenTiming":"later","feeModel":"low"}` → returns `{"recommendation":{...}}`
 
 ---
 

@@ -3,6 +3,13 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import {
+  type SituationType,
+  type TokenTiming,
+  type FeeModel,
+  type AdvisorRecommendation,
+  getAdvisorRecommendation,
+} from '@/lib/advisor'
 
 const RELATED_EXAMPLES: Record<string, { slug: string; emoji: string; title: string; tagline: string }[]> = {
   solo: [
@@ -19,88 +26,21 @@ const RELATED_EXAMPLES: Record<string, { slug: string; emoji: string; title: str
   ],
 }
 
-type SituationType = 'crowdfund' | 'collab' | 'solo'
-type TokenTiming = 'now' | 'later' | 'never'
-type FeeModel = 'low' | 'medium' | 'high'
-
 type Answers = {
   situation: SituationType | null
   tokenTiming: TokenTiming | null
   feeModel: FeeModel | null
 }
 
-type Recommendation = {
-  communityPool: number
-  creatorPool: number
-  treasury: number
-  zaoStake: number
-  headline: string
-  rationale: string
-  tokenAdvice: string
-  feeAdvice: string
-  splitWizardHint: string
-}
+type Recommendation = AdvisorRecommendation
 
 function getRecommendation(answers: Answers): Recommendation | null {
   if (!answers.situation || !answers.tokenTiming || !answers.feeModel) return null
-
-  const base: Record<SituationType, Pick<Recommendation, 'communityPool' | 'creatorPool' | 'treasury' | 'headline' | 'rationale'>> = {
-    crowdfund: {
-      communityPool: 60,
-      creatorPool: 15,
-      treasury: 25,
-      headline: 'Community-first: 60% to the people who showed up',
-      rationale:
-        'In a group crowdfund, the backers ARE the project. A 60% community pool signals that clearly — the treasury becomes a shared war chest for proposals and votes. The creator pool covers operations.',
-    },
-    collab: {
-      communityPool: 50,
-      creatorPool: 30,
-      treasury: 20,
-      headline: 'Balanced collab: 50% community, 30% creators',
-      rationale:
-        'Two or more artists each have skin in the game. The creator pool splits among collaborators by role (configured in the split wizard). A 20% treasury gives the community something to govern together.',
-    },
-    solo: {
-      communityPool: 1,
-      creatorPool: 97,
-      treasury: 2,
-      headline: 'Creator-first: you keep 97% — grow the community share as they show up',
-      rationale:
-        'The default is creator-first. You keep 97% of every fee; 1% goes to the community treasury (yours to govern); 1% goes to ZOL compute upkeep (or bring your own AI key and that 1% stays in treasury too). When real supporters start showing up — a leaderboard, a boost program, NFT holders — move community pool up from 1% to wherever it earns their loyalty. Don\'t give away share before the community exists.',
-    },
-  }
-
-  const tokenAdvice: Record<TokenTiming, string> = {
-    now: 'Launch with a token immediately — your community momentum and split config are ready. Deploy the 0xSplits contract first, then Clanker with that address as the fee recipient.',
-    later:
-      'Hold on the token and start tokenless: build your leaderboard, prove the boost engine, collect a few dozen real supporters. When you launch, the token backs existing momentum — not speculation.',
-    never:
-      'No token needed. Use the patronage tier system ($5/$25/$100 recurring) with Stripe instead. Revenue goes directly to your 0xSplits recipients without any token mechanics.',
-  }
-
-  const feeAdvice: Record<FeeModel, string> = {
-    low: 'At low volume ($1k–10k/day): community pool generates $35–350/week. This is early stages — the value is community signal and fee transparency, not dollar amounts.',
-    medium:
-      'At medium volume ($10k–100k/day): community pool generates $350–3,500/week. Enough that top contributors feel it. Weekly receipts build the compounding trust loop.',
-    high: 'At high volume ($100k+/day): community pool generates $3,500+/week. At this scale, the split contract becomes a significant on-chain revenue mechanism. ZAO stake starts mattering financially.',
-  }
-
-  const splitWizardHint: Record<SituationType, string> = {
-    crowdfund: 'In the split wizard: choose "Group crowdfund" → add all backer wallets → set roles as "Backer"',
-    collab: 'In the split wizard: choose "Collab / joint release" → add each artist + producer with their roles and %',
-    solo: 'In the split wizard: choose "Solo artist" → one entry for you, one for your community pool wallet',
-  }
-
-  const cfg = base[answers.situation]
-
-  return {
-    ...cfg,
-    zaoStake: 5,
-    tokenAdvice: tokenAdvice[answers.tokenTiming],
-    feeAdvice: feeAdvice[answers.feeModel],
-    splitWizardHint: splitWizardHint[answers.situation],
-  }
+  return getAdvisorRecommendation({
+    situation: answers.situation,
+    tokenTiming: answers.tokenTiming,
+    feeModel: answers.feeModel,
+  })
 }
 
 const SITUATIONS: { value: SituationType; label: string; description: string }[] = [

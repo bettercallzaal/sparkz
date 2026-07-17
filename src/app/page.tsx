@@ -82,13 +82,13 @@ export default function HomePage() {
             <span className="text-white">KZ</span>
           </span>
           <div className="flex items-center gap-3">
+            <Link href="/launches" className="text-sm text-slate-400 hover:text-white transition-colors hidden sm:inline">
+              Launches
+            </Link>
             <Link href="/tiers" className="text-sm text-slate-400 hover:text-white transition-colors hidden sm:inline">
               Tiers
             </Link>
-            <Link href="/split-wizard" className="text-sm text-slate-400 hover:text-white transition-colors hidden sm:inline">
-              Split wizard
-            </Link>
-            <Link href="/vetted" className="text-sm text-slate-400 hover:text-white transition-colors hidden sm:inline">
+            <Link href="/vetted" className="text-sm text-gold-400 hover:text-gold-300 transition-colors hidden sm:inline font-semibold">
               🏅 Get vetted
             </Link>
             <Link href="/back" className="btn-gold text-sm py-2 px-4">

@@ -20,3 +20,9 @@ Crypto already knows how to move value. Sparkz makes launching a creator economy
 ## Status
 
 Early build. First launch: Zoostr (ZABAL x Boostr). Part of the ZAO ecosystem.
+
+## Feedback
+
+This is public on purpose - if someone wants to take the idea and run, go for it. I would rather learn from others and hear real suggestions.
+
+One rule: bring solutions, not just complaints. If you want to comment, make sure there is something actionable I can do to rectify your perspective. Feedback with a concrete fix gets read and acted on. A complaint with no actionable path will just be ignored.

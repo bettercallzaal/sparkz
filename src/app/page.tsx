@@ -3,8 +3,38 @@ import type { Metadata } from 'next'
 
 export const revalidate = 60
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://sparkz.xyz'
+const OG_URL = `${BASE_URL}/api/og?title=Sparkz&sub=Start+with+a+spark%2C+not+a+token.`
+
 export const metadata: Metadata = {
   title: 'Sparkz — Start with a spark, not a token',
+  description:
+    'Build your community, set your splits, and let fans back your work — all before any coin exists. ZAO-curated creator launches with multi-recipient 0xSplits.',
+  openGraph: {
+    title: 'Sparkz — Start with a spark, not a token',
+    description: 'Back the work. Multi-recipient fee splits. No token required to get started.',
+    url: BASE_URL,
+    siteName: 'Sparkz',
+    images: [{ url: OG_URL, width: 1200, height: 630, alt: 'Sparkz — Start with a spark, not a token' }],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Sparkz — Start with a spark, not a token',
+    description: 'Back the work. Multi-recipient fee splits. No token required to get started.',
+    images: [OG_URL],
+  },
+  other: {
+    'fc:frame': 'vNext',
+    'fc:frame:image': OG_URL,
+    'fc:frame:image:aspect_ratio': '1.91:1',
+    'fc:frame:button:1': '⚡ Get my recommended split',
+    'fc:frame:button:1:action': 'link',
+    'fc:frame:button:1:target': `${BASE_URL}/advisor`,
+    'fc:frame:button:2': '🏅 Apply for a slot',
+    'fc:frame:button:2:action': 'link',
+    'fc:frame:button:2:target': `${BASE_URL}/vetted`,
+  },
 }
 
 type BoostrStats = {
@@ -336,6 +366,119 @@ export default async function HomePage() {
           </a>
         </p>
       </section>
+
+      {/* Footer */}
+      <footer className="border-t border-zao-border bg-zao-card/40">
+        <div className="max-w-5xl mx-auto px-4 py-12">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 mb-10">
+            <div className="col-span-2 sm:col-span-1">
+              <div className="font-black text-xl tracking-tight mb-3">
+                <span className="text-gradient-gold">SPAR</span>
+                <span className="text-white">KZ</span>
+              </div>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Creator launches with transparent splits and no-token onboarding. Backed by ZAO.
+              </p>
+              <div className="flex gap-3 mt-4">
+                <a
+                  href="https://warpcast.com/zaal"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-slate-600 hover:text-slate-400 transition-colors"
+                >
+                  Farcaster ↗
+                </a>
+                <a
+                  href="https://github.com/bettercallzaal/sparkz"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-slate-600 hover:text-slate-400 transition-colors"
+                >
+                  GitHub ↗
+                </a>
+              </div>
+            </div>
+
+            <div>
+              <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">
+                Creator tools
+              </div>
+              <ul className="space-y-2">
+                {[
+                  { label: 'Advisor', href: '/advisor' },
+                  { label: 'Split wizard', href: '/split-wizard' },
+                  { label: 'Patronage tiers', href: '/tiers' },
+                  { label: 'BYOK settings', href: '/settings' },
+                ].map((l) => (
+                  <li key={l.label}>
+                    <Link href={l.href} className="text-xs text-slate-500 hover:text-slate-300 transition-colors">
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">
+                Discovery
+              </div>
+              <ul className="space-y-2">
+                {[
+                  { label: 'Launches', href: '/launches' },
+                  { label: 'Spark examples', href: '/examples' },
+                  { label: 'Culture Circles', href: '/circles' },
+                  { label: 'Audius integration', href: '/audius' },
+                ].map((l) => (
+                  <li key={l.label}>
+                    <Link href={l.href} className="text-xs text-slate-500 hover:text-slate-300 transition-colors">
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">
+                Learn
+              </div>
+              <ul className="space-y-2">
+                {[
+                  { label: 'How it works', href: '/how-it-works' },
+                  { label: 'Spark lifecycle', href: '/lifecycle' },
+                  { label: 'Collectables', href: '/collectables' },
+                  { label: 'Get vetted', href: '/vetted' },
+                ].map((l) => (
+                  <li key={l.label}>
+                    <Link href={l.href} className="text-xs text-slate-500 hover:text-slate-300 transition-colors">
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div className="border-t border-zao-border pt-6 flex flex-wrap items-center justify-between gap-4">
+            <p className="text-xs text-slate-700">
+              Perks described here are what holders enjoy today — not guaranteed entitlements.
+              Nothing on this site is financial advice or an offer of securities.
+            </p>
+            <div className="flex items-center gap-2 text-xs text-slate-700">
+              <span>See the first Sparkz launch:</span>
+              <a
+                href="https://zoostr.xyz"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-slate-500 hover:text-slate-400 transition-colors"
+              >
+                zoostr.xyz ↗
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </main>
   )
 }

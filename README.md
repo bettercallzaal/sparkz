@@ -1,25 +1,30 @@
 # Sparkz
 
-**Sparkz is a creator-coin launcher with an AI advisor that configures a monetization mechanism for creators - fee split, governance, community stake, and holder perks - with smart defaults on the Clanker rail, so it's "back the album," not "buy a coin."** The AI walks the creator through every choice, and ZAO holds an aligned locked stake instead of taking a fee.
+**Sparkz lets a creator start with a spark, not a token.** Build your community and momentum first - collectables, backing, a boost engine that amplifies you - and launch a token only if and when it makes sense. No token required to get started. Back the album, not buy a coin.
 
-## How it works
+## The idea
 
-A creator points Sparkz at their work. The AI advisor proposes a full configuration:
+Most "creator coin" tools make you launch a coin on day one. Sparkz flips it: you start with a **spark** - a tokenless way to let your community back your work and collect what you make. If the energy is there, you can graduate to a token later. Some do it immediately, some wait a month, some never - and that is fine. The token is an option, not the entry fee.
 
-- **Fee split** - creator / community / treasury, deployed as a mutable 0xSplits contract so it stays adjustable. (Clanker v4 fee percentages are immutable after deploy, so the split lives inside Splits, where the creator controls it, fully on-chain and visible.)
-- **Governance** - how holders get a say.
-- **Community stake** - a locked share aligned to the community. ZAO takes a stake, not a fee slice.
-- **Holder perks** - access and belonging, never price.
+## Why it's different
 
-Smart defaults everywhere: a first-time creator can launch safely, a power user can tune every knob.
+- **No token to start.** Begin with a spark and collectables. A token is opt-in, later, if ever - so you build real momentum before anything is on-chain.
+- **Full customization + optimization.** When you do launch, an AI advisor tunes every knob Clanker gives you (fee split, vault, governance), deployed through a mutable 0xSplits contract so your split stays adjustable, then builds on top of Empire.
+- **A boost engine.** A leaderboard that amplifies the creator and rewards the community that actually shows up - the extra lift a plain coin never gives you.
+- **Collectables come standard.** Backing a creator's work earns collectables automatically.
+- **Backed by ZAO.** Not a permissionless farm. ZAO stands behind who launches, so it stays quality over speculation, and takes an aligned locked stake - never a fee slice.
 
-## Why
+## The frame
 
-Crypto already knows how to move value. Sparkz gives creators a monetization mechanism that is legible and safe - a way to get paid for their work alongside their community, where the language stays "back the album," never "buy a coin." Perks are what holders enjoy today, not promises.
+Wherever there is a coin, there is speculation. So Sparkz leads with the work, not the coin: **back the album.** Perks are what backers enjoy today, not promises. If a token ever comes, it is plumbing - never the pitch.
+
+## Collabs
+
+Built to work with the ecosystem: ZAO, Kismet, Podia, POIDH, Empire, and more.
 
 ## Status
 
-Early build. First launch: Zoostr (ZABAL x Boostr). Part of the ZAO ecosystem.
+Early build. First spark: Zoostr (ZABAL x Boostr). Part of the ZAO ecosystem.
 
 ## Feedback
 

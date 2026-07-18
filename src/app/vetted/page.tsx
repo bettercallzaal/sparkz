@@ -1,10 +1,37 @@
 import type { Metadata } from 'next'
 import VettingApplication from '@/components/VettingApplication'
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://sparkz.xyz'
+const OG_URL = `${BASE_URL}/api/og?title=${encodeURIComponent('Vetted by ZAO')}&sub=${encodeURIComponent('1 of 50 launch slots per quarter.')}`
+
 export const metadata: Metadata = {
   title: 'Vetted by ZAO — Sparkz',
   description:
     'ZAO backs a small number of creators per quarter — 1 of 50 slots. Vetted launches get the ZAO badge, scarce drop prestige, and ZOL marketing support end to end.',
+  openGraph: {
+    title: 'Vetted by ZAO — Sparkz',
+    description: '50 launch slots per quarter. ZAO reviews, backs, and stands behind each one.',
+    url: `${BASE_URL}/vetted`,
+    images: [{ url: OG_URL, width: 1200, height: 630, alt: 'Vetted by ZAO — Sparkz' }],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Vetted by ZAO — Sparkz',
+    description: '50 launch slots per quarter. ZAO reviews, backs, and stands behind each one.',
+    images: [OG_URL],
+  },
+  other: {
+    'fc:frame': 'vNext',
+    'fc:frame:image': OG_URL,
+    'fc:frame:image:aspect_ratio': '1.91:1',
+    'fc:frame:button:1': '🏅 Apply for a slot',
+    'fc:frame:button:1:action': 'link',
+    'fc:frame:button:1:target': `${BASE_URL}/vetted`,
+    'fc:frame:button:2': '⚡ Try the advisor first',
+    'fc:frame:button:2:action': 'link',
+    'fc:frame:button:2:target': `${BASE_URL}/advisor`,
+  },
 }
 
 const WHAT_YOU_GET = [

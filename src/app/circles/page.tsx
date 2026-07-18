@@ -1,10 +1,37 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://sparkz.xyz'
+const OG_URL = `${BASE_URL}/api/og?title=${encodeURIComponent('Culture Circles')}&sub=${encodeURIComponent('Sparks back other sparks. Pre-token. Mutual backing.')}`
+
 export const metadata: Metadata = {
   title: 'Culture Circles — Sparkz',
   description:
     'Sparks back other sparks. A creator with a growing community boosts an established spark, earns from its fee pool, and builds proof-of-contribution before their own token exists. The network effect Sparkz was missing.',
+  openGraph: {
+    title: 'Culture Circles — Sparkz',
+    description: 'Sparks back other sparks. Pre-token. Mutual backing graph. The network effect that was missing from creator coins.',
+    url: `${BASE_URL}/circles`,
+    images: [{ url: OG_URL, width: 1200, height: 630, alt: 'Culture Circles — Sparkz' }],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Culture Circles — Sparkz',
+    description: 'Sparks back other sparks. Pre-token. Mutual backing.',
+    images: [OG_URL],
+  },
+  other: {
+    'fc:frame': 'vNext',
+    'fc:frame:image': OG_URL,
+    'fc:frame:image:aspect_ratio': '1.91:1',
+    'fc:frame:button:1': '◎ Back Zoostr now',
+    'fc:frame:button:1:action': 'link',
+    'fc:frame:button:1:target': 'https://boostr.itscashless.com',
+    'fc:frame:button:2': '🏅 Apply for a slot',
+    'fc:frame:button:2:action': 'link',
+    'fc:frame:button:2:target': `${BASE_URL}/vetted`,
+  },
 }
 
 const HOW_IT_WORKS = [

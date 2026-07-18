@@ -1,10 +1,37 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://sparkz.xyz'
+const OG_URL = `${BASE_URL}/api/og?title=${encodeURIComponent('The spark lifecycle')}&sub=${encodeURIComponent('Proposed → Emerging → Verified → Established → Federated')}`
+
 export const metadata: Metadata = {
   title: 'The spark lifecycle — Sparkz',
   description:
     'Five stages from first idea to federated network. Start tokenless. Build real community. Tokenize when momentum is proven — not before.',
+  openGraph: {
+    title: 'The spark lifecycle — Sparkz',
+    description: 'Five stages: Proposed → Emerging → Verified → Established → Federated. Start with no token. Tokenize when momentum is proven.',
+    url: `${BASE_URL}/lifecycle`,
+    images: [{ url: OG_URL, width: 1200, height: 630, alt: 'The spark lifecycle' }],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'The spark lifecycle — Sparkz',
+    description: 'Five stages from first idea to federated network. Start tokenless.',
+    images: [OG_URL],
+  },
+  other: {
+    'fc:frame': 'vNext',
+    'fc:frame:image': OG_URL,
+    'fc:frame:image:aspect_ratio': '1.91:1',
+    'fc:frame:button:1': '⚡ Find my stage',
+    'fc:frame:button:1:action': 'link',
+    'fc:frame:button:1:target': `${BASE_URL}/advisor`,
+    'fc:frame:button:2': '🏅 Apply for a slot',
+    'fc:frame:button:2:action': 'link',
+    'fc:frame:button:2:target': `${BASE_URL}/vetted`,
+  },
 }
 
 const STAGES = [

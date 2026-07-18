@@ -2,10 +2,37 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LAUNCHES, STATUS_LABELS, TYPE_LABELS } from '@/lib/launches'
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://sparkz.xyz'
+const OG_URL = `${BASE_URL}/api/og?title=${encodeURIComponent('Sparkz launches')}&sub=${encodeURIComponent('ZAO-vetted. Transparent splits. No token hype.')}`
+
 export const metadata: Metadata = {
   title: 'Sparkz launches — ZAO-backed creator communities',
   description:
     'Every Sparkz launch is ZAO-vetted. Browse live and upcoming communities — each with transparent fee splits, on-chain receipts, and no token hype.',
+  openGraph: {
+    title: 'Sparkz launches — ZAO-backed creator communities',
+    description: 'ZAO-vetted launches with transparent fee splits, on-chain receipts, and no speculation language.',
+    url: `${BASE_URL}/launches`,
+    images: [{ url: OG_URL, width: 1200, height: 630, alt: 'Sparkz launches' }],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Sparkz launches',
+    description: 'ZAO-vetted. Transparent splits. No token hype.',
+    images: [OG_URL],
+  },
+  other: {
+    'fc:frame': 'vNext',
+    'fc:frame:image': OG_URL,
+    'fc:frame:image:aspect_ratio': '1.91:1',
+    'fc:frame:button:1': '🟡 See Zoostr — live now',
+    'fc:frame:button:1:action': 'link',
+    'fc:frame:button:1:target': `${BASE_URL}/launches/zoostr`,
+    'fc:frame:button:2': '🏅 Apply for a slot',
+    'fc:frame:button:2:action': 'link',
+    'fc:frame:button:2:target': `${BASE_URL}/vetted`,
+  },
 }
 
 export default function LaunchesPage() {

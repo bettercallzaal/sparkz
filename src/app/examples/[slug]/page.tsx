@@ -7,6 +7,8 @@ export function generateStaticParams() {
   return SPARK_EXAMPLES.map((e) => ({ slug: e.slug }))
 }
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://sparkz.xyz'
+
 export async function generateMetadata({
   params,
 }: {
@@ -15,9 +17,39 @@ export async function generateMetadata({
   const { slug } = await params
   const ex = getExampleBySlug(slug)
   if (!ex) return {}
+  const title = `${ex.title} — Spark examples — Sparkz`
+  const ogTitle = encodeURIComponent(`${ex.emoji} ${ex.title}`)
+  const ogSub = encodeURIComponent(ex.tagline)
+  const ogUrl = `${BASE_URL}/api/og?title=${ogTitle}&sub=${ogSub}`
+  const pageUrl = `${BASE_URL}/examples/${slug}`
+  const advisorUrl = `${BASE_URL}/advisor?situation=${ex.advisorPreset.situation}&token=${ex.advisorPreset.tokenTiming}&fee=${ex.advisorPreset.feeModel}`
   return {
-    title: `${ex.title} — Spark examples — Sparkz`,
+    title,
     description: ex.tagline,
+    openGraph: {
+      title,
+      description: ex.tagline,
+      url: pageUrl,
+      images: [{ url: ogUrl, width: 1200, height: 630, alt: title }],
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: ex.tagline,
+      images: [ogUrl],
+    },
+    other: {
+      'fc:frame': 'vNext',
+      'fc:frame:image': ogUrl,
+      'fc:frame:image:aspect_ratio': '1.91:1',
+      'fc:frame:button:1': '⚡ Get my recommended split',
+      'fc:frame:button:1:action': 'link',
+      'fc:frame:button:1:target': advisorUrl,
+      'fc:frame:button:2': '← All templates',
+      'fc:frame:button:2:action': 'link',
+      'fc:frame:button:2:target': `${BASE_URL}/examples`,
+    },
   }
 }
 

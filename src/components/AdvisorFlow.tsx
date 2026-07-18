@@ -35,15 +35,6 @@ type Answers = {
 
 type Recommendation = AdvisorRecommendation
 
-function getRecommendation(answers: Answers): Recommendation | null {
-  if (!answers.situation || !answers.tokenTiming || !answers.feeModel) return null
-  return getAdvisorRecommendation({
-    situation: answers.situation,
-    tokenTiming: answers.tokenTiming,
-    feeModel: answers.feeModel,
-  })
-}
-
 const SITUATIONS: { value: SituationType; label: string; description: string }[] = [
   {
     value: 'crowdfund',

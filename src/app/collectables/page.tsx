@@ -48,7 +48,7 @@ const STEPS = [
   {
     n: '3',
     label: 'Fees hit the splits contract',
-    desc: 'Trading fees flow into the 0xSplits contract. The contract distributes by the weights from step 2.',
+    desc: 'Trading fees accumulate in the 0xSplits contract, allocated by the weights from step 2. Recipients claim their share at splits.org — no deadline, no lockup.',
   },
   {
     n: '4',

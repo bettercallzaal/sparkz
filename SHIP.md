@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 9 PRs are draft. Merge in order. One human click per step.
+> All 16 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -28,9 +28,13 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 7 | `feat/lifecycle-page` | /lifecycle 5-stage spark model + sitemap fix for /launches/[slug] |
 | 8 | `feat/byok-settings` | /settings BYOK page + Viniapp ?via= attribution badge on /advisor |
 | 9 | `feat/v1-scope` | V1-SCOPE.md locked scope doc |
-| 10 | `feat/circles-page` | /circles Culture Circles page + homepage stats card + lifecycle Stage 5 CTA |
-| 11 | `feat/advisor-examples` | Advisor "See it in action" related-example cards |
-| 12 | `feat/advisor-api` | `/api/advisor` POST endpoint + shared `lib/advisor.ts` (Viniapp Phase 2 relay) |
+| 10 | `feat/culture-circles` | /circles Culture Circles page + homepage stats card + lifecycle Stage 5 CTA |
+| 11 | `feat/advisor-examples-link` | Advisor "See it in action" related-example cards |
+| 12 | `feat/advisor-api` | `/api/advisor` POST endpoint + shared `lib/advisor.ts` (Viniapp Phase 2 relay); V1-SCOPE.md updated |
+| 13 | `feat/ship-guide` | SHIP.md updated with full env vars + 10→16 PR table (duplicate of row 10, correct branch is feat/ship-guide) |
+| 14 | `feat/homepage-live-stats` | Live Zoostr stats card on sparkz.xyz homepage (green pulse, ISR 60s) |
+| 15 | `feat/homepage-polish` | Homepage OG + Twitter + Farcaster Frame metadata; 4-column site footer with nav + legal disclaimer |
+| 16 | `feat/shareability` | Advisor URL sync (answers → URL → shareable deep-links); "Cast this result" Warpcast compose link; /launches/[slug] OG + Frame metadata |
 
 ---
 
@@ -70,6 +74,9 @@ After Vercel deploys:
 - [ ] `https://sparkz.xyz/circles` — Culture Circles mechanic page visible
 - [ ] `https://sparkz.xyz/sitemap.xml` — all routes listed
 - [ ] `POST https://sparkz.xyz/api/advisor` with `{"situation":"solo","tokenTiming":"later","feeModel":"low"}` → returns `{"recommendation":{...}}`
+- [ ] `https://sparkz.xyz` — OG image and Farcaster Frame tags present (paste in Warpcast composer → preview renders)
+- [ ] `https://sparkz.xyz/advisor` — answer Q1 → URL updates to `?situation=...`; answer all 3 → "Cast this result ↗" link appears
+- [ ] `https://sparkz.xyz/launches/zoostr` — share to Farcaster → Frame preview with Zoostr OG image + 2 CTA buttons
 
 ---
 

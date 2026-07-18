@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 122 PRs are draft. Merge in order. One human click per step.
+> All 124 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -141,6 +141,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 120 | `feat/ship-md-pr-count-119` | SHIP.md: count 118→120; add rows for PRs #119–#120 |
 | 121 | `feat/advisor-solo-rationale-copy-fix` | advisor.ts solo rationale: fix 99% copy gap — now explicitly names all three pools (97% creator + 1% community pool floor + 2% treasury) |
 | 122 | `feat/ship-md-pr-count-121` | SHIP.md: count 120→122; add rows for PRs #121–#122 |
+| 123 | `feat/split-wizard-paid-out-fix` | SplitWizard.tsx: 'paid out weekly' → 'allocated weekly — contributors claim at splits.org'; communityPool description same fix |
+| 124 | `feat/ship-md-pr-count-123` | SHIP.md: count 122→124; add rows for PRs #123–#124 |
 
 ---
 

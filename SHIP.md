@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 48 PRs are draft. Merge in order. One human click per step.
+> All 49 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -67,6 +67,7 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 46 | `feat/examples-perk-framing-fix` | examples/[slug]: "What backers enjoy today" → dynamic label for tokenPath:'later' (perks conditional on token); group-crowdfund tokenNote: add "if and when" qualifier to definitive promise |
 | 47 | `feat/launches-detail-pct-fix` | launches/[slug]: fix percentage calc — was dividing by top-5 points only; now divides by full contributor pool total, so shares shown are accurate |
 | 48 | `feat/homepage-v2-descriptions` | homepage USE_CASES: fix Audius + Collectables descriptions — both used present tense for v2 features ("mints", "earn the most") under "What you can do today" header; rewritten to be accurate |
+| 49 | `feat/audius-page-v2-framing` | audius/page.tsx: metadata description + hero paragraph claimed individual fan scoring is live — rewritten to distinguish today (catalog stats) from v2 (fan-level weights); "unlocks" list item 2 qualified with "(v2)" |
 
 ---
 

@@ -8,7 +8,7 @@ const OG_URL = `${BASE_URL}/api/og?title=${encodeURIComponent('Audius × Sparkz'
 export const metadata: Metadata = {
   title: 'Audius integration — Sparkz',
   description:
-    'Connect your Audius catalog to Sparkz. Stream plays, favorites, and reposts become the community engagement metric — fan engagement on your music maps to fee split weights.',
+    'Connect your Audius catalog to Sparkz. See your stream stats today — plays, favorites, reposts. In v2, fan engagement maps directly to fee split weights for your community pool.',
   openGraph: {
     title: 'Audius × Sparkz',
     description: 'Your Audius streams wired to a 0xSplits contract. Music-native community fee distribution.',
@@ -59,8 +59,8 @@ export default function AudiusPage() {
           </h1>
           <p className="text-slate-400 leading-relaxed">
             Audius is where music-native creators already have an audience. Sparkz connects your
-            stream data to your community split — plays, favorites, and reposts become the metric
-            that determines who earns what from your fee pool.
+            stream data to your split config — today, see your catalog&rsquo;s engagement health;
+            in v2, plays, favorites, and reposts map directly to fan fee-pool weights.
           </p>
         </div>
 
@@ -139,7 +139,7 @@ export default function AudiusPage() {
             </li>
             <li className="flex gap-2">
               <span className="text-purple-400 flex-shrink-0">✓</span>
-              Streaming engagement = ownership stake — the fans who play your music the most earn the most from your fee pool
+              Music-native split signal — in v2, the fans who play your music the most earn the most from your fee pool (fan-level scoring via Audius SDK)
             </li>
             <li className="flex gap-2">
               <span className="text-purple-400 flex-shrink-0">✓</span>

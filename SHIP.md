@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 78 PRs are draft. Merge in order. One human click per step.
+> All 80 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -97,6 +97,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 76 | `feat/collectables-fee-split-contract-fix` | collectables/page.tsx status box: "fee distribution contract" → "0xSplits contract" — avoids auto-distribution implication |
 | 77 | `feat/ship-md-pr-count-76` | SHIP.md: count 74→76; add rows for PRs #75–#76 |
 | 78 | `feat/collectables-specs-contract-name-fix` | collectables/page.tsx tech-specs row: "Sparkz distribution contract" → "0xSplits contract" |
+| 79 | `feat/ship-md-pr-count-78` | SHIP.md: count 76→78; add rows for PRs #77–#78 |
+| 80 | `feat/env-example-ship-md-env-fix` | add .env.example; SHIP.md env var table: "RESEND_TO_EMAIL" → "ZAO_NOTIFY_EMAIL", add RESEND_FROM_EMAIL |
 
 ---
 

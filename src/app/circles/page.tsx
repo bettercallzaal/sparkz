@@ -48,7 +48,7 @@ const HOW_IT_WORKS = [
     step: '02',
     actor: 'Cross-community boost',
     headline: 'Your community boosts an Established spark.',
-    body: 'Your fans start boosting Zoostr — an Established spark with a live leaderboard and weekly fee payouts. They appear on the Zoostr leaderboard. They earn from Zoostr\'s fee pool proportional to their contribution. Their wallets start receiving on-chain payments before your own token exists.',
+    body: 'Your fans start boosting Zoostr — an Established spark with a live leaderboard and weekly fee payouts. They appear on the Zoostr leaderboard. They earn from Zoostr\'s fee pool proportional to their contribution. Their fee share accumulates on-chain — they claim at splits.org — before your own token exists.',
     color: 'border-zao-violet/30',
     tag: 'Active now',
     tagColor: 'text-zao-violet border-zao-violet/30 bg-zao-violet/10',
@@ -218,7 +218,7 @@ export default function CirclesPage() {
               {[
                 'Boost Zoostr ($ZOOSTR) — the first active circle',
                 'Appear on the Zoostr leaderboard by contribution points',
-                'Earn from the Zoostr weekly fee pool (once token is live)',
+                'Earn from the Zoostr weekly fee pool — claim at splits.org (once token is live)',
                 'DreamNet-style weekly receipts naming top contributors',
                 'Proof-of-contribution history before your own launch',
               ].map((item) => (

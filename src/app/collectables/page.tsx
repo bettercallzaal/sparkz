@@ -174,7 +174,7 @@ export default function CollectablesPage() {
               ['Network', 'Base'],
               ['Metadata', 'On-chain SVG in tokenURI — no IPFS dependency'],
               ['Transferability', 'Non-transferable (soulbound) — receipt, not an asset'],
-              ['Minting', 'Minted by the Sparkz distribution contract at updateSplit() call'],
+              ['Minting', 'Minted by the 0xSplits contract at updateSplit() call'],
               ['Volume', 'One per contributor per weekly distribution'],
               ['Governance', 'None — explicitly no governance rights attached'],
             ].map(([label, value]) => (

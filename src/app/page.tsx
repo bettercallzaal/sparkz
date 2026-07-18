@@ -73,7 +73,7 @@ const USE_CASES = [
     href: '/split-wizard',
   },
   {
-    emoji: '🎟',
+    emoji: '💳',
     title: 'Fan backing',
     description:
       'Your fans back your next album with a card — no wallet, no gas, no friction. They collect a proof of backing. You get early momentum before any token exists.',
@@ -137,7 +137,7 @@ const USE_CASES = [
     href: '/circles',
   },
   {
-    emoji: '🎵',
+    emoji: '🎧',
     title: 'Audius integration',
     description:
       'Connect your Audius catalog. Stream plays, favorites, and reposts become the community engagement metric — the fans who engage most with your music earn the most from your fee pool.',

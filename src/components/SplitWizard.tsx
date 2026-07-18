@@ -388,12 +388,12 @@ export default function SplitWizard() {
             <h2 className="text-lg font-bold text-white mb-1">How do trading fees get split?</h2>
             <p className="text-sm text-slate-500">
               This is the fee split for the 0xSplits contract — what happens to every 1% Clanker
-              trading fee. The community pool is paid out weekly by contribution score.
+              trading fee. The community pool is allocated weekly by contribution score — contributors claim at splits.org.
             </p>
           </div>
 
           {[
-            { key: 'communityPool' as const, label: 'Community pool', description: 'Paid to contributors by points, weekly' },
+            { key: 'communityPool' as const, label: 'Community pool', description: 'Allocated by points, weekly — contributors claim at splits.org' },
             { key: 'creatorPool' as const, label: 'Creator pool', description: 'Distributed among collaborators above by their share' },
             { key: 'treasury' as const, label: 'Treasury', description: 'Community-governed, for future use (liquidity, votes, collabs)' },
           ].map(({ key, label, description }) => (

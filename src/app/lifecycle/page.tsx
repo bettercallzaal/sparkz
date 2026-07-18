@@ -99,11 +99,11 @@ const STAGES = [
     status: 'live',
     headline: 'Token live. Fees flow. Weekly receipts.',
     description:
-      'The token is live on Clanker. 1% of every trade goes to the 0xSplits contract. ZOL runs the weekly snapshot, updates split weights, and posts the receipt cast. Contributors earn proportional to their points — no claiming, no lockups, just fees landing in wallets.',
+      'The token is live on Clanker. 1% of every trade goes to the 0xSplits contract. ZOL runs the weekly snapshot and drafts the receipt cast; Zaal reviews and calls updateSplit() on-chain. Contributors earn proportional to their points — claim at app.splits.org, no lockups, no deadline.',
     available: [
       'Token live (Clanker v4, 1% fee tier)',
       '0xSplits contract receiving live fees',
-      'Weekly snapshot → split update → on-chain',
+      'Weekly snapshot → ZOL draft → Zaal calls updateSplit() on-chain',
       'Weekly receipt cast (top earners, pool size, leaderboard link)',
       'Receipt page with Farcaster Frame (shareable)',
     ],

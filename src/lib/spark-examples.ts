@@ -43,7 +43,7 @@ export const SPARK_EXAMPLES: SparkExample[] = [
       note: 'This is the evolved split — after 30+ real boosters have shown up for weeks. Start creator-first (97% creator, 2% treasury, 1% community). Increase community pool to 50% once the leaderboard has proven itself. The advisor starts you at 97/2/1; this is where Zoostr arrived.',
     },
     perks: [
-      'Fee share proportional to boost points (no claiming — lands in wallet)',
+      'Fee share proportional to boost points — claim via app.splits.org (no lockups, no deadline)',
       'Top-3 podium on the site',
       'Named in weekly receipt casts',
       'Early access to future drops',

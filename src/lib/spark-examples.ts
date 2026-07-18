@@ -89,7 +89,7 @@ export const SPARK_EXAMPLES: SparkExample[] = [
     situation:
       'A group of people wants to back a project together — an album, an event, a travel fund (like Farcaster-to-Devcon). The backers are the community. They want to govern the treasury and earn from the project\'s success.',
     noTokenAction:
-      'Open the backing now (card payment, no wallet required). Backers get a proof-of-backing NFT immediately. Treasury accrues. Token launch is optional — the project can run on patronage alone.',
+      'Open the backing now (card payment, no wallet required). Backers receive email confirmation — no wallet or gas required. Treasury accrues. Token launch is optional — the project can run on patronage alone.',
     metric: 'Contribution size (backer stake / total raised = community pool weight)',
     splitConfig: {
       communityPool: 60,
@@ -99,9 +99,9 @@ export const SPARK_EXAMPLES: SparkExample[] = [
       note: 'Community pool distributed to backers by their contribution size. Creator/operator pool covers production. Treasury is the shared war chest for proposals and votes.',
     },
     perks: [
-      'Proof-of-backing NFT minted at contribution time',
-      'Proportional fee share from any token that launches',
-      'Treasury voting rights on how funds are used',
+      'Proof-of-backing NFT at contribution time (v2 — launches alongside first split distribution)',
+      'Proportional fee share from any token that launches — claim at splits.org',
+      'Treasury voting rights on how funds are used (v2)',
       'Named in project credits',
     ],
     tokenPath: 'later',
@@ -127,7 +127,7 @@ export const SPARK_EXAMPLES: SparkExample[] = [
       note: 'Community pool split by NFT holdings snapshot. NFT rarity weighting optional — equal weight per NFT is simpler and harder to game.',
     },
     perks: [
-      'Passive fee income proportional to NFT holdings',
+      'Fee share proportional to NFT holdings — claim at splits.org (no lockups, no deadline)',
       'Weekly on-chain receipt — holders see their earnings per NFT',
       'Treasury fund for community proposals (new drops, collabs, events)',
     ],

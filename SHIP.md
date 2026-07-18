@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 80 PRs are draft. Merge in order. One human click per step.
+> All 82 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -99,6 +99,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 78 | `feat/collectables-specs-contract-name-fix` | collectables/page.tsx tech-specs row: "Sparkz distribution contract" → "0xSplits contract" |
 | 79 | `feat/ship-md-pr-count-78` | SHIP.md: count 76→78; add rows for PRs #77–#78 |
 | 80 | `feat/env-example-ship-md-env-fix` | add .env.example; SHIP.md env var table: "RESEND_TO_EMAIL" → "ZAO_NOTIFY_EMAIL", add RESEND_FROM_EMAIL |
+| 81 | `feat/ship-md-pr-count-80` | SHIP.md: count 78→80; add rows for PRs #79–#80 |
+| 82 | `feat/tiers-perk-token-allocation-legal-fix` | TiersWizard: remove "token allocation" from Empire default perk, perk suggestions, and step-5 wizard copy |
 
 ---
 

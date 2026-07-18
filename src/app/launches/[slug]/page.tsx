@@ -271,7 +271,7 @@ export default async function LaunchDetailPage({
             </div>
             <div className="space-y-3">
               {[
-                { label: 'Community pool', pct: launch.splitConfig.communityPool, note: 'weekly by contribution', color: 'bg-gold-400' },
+                { label: 'Community pool', pct: launch.splitConfig.communityPool, note: 'weekly by contribution — claim at splits.org', color: 'bg-gold-400' },
                 { label: 'Creator pool', pct: launch.splitConfig.creatorPool, note: 'creator operations', color: 'bg-zao-violet' },
                 { label: 'Treasury', pct: launch.splitConfig.treasury, note: 'community-governed', color: 'bg-slate-500' },
               ].map(({ label, pct, note, color }) => (
@@ -316,7 +316,7 @@ export default async function LaunchDetailPage({
               </div>
               <div className="flex gap-3">
                 <span className="text-slate-600 w-24 flex-shrink-0">Distribution</span>
-                <span className="text-slate-300">Weekly snapshot → updateSplit()</span>
+                <span className="text-slate-300">Weekly snapshot → updateSplit() → recipients claim at splits.org</span>
               </div>
               {launch.communityUrl && (
                 <div className="flex gap-3">

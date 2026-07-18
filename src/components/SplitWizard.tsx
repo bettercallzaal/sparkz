@@ -225,6 +225,24 @@ export default function SplitWizard() {
     _next: 'Run npm run snapshot to compute weights | Go to app.splits.org to create your split | Deploy on clanker.world only when ready',
   }
 
+  const warpcastShareUrl = (() => {
+    const tokenLine = splitConfig.launchToken
+      ? (tokenTicker ? `$${tokenTicker.toUpperCase()} on Base (Clanker · 1% fee · 0xSplits)` : 'token on Base (Clanker · 1% fee · 0xSplits)')
+      : 'tokenless for now — no speculation required'
+    const text = [
+      `just configured my split with Sparkz ⚡`,
+      ``,
+      `community pool: ${splitConfig.communityPool}%`,
+      `creator pool: ${splitConfig.creatorPool}%`,
+      `treasury: ${splitConfig.treasury}%`,
+      ``,
+      tokenLine,
+      ``,
+      `sparkz.xyz/split-wizard`,
+    ].join('\n')
+    return `https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`
+  })()
+
   const copyJSON = async () => {
     await navigator.clipboard.writeText(JSON.stringify(exportPayload, null, 2))
     setCopied(true)
@@ -574,6 +592,14 @@ export default function SplitWizard() {
                 Download split.json
               </button>
             </div>
+            <a
+              href={warpcastShareUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 flex items-center justify-center gap-2 w-full py-2 rounded-lg border border-zao-violet/40 text-zao-violet hover:border-zao-violet/70 hover:bg-zao-violet/5 text-sm font-semibold transition-colors"
+            >
+              Share on Farcaster ↗
+            </a>
           </div>
 
           {splitConfig.launchToken && (

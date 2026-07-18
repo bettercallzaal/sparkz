@@ -650,6 +650,22 @@ export default function SplitWizard() {
             </div>
           )}
 
+          {!splitConfig.launchToken && (
+            <div className="card-dark p-5 border-zao-border">
+              <div className="text-sm font-bold text-white mb-2">Next steps (tokenless)</div>
+              <ol className="text-sm text-slate-400 space-y-1 list-decimal list-inside">
+                <li>Fill wallet addresses in your split.json</li>
+                <li>Go to <a href="https://app.splits.org" target="_blank" rel="noopener noreferrer" className="text-gold-400 hover:text-gold-300">app.splits.org</a> → Create a split with your recipients to enable direct on-chain payments</li>
+                <li>Set up <a href="/tiers" className="text-gold-400 hover:text-gold-300">patronage tiers</a> so fans can back you with a card today</li>
+                <li>When ready to tokenize: come back, toggle &ldquo;launch a token,&rdquo; and get the full deploy package</li>
+              </ol>
+              <p className="text-xs text-slate-600 mt-3">
+                No token required to have a working split. The 0xSplits contract pays collaborators
+                from any revenue you route to it — fan backing, licensing, tips.
+              </p>
+            </div>
+          )}
+
           <div className="flex gap-3">
             <button onClick={() => setStep('split-config')} className="btn-outline flex-1">
               ← Edit

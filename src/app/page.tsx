@@ -156,7 +156,7 @@ const USE_CASES = [
     emoji: '💰',
     title: 'Fee splits — if and when you launch',
     description:
-      'Configure what share of every trading fee flows to your community — by leaderboard points, NFT holdings, or any contribution metric. Creator-first by default. Weekly, automatic, on-chain.',
+      'Configure what share of every trading fee flows to your community — by leaderboard points, NFT holdings, or any contribution metric. Creator-first by default. Weekly, on-chain, contributors claim their share.',
     cta: 'How it works',
     href: '/how-it-works',
   },
@@ -261,7 +261,7 @@ export default async function HomePage() {
                 </div>
                 <p className="text-sm text-slate-400 max-w-sm">
                   ZABAL × Boostr. 50% of every trading fee to the leaderboard by points.
-                  Weekly, on-chain, automatic.
+                  Weekly · on-chain · claim at splits.org
                 </p>
               </div>
               <div className="flex gap-6">

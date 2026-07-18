@@ -69,6 +69,7 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 48 | `feat/homepage-v2-descriptions` | homepage USE_CASES: fix Audius + Collectables descriptions — both used present tense for v2 features ("mints", "earn the most") under "What you can do today" header; rewritten to be accurate |
 | 49 | `feat/audius-page-v2-framing` | audius/page.tsx: metadata description + hero paragraph claimed individual fan scoring is live — rewritten to distinguish today (catalog stats) from v2 (fan-level weights); "unlocks" list item 2 qualified with "(v2)" |
 | 50 | `feat/no-claiming-accuracy` | spark-examples.ts: fix "no claiming — lands in wallet" perk (Pull split requires claiming at splits.org); lifecycle/page.tsx stage 4: fix "ZOL updates split weights" (ZOL drafts, Zaal executes updateSplit) + "fees landing in wallets" (claim required) |
+| 51 | `feat/homepage-automatic-copy` | homepage: fix two "automatic" claims — USE_CASES fee-split description + Zoostr launch card; both implied auto-payout but Pull split requires claiming at splits.org |
 
 ---
 

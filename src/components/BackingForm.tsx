@@ -48,6 +48,8 @@ export default function BackingForm() {
   }
 
   if (state === 'success') {
+    const castText = `just joined the waitlist for Sparkz backing at the ${tier} tier ⚡\n\nno wallet. no gas. just backing the work before it goes live.\n\nsparkz.xyz/back`
+    const warpcastUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(castText)}`
     return (
       <div className="card-dark p-8 text-center">
         <div className="text-4xl mb-4">🟡</div>
@@ -57,6 +59,14 @@ export default function BackingForm() {
           goes live. You&rsquo;ll be first in at the{' '}
           <strong className="text-gold-400">{tier}</strong> tier.
         </p>
+        <a
+          href={warpcastUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-zao-violet/40 text-zao-violet hover:border-zao-violet/70 hover:bg-zao-violet/5 text-sm font-semibold transition-colors"
+        >
+          Cast your spot ↗
+        </a>
         <p className="text-xs text-slate-600 mt-4">
           No wallet required. No gas. Just show up.
         </p>

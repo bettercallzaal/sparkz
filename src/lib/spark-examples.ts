@@ -239,7 +239,7 @@ export const SPARK_EXAMPLES: SparkExample[] = [
       creatorPool: 70,
       treasury: 15,
       zaoStake: 5,
-      note: 'Creator pool is divided among roster artists by their contract (e.g. 3 artists at 25%/25%/20% of the 70%). 0xSplits routes fees to all recipients automatically — the label just maintains the weights. Community pool allocated to fans of the whole roster — claim at splits.org.',
+      note: 'Creator pool is divided among roster artists by their contract (e.g. 3 artists at 25%/25%/20% of the 70%). 0xSplits allocates fees to recipients by the configured weights — artists and community all claim their share at splits.org. The label just maintains the percentages.',
     },
     perks: [
       'Fee share per artist proportional to their streaming performance — claim at splits.org',

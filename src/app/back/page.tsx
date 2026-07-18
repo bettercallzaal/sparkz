@@ -85,8 +85,7 @@ export default function BackPage() {
           </p>
           <p>
             Fiat onboarding is in early access. Card processing powered by Stripe (Sparkz never
-            stores payment details). A custodial wallet is provisioned for your backing proof
-            automatically — no setup required.
+            stores payment details). You&rsquo;ll receive email confirmation — no wallet or gas required.
           </p>
         </div>
       </div>

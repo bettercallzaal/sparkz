@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 59 PRs are draft. Merge in order. One human click per step.
+> All 65 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -78,6 +78,12 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 57 | `feat/examples-nft-voting-fix` | spark-examples.ts: group-crowdfund noTokenAction claimed "NFT immediately" (v2); perks add v2 qualifier for NFT + voting; pfp-nft-community "Passive fee income" → "claim at splits.org" |
 | 58 | `feat/advisor-stripe-copy-fix` | advisor.ts: "Revenue goes directly to your 0xSplits recipients" (false — Stripe doesn't auto-route to 0xSplits in V1); crowdfund rationale: "proposals and votes" → add v2 qualifier |
 | 59 | `feat/dao-staking-v2-perks` | dao-staking example: perks presented as "What backers enjoy today" but staking + governance are v2; add v2 qualifiers to all 3 governance perks + splitConfig.note |
+| 60 | `feat/launches-detail-claiming-note` | launches/[slug]: community pool note "weekly by contribution" + technical setup "Distribution" field both missing claim step; add "— claim at splits.org" to both |
+| 61 | `feat/circles-claiming-fix` | /circles step 02: "wallets start receiving on-chain payments" → fee share accumulates on-chain, recipients claim at splits.org; Available now list: add claim note |
+| 62 | `feat/collectables-split-claiming-note` | /collectables step 3: "contract distributes by weights" → fees accumulate in contract, allocated by weights; recipients claim at splits.org |
+| 63 | `feat/split-wizard-how-it-works-claiming` | SplitWizard no-token review: "contract pays collaborators" → "holds revenue — claim at splits.org"; how-it-works step 02: "distributes to your list" → "claim at splits.org" |
+| 64 | `feat/launches-zoostr-claiming-copy` | launches.ts Zoostr description: "to the leaderboard by points, weekly" → "allocated...by points. Claim at splits.org" |
+| 65 | `feat/vetted-zoostr-claiming-copy` | /vetted EXAMPLES Zoostr description: same fix as PR #64 — mirrors launches.ts correction |
 
 ---
 
@@ -148,4 +154,4 @@ After sparkz.xyz is live, the Zoostr site's collectables teaser link (`https://s
 
 ---
 
-*Prepared by ZOL · 2026-07-17 · All code is ready. Human merges, Vercel deploys, Zaal verifies.*
+*Prepared by ZOL · 2026-07-18 · All code is ready. Human merges, Vercel deploys, Zaal verifies.*

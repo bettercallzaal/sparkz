@@ -48,6 +48,7 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 27 | `feat/back-waitlist-share` | "Cast your spot ↗" link on /back waitlist success — joining is a social signal before launch |
 | 28 | `feat/readme-update` | README: add pages table + SHIP.md reference — ready for public traffic |
 | 29 | `feat/launch-detail-share` | "Share on Farcaster ↗" button on /launches/[slug] — in-page complement to the Frame embed |
+| 30 | `feat/error-boundary` | Global error.tsx boundary + /launches/[slug] loading skeleton (animate-pulse) |
 
 ---
 

@@ -19,7 +19,7 @@
 ### Discovery (all live)
 - `/launches` — public launch registry
 - `/launches/[slug]` — live detail page with Boostr stats, split config, receipts
-- `/examples` — 7 spark templates — leaderboard, collab, crowdfund, PFP/NFT, light DAO, solo patronage, collab-no-token (each shows split config, token path, perks)
+- `/examples` — 9 spark templates — leaderboard, collab, crowdfund, PFP/NFT, light DAO, solo patronage, collab-no-token, record label roster, podcast collective (each shows split config, token path, perks)
 - `/examples/[slug]` — template detail pages with advisor deep-links
 
 ### Lifecycle + education (all live)

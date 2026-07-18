@@ -104,7 +104,7 @@ export default function ExamplesPage() {
       <section className="max-w-5xl mx-auto px-4 pb-24">
         <div className="card-dark p-6 sm:p-8">
           <div className="text-xs font-bold text-gold-400 uppercase tracking-widest mb-3">
-            The pattern across all five
+            The pattern across all {SPARK_EXAMPLES.length}
           </div>
           <div className="grid sm:grid-cols-3 gap-6">
             <div>

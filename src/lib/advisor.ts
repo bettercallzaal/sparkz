@@ -30,7 +30,7 @@ const BASE_CONFIGS: Record<
     treasury: 25,
     headline: 'Community-first: 60% to the people who showed up',
     rationale:
-      'In a group crowdfund, the backers ARE the project. A 60% community pool signals that clearly — the treasury becomes a shared war chest for proposals and votes. The creator pool covers operations.',
+      'In a group crowdfund, the backers ARE the project. A 60% community pool signals that clearly — the treasury is a shared war chest for the project (proposals and votes are a v2 governance layer). The creator pool covers operations.',
   },
   collab: {
     communityPool: 50,
@@ -55,7 +55,7 @@ const TOKEN_ADVICE: Record<TokenTiming, string> = {
   later:
     'Hold on the token and start tokenless: build your leaderboard, prove the boost engine, collect a few dozen real supporters. When you launch, the token backs existing momentum — not speculation.',
   never:
-    'No token needed. Use the patronage tier system ($5/$25/$100 recurring) with Stripe instead. Revenue goes directly to your 0xSplits recipients without any token mechanics.',
+    'No token needed. Use the patronage tier system ($5/$25/$100 recurring) with Stripe. Patronage revenue flows through Stripe — set up 0xSplits separately if you want to split payouts between collaborators.',
 }
 
 const FEE_ADVICE: Record<FeeModel, string> = {

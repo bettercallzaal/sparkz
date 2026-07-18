@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 57 PRs are draft. Merge in order. One human click per step.
+> All 58 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -76,6 +76,7 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 55 | `feat/back-wallet-copy-fix` | /back page disclaimer: remove false "custodial wallet provisioned automatically" — not implemented; replaced with accurate "email confirmation, no wallet or gas required" |
 | 56 | `feat/tiers-wizard-onchain-claim-fix` | TiersWizard: fix two false on-chain claims — export JSON _next step + step 3 preview copy both claimed "proof of backing on-chain automatically"; V1 is Stripe + email only; on-chain backing proof is v2 |
 | 57 | `feat/examples-nft-voting-fix` | spark-examples.ts: group-crowdfund noTokenAction claimed "NFT immediately" (v2); perks add v2 qualifier for NFT + voting; pfp-nft-community "Passive fee income" → "claim at splits.org" |
+| 58 | `feat/advisor-stripe-copy-fix` | advisor.ts: "Revenue goes directly to your 0xSplits recipients" (false — Stripe doesn't auto-route to 0xSplits in V1); crowdfund rationale: "proposals and votes" → add v2 qualifier |
 
 ---
 

@@ -34,7 +34,7 @@ Built to work with the ecosystem: ZAO, Viniapp (Chris Dolinski), Kismet, POIDH, 
 | `/vetted` | ZAO vetting application (50 slots/quarter) |
 | `/launches` | ZAO-vetted launch registry |
 | `/launches/[slug]` | Live launch detail: stats, boosters, split config, receipts |
-| `/examples` | 7 spark templates — leaderboard, collab, crowdfund, PFP/NFT, light DAO, solo patronage, collab-no-token |
+| `/examples` | 9 spark templates — leaderboard, collab, crowdfund, PFP/NFT, light DAO, solo patronage, collab-no-token, record label roster, podcast collective |
 | `/examples/[slug]` | Template detail: situation, split config, perks, token path, advisor deep-link |
 | `/lifecycle` | 5-stage spark model (Proposed → Federated) |
 | `/circles` | Culture Circles — sparks back each other before any token |

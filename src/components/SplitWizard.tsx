@@ -164,6 +164,10 @@ export default function SplitWizard() {
   ])
   const [splitConfig, setSplitConfig] = useState<SplitConfig>(initialSplitConfig)
   const [copied, setCopied] = useState(false)
+  const [tokenName, setTokenName] = useState('')
+  const [tokenTicker, setTokenTicker] = useState('')
+  const [tokenImageUrl, setTokenImageUrl] = useState('')
+  const [tokenDescription, setTokenDescription] = useState('')
 
   const updateCollab = useCallback(
     (id: string, field: keyof Collaborator, value: string | number) => {
@@ -184,6 +188,7 @@ export default function SplitWizard() {
   const totalFeeAlloc = splitConfig.communityPool + splitConfig.creatorPool + splitConfig.treasury
   const creatorCredit = 100 - splitConfig.zaoStake
 
+  const hasTokenConfig = tokenName || tokenTicker || tokenImageUrl || tokenDescription
   const exportPayload = {
     _comment: 'Sparkz split sheet — review before wiring to 0xSplits',
     project: projectName || 'Untitled project',
@@ -206,6 +211,17 @@ export default function SplitWizard() {
       purpose: 'Aligned ZAO backing — not a fee extraction',
     },
     tokenLaunch: splitConfig.launchToken ? 'yes — configure in deploy-config.md' : 'no — tokenless for now',
+    ...(hasTokenConfig && {
+      clankerDeploy: {
+        _comment: 'Token config for clanker.world — set feeRecipient to your 0xSplits contract address from app.splits.org',
+        name: tokenName || '[TOKEN NAME]',
+        ticker: tokenTicker ? `$${tokenTicker.toUpperCase().replace(/^\$/, '')}` : '[TICKER]',
+        description: tokenDescription || undefined,
+        imageUrl: tokenImageUrl || '[YOUR_IMAGE_URL]',
+        feeTier: '1%',
+        feeRecipient: '[YOUR_SPLITS_ADDRESS — from app.splits.org]',
+      },
+    }),
     _next: 'Run npm run snapshot to compute weights | Go to app.splits.org to create your split | Deploy on clanker.world only when ready',
   }
 
@@ -559,6 +575,63 @@ export default function SplitWizard() {
               </button>
             </div>
           </div>
+
+          {splitConfig.launchToken && (
+            <div className="card-dark p-5 border-zao-violet/20">
+              <div className="text-sm font-bold text-white mb-1">Token config (optional)</div>
+              <p className="text-xs text-slate-500 mb-4 leading-relaxed">
+                Fill these in to include a Clanker deploy config in your export JSON. Leave blank to skip.
+              </p>
+              <div className="space-y-3">
+                <div className="grid sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs text-slate-500 block mb-1">Token name</label>
+                    <input
+                      type="text"
+                      placeholder="Zoostr"
+                      value={tokenName}
+                      onChange={(e) => setTokenName(e.target.value)}
+                      className="w-full bg-zao-dark border border-zao-border rounded-lg px-3 py-2 text-sm text-white placeholder-slate-700 focus:outline-none focus:border-gold-500/50"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs text-slate-500 block mb-1">Ticker</label>
+                    <input
+                      type="text"
+                      placeholder="ZOOSTR"
+                      value={tokenTicker}
+                      onChange={(e) => setTokenTicker(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''))}
+                      className="w-full bg-zao-dark border border-zao-border rounded-lg px-3 py-2 text-sm text-white placeholder-slate-700 focus:outline-none focus:border-gold-500/50 font-mono"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="text-xs text-slate-500 block mb-1">Image URL</label>
+                  <input
+                    type="url"
+                    placeholder="https://your-image.png"
+                    value={tokenImageUrl}
+                    onChange={(e) => setTokenImageUrl(e.target.value)}
+                    className="w-full bg-zao-dark border border-zao-border rounded-lg px-3 py-2 text-sm text-white placeholder-slate-700 focus:outline-none focus:border-gold-500/50"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-slate-500 block mb-1">Description (1–2 sentences)</label>
+                  <textarea
+                    placeholder="The community token that pays back the people who built the empire."
+                    value={tokenDescription}
+                    onChange={(e) => setTokenDescription(e.target.value)}
+                    rows={2}
+                    className="w-full bg-zao-dark border border-zao-border rounded-lg px-3 py-2 text-sm text-white placeholder-slate-700 focus:outline-none focus:border-gold-500/50 resize-none"
+                  />
+                </div>
+              </div>
+              <p className="text-xs text-slate-700 mt-3">
+                Filling these adds a <code className="text-slate-500">clankerDeploy</code> key to your split.json.
+                You still deploy manually — paste the splits address as <code className="text-slate-500">feeRecipient</code> on clanker.world.
+              </p>
+            </div>
+          )}
 
           {splitConfig.launchToken && (
             <div className="card-dark p-5 border-gold-500/20">

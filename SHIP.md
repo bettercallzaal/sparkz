@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 96 PRs are draft. Merge in order. One human click per step.
+> All 98 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -115,6 +115,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 94 | `feat/spark-examples-label-podcast` | spark-examples.ts: add record-label-roster and podcast-collective templates (7 → 9 examples) |
 | 95 | `feat/ship-md-pr-count-94` | SHIP.md: count 92→94; add rows for PRs #93–#94 |
 | 96 | `feat/spark-examples-count-9` | examples/page.tsx + homepage: update hardcoded "7 templates" → "9 templates" |
+| 97 | `feat/ship-md-pr-count-96` | SHIP.md: count 94→96; add rows for PRs #95–#96 |
+| 98 | `feat/examples-meta-count-9` | examples/page.tsx: metadata.description + OG + Twitter text "7 templates" → "9 templates" (missed by PR #96) |
 
 ---
 
@@ -149,7 +151,7 @@ After Vercel deploys:
 - [ ] `https://sparkz.xyz/vetted` — form submits
 - [ ] `https://sparkz.xyz/launches` — Zoostr launch card visible
 - [ ] `https://sparkz.xyz/launches/zoostr` — live Boostr stats load (green pulse indicator)
-- [ ] `https://sparkz.xyz/examples` — 7 template cards visible (including patronage-solo + collab-split-no-token)
+- [ ] `https://sparkz.xyz/examples` — 9 template cards visible (including patronage-solo, collab-split-no-token, record-label-roster, podcast-collective)
 - [ ] `https://sparkz.xyz/examples/patronage-solo` — loads; "no token ever" framing visible
 - [ ] `https://sparkz.xyz/lifecycle` — 5-stage timeline visible
 - [ ] `https://sparkz.xyz/settings` — BYOK form renders

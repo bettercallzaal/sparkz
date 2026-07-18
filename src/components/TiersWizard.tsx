@@ -51,7 +51,7 @@ const DEFAULT_TIERS: Tier[] = [
       'Everything in Flame',
       '1:1 call with the creator (30 min, monthly)',
       'Producer/collaborator credit on one release per year',
-      'First access to any future token allocation',
+      'ZAO advisory call (1x per quarter)',
       'ZAO Empire badge on your profile',
     ],
   },
@@ -69,7 +69,7 @@ const PERK_SUGGESTIONS = [
   'Behind-the-scenes content',
   'Vote on next project direction',
   'Producer credit on one release',
-  'First access to token allocation',
+  'Early invite when you launch',
 ]
 
 function PerkList({
@@ -474,7 +474,7 @@ export default function TiersWizard() {
               <li>ZOL builds your fan page and wires it to Stripe Checkout</li>
               <li>Fans back you with a card — no wallet, no gas</li>
               <li>Proof of backing goes on-chain per tier via a custodial wallet</li>
-              <li>When you&apos;re ready for a token, early backers get priority access</li>
+              <li>Early backers are part of your inner circle if you take the next step</li>
             </ol>
           </div>
 

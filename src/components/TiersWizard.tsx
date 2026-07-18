@@ -271,7 +271,7 @@ export default function TiersWizard() {
     _next: [
       'Share this config with ZOL (@bettercallzaal on Farcaster) to get your fan page built',
       'Or: wire to Stripe Checkout — each tier becomes a Stripe Price object',
-      'Stripe payment → custodial wallet provisioned automatically → proof of backing on-chain',
+      'Stripe payment → fan receives email confirmation; on-chain backing proof is v2 roadmap',
       'No wallet required for fans; Stripe account required for creator',
     ],
     _platform: 'Sparkz — sparkz.xyz — ZAO ecosystem',
@@ -408,7 +408,7 @@ export default function TiersWizard() {
           <div>
             <h2 className="text-lg font-bold text-white mb-1">This is what your fans see.</h2>
             <p className="text-sm text-slate-500">
-              Card payment, no wallet required. Proof of backing goes on-chain automatically.
+              Card payment, no wallet required. Fan receives email confirmation.
             </p>
           </div>
           <FanPreview creator={creator} tiers={tiers} />

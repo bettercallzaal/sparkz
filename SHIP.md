@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 55 PRs are draft. Merge in order. One human click per step.
+> All 56 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -74,6 +74,7 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 53 | `feat/examples-claiming-fix` | examples/page.tsx invariants: "No claiming — fees flow" → "Fees accumulate on-chain — claim at splits.org" |
 | 54 | `feat/how-it-works-claiming-fix` | how-it-works hero para: "distributes automatically" → "accumulates in split — recipients claim at splits.org"; launches/[slug] share cast: "automatic" → "claim at splits.org" |
 | 55 | `feat/back-wallet-copy-fix` | /back page disclaimer: remove false "custodial wallet provisioned automatically" — not implemented; replaced with accurate "email confirmation, no wallet or gas required" |
+| 56 | `feat/tiers-wizard-onchain-claim-fix` | TiersWizard: fix two false on-chain claims — export JSON _next step + step 3 preview copy both claimed "proof of backing on-chain automatically"; V1 is Stripe + email only; on-chain backing proof is v2 |
 
 ---
 

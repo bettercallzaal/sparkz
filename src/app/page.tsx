@@ -327,7 +327,7 @@ export default async function HomePage() {
           </h2>
           <p className="text-slate-400 mb-4 leading-relaxed">
             On Clanker, the fee recipient is a single address — frozen at deploy. Every other tool
-            just puts the creator's wallet there. Sparkz puts a{' '}
+            just puts the creator&rsquo;s wallet there. Sparkz puts a{' '}
             <strong className="text-white">0xSplits contract</strong> there instead. Inside Splits,
             recipients and weights are adjustable on any cadence without touching the token.
           </p>

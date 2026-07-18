@@ -458,7 +458,7 @@ export default function TiersWizard() {
           <div className="card-dark p-4">
             <div className="text-xs text-slate-500 mb-2">Or get vetted by ZAO for a full launch</div>
             <p className="text-sm text-slate-400 mb-3">
-              ZAO-backed launches get a "Vetted by ZAO" badge, scarce drop slots (1 of 50/quarter),
+              ZAO-backed launches get a &ldquo;Vetted by ZAO&rdquo; badge, scarce drop slots (1 of 50/quarter),
               and ZOL marketing support. The patronage tiers become part of the full Sparkz launch.
             </p>
             <a href="/vetted" className="text-gold-400 text-sm font-semibold hover:text-gold-300 transition-colors">

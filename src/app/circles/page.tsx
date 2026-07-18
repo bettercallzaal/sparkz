@@ -97,10 +97,10 @@ export default function CirclesPage() {
     <main className="min-h-screen bg-zao-dark">
       <nav className="border-b border-zao-border bg-zao-card/80 backdrop-blur sticky top-0 z-50">
         <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
-          <a href="/" className="font-black text-xl tracking-tight">
+          <Link href="/" className="font-black text-xl tracking-tight">
             <span className="text-gradient-gold">SPAR</span>
             <span className="text-white">KZ</span>
-          </a>
+          </Link>
           <div className="flex items-center gap-4">
             <Link href="/lifecycle" className="text-sm text-slate-400 hover:text-white transition-colors hidden sm:inline">
               Lifecycle

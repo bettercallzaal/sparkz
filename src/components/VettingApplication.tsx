@@ -124,7 +124,7 @@ export default function VettingApplication() {
           Describe your community <span className="text-red-400">*</span>
         </label>
         <p className="text-xs text-slate-500 mb-2">
-          Who shows up for you? How? What does "real engagement" look like in your community — not follower counts.
+          Who shows up for you? How? What does &ldquo;real engagement&rdquo; look like in your community — not follower counts.
         </p>
         <textarea
           required

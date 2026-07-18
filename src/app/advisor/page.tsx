@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { Suspense } from 'react'
 import AdvisorFlow from '@/components/AdvisorFlow'
 
@@ -20,10 +21,10 @@ export default async function AdvisorPage({
     <main className="min-h-screen bg-zao-dark">
       <nav className="border-b border-zao-border bg-zao-card/80 backdrop-blur sticky top-0 z-50">
         <div className="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
-          <a href="/" className="font-black text-xl tracking-tight">
+          <Link href="/" className="font-black text-xl tracking-tight">
             <span className="text-gradient-gold">SPAR</span>
             <span className="text-white">KZ</span>
-          </a>
+          </Link>
           <div className="flex items-center gap-3">
             {viaViniapp && (
               <span className="text-xs px-2.5 py-1 rounded-full border border-zao-violet/30 bg-zao-violet/10 text-zao-violet font-semibold">

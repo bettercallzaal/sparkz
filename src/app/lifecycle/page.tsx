@@ -147,10 +147,10 @@ export default function LifecyclePage() {
     <main className="min-h-screen bg-zao-dark">
       <nav className="border-b border-zao-border bg-zao-card/80 backdrop-blur sticky top-0 z-50">
         <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
-          <a href="/" className="font-black text-xl tracking-tight">
+          <Link href="/" className="font-black text-xl tracking-tight">
             <span className="text-gradient-gold">SPAR</span>
             <span className="text-white">KZ</span>
-          </a>
+          </Link>
           <Link href="/vetted" className="text-sm text-gold-400 hover:text-gold-300 font-semibold transition-colors">
             Apply for a slot →
           </Link>

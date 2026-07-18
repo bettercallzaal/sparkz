@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import VettingApplication from '@/components/VettingApplication'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://sparkz.xyz'
@@ -88,10 +89,10 @@ export default function VettedPage() {
     <main className="min-h-screen bg-zao-dark">
       <nav className="border-b border-zao-border bg-zao-card/80 backdrop-blur sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
-          <a href="/" className="font-black text-xl tracking-tight">
+          <Link href="/" className="font-black text-xl tracking-tight">
             <span className="text-gradient-gold">SPAR</span>
             <span className="text-white">KZ</span>
-          </a>
+          </Link>
           <span className="text-sm text-slate-500">Vetted by ZAO</span>
         </div>
       </nav>
@@ -141,9 +142,9 @@ export default function VettedPage() {
           <div className="mt-6 p-4 rounded-lg bg-zao-dark border border-zao-border">
             <p className="text-sm text-slate-500">
               <strong className="text-slate-300">What ZAO does NOT look for:</strong> Token hype,
-              follower counts without engagement, "gonna be huge" pitches, anything that requires
-              speculation language. If your pitch is "my coin will moon" — not a fit. If it&rsquo;s
-              "my community showed up for me and deserves a fair stake" — tell us more.
+              follower counts without engagement, &ldquo;gonna be huge&rdquo; pitches, anything that requires
+              speculation language. If your pitch is &ldquo;my coin will moon&rdquo; — not a fit. If it&rsquo;s
+              &ldquo;my community showed up for me and deserves a fair stake&rdquo; — tell us more.
             </p>
           </div>
         </div>

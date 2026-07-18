@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 65 PRs are draft. Merge in order. One human click per step.
+> All 66 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -84,6 +84,7 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 63 | `feat/split-wizard-how-it-works-claiming` | SplitWizard no-token review: "contract pays collaborators" → "holds revenue — claim at splits.org"; how-it-works step 02: "distributes to your list" → "claim at splits.org" |
 | 64 | `feat/launches-zoostr-claiming-copy` | launches.ts Zoostr description: "to the leaderboard by points, weekly" → "allocated...by points. Claim at splits.org" |
 | 65 | `feat/vetted-zoostr-claiming-copy` | /vetted EXAMPLES Zoostr description: same fix as PR #64 — mirrors launches.ts correction |
+| 66 | `feat/ship-md-pr-count-update` | SHIP.md: update intro count 59→65 PRs; add rows for PRs #60–#65; date updated to 2026-07-18 |
 
 ---
 

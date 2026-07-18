@@ -109,7 +109,8 @@ After merging all PRs, set these in Vercel → Project → Settings → Environm
 | `NEXT_PUBLIC_BASE_URL` | `https://sparkz.xyz` | Before first deploy |
 | `STRIPE_SECRET_KEY` | `sk_live_...` | When Stripe account is ready; omit to run in waitlist mode |
 | `RESEND_API_KEY` | `re_...` | When Resend account is ready; omit to skip email |
-| `RESEND_TO_EMAIL` | `zaalp99@gmail.com` | Where vetting applications and backing notifications go |
+| `RESEND_FROM_EMAIL` | `sparkz@sparkz.xyz` | From address for Resend emails; default is sparkz@sparkz.xyz |
+| `ZAO_NOTIFY_EMAIL` | `zaalp99@gmail.com` | Where vetting applications and backing notifications go |
 | `VINIAPP_RELAY_KEY` | any secret string | When Chris Dolinski is ready to connect Viniapp → `/api/advisor`; omit to leave endpoint open (POST still validates inputs) |
 
 Without Stripe/Resend keys, the site runs in waitlist mode:

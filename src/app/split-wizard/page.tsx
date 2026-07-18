@@ -55,8 +55,8 @@ export default function SplitWizardPage() {
           </h1>
           <p className="text-slate-400 leading-relaxed">
             Define who gets what — producer, engineer, featured artist, community pool — before any
-            token exists. This becomes your on-chain 0xSplits config and is IPFS-attested so
-            there&rsquo;s a permanent record of what was agreed.
+            token exists. Export the config as JSON, share it with your team for sign-off, then use
+            it to deploy on app.splits.org when you&rsquo;re ready.
           </p>
         </div>
         <Suspense>

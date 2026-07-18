@@ -53,7 +53,7 @@ const STEPS = [
   {
     n: '4',
     label: 'A collectable is minted for you',
-    desc: 'An ERC-1155 receipt NFT is minted — one per distribution per recipient. The SVG is generated on-chain: week number, your points, your percentage, the project name.',
+    desc: 'An ERC-1155 receipt NFT is minted — one per weekly snapshot per recipient. The SVG is generated on-chain: week number, your points, your percentage, the project name.',
   },
   {
     n: '5',
@@ -187,7 +187,7 @@ export default function CollectablesPage() {
           <div className="pt-2 border-t border-zao-border">
             <p className="text-xs text-slate-600">
               Smart contract deploy is human-gated — Zaal deploys. The ZOL loop generates the
-              distribution payloads; a human reviews + executes on-chain. Collectables are issued
+              snapshot payloads; a human reviews + executes on-chain. Collectables are issued
               alongside the weekly split update (v2, after token launch).
             </p>
           </div>

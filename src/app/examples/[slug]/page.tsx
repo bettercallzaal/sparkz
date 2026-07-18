@@ -211,7 +211,13 @@ export default async function ExampleDetailPage({
         <div>
           <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Other examples</div>
           <div className="grid sm:grid-cols-2 gap-3">
-            {SPARK_EXAMPLES.filter((e) => e.slug !== ex.slug).slice(0, 4).map((other) => (
+            {(() => {
+              const others = SPARK_EXAMPLES.filter((e) => e.slug !== ex.slug)
+              const n = others.length
+              // Spread selection across the full array so newer templates always get exposure
+              const spread = n <= 4 ? others : [others[0], others[Math.floor(n / 3)], others[Math.floor((2 * n) / 3)], others[n - 1]]
+              return spread
+            })().map((other) => (
               <Link
                 key={other.slug}
                 href={`/examples/${other.slug}`}

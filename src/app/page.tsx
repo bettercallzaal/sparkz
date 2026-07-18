@@ -148,7 +148,7 @@ const USE_CASES = [
     emoji: '🎖',
     title: 'Collectables — proof you built it',
     description:
-      'Proof-of-contribution receipt NFTs — earned, never purchased. Every weekly distribution will mint an on-chain record: week, points, percentage, payout. ERC-1155, non-transferable, SVG on-chain. Launching alongside the first split distribution.',
+      'Proof-of-contribution receipt NFTs — earned, never purchased. Every weekly snapshot will mint an on-chain record: week, points, percentage, share. ERC-1155, non-transferable, SVG on-chain. Launching alongside the first split update.',
     cta: 'See how collectables work',
     href: '/collectables',
   },

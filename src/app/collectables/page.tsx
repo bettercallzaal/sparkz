@@ -7,7 +7,7 @@ const OG_URL = `${BASE_URL}/api/og?title=${encodeURIComponent('Collectables')}&s
 export const metadata: Metadata = {
   title: 'Collectables — Sparkz',
   description:
-    'Proof-of-contribution receipt NFTs, earned from boosting — not purchased. Every weekly distribution mints an on-chain record of your share.',
+    'Proof-of-contribution receipt NFTs, earned from boosting — not purchased. Every weekly snapshot mints an on-chain record of your share.',
   openGraph: {
     title: 'Collectables — Sparkz',
     description: 'Proof-of-contribution receipt NFTs. Earned from boosting, not purchased. On-chain record of your share.',
@@ -170,12 +170,12 @@ export default function CollectablesPage() {
           </h2>
           <div className="space-y-2 text-sm">
             {[
-              ['Standard', 'ERC-1155 (multi-token — one type per weekly distribution)'],
+              ['Standard', 'ERC-1155 (multi-token — one type per weekly snapshot)'],
               ['Network', 'Base'],
               ['Metadata', 'On-chain SVG in tokenURI — no IPFS dependency'],
               ['Transferability', 'Non-transferable (soulbound) — receipt, not an asset'],
               ['Minting', 'Minted by the Sparkz distribution contract at updateSplit() call'],
-              ['Volume', 'One per contributor per weekly distribution'],
+              ['Volume', 'One per contributor per weekly snapshot'],
               ['Governance', 'None — explicitly no governance rights attached'],
             ].map(([label, value]) => (
               <div key={label} className="flex gap-4 border-b border-zao-border/50 pb-2 last:border-0 last:pb-0">

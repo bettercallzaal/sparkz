@@ -156,7 +156,7 @@ const USE_CASES = [
     emoji: '💰',
     title: 'Fee splits — if and when you launch',
     description:
-      'If you graduate to a token, 50% of every trading fee flows to your leaderboard by points. Weekly, automatic, on-chain. The coin is plumbing — the community is the pitch.',
+      'Configure what share of every trading fee flows to your community — by leaderboard points, NFT holdings, or any contribution metric. Creator-first by default. Weekly, automatic, on-chain.',
     cta: 'How it works',
     href: '/how-it-works',
   },

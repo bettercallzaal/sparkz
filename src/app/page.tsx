@@ -140,15 +140,15 @@ const USE_CASES = [
     emoji: '🎧',
     title: 'Audius integration',
     description:
-      'Connect your Audius catalog. Stream plays, favorites, and reposts become the community engagement metric — the fans who engage most with your music earn the most from your fee pool.',
-    cta: 'Connect Audius',
+      'Enter your Audius handle to see your catalog\'s engagement metrics — plays, favorites, reposts. In v2, your top listeners\' engagement maps directly to their fee pool weight. Today, use catalog stats to understand your audience.',
+    cta: 'Explore Audius integration',
     href: '/audius',
   },
   {
     emoji: '🎖',
     title: 'Collectables — proof you built it',
     description:
-      'Every weekly fee distribution mints an on-chain receipt for every contributor who earned a share. Not a badge you bought — a permanent record: week, points, percentage, payout. ERC-1155, non-transferable, SVG on-chain.',
+      'Proof-of-contribution receipt NFTs — earned, never purchased. Every weekly distribution will mint an on-chain record: week, points, percentage, payout. ERC-1155, non-transferable, SVG on-chain. Launching alongside the first split distribution.',
     cta: 'See how collectables work',
     href: '/collectables',
   },

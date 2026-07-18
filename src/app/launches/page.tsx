@@ -119,7 +119,7 @@ export default function LaunchesPage() {
 
 function LaunchCard({ launch }: { launch: import('@/lib/launches').Launch }) {
   return (
-    <a
+    <Link
       href={`/launches/${launch.slug}`}
       className="card-dark p-6 flex flex-col gap-3 hover:border-gold-500/30 transition-colors block"
     >
@@ -150,6 +150,6 @@ function LaunchCard({ launch }: { launch: import('@/lib/launches').Launch }) {
         <span>·</span>
         <span>{launch.quarter}</span>
       </div>
-    </a>
+    </Link>
   )
 }

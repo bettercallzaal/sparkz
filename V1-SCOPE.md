@@ -19,7 +19,7 @@
 ### Discovery (all live)
 - `/launches` — public launch registry
 - `/launches/[slug]` — live detail page with Boostr stats, split config, receipts
-- `/examples` — 5 tokenless spark templates
+- `/examples` — 7 tokenless spark templates (leaderboard, music collab, group crowdfund, PFP/NFT, light DAO, solo patronage, collab split no-token)
 - `/examples/[slug]` — template detail pages with advisor deep-links
 
 ### Lifecycle + education (all live)
@@ -63,4 +63,4 @@ Any PR that adds autonomous publishing, autonomous treasury spend, or autonomous
 
 ---
 
-*Last updated: 2026-07-17 · Locked — additions require Zaal sign-off*
+*Last updated: 2026-07-18 · Locked — additions require Zaal sign-off*

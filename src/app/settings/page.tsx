@@ -34,7 +34,7 @@ export default function SettingsPage() {
       <div className="max-w-3xl mx-auto px-4 pt-12 pb-24">
         <h1 className="text-3xl font-black text-white mb-2">Settings</h1>
         <p className="text-slate-400 mb-10">
-          Stored locally in your browser. Never sent to any Sparkz server.
+          Stored in your browser. Sent transiently to our API for Claude calls — never stored server-side.
         </p>
 
         <BYOKSettings />

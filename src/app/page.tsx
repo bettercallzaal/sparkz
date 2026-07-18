@@ -308,12 +308,23 @@ export default async function HomePage() {
               <div className="text-3xl">{uc.emoji}</div>
               <h3 className="font-bold text-white text-lg">{uc.title}</h3>
               <p className="text-slate-400 text-sm leading-relaxed flex-1">{uc.description}</p>
-              <Link
-                href={uc.href}
-                className="text-gold-400 text-sm font-semibold hover:text-gold-500 transition-colors"
-              >
-                {uc.cta} →
-              </Link>
+              {uc.href.startsWith('http') ? (
+                <a
+                  href={uc.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gold-400 text-sm font-semibold hover:text-gold-500 transition-colors"
+                >
+                  {uc.cta} ↗
+                </a>
+              ) : (
+                <Link
+                  href={uc.href}
+                  className="text-gold-400 text-sm font-semibold hover:text-gold-500 transition-colors"
+                >
+                  {uc.cta} →
+                </Link>
+              )}
             </div>
           ))}
         </div>

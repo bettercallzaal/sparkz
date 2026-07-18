@@ -20,7 +20,7 @@ Wherever there is a coin, there is speculation. So Sparkz leads with the work, n
 
 ## Collabs
 
-Built to work with the ecosystem: ZAO, Kismet, Podia, POIDH, Empire, and more.
+Built to work with the ecosystem: ZAO, Viniapp (Chris Dolinski), Kismet, POIDH, Empire, and more.
 
 ## What's live
 

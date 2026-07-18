@@ -170,12 +170,12 @@ export default function CollectablesPage() {
           </h2>
           <div className="space-y-2 text-sm">
             {[
-              ['Standard', 'ERC-1155 (multi-token — one type per weekly distribution)'],
+              ['Standard', 'ERC-1155 (multi-token — one type per weekly snapshot)'],
               ['Network', 'Base'],
               ['Metadata', 'On-chain SVG in tokenURI — no IPFS dependency'],
               ['Transferability', 'Non-transferable (soulbound) — receipt, not an asset'],
               ['Minting', 'Minted by the 0xSplits contract at updateSplit() call'],
-              ['Volume', 'One per contributor per weekly distribution'],
+              ['Volume', 'One per contributor per weekly snapshot'],
               ['Governance', 'None — explicitly no governance rights attached'],
             ].map(([label, value]) => (
               <div key={label} className="flex gap-4 border-b border-zao-border/50 pb-2 last:border-0 last:pb-0">

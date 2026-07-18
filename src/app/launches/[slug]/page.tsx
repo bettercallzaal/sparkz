@@ -59,6 +59,7 @@ type BoostrStats = {
   allTimeContributorsCount: number
   totalLikesGenerated: number
   totalCastsLiked: number
+  totalContributorPoints: number
   topContributors: { username: string; zabalLikesCount: number; followers_count: number; pfp_url: string }[]
 }
 
@@ -72,15 +73,16 @@ async function fetchBoostrStats(url: string): Promise<BoostrStats | null> {
     const raw = await res.json()
     if (!raw.success || !raw.stats) return null
     const s = raw.stats
-    const sorted = [...(s.zabalUsers ?? [])].sort(
-      (a: { zabalLikesCount: number; followers_count: number }, b: { zabalLikesCount: number; followers_count: number }) =>
-        b.zabalLikesCount - a.zabalLikesCount || b.followers_count - a.followers_count
+    const allUsers: { zabalLikesCount: number; followers_count: number; username: string; pfp_url: string }[] = s.zabalUsers ?? []
+    const sorted = [...allUsers].sort(
+      (a, b) => b.zabalLikesCount - a.zabalLikesCount || b.followers_count - a.followers_count
     )
     return {
       activeContributorsCount: s.activeContributorsCount ?? 0,
       allTimeContributorsCount: s.allTimeContributorsCount ?? 0,
       totalLikesGenerated: s.totalLikesGenerated ?? 0,
       totalCastsLiked: s.totalCastsLiked ?? 0,
+      totalContributorPoints: allUsers.reduce((sum, u) => sum + u.zabalLikesCount, 0),
       topContributors: sorted.slice(0, 5),
     }
   } catch {
@@ -108,7 +110,7 @@ export default async function LaunchDetailPage({
   if (!launch) notFound()
 
   const stats = launch.boostrStatsUrl ? await fetchBoostrStats(launch.boostrStatsUrl) : null
-  const totalPts = stats?.topContributors.reduce((s, c) => s + c.zabalLikesCount, 0) ?? 0
+  const totalPts = stats?.totalContributorPoints ?? 0
   const weeklyPool = WEEKLY_VOLUME * FEE_TIER * (launch.splitConfig.communityPool / 100) * DAYS
 
   return (

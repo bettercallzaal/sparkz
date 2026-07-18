@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 16 PRs are draft. Merge in order. One human click per step.
+> All 17 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -35,6 +35,7 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 14 | `feat/homepage-live-stats` | Live Zoostr stats card on sparkz.xyz homepage (green pulse, ISR 60s) |
 | 15 | `feat/homepage-polish` | Homepage OG + Twitter + Farcaster Frame metadata; 4-column site footer with nav + legal disclaimer |
 | 16 | `feat/shareability` | Advisor URL sync (answers → URL → shareable deep-links); "Cast this result" Warpcast compose link; /launches/[slug] OG + Frame metadata |
+| 17 | `feat/og-sweep` | OG + Farcaster Frame metadata on examples/[slug], vetted, lifecycle, launches, circles; ESLint config + all lint errors fixed (Link/a, entities) |
 
 ---
 

@@ -165,6 +165,64 @@ export const SPARK_EXAMPLES: SparkExample[] = [
       'The DAO model requires a token by definition — staking needs something to stake. Launch with a token and publish the governance rules simultaneously. The token IS the governance mechanism.',
     advisorPreset: { situation: 'crowdfund', tokenTiming: 'now', feeModel: 'high' },
   },
+  {
+    slug: 'patronage-solo',
+    emoji: '☕',
+    title: 'Solo patronage — no token, ever',
+    tagline: 'Recurring memberships. No coin. Your community backs the work.',
+    situation:
+      'You make music, write, or create consistently. You have 50–200 fans who want to support you. You do not want a token — the speculation risk, the regulatory grey area, the "what does this coin DO?" questions. You just want recurring revenue from people who believe in the work.',
+    noTokenAction:
+      'Set up your three patronage tiers ($5/$25/$100) with concrete perks for each. Publish the tier page. Your fans back you with a card — no wallet, no gas, no speculation. You get a monthly income stream while you create.',
+    metric:
+      'Active patron count per tier × monthly recurring revenue. The metric is simple: paying fans, not holders.',
+    splitConfig: {
+      communityPool: 0,
+      creatorPool: 97,
+      treasury: 3,
+      zaoStake: 0,
+      note: 'No token = no community pool. Creator keeps nearly everything. A small treasury covers platform upkeep (ZOL compute). ZAO stake is 0% because there is no token to stake.',
+    },
+    perks: [
+      'Direct access to the creator (Discord, group chat, or email)',
+      'Early access to new releases',
+      'Monthly Q&A or listening session',
+      '$100 tier: name in the credits of the next release',
+    ],
+    tokenPath: 'never',
+    tokenNote:
+      'This is a deliberate, permanent decision. No token. Patronage is the model — recurring revenue from real fans, no speculation layer. If you later want a token, start a new Sparkz advisor flow.',
+    advisorPreset: { situation: 'solo', tokenTiming: 'never', feeModel: 'low' },
+  },
+  {
+    slug: 'collab-split-no-token',
+    emoji: '🤝',
+    title: 'Collab split — no token',
+    tagline: 'Multiple artists, one shared split. No coin required.',
+    situation:
+      'Two or more artists are releasing together — a joint EP, a remix series, a featured collab. Both bring their own communities. You want every contributor to get paid directly from streaming royalties and fan backing, proportional to their contribution, without issuing a token.',
+    noTokenAction:
+      'Use the split wizard to set each collaborator\'s percentage now. Publish the split sheet before the release. Both communities see the terms before they back it. Zero ambiguity, no handshake agreements.',
+    metric:
+      'Weighted fan engagement per artist — each creator\'s community boosting the shared release. Split weights match the contribution percentages in the split sheet.',
+    splitConfig: {
+      communityPool: 5,
+      creatorPool: 90,
+      treasury: 5,
+      zaoStake: 0,
+      note: 'Creator pool is split between both artists per the split sheet (e.g., 60/40 or 50/50 — you set it in the wizard). 5% community pool rewards fans who amplified the collab. No token = no ZAO stake.',
+    },
+    perks: [
+      'Both artists\' communities get access to exclusive collab content',
+      'Small community pool for top amplifiers (no token — just points + recognition)',
+      'On-chain split sheet — publicly verifiable, no dispute possible',
+      'Named in the weekly receipt if backing exceeds threshold',
+    ],
+    tokenPath: 'never',
+    tokenNote:
+      'No token needed for a collab split. The 0xSplits contract handles direct payments to all contributors. If one artist later wants to launch a token for their solo work, they do that separately — the collab split stays independent.',
+    advisorPreset: { situation: 'collab', tokenTiming: 'never', feeModel: 'low' },
+  },
 ]
 
 export function getExampleBySlug(slug: string): SparkExample | undefined {

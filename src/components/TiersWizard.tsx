@@ -293,6 +293,21 @@ export default function TiersWizard() {
     URL.revokeObjectURL(url)
   }
 
+  const warpcastTiersUrl = (() => {
+    const tierLines = tiers.map((t) => `${t.emoji} ${t.name} — $${t.price}/mo`).join('\n')
+    const projectLine = creator.projectName || 'my project'
+    const text = [
+      `just set up patronage tiers for ${projectLine} on Sparkz ⚡`,
+      ``,
+      tierLines,
+      ``,
+      `no wallet. no gas. just backing.`,
+      ``,
+      `sparkz.xyz/tiers`,
+    ].join('\n')
+    return `https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`
+  })()
+
   return (
     <div>
       {/* Progress */}
@@ -431,6 +446,14 @@ export default function TiersWizard() {
                 Download tiers.json
               </button>
             </div>
+            <a
+              href={warpcastTiersUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 flex items-center justify-center gap-2 w-full py-2 rounded-lg border border-zao-violet/40 text-zao-violet hover:border-zao-violet/70 hover:bg-zao-violet/5 text-sm font-semibold transition-colors"
+            >
+              Share on Farcaster ↗
+            </a>
           </div>
 
           <div className="card-dark p-5 border-gold-500/20">

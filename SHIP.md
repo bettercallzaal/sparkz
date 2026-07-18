@@ -50,6 +50,7 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 29 | `feat/launch-detail-share` | "Share on Farcaster ↗" button on /launches/[slug] — in-page complement to the Frame embed |
 | 30 | `feat/error-boundary` | Global error.tsx boundary + /launches/[slug] loading skeleton (animate-pulse) |
 | 31 | `feat/loading-skeletons` | Homepage + advisor loading skeletons — shown during client-side navigation |
+| 32 | `feat/tool-loading-skeletons` | Loading skeletons for split-wizard, tiers, back, vetted — all four tool pages |
 
 ---
 

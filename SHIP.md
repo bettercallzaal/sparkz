@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 120 PRs are draft. Merge in order. One human click per step.
+> All 122 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -139,6 +139,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 118 | `feat/ship-md-pr-count-117` | SHIP.md: count 116→118; add rows for PRs #117–#118 |
 | 119 | `feat/use-cases-external-link-fix` | homepage USE_CASES map: external href (zoostr.xyz) was wrapped in &lt;Link&gt; — fix to native &lt;a target="_blank" rel="noopener noreferrer"&gt;; arrow updated → ↗ |
 | 120 | `feat/ship-md-pr-count-119` | SHIP.md: count 118→120; add rows for PRs #119–#120 |
+| 121 | `feat/advisor-solo-rationale-copy-fix` | advisor.ts solo rationale: fix 99% copy gap — now explicitly names all three pools (97% creator + 1% community pool floor + 2% treasury) |
+| 122 | `feat/ship-md-pr-count-121` | SHIP.md: count 120→122; add rows for PRs #121–#122 |
 
 ---
 

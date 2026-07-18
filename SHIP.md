@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 29 PRs are draft. Merge in order. One human click per step.
+> All 34 PRs are draft. Merge in order. One human click per step.
 
 ---
 

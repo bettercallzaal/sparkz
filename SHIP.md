@@ -70,15 +70,21 @@ After Vercel deploys:
 - [ ] `https://sparkz.xyz/vetted` — form submits
 - [ ] `https://sparkz.xyz/launches` — Zoostr launch card visible
 - [ ] `https://sparkz.xyz/launches/zoostr` — live Boostr stats load (green pulse indicator)
-- [ ] `https://sparkz.xyz/examples` — 5 template cards visible
+- [ ] `https://sparkz.xyz/examples` — 7 template cards visible (including patronage-solo + collab-split-no-token)
+- [ ] `https://sparkz.xyz/examples/patronage-solo` — loads; "no token ever" framing visible
 - [ ] `https://sparkz.xyz/lifecycle` — 5-stage timeline visible
 - [ ] `https://sparkz.xyz/settings` — BYOK form renders
 - [ ] `https://sparkz.xyz/circles` — Culture Circles mechanic page visible
-- [ ] `https://sparkz.xyz/sitemap.xml` — all routes listed
+- [ ] `https://sparkz.xyz/audius` — Audius handle input renders; lookup returns catalog stats
+- [ ] `https://sparkz.xyz/collectables` — page loads; steps visible
+- [ ] `https://sparkz.xyz/how-it-works` — 0xSplits + Clanker walkthrough visible
+- [ ] `https://sparkz.xyz/sitemap.xml` — all routes listed (17+ entries)
 - [ ] `POST https://sparkz.xyz/api/advisor` with `{"situation":"solo","tokenTiming":"later","feeModel":"low"}` → returns `{"recommendation":{...}}`
 - [ ] `https://sparkz.xyz` — OG image and Farcaster Frame tags present (paste in Warpcast composer → preview renders)
-- [ ] `https://sparkz.xyz/advisor` — answer Q1 → URL updates to `?situation=...`; answer all 3 → "Cast this result ↗" link appears
+- [ ] `https://sparkz.xyz/advisor` — answer Q1 → URL updates to `?situation=...`; answer all 3 → "Cast this result ↗" link appears; advisor result links to split wizard pre-filled
 - [ ] `https://sparkz.xyz/launches/zoostr` — share to Farcaster → Frame preview with Zoostr OG image + 2 CTA buttons
+- [ ] `https://sparkz.xyz/advisor` — result shows "See it in action" related example cards
+- [ ] Share any page (advisor, examples, tiers, audius) in Warpcast → Frame preview renders
 
 ---
 

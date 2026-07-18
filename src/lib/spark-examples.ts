@@ -249,7 +249,7 @@ export const SPARK_EXAMPLES: SparkExample[] = [
     ],
     tokenPath: 'later',
     tokenNote:
-      'Launch a token for the label when the roster is established and the community has been earning for 2–3 months. The 0xSplits contract already routes fees to all stakeholders — a token just adds a trading volume layer. Each artist can also launch their own solo token independently; the label split stays separate.',
+      'Launch a token for the label when the roster is established and the community has been earning for 2–3 months. The 0xSplits split is already configured for all stakeholders — a token just adds a trading volume layer on top. Each artist can also launch their own solo token independently; the label split stays separate.',
     advisorPreset: { situation: 'collab', tokenTiming: 'later', feeModel: 'medium' },
   },
   {

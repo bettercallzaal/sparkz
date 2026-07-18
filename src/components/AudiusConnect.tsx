@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useState } from 'react'
 
 type AudiusUser = {
@@ -44,7 +45,7 @@ function TrackRow({ track, rank }: { track: AudiusTrack; rank: number }) {
     <div className="flex items-center gap-3 py-2 border-b border-zao-border/50 last:border-0">
       <div className="w-5 text-center text-xs text-slate-600 font-mono flex-shrink-0">{rank}</div>
       {track.artwork?.['150x150'] && (
-        <img
+        <Image
           src={track.artwork['150x150']}
           alt={track.title}
           width={32}
@@ -130,7 +131,7 @@ export default function AudiusConnect() {
           {/* User card */}
           <div className="card-dark p-5 flex items-center gap-4">
             {result.user.profile_picture?.['150x150'] && (
-              <img
+              <Image
                 src={result.user.profile_picture['150x150']}
                 alt={result.user.name}
                 width={56}

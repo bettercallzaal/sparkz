@@ -46,7 +46,7 @@ const BASE_CONFIGS: Record<
     treasury: 2,
     headline: 'Creator-first: you keep 97% — grow the community share as they show up',
     rationale:
-      "The default is creator-first. You keep 97% of every fee; 1% goes to the community treasury (yours to govern); 1% goes to ZOL compute upkeep (or bring your own AI key and that 1% stays in treasury too). When real supporters start showing up — a leaderboard, a boost program, NFT holders — move community pool up from 1% to wherever it earns their loyalty. Don't give away share before the community exists.",
+      "The default is creator-first. You keep 97% of every fee; 1% is a floor for your community pool (leaderboard, boost program, or NFT holders — whoever shows up); 2% goes to treasury (1% community governance + 1% ZOL compute upkeep — bring your own key and the compute 1% folds back into your treasury). When real supporters start showing up consistently, move the community pool up from 1% to wherever it earns their loyalty. Don't give away share before the community exists.",
   },
 }
 

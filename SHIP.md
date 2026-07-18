@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 90 PRs are draft. Merge in order. One human click per step.
+> All 92 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -109,6 +109,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 88 | `feat/collectables-metadata-distribution-fix` | collectables/page.tsx: metadata description "weekly distribution" → "weekly snapshot" |
 | 89 | `feat/ship-md-pr-count-88` | SHIP.md: count 86→88; add rows for PRs #87–#88 |
 | 90 | `feat/collectables-tech-spec-snapshot-fix` | collectables/page.tsx: tech-spec Standard + Volume rows "weekly distribution" → "weekly snapshot" |
+| 91 | `feat/ship-md-pr-count-90` | SHIP.md: count 88→90; add rows for PRs #89–#90 |
+| 92 | `feat/homepage-collectables-snapshot-fix` | homepage: collectables USE_CASE card "weekly distribution" → "weekly snapshot"; "payout" → "share"; "first split distribution" → "first split update" |
 
 ---
 

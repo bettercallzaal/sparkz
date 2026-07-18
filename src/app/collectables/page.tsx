@@ -7,7 +7,7 @@ const OG_URL = `${BASE_URL}/api/og?title=${encodeURIComponent('Collectables')}&s
 export const metadata: Metadata = {
   title: 'Collectables — Sparkz',
   description:
-    'Proof-of-contribution receipt NFTs, earned from boosting — not purchased. Every weekly distribution mints an on-chain record of your share.',
+    'Proof-of-contribution receipt NFTs, earned from boosting — not purchased. Every weekly snapshot mints an on-chain record of your share.',
   openGraph: {
     title: 'Collectables — Sparkz',
     description: 'Proof-of-contribution receipt NFTs. Earned from boosting, not purchased. On-chain record of your share.',

@@ -220,7 +220,7 @@ export const SPARK_EXAMPLES: SparkExample[] = [
     ],
     tokenPath: 'never',
     tokenNote:
-      'No token needed for a collab split. The 0xSplits contract handles direct payments to all contributors. If one artist later wants to launch a token for their solo work, they do that separately — the collab split stays independent.',
+      'No token needed for a collab split. The 0xSplits split handles fee allocation for all contributors — each can claim their share at splits.org. If one artist later wants to launch a token for their solo work, they do that separately — the collab split stays independent.',
     advisorPreset: { situation: 'collab', tokenTiming: 'never', feeModel: 'low' },
   },
   {

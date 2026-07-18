@@ -2,10 +2,20 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import BYOKSettings from '@/components/BYOKSettings'
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://sparkz.xyz'
+const OG_URL = `${BASE_URL}/api/og?title=${encodeURIComponent('Settings')}&sub=${encodeURIComponent('Bring your own AI key. Zero platform compute cost.')}`
+
 export const metadata: Metadata = {
   title: 'Settings — Sparkz',
   description:
     'Bring your own AI key (BYOK) to route ZOL advisor compute through your own Anthropic account. Zero platform cost when your key is active — the 1% compute floor folds back into community treasury.',
+  openGraph: {
+    title: 'Settings — Sparkz',
+    description: 'BYOK: bring your own Anthropic API key. ZOL compute routes through your account — zero platform cost, 1% floor returns to treasury.',
+    url: `${BASE_URL}/settings`,
+    images: [{ url: OG_URL, width: 1200, height: 630, alt: 'Settings — Sparkz' }],
+    type: 'website',
+  },
 }
 
 export default function SettingsPage() {

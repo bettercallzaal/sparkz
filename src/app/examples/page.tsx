@@ -2,10 +2,37 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { SPARK_EXAMPLES } from '@/lib/spark-examples'
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://sparkz.xyz'
+const OG_URL = `${BASE_URL}/api/og?title=${encodeURIComponent('Spark examples')}&sub=${encodeURIComponent('7 templates. Start tokenless. Build real community.')}`
+
 export const metadata: Metadata = {
   title: 'Spark examples — Sparkz',
   description:
-    'Five concrete "spark" templates to start from: leaderboard community, music collab, group crowdfund, PFP/NFT community, and light DAO. Each shows the no-token starting point, the split config, and when (or if) to add a token.',
+    '7 concrete spark templates: leaderboard community, music collab, group crowdfund, PFP/NFT community, light DAO, solo patronage, and collab split. Each shows the no-token starting point, the split config, and when (or if) to add a token.',
+  openGraph: {
+    title: 'Spark examples — Sparkz',
+    description: '7 templates. Start tokenless. Build real community. Each one shows the split config, perks, and when (or if) to add a token.',
+    url: `${BASE_URL}/examples`,
+    images: [{ url: OG_URL, width: 1200, height: 630, alt: 'Spark examples — Sparkz' }],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Spark examples — Sparkz',
+    description: '7 templates. Start tokenless. Build real community.',
+    images: [OG_URL],
+  },
+  other: {
+    'fc:frame': 'vNext',
+    'fc:frame:image': OG_URL,
+    'fc:frame:image:aspect_ratio': '1.91:1',
+    'fc:frame:button:1': '⚡ Get my recommended split',
+    'fc:frame:button:1:action': 'link',
+    'fc:frame:button:1:target': `${BASE_URL}/advisor`,
+    'fc:frame:button:2': '🏅 Apply for a slot',
+    'fc:frame:button:2:action': 'link',
+    'fc:frame:button:2:target': `${BASE_URL}/vetted`,
+  },
 }
 
 const TOKEN_PATH_LABELS = {

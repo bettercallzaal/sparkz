@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 66 PRs are draft. Merge in order. One human click per step.
+> All 68 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -85,6 +85,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 64 | `feat/launches-zoostr-claiming-copy` | launches.ts Zoostr description: "to the leaderboard by points, weekly" → "allocated...by points. Claim at splits.org" |
 | 65 | `feat/vetted-zoostr-claiming-copy` | /vetted EXAMPLES Zoostr description: same fix as PR #64 — mirrors launches.ts correction |
 | 66 | `feat/ship-md-pr-count-update` | SHIP.md: update intro count 59→65 PRs; add rows for PRs #60–#65; date updated to 2026-07-18 |
+| 67 | `feat/ship-md-pr-count-67` | SHIP.md: count 65→66; add row for PR #66 |
+| 68 | `feat/collectables-weekly-distribution-fix` | collectables/page.tsx + homepage: "weekly distribution" → "weekly snapshot" (Pull model — minting happens at snapshot, not automatic payout) |
 
 ---
 

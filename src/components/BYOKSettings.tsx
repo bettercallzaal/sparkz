@@ -103,15 +103,15 @@ export default function BYOKSettings() {
         <div className="mt-5 pt-5 border-t border-zao-border space-y-2 text-xs text-slate-600">
           <div className="flex gap-2">
             <span className="text-gold-500">✓</span>
-            <span>Stored only in your browser localStorage — never transmitted to Sparkz servers</span>
+            <span>Stored in your browser localStorage — sent transiently to our API to proxy Claude calls, never stored server-side</span>
           </div>
           <div className="flex gap-2">
             <span className="text-gold-500">✓</span>
-            <span>Used only for ZOL advisor calls made from this browser session</span>
+            <span>Powers ZOL-enhanced advisor recommendations — same 3 questions, richer personalized output</span>
           </div>
           <div className="flex gap-2">
             <span className="text-gold-500">✓</span>
-            <span>No key? The advisor still works — compute draws from the Sparkz treasury pool (the 1% upkeep floor in your split)</span>
+            <span>No key? The advisor still works — deterministic recommendations, no Claude required</span>
           </div>
           <div className="flex gap-2">
             <span className="text-slate-700">→</span>
@@ -135,17 +135,17 @@ export default function BYOKSettings() {
             <div className="p-3 rounded-lg bg-zao-dark border border-zao-border">
               <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Without BYOK</div>
               <ul className="space-y-1.5 text-slate-400">
-                <li className="flex gap-2"><span className="text-slate-600">–</span> Advisor compute from Sparkz treasury</li>
-                <li className="flex gap-2"><span className="text-slate-600">–</span> 1% of your fee split goes to treasury upkeep</li>
-                <li className="flex gap-2"><span className="text-slate-600">–</span> Treasury funds compute for all non-technical creators</li>
+                <li className="flex gap-2"><span className="text-slate-600">–</span> Deterministic advisor — fast, consistent, no AI required</li>
+                <li className="flex gap-2"><span className="text-slate-600">–</span> 1% of your fee split goes to treasury (for future compute)</li>
+                <li className="flex gap-2"><span className="text-slate-600">–</span> Good for most creators — the defaults are well-calibrated</li>
               </ul>
             </div>
             <div className="p-3 rounded-lg bg-green-500/5 border border-green-500/20">
               <div className="text-xs font-bold text-green-400 uppercase tracking-wider mb-2">With BYOK</div>
               <ul className="space-y-1.5 text-slate-400">
-                <li className="flex gap-2"><span className="text-green-500">✓</span> Compute on your Anthropic account</li>
-                <li className="flex gap-2"><span className="text-green-500">✓</span> That 1% folds back into community treasury</li>
-                <li className="flex gap-2"><span className="text-green-500">✓</span> No platform cost — pay only for what you use</li>
+                <li className="flex gap-2"><span className="text-green-500">✓</span> ZOL-enhanced recommendations via Claude Haiku</li>
+                <li className="flex gap-2"><span className="text-green-500">✓</span> More personalized rationale for your specific situation</li>
+                <li className="flex gap-2"><span className="text-green-500">✓</span> No platform cost — your Anthropic account pays per call</li>
               </ul>
             </div>
           </div>

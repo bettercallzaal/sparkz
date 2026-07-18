@@ -10,6 +10,7 @@ import {
   type AdvisorRecommendation,
   getAdvisorRecommendation,
 } from '@/lib/advisor'
+import { useBYOK } from '@/components/BYOKSettings'
 
 const RELATED_EXAMPLES: Record<string, { slug: string; emoji: string; title: string; tagline: string }[]> = {
   solo: [
@@ -122,12 +123,16 @@ function OptionButton<T extends string>({
 export default function AdvisorFlow() {
   const searchParams = useSearchParams()
   const router = useRouter()
+  const { key: byokKey, isActive: byokActive } = useBYOK()
 
   const [answers, setAnswers] = useState<Answers>({
     situation: null,
     tokenTiming: null,
     feeModel: null,
   })
+  const [recommendation, setRecommendation] = useState<Recommendation | null>(null)
+  const [recSource, setRecSource] = useState<'llm' | 'deterministic' | null>(null)
+  const [recLoading, setRecLoading] = useState(false)
 
   // Pre-fill from URL params (e.g. from /examples/[slug] deep-link)
   useEffect(() => {
@@ -144,6 +149,50 @@ export default function AdvisorFlow() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // Fetch recommendation whenever all 3 answers are set
+  useEffect(() => {
+    if (!answers.situation || !answers.tokenTiming || !answers.feeModel) {
+      setRecommendation(null)
+      setRecSource(null)
+      return
+    }
+
+    if (byokActive && byokKey) {
+      setRecLoading(true)
+      fetch('/api/advisor', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-anthropic-key': byokKey },
+        body: JSON.stringify({
+          situation: answers.situation,
+          tokenTiming: answers.tokenTiming,
+          feeModel: answers.feeModel,
+        }),
+      })
+        .then((r) => r.json())
+        .then((data) => {
+          setRecommendation(data.recommendation)
+          setRecSource(data.source === 'llm' ? 'llm' : 'deterministic')
+        })
+        .catch(() => {
+          setRecommendation(getAdvisorRecommendation({
+            situation: answers.situation!,
+            tokenTiming: answers.tokenTiming!,
+            feeModel: answers.feeModel!,
+          }))
+          setRecSource('deterministic')
+        })
+        .finally(() => setRecLoading(false))
+    } else {
+      setRecommendation(getAdvisorRecommendation({
+        situation: answers.situation,
+        tokenTiming: answers.tokenTiming,
+        feeModel: answers.feeModel,
+      }))
+      setRecSource('deterministic')
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [answers.situation, answers.tokenTiming, answers.feeModel, byokActive, byokKey])
+
   // Sync answers to URL so recommendations are bookmarkable/shareable
   const updateAnswer = useCallback(<K extends keyof Answers>(key: K, value: Answers[K]) => {
     setAnswers((prev) => {
@@ -157,7 +206,6 @@ export default function AdvisorFlow() {
     })
   }, [router])
 
-  const recommendation = getRecommendation(answers)
   const allAnswered = answers.situation && answers.tokenTiming && answers.feeModel
 
   const castText = recommendation
@@ -239,12 +287,33 @@ export default function AdvisorFlow() {
         </div>
       </div>
 
+      {/* Recommendation loading state */}
+      {allAnswered && recLoading && (
+        <div className="card-dark p-6 border-gold-500/30 animate-pulse space-y-4">
+          <div className="h-3 w-32 bg-zao-border rounded" />
+          <div className="h-6 w-3/4 bg-zao-border rounded" />
+          <div className="space-y-2">
+            {[0.6, 0.3, 0.1].map((w, i) => (
+              <div key={i} className="h-2 bg-zao-border rounded" style={{ width: `${w * 100}%` }} />
+            ))}
+          </div>
+          <div className="text-xs text-slate-600">ZOL is generating your recommendation…</div>
+        </div>
+      )}
+
       {/* Recommendation */}
-      {allAnswered && recommendation && (
+      {allAnswered && recommendation && !recLoading && (
         <div className="card-dark p-6 border-gold-500/30 space-y-5">
           <div>
-            <div className="text-xs font-bold text-gold-400 uppercase tracking-widest mb-2">
-              Your recommended split
+            <div className="flex items-center gap-3 mb-2">
+              <div className="text-xs font-bold text-gold-400 uppercase tracking-widest">
+                Your recommended split
+              </div>
+              {recSource === 'llm' && (
+                <span className="text-xs px-2 py-0.5 rounded-full border border-zao-violet/30 bg-zao-violet/10 text-zao-violet font-semibold">
+                  ZOL-enhanced
+                </span>
+              )}
             </div>
             <h3 className="text-xl font-black text-white">{recommendation.headline}</h3>
           </div>

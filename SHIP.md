@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 116 PRs are draft. Merge in order. One human click per step.
+> All 118 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -135,6 +135,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 114 | `feat/ship-md-pr-count-113` | SHIP.md: count 112→114; add rows for PRs #113–#114 |
 | 115 | `feat/launches-link-component` | launches/page.tsx LaunchCard: native &lt;a&gt; → Next.js &lt;Link&gt; for route prefetching (Link was already imported but unused) |
 | 116 | `feat/ship-md-pr-count-115` | SHIP.md: count 114→116; add rows for PRs #115–#116 |
+| 117 | `feat/components-internal-link-fix` | 5 components (AdvisorFlow, VettingApplication, AudiusConnect, TiersWizard, SplitWizard): internal &lt;a href&gt; → Next.js &lt;Link&gt; |
+| 118 | `feat/ship-md-pr-count-117` | SHIP.md: count 116→118; add rows for PRs #117–#118 |
 
 ---
 

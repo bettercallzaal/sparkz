@@ -152,13 +152,13 @@ export const SPARK_EXAMPLES: SparkExample[] = [
       creatorPool: 20,
       treasury: 35,
       zaoStake: 5,
-      note: 'Higher treasury % because the DAO governs it. Community pool goes to stakers. Creator pool covers ops. Treasury is the subject of governance.',
+      note: 'Higher treasury % because the DAO governs it (governance is v2). Community pool goes to stakers. Creator pool covers ops. Treasury is the shared war chest.',
     },
     perks: [
-      'Staking fee share (earn by participating in governance)',
-      'Proposal rights on treasury allocation',
-      'Token-weighted voting (no plutocracy protection — design carefully)',
-      'ZAO "light DAO" template as the governance rules starting point',
+      'Fee share for stakers — claim at splits.org (staking mechanism is v2)',
+      'Proposal rights on treasury allocation (v2 governance module)',
+      'Token-weighted voting (v2 — design plutocracy protections before launch)',
+      'ZAO "light DAO" template as your governance rules starting point',
     ],
     tokenPath: 'now',
     tokenNote:

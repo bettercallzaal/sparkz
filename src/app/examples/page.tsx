@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { SPARK_EXAMPLES } from '@/lib/spark-examples'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://sparkz.xyz'
-const OG_URL = `${BASE_URL}/api/og?title=${encodeURIComponent('Spark examples')}&sub=${encodeURIComponent('7 templates. Start tokenless. Build real community.')}`
+const OG_URL = `${BASE_URL}/api/og?title=${encodeURIComponent('Spark examples')}&sub=${encodeURIComponent('9 templates. Start tokenless. Build real community.')}`
 
 export const metadata: Metadata = {
   title: 'Spark examples — Sparkz',

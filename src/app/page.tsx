@@ -116,7 +116,7 @@ const USE_CASES = [
     emoji: '📖',
     title: 'Spark examples',
     description:
-      '7 concrete templates: leaderboard community, music collab, group crowdfund, PFP/NFT community, light DAO, solo patronage, and collab split. Each shows the no-token starting action, the split config, and when to add a token.',
+      '9 concrete templates: leaderboard community, music collab, group crowdfund, PFP/NFT community, light DAO, solo patronage, collab split, record label roster, and podcast collective. Each shows the no-token starting action, the split config, and when to add a token.',
     cta: 'Browse templates',
     href: '/examples',
   },

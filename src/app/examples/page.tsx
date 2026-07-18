@@ -8,10 +8,10 @@ const OG_URL = `${BASE_URL}/api/og?title=${encodeURIComponent('Spark examples')}
 export const metadata: Metadata = {
   title: 'Spark examples — Sparkz',
   description:
-    '7 concrete spark templates: leaderboard community, music collab, group crowdfund, PFP/NFT community, light DAO, solo patronage, and collab split. Each shows the no-token starting point, the split config, and when (or if) to add a token.',
+    '9 concrete spark templates: leaderboard community, music collab, group crowdfund, PFP/NFT community, light DAO, solo patronage, collab split, record label roster, and podcast collective. Each shows the no-token starting point, the split config, and when (or if) to add a token.',
   openGraph: {
     title: 'Spark examples — Sparkz',
-    description: '7 templates. Start tokenless. Build real community. Each one shows the split config, perks, and when (or if) to add a token.',
+    description: '9 templates. Start tokenless. Build real community. Each one shows the split config, perks, and when (or if) to add a token.',
     url: `${BASE_URL}/examples`,
     images: [{ url: OG_URL, width: 1200, height: 630, alt: 'Spark examples — Sparkz' }],
     type: 'website',
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Spark examples — Sparkz',
-    description: '7 templates. Start tokenless. Build real community.',
+    description: '9 templates. Start tokenless. Build real community.',
     images: [OG_URL],
   },
   other: {

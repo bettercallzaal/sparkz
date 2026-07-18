@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 43 PRs are draft. Merge in order. One human click per step.
+> All 44 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -62,6 +62,7 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 41 | `feat/homepage-fee-split-copy` | Homepage USE_CASES: fix "50% of every fee" → accurate "configure what share" — aligns with creator-first default |
 | 42 | `feat/split-wizard-copy-fix` | Split wizard: remove false "IPFS-attested" claim — wizard exports JSON; no IPFS upload in V1 |
 | 43 | `feat/homepage-emoji-dedup` | Homepage USE_CASES: fix duplicate emojis (🎵→🎧 for Audius, 🎟→💳 for Fan backing) |
+| 44 | `feat/readme-examples-accuracy` | README: fix /examples row (remove "tokenless" misnomer, list all 7 slugs) + add /examples/[slug] row |
 
 ---
 

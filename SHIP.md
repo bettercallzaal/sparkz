@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 108 PRs are draft. Merge in order. One human click per step.
+> All 110 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -127,6 +127,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 106 | `feat/ship-md-pr-count-105` | SHIP.md: count 104→106; add rows for PRs #105–#106 |
 | 107 | `feat/spark-examples-routes-fix` | spark-examples.ts record-label-roster tokenNote: "routes fees to all stakeholders" → "split is already configured for all stakeholders" |
 | 108 | `feat/ship-md-pr-count-107` | SHIP.md: count 106→108; add rows for PRs #107–#108 |
+| 109 | `feat/collectables-allocation-field-label` | collectables/page.tsx WHAT_IS_ON_IT: field 'Distribution' → 'Allocation'; consistent with PR #103's allocation-breakdown language |
+| 110 | `feat/ship-md-pr-count-109` | SHIP.md: count 108→110; add rows for PRs #109–#110 |
 
 ---
 

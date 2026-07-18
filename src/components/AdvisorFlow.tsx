@@ -160,6 +160,23 @@ export default function AdvisorFlow() {
   const recommendation = getRecommendation(answers)
   const allAnswered = answers.situation && answers.tokenTiming && answers.feeModel
 
+  const castText = recommendation
+    ? [
+        `just set up my creator split on Sparkz ⚡`,
+        ``,
+        `creator: ${recommendation.creatorPool}% · community pool: ${recommendation.communityPool}% · treasury: ${recommendation.treasury}%`,
+        `ZAO stake: ${recommendation.zaoStake}% locked supply — not a fee slice`,
+        ``,
+        answers.tokenTiming === 'now'
+          ? `launching with a token now`
+          : answers.tokenTiming === 'never'
+            ? `patronage-only — no token, ever`
+            : `building first. token later, if ever.`,
+        ``,
+        `configure yours → sparkz.xyz/advisor?situation=${answers.situation}&token=${answers.tokenTiming}&fee=${answers.feeModel}`,
+      ].join('\n')
+    : ''
+
   return (
     <div className="space-y-8">
       {/* Q1 */}
@@ -313,7 +330,7 @@ export default function AdvisorFlow() {
             </p>
             {answers.situation && answers.tokenTiming && answers.feeModel && (
               <a
-                href={`https://warpcast.com/~/compose?text=${encodeURIComponent(`my sparkz split recommendation:\n\n${recommendation.headline}\n\nget yours → sparkz.xyz/advisor?situation=${answers.situation}&token=${answers.tokenTiming}&fee=${answers.feeModel}`)}`}
+                href={`https://warpcast.com/~/compose?text=${encodeURIComponent(castText)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xs text-zao-violet hover:text-purple-300 transition-colors font-semibold flex-shrink-0"

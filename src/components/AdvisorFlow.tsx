@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useState, useEffect, useCallback } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
   type SituationType,
@@ -121,6 +121,7 @@ function OptionButton<T extends string>({
 
 export default function AdvisorFlow() {
   const searchParams = useSearchParams()
+  const router = useRouter()
 
   const [answers, setAnswers] = useState<Answers>({
     situation: null,
@@ -143,6 +144,19 @@ export default function AdvisorFlow() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // Sync answers to URL so recommendations are bookmarkable/shareable
+  const updateAnswer = useCallback(<K extends keyof Answers>(key: K, value: Answers[K]) => {
+    setAnswers((prev) => {
+      const next = { ...prev, [key]: value }
+      const params = new URLSearchParams()
+      if (next.situation) params.set('situation', next.situation)
+      if (next.tokenTiming) params.set('token', next.tokenTiming)
+      if (next.feeModel) params.set('fee', next.feeModel)
+      router.replace(`/advisor?${params.toString()}`, { scroll: false })
+      return next
+    })
+  }, [router])
+
   const recommendation = getRecommendation(answers)
   const allAnswered = answers.situation && answers.tokenTiming && answers.feeModel
 
@@ -160,7 +174,7 @@ export default function AdvisorFlow() {
               key={opt.value}
               option={opt}
               selected={answers.situation === opt.value}
-              onSelect={(v) => setAnswers((a) => ({ ...a, situation: v }))}
+              onSelect={(v) => updateAnswer('situation', v)}
             />
           ))}
         </div>
@@ -178,7 +192,7 @@ export default function AdvisorFlow() {
               key={opt.value}
               option={opt}
               selected={answers.tokenTiming === opt.value}
-              onSelect={(v) => setAnswers((a) => ({ ...a, tokenTiming: v }))}
+              onSelect={(v) => updateAnswer('tokenTiming', v)}
             />
           ))}
         </div>
@@ -202,7 +216,7 @@ export default function AdvisorFlow() {
               key={opt.value}
               option={opt}
               selected={answers.feeModel === opt.value}
-              onSelect={(v) => setAnswers((a) => ({ ...a, feeModel: v }))}
+              onSelect={(v) => updateAnswer('feeModel', v)}
             />
           ))}
         </div>
@@ -293,10 +307,21 @@ export default function AdvisorFlow() {
             </div>
           </div>
 
-          <p className="text-xs text-slate-600">
-            This is a starting point, not a locked config. Adjust in the split wizard. The actual
-            deploy is always a human decision — the advisor prepares, never deploys.
-          </p>
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <p className="text-xs text-slate-600">
+              Starting point, not locked. Adjust in the split wizard. Deploy is always human.
+            </p>
+            {answers.situation && answers.tokenTiming && answers.feeModel && (
+              <a
+                href={`https://warpcast.com/~/compose?text=${encodeURIComponent(`my sparkz split recommendation:\n\n${recommendation.headline}\n\nget yours → sparkz.xyz/advisor?situation=${answers.situation}&token=${answers.tokenTiming}&fee=${answers.feeModel}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-zao-violet hover:text-purple-300 transition-colors font-semibold flex-shrink-0"
+              >
+                Cast this result ↗
+              </a>
+            )}
+          </div>
 
           {/* Related spark examples */}
           {answers.situation && RELATED_EXAMPLES[answers.situation] && (

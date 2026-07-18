@@ -9,6 +9,8 @@ export function generateStaticParams() {
   return LAUNCHES.map((l) => ({ slug: l.slug }))
 }
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://sparkz.xyz'
+
 export async function generateMetadata({
   params,
 }: {
@@ -17,9 +19,38 @@ export async function generateMetadata({
   const { slug } = await params
   const launch = getLaunchBySlug(slug)
   if (!launch) return {}
+  const title = `${launch.name}${launch.ticker ? ` ($${launch.ticker})` : ''} — Sparkz launches`
+  const ogTitle = encodeURIComponent(`${launch.emoji} ${launch.name}${launch.ticker ? ` · $${launch.ticker}` : ''}`)
+  const ogSub = encodeURIComponent(launch.tagline)
+  const ogUrl = `${BASE_URL}/api/og?title=${ogTitle}&sub=${ogSub}`
+  const pageUrl = `${BASE_URL}/launches/${slug}`
   return {
-    title: `${launch.name}${launch.ticker ? ` ($${launch.ticker})` : ''} — Sparkz launches`,
-    description: launch.tagline,
+    title,
+    description: launch.description,
+    openGraph: {
+      title,
+      description: launch.tagline,
+      url: pageUrl,
+      images: [{ url: ogUrl, width: 1200, height: 630, alt: title }],
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: launch.tagline,
+      images: [ogUrl],
+    },
+    other: {
+      'fc:frame': 'vNext',
+      'fc:frame:image': ogUrl,
+      'fc:frame:image:aspect_ratio': '1.91:1',
+      'fc:frame:button:1': launch.siteUrl ? `${launch.emoji} Visit ${launch.name}` : `📊 See leaderboard`,
+      'fc:frame:button:1:action': 'link',
+      'fc:frame:button:1:target': launch.siteUrl ?? pageUrl,
+      'fc:frame:button:2': '⚡ Launch like this',
+      'fc:frame:button:2:action': 'link',
+      'fc:frame:button:2:target': `${BASE_URL}/advisor`,
+    },
   }
 }
 

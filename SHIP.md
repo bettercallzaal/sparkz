@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 36 PRs are draft. Merge in order. One human click per step.
+> All 37 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -55,6 +55,7 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 34 | `feat/settings-audius-loading` | Loading skeletons for /settings (BYOK form) and /audius (handle input) |
 | 35 | `feat/ship-md-count-fix` | SHIP.md intro: correct PR count from 29 to 35 |
 | 36 | `feat/homepage-examples-count` | Homepage USE_CASES: fix Spark examples count from 5 to 7, list all 7 templates |
+| 37 | `feat/content-page-loading-skeletons` | Loading skeletons for /examples, /examples/[slug], and /launches |
 
 ---
 

@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 68 PRs are draft. Merge in order. One human click per step.
+> All 72 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -87,6 +87,10 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 66 | `feat/ship-md-pr-count-update` | SHIP.md: update intro count 59→65 PRs; add rows for PRs #60–#65; date updated to 2026-07-18 |
 | 67 | `feat/ship-md-pr-count-67` | SHIP.md: count 65→66; add row for PR #66 |
 | 68 | `feat/collectables-weekly-distribution-fix` | collectables/page.tsx + homepage: "weekly distribution" → "weekly snapshot" (Pull model — minting happens at snapshot, not automatic payout) |
+| 69 | `feat/ship-md-pr-count-69` | SHIP.md: count 65→68; add rows for PRs #66–#68 |
+| 70 | `feat/byok-advisor-relay` | /api/advisor: wire BYOK key to Claude Haiku; AdvisorFlow: async fetch + ZOL-enhanced badge + loading skeleton; BYOKSettings + settings page: fix "never transmitted" claim |
+| 71 | `feat/ship-md-pr-count-71` | SHIP.md: count 68→70; add rows for PRs #69–#70; AdvisorFlow: remove dead getRecommendation wrapper |
+| 72 | `feat/spark-examples-notes-claiming-fix` | spark-examples.ts: splitConfig notes 'goes to'/'distributed to' imply auto-push — fixed to 'allocated to...claim at splits.org' for collab-split, group-crowdfund, dao-staking |
 
 ---
 

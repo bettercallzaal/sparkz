@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 98 PRs are draft. Merge in order. One human click per step.
+> All 100 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -117,6 +117,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 96 | `feat/spark-examples-count-9` | examples/page.tsx + homepage: update hardcoded "7 templates" → "9 templates" |
 | 97 | `feat/ship-md-pr-count-96` | SHIP.md: count 94→96; add rows for PRs #95–#96 |
 | 98 | `feat/examples-meta-count-9` | examples/page.tsx: metadata.description + OG + Twitter text "7 templates" → "9 templates" (missed by PR #96) |
+| 99 | `feat/v1-scope-examples-count-9` | V1-SCOPE.md + README.md: examples count 7 → 9; add record-label-roster and podcast-collective to template lists |
+| 100 | `feat/ship-md-pr-count-99` | SHIP.md: count 98→100; add rows for PRs #99–#100 |
 
 ---
 

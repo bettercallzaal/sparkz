@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 72 PRs are draft. Merge in order. One human click per step.
+> All 74 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -91,6 +91,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 70 | `feat/byok-advisor-relay` | /api/advisor: wire BYOK key to Claude Haiku; AdvisorFlow: async fetch + ZOL-enhanced badge + loading skeleton; BYOKSettings + settings page: fix "never transmitted" claim |
 | 71 | `feat/ship-md-pr-count-71` | SHIP.md: count 68→70; add rows for PRs #69–#70; AdvisorFlow: remove dead getRecommendation wrapper |
 | 72 | `feat/spark-examples-notes-claiming-fix` | spark-examples.ts: splitConfig notes 'goes to'/'distributed to' imply auto-push — fixed to 'allocated to...claim at splits.org' for collab-split, group-crowdfund, dao-staking |
+| 73 | `feat/ship-md-pr-count-72` | SHIP.md: count 68→72; add rows for PRs #69–#72 |
+| 74 | `feat/collectables-body-snapshot-fix` | collectables/page.tsx hero body: "every weekly fee distribution mints" → "every weekly snapshot mints"; "percentage, payout" → "percentage, share" |
 
 ---
 

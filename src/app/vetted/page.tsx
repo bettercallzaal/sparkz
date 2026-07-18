@@ -79,7 +79,7 @@ const WHAT_ZAO_LOOKS_FOR = [
 const EXAMPLES = [
   {
     name: 'Zoostr ($ZOOSTR)',
-    description: 'ZABAL × Boostr. Boosters built the empire before any token existed. The token pays them back — 50% of every trade fee to the leaderboard by points, weekly.',
+    description: 'ZABAL × Boostr. Boosters built the empire before any token existed. The token pays them back — 50% of every trade fee allocated to the leaderboard by points. Claim at splits.org.',
     href: 'https://zoostr.xyz',
   },
 ]

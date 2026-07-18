@@ -2,10 +2,37 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import BackingForm from '@/components/BackingForm'
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://sparkz.xyz'
+const OG_URL = `${BASE_URL}/api/og?title=${encodeURIComponent('Back the work')}&sub=${encodeURIComponent('No wallet. No gas. Just backing.')}`
+
 export const metadata: Metadata = {
   title: 'Back the work — Sparkz',
   description:
     'Back a creator\'s work with a card — no wallet, no gas, no friction. You collect a proof of backing. The creator gets early momentum before any token exists.',
+  openGraph: {
+    title: 'Back the work — Sparkz',
+    description: 'Back a creator with a card — no wallet, no gas. You get proof of backing. They get early momentum.',
+    url: `${BASE_URL}/back`,
+    images: [{ url: OG_URL, width: 1200, height: 630, alt: 'Back the work — Sparkz' }],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Back the work — Sparkz',
+    description: 'No wallet. No gas. Just backing.',
+    images: [OG_URL],
+  },
+  other: {
+    'fc:frame': 'vNext',
+    'fc:frame:image': OG_URL,
+    'fc:frame:image:aspect_ratio': '1.91:1',
+    'fc:frame:button:1': '◎ Back Zoostr',
+    'fc:frame:button:1:action': 'link',
+    'fc:frame:button:1:target': 'https://boostr.itscashless.com',
+    'fc:frame:button:2': '🏅 Apply for a slot',
+    'fc:frame:button:2:action': 'link',
+    'fc:frame:button:2:target': `${BASE_URL}/vetted`,
+  },
 }
 
 export default function BackPage() {

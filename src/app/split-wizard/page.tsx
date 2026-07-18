@@ -3,10 +3,37 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 import SplitWizard from '@/components/SplitWizard'
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://sparkz.xyz'
+const OG_URL = `${BASE_URL}/api/og?title=${encodeURIComponent('Split sheet wizard')}&sub=${encodeURIComponent('Set roles + % before you launch. No disputes later.')}`
+
 export const metadata: Metadata = {
   title: 'Split sheet wizard — Sparkz',
   description:
     'Set roles and percentages before you launch. Every collaborator gets their share — on-chain, from day one. No disputes later.',
+  openGraph: {
+    title: 'Split sheet wizard — Sparkz',
+    description: 'Set roles and percentages before you launch. Every collaborator on-chain from day one — no disputes later.',
+    url: `${BASE_URL}/split-wizard`,
+    images: [{ url: OG_URL, width: 1200, height: 630, alt: 'Split sheet wizard — Sparkz' }],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Split sheet wizard — Sparkz',
+    description: 'Set roles + % before you launch. No disputes later.',
+    images: [OG_URL],
+  },
+  other: {
+    'fc:frame': 'vNext',
+    'fc:frame:image': OG_URL,
+    'fc:frame:image:aspect_ratio': '1.91:1',
+    'fc:frame:button:1': '🎵 Build your split sheet',
+    'fc:frame:button:1:action': 'link',
+    'fc:frame:button:1:target': `${BASE_URL}/split-wizard`,
+    'fc:frame:button:2': '⚡ Try the advisor first',
+    'fc:frame:button:2:action': 'link',
+    'fc:frame:button:2:target': `${BASE_URL}/advisor`,
+  },
 }
 
 export default function SplitWizardPage() {

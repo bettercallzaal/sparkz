@@ -2,10 +2,37 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import TiersWizard from '@/components/TiersWizard'
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://sparkz.xyz'
+const OG_URL = `${BASE_URL}/api/og?title=${encodeURIComponent('Patronage tiers')}&sub=${encodeURIComponent('$5 / $25 / $100. No token required. Just membership.')}`
+
 export const metadata: Metadata = {
   title: 'Patronage tier wizard — Sparkz',
   description:
     'Set up tokenless recurring memberships for your community — $5, $25, $100 — with customizable perks per tier. No token required. 88% of community builders monetize this way.',
+  openGraph: {
+    title: 'Patronage tiers — Sparkz',
+    description: 'Tokenless recurring memberships. $5, $25, $100. Customizable perks. 88% of community builders monetize this way.',
+    url: `${BASE_URL}/tiers`,
+    images: [{ url: OG_URL, width: 1200, height: 630, alt: 'Patronage tiers — Sparkz' }],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Patronage tiers — Sparkz',
+    description: '$5 / $25 / $100. No token required. Just membership.',
+    images: [OG_URL],
+  },
+  other: {
+    'fc:frame': 'vNext',
+    'fc:frame:image': OG_URL,
+    'fc:frame:image:aspect_ratio': '1.91:1',
+    'fc:frame:button:1': '🏅 Set up my tiers',
+    'fc:frame:button:1:action': 'link',
+    'fc:frame:button:1:target': `${BASE_URL}/tiers`,
+    'fc:frame:button:2': '⚡ Try the advisor first',
+    'fc:frame:button:2:action': 'link',
+    'fc:frame:button:2:target': `${BASE_URL}/advisor`,
+  },
 }
 
 export default function TiersPage() {

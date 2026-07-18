@@ -1,10 +1,37 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://sparkz.xyz'
+const OG_URL = `${BASE_URL}/api/og?title=${encodeURIComponent('Collectables')}&sub=${encodeURIComponent('Proof of contribution. Earned, not purchased.')}`
+
 export const metadata: Metadata = {
   title: 'Collectables — Sparkz',
   description:
     'Proof-of-contribution receipt NFTs, earned from boosting — not purchased. Every weekly distribution mints an on-chain record of your share.',
+  openGraph: {
+    title: 'Collectables — Sparkz',
+    description: 'Proof-of-contribution receipt NFTs. Earned from boosting, not purchased. On-chain record of your share.',
+    url: `${BASE_URL}/collectables`,
+    images: [{ url: OG_URL, width: 1200, height: 630, alt: 'Collectables — Sparkz' }],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Collectables — Sparkz',
+    description: 'Proof of contribution. Earned, not purchased.',
+    images: [OG_URL],
+  },
+  other: {
+    'fc:frame': 'vNext',
+    'fc:frame:image': OG_URL,
+    'fc:frame:image:aspect_ratio': '1.91:1',
+    'fc:frame:button:1': '🏆 See the Zoostr leaderboard',
+    'fc:frame:button:1:action': 'link',
+    'fc:frame:button:1:target': `${BASE_URL}/launches/zoostr`,
+    'fc:frame:button:2': '🏅 Apply for a slot',
+    'fc:frame:button:2:action': 'link',
+    'fc:frame:button:2:target': `${BASE_URL}/vetted`,
+  },
 }
 
 const STEPS = [

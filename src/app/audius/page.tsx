@@ -2,10 +2,37 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import AudiusConnect from '@/components/AudiusConnect'
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://sparkz.xyz'
+const OG_URL = `${BASE_URL}/api/og?title=${encodeURIComponent('Audius × Sparkz')}&sub=${encodeURIComponent('Your streams. Your split. Music-native fee distribution.')}`
+
 export const metadata: Metadata = {
   title: 'Audius integration — Sparkz',
   description:
     'Connect your Audius catalog to Sparkz. Stream plays, favorites, and reposts become the community engagement metric — fan engagement on your music maps to fee split weights.',
+  openGraph: {
+    title: 'Audius × Sparkz',
+    description: 'Your Audius streams wired to a 0xSplits contract. Music-native community fee distribution.',
+    url: `${BASE_URL}/audius`,
+    images: [{ url: OG_URL, width: 1200, height: 630, alt: 'Audius × Sparkz' }],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Audius × Sparkz',
+    description: 'Your streams. Your split. Music-native fee distribution.',
+    images: [OG_URL],
+  },
+  other: {
+    'fc:frame': 'vNext',
+    'fc:frame:image': OG_URL,
+    'fc:frame:image:aspect_ratio': '1.91:1',
+    'fc:frame:button:1': '🎵 Look up your catalog',
+    'fc:frame:button:1:action': 'link',
+    'fc:frame:button:1:target': `${BASE_URL}/audius`,
+    'fc:frame:button:2': '⚡ Configure your split',
+    'fc:frame:button:2:action': 'link',
+    'fc:frame:button:2:target': `${BASE_URL}/advisor`,
+  },
 }
 
 export default function AudiusPage() {

@@ -1,10 +1,37 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://sparkz.xyz'
+const OG_URL = `${BASE_URL}/api/og?title=${encodeURIComponent('How it works')}&sub=${encodeURIComponent('0xSplits + Clanker. Adjustable, on-chain, music-native.')}`
+
 export const metadata: Metadata = {
   title: 'How it works — Sparkz',
   description:
     'How Sparkz wires 0xSplits to Clanker for adjustable, on-chain community fee distribution. The technical pattern and the trust model.',
+  openGraph: {
+    title: 'How it works — Sparkz',
+    description: '0xSplits + Clanker. Adjustable fee splits, on-chain distribution, music-native — not a frozen wallet address.',
+    url: `${BASE_URL}/how-it-works`,
+    images: [{ url: OG_URL, width: 1200, height: 630, alt: 'How it works — Sparkz' }],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'How it works — Sparkz',
+    description: '0xSplits + Clanker. Adjustable, on-chain, music-native.',
+    images: [OG_URL],
+  },
+  other: {
+    'fc:frame': 'vNext',
+    'fc:frame:image': OG_URL,
+    'fc:frame:image:aspect_ratio': '1.91:1',
+    'fc:frame:button:1': '⚡ Open the advisor',
+    'fc:frame:button:1:action': 'link',
+    'fc:frame:button:1:target': `${BASE_URL}/advisor`,
+    'fc:frame:button:2': '📖 See an example',
+    'fc:frame:button:2:action': 'link',
+    'fc:frame:button:2:target': `${BASE_URL}/examples`,
+  },
 }
 
 const STEPS = [

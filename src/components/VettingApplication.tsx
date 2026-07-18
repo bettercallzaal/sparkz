@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useState } from 'react'
 
 type FormState = 'idle' | 'submitting' | 'success' | 'error'
@@ -84,13 +85,13 @@ export default function VettingApplication() {
         </a>
         <p className="text-xs text-slate-600 mt-4">
           While you wait: set up your{' '}
-          <a href="/tiers" className="text-gold-400 hover:text-gold-300">
+          <Link href="/tiers" className="text-gold-400 hover:text-gold-300">
             patronage tiers
-          </a>{' '}
+          </Link>{' '}
           and{' '}
-          <a href="/split-wizard" className="text-gold-400 hover:text-gold-300">
+          <Link href="/split-wizard" className="text-gold-400 hover:text-gold-300">
             split config
-          </a>
+          </Link>
           . Having these ready speeds up the vetting.
         </p>
       </div>

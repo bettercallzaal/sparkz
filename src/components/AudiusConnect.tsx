@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import Image from 'next/image'
 import { useState } from 'react'
 
@@ -213,9 +214,9 @@ export default function AudiusConnect() {
               Interested in the v2 fan scoring? Apply for a ZAO vetting slot — vetted launches
               get early access to v2 features.
             </p>
-            <a href="/vetted" className="text-purple-400 text-sm font-semibold hover:text-purple-300 transition-colors mt-2 inline-block">
+            <Link href="/vetted" className="text-purple-400 text-sm font-semibold hover:text-purple-300 transition-colors mt-2 inline-block">
               Apply for early access →
-            </a>
+            </Link>
           </div>
 
           {/* Split config export placeholder */}
@@ -228,9 +229,9 @@ export default function AudiusConnect() {
               When v2 fan scoring is live, the snapshot script will pull from Audius instead of
               (or alongside) Boostr.
             </p>
-            <a href="/split-wizard" className="btn-gold inline-block text-sm py-2 px-4">
+            <Link href="/split-wizard" className="btn-gold inline-block text-sm py-2 px-4">
               Open split wizard →
-            </a>
+            </Link>
           </div>
         </div>
       )}

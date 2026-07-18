@@ -340,9 +340,9 @@ export default function AdvisorFlow() {
               {answers.situation === 'solo' && (
                 <div className="text-slate-700">
                   Treasury = 1% community governance + 1% ZOL compute upkeep.{' '}
-                  <a href="/settings" className="text-slate-500 hover:text-slate-400 underline transition-colors">
+                  <Link href="/settings" className="text-slate-500 hover:text-slate-400 underline transition-colors">
                     Bring your own key (BYOK)
-                  </a>{' '}
+                  </Link>{' '}
                   <span className="text-slate-600">and the compute 1% folds back into your treasury.</span>
                 </div>
               )}

@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useState, useCallback, useMemo } from 'react'
 import { useSearchParams } from 'next/navigation'
 
@@ -682,7 +683,7 @@ export default function SplitWizard() {
               <ol className="text-sm text-slate-400 space-y-1 list-decimal list-inside">
                 <li>Fill wallet addresses in your split.json</li>
                 <li>Go to <a href="https://app.splits.org" target="_blank" rel="noopener noreferrer" className="text-gold-400 hover:text-gold-300">app.splits.org</a> → Create a split with your recipients to enable direct on-chain payments</li>
-                <li>Set up <a href="/tiers" className="text-gold-400 hover:text-gold-300">patronage tiers</a> so fans can back you with a card today</li>
+                <li>Set up <Link href="/tiers" className="text-gold-400 hover:text-gold-300">patronage tiers</Link> so fans can back you with a card today</li>
                 <li>When ready to tokenize: come back, toggle &ldquo;launch a token,&rdquo; and get the full deploy package</li>
               </ol>
               <p className="text-xs text-slate-600 mt-3">

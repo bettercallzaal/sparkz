@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useState } from 'react'
 
 type Tier = {
@@ -484,9 +485,9 @@ export default function TiersWizard() {
               ZAO-backed launches get a &ldquo;Vetted by ZAO&rdquo; badge, scarce drop slots (1 of 50/quarter),
               and ZOL marketing support. The patronage tiers become part of the full Sparkz launch.
             </p>
-            <a href="/vetted" className="text-gold-400 text-sm font-semibold hover:text-gold-300 transition-colors">
+            <Link href="/vetted" className="text-gold-400 text-sm font-semibold hover:text-gold-300 transition-colors">
               Apply for ZAO vetting →
-            </a>
+            </Link>
           </div>
 
           <div className="flex gap-3">

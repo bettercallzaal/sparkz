@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 27 PRs are draft. Merge in order. One human click per step.
+> All 28 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -46,6 +46,7 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 25 | `feat/tiers-wizard-share` | "Share on Farcaster ↗" link in tier wizard export step — mirrors split wizard pattern |
 | 26 | `feat/vetted-success-share` | "Cast your application ↗" link on /vetted success state — applying for a slot is a social signal |
 | 27 | `feat/back-waitlist-share` | "Cast your spot ↗" link on /back waitlist success — joining is a social signal before launch |
+| 28 | `feat/readme-update` | README: add pages table + SHIP.md reference — ready for public traffic |
 
 ---
 

@@ -22,6 +22,31 @@ Wherever there is a coin, there is speculation. So Sparkz leads with the work, n
 
 Built to work with the ecosystem: ZAO, Kismet, Podia, POIDH, Empire, and more.
 
+## What's live
+
+| Route | What it does |
+|-------|-------------|
+| `/` | Homepage: live Zoostr stats, use case cards, framing |
+| `/advisor` | 3-question AI advisor → recommended split + token timing |
+| `/split-wizard` | Role-based split builder, exports 0xSplits-ready JSON |
+| `/tiers` | Patronage tier wizard ($5/$25/$100) — tokenless, Stripe-ready |
+| `/back` | Fan backing form (card payment, no wallet required) |
+| `/vetted` | ZAO vetting application (50 slots/quarter) |
+| `/launches` | ZAO-vetted launch registry |
+| `/launches/[slug]` | Live launch detail: stats, boosters, split config, receipts |
+| `/examples` | 7 tokenless spark templates with split configs |
+| `/lifecycle` | 5-stage spark model (Proposed → Federated) |
+| `/circles` | Culture Circles — sparks back each other before any token |
+| `/how-it-works` | 0xSplits → Clanker technical walkthrough |
+| `/collectables` | ERC-1155 proof-of-contribution collectables spec |
+| `/audius` | Audius catalog → engagement metric connector |
+| `/settings` | BYOK (bring your own Anthropic key) |
+| `POST /api/advisor` | Advisor JSON endpoint for Viniapp relay |
+
+## Deploying
+
+See [SHIP.md](SHIP.md) for the full env vars, PR merge sequence, and Vercel deploy checklist.
+
 ## Status
 
 Early build. First spark: Zoostr (ZABAL x Boostr). Part of the ZAO ecosystem.

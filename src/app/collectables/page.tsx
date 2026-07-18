@@ -67,7 +67,7 @@ const WHAT_IS_ON_IT = [
   { field: 'Week', example: 'Week 14 · 2026' },
   { field: 'Contributor', example: '@username' },
   { field: 'Points', example: '342 pts (8.4% of eligible pool)' },
-  { field: 'Distribution', example: '0.00042 ETH from trading fees' },
+  { field: 'Allocation', example: '0.00042 ETH from trading fees' },
   { field: 'Contract', example: '0xSplits: 0xabc…def' },
 ]
 

@@ -58,7 +58,7 @@ export default function ExamplesPage() {
 
       <section className="max-w-5xl mx-auto px-4 pt-14 pb-10">
         <h1 className="text-4xl sm:text-5xl font-black text-white mb-4 leading-tight">
-          5 ways to start<br />
+          {SPARK_EXAMPLES.length} ways to start<br />
           <span className="text-gradient-gold">with a spark.</span>
         </h1>
         <p className="text-slate-400 max-w-2xl leading-relaxed text-lg">

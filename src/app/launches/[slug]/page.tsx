@@ -181,7 +181,7 @@ export default async function LaunchDetailPage({
               </a>
             )}
             <a
-              href={`https://warpcast.com/~/compose?text=${encodeURIComponent(`${launch.name} ${launch.ticker ? `$${launch.ticker}` : ''} — ${launch.tagline}\n\n${launch.communityPool}% of every trading fee to the community by points\nweekly · on-chain · automatic\n\n${BASE_URL}/launches/${launch.slug}`)}`}
+              href={`https://warpcast.com/~/compose?text=${encodeURIComponent(`${launch.name} ${launch.ticker ? `$${launch.ticker}` : ''} — ${launch.tagline}\n\n${launch.communityPool}% of every trading fee to the community by points\nweekly · on-chain · claim at splits.org\n\n${BASE_URL}/launches/${launch.slug}`)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm py-2 px-5 rounded-lg border border-zao-violet/40 text-zao-violet hover:border-zao-violet/70 hover:bg-zao-violet/5 transition-colors text-center block"

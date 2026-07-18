@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 49 PRs are draft. Merge in order. One human click per step.
+> All 54 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -72,6 +72,7 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 51 | `feat/homepage-automatic-copy` | homepage: fix two "automatic" claims — USE_CASES fee-split description + Zoostr launch card; both implied auto-payout but Pull split requires claiming at splits.org |
 | 52 | `feat/readme-collectables-fix` | README: fix "Collectables come standard. Backing earns collectables automatically." — collectables are v2 roadmap; updated to describe spec page + v2 timeline |
 | 53 | `feat/examples-claiming-fix` | examples/page.tsx invariants: "No claiming — fees flow" → "Fees accumulate on-chain — claim at splits.org" |
+| 54 | `feat/how-it-works-claiming-fix` | how-it-works hero para: "distributes automatically" → "accumulates in split — recipients claim at splits.org"; launches/[slug] share cast: "automatic" → "claim at splits.org" |
 
 ---
 

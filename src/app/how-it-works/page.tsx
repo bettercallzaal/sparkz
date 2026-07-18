@@ -116,8 +116,8 @@ export default function HowItWorksPage() {
         </h1>
         <p className="text-slate-400 leading-relaxed text-lg">
           The core pattern: put a 0xSplits contract as the Clanker fee recipient. Inside Splits,
-          recipients are adjustable. The result: every trade fee distributes to your community,
-          automatically, with weights that evolve as your leaderboard does.
+          recipients are adjustable. The result: every trade fee accumulates in your community
+          split — recipients claim at splits.org, with weights that evolve as your leaderboard does.
         </p>
       </section>
 

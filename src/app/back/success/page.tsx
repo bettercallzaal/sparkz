@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://sparkz.xyz'
+
 export const metadata: Metadata = {
   title: 'You backed it — Sparkz',
 }
@@ -12,6 +14,9 @@ export default async function BackSuccessPage({
 }) {
   const { tier: tierParam } = await searchParams
   const tier = tierParam ?? '$25'
+
+  const castText = `just backed the work on Sparkz at the ${tier} tier ⚡\n\nno wallet. no gas. just backing.\n\n${BASE_URL}/back`
+  const warpcastUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(castText)}`
 
   return (
     <main className="min-h-screen bg-zao-dark flex items-center justify-center px-4">
@@ -34,6 +39,14 @@ export default async function BackSuccessPage({
             className="btn-gold text-sm py-2 px-5 inline-block"
           >
             See the launch → zoostr.xyz ↗
+          </a>
+          <a
+            href={warpcastUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-outline text-sm py-2 px-5 inline-block border-zao-violet/40 text-zao-violet hover:border-zao-violet/70"
+          >
+            Cast on Farcaster ↗
           </a>
           <Link href="/examples" className="btn-outline text-sm py-2 px-5">
             Browse spark examples

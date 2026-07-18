@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 21 PRs are draft. Merge in order. One human click per step.
+> All 22 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -40,6 +40,7 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 19 | `feat/split-wizard-token-config` | Token name/ticker/imageUrl/description fields in split wizard review step; exports `clankerDeploy` config when filled — complete deploy package in one JSON |
 | 20 | `feat/audius-image-fix` | next/image for Audius avatars; `**.audius.co` remote pattern — sparkz-product is now lint-warning-clean |
 | 21 | `feat/split-wizard-share` | "Share on Farcaster ↗" link in split wizard review step — pre-fills cast with split config summary |
+| 22 | `feat/back-success-share` | "Cast on Farcaster ↗" link on /back/success page — fans share their backing moment |
 
 ---
 

@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 114 PRs are draft. Merge in order. One human click per step.
+> All 116 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -133,6 +133,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 112 | `feat/ship-md-pr-count-111` | SHIP.md: count 110→112; add rows for PRs #111–#112 |
 | 113 | `feat/examples-slug-spread-others` | examples/[slug]: spread 'other examples' at 0,⅓,⅔,last positions so record-label-roster + podcast-collective always get exposure |
 | 114 | `feat/ship-md-pr-count-113` | SHIP.md: count 112→114; add rows for PRs #113–#114 |
+| 115 | `feat/launches-link-component` | launches/page.tsx LaunchCard: native &lt;a&gt; → Next.js &lt;Link&gt; for route prefetching (Link was already imported but unused) |
+| 116 | `feat/ship-md-pr-count-115` | SHIP.md: count 114→116; add rows for PRs #115–#116 |
 
 ---
 

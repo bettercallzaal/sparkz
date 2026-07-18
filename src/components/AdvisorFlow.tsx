@@ -15,11 +15,11 @@ import { useBYOK } from '@/components/BYOKSettings'
 const RELATED_EXAMPLES: Record<string, { slug: string; emoji: string; title: string; tagline: string }[]> = {
   solo: [
     { slug: 'leaderboard-boost', emoji: '🏆', title: 'Community leaderboard', tagline: 'Your superfans earn fee share just by showing up.' },
-    { slug: 'pfp-nft-community', emoji: '🎨', title: 'PFP / NFT community', tagline: 'Holders earn fee share. The NFT becomes the membership card.' },
+    { slug: 'podcast-collective', emoji: '🎙', title: 'Podcast / show collective', tagline: 'Multiple hosts, honest credits. Support the show without a coin.' },
   ],
   collab: [
     { slug: 'music-collab', emoji: '🎵', title: 'Music collab', tagline: 'Two artists, one split. Both incentivized to share.' },
-    { slug: 'dao-staking', emoji: '🏛', title: 'Light DAO', tagline: 'Stake to vote, earn while staked.' },
+    { slug: 'record-label-roster', emoji: '🎼', title: 'Record label / artist roster', tagline: 'Multiple artists, one Splits contract. The label earns when any artist does.' },
   ],
   crowdfund: [
     { slug: 'group-crowdfund', emoji: '🌐', title: 'Group crowdfund', tagline: 'A community backs a shared project. Backers share the pool.' },

@@ -69,7 +69,7 @@ export const SPARK_EXAMPLES: SparkExample[] = [
       creatorPool: 40,
       treasury: 20,
       zaoStake: 5,
-      note: 'Creator pool divided by role: e.g. Artist A 60% / Artist B 30% / Producer 10% of that 40%. Community pool goes to both artists\' combined fan base by engagement.',
+      note: 'Creator pool divided by role: e.g. Artist A 60% / Artist B 30% / Producer 10% of that 40%. Community pool allocated to both artists\' combined fan base by engagement — claim at splits.org.',
     },
     perks: [
       'Fee share by contribution (both artists earn from every trade)',
@@ -96,10 +96,10 @@ export const SPARK_EXAMPLES: SparkExample[] = [
       creatorPool: 15,
       treasury: 25,
       zaoStake: 5,
-      note: 'Community pool distributed to backers by their contribution size. Creator/operator pool covers production. Treasury is the shared war chest for proposals and votes.',
+      note: 'Community pool allocated to backers by contribution size — claim at splits.org. Creator/operator pool covers production. Treasury is the shared war chest for proposals and votes.',
     },
     perks: [
-      'Proof-of-backing NFT at contribution time (v2 — launches alongside first split distribution)',
+      'Proof-of-backing NFT at contribution time (v2 — launches alongside first split update)',
       'Proportional fee share from any token that launches — claim at splits.org',
       'Treasury voting rights on how funds are used (v2)',
       'Named in project credits',
@@ -152,7 +152,7 @@ export const SPARK_EXAMPLES: SparkExample[] = [
       creatorPool: 20,
       treasury: 35,
       zaoStake: 5,
-      note: 'Higher treasury % because the DAO governs it (governance is v2). Community pool goes to stakers. Creator pool covers ops. Treasury is the shared war chest.',
+      note: 'Higher treasury % because the DAO governs it (governance is v2). Community pool allocated to stakers — claim at splits.org. Creator pool covers ops. Treasury is the shared war chest.',
     },
     perks: [
       'Fee share for stakers — claim at splits.org (staking mechanism is v2)',

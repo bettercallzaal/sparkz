@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 34 PRs are draft. Merge in order. One human click per step.
+> All 35 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -53,6 +53,7 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 32 | `feat/tool-loading-skeletons` | Loading skeletons for split-wizard, tiers, back, vetted — all four tool pages |
 | 33 | `feat/advisor-cast-copy` | Richer "Cast this result" text: shows actual split %, ZAO stake, token timing |
 | 34 | `feat/settings-audius-loading` | Loading skeletons for /settings (BYOK form) and /audius (handle input) |
+| 35 | `feat/ship-md-count-fix` | SHIP.md intro: correct PR count from 29 to 35 |
 
 ---
 

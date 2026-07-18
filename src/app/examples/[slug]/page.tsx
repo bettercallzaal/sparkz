@@ -162,7 +162,9 @@ export default async function ExampleDetailPage({
 
         {/* Perks */}
         <div className="card-dark p-6">
-          <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">What backers enjoy today</div>
+          <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">
+            {ex.tokenPath === 'later' ? 'What this spark delivers for backers' : 'What backers enjoy today'}
+          </div>
           <ul className="space-y-2">
             {ex.perks.map((p) => (
               <li key={p} className="flex items-start gap-2 text-sm text-slate-300">

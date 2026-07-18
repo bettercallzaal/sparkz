@@ -106,7 +106,7 @@ export const SPARK_EXAMPLES: SparkExample[] = [
     ],
     tokenPath: 'later',
     tokenNote:
-      'Start with patronage. If the group fund reaches a milestone (e.g. 50 backers, $5k raised), graduate to a token. The backers become token holders — their proof-of-backing maps directly to allocation.',
+      'Start with patronage. If the group fund reaches a milestone (e.g. 50 backers, $5k raised), graduate to a token. If and when a token launches, backers can be prioritized — their proof-of-backing can inform their initial allocation.',
     advisorPreset: { situation: 'crowdfund', tokenTiming: 'later', feeModel: 'low' },
   },
   {

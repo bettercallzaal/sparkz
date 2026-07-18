@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 45 PRs are draft. Merge in order. One human click per step.
+> All 46 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -64,6 +64,7 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 43 | `feat/homepage-emoji-dedup` | Homepage USE_CASES: fix duplicate emojis (🎵→🎧 for Audius, 🎟→💳 for Fan backing) |
 | 44 | `feat/readme-examples-accuracy` | README: fix /examples row (remove "tokenless" misnomer, list all 7 slugs) + add /examples/[slug] row |
 | 45 | `feat/v1scope-examples-fix` | V1-SCOPE.md: remove "tokenless" misnomer from /examples row — 3 of 7 templates have tokenPath:'now' |
+| 46 | `feat/examples-perk-framing-fix` | examples/[slug]: "What backers enjoy today" → dynamic label for tokenPath:'later' (perks conditional on token); group-crowdfund tokenNote: add "if and when" qualifier to definitive promise |
 
 ---
 

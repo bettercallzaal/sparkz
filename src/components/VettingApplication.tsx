@@ -63,6 +63,8 @@ export default function VettingApplication() {
   }
 
   if (state === 'success') {
+    const castText = `just applied for a ZAO-vetted Sparkz launch 🏅\n\n50 slots/quarter. personal review. no automation.\n\nsparkz.xyz/vetted`
+    const warpcastUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(castText)}`
     return (
       <div className="card-dark p-8 text-center">
         <div className="text-4xl mb-4">🏅</div>
@@ -72,6 +74,14 @@ export default function VettingApplication() {
           <strong className="text-white">{form.contact}</strong> within 48 hours. If it&rsquo;s a fit,
           ZOL will reach out to start the config process — no automation, no template.
         </p>
+        <a
+          href={warpcastUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-zao-violet/40 text-zao-violet hover:border-zao-violet/70 hover:bg-zao-violet/5 text-sm font-semibold transition-colors"
+        >
+          Cast your application ↗
+        </a>
         <p className="text-xs text-slate-600 mt-4">
           While you wait: set up your{' '}
           <a href="/tiers" className="text-gold-400 hover:text-gold-300">

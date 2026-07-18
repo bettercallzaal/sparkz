@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 102 PRs are draft. Merge in order. One human click per step.
+> All 104 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -121,6 +121,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 100 | `feat/ship-md-pr-count-99` | SHIP.md: count 98→100; add rows for PRs #99–#100 |
 | 101 | `feat/advisor-related-examples-update` | AdvisorFlow: RELATED_EXAMPLES — collab gets record-label-roster; solo gets podcast-collective |
 | 102 | `feat/ship-md-pr-count-101` | SHIP.md: count 100→102; add rows for PRs #101–#102 |
+| 103 | `feat/collectables-step4-snapshot-fix` | collectables/page.tsx step-4 'per distribution' → 'per weekly snapshot'; 'distribution payloads' → 'snapshot payloads'; launches/[slug] receipt card 'distribution breakdown' → 'allocation breakdown' |
+| 104 | `feat/ship-md-pr-count-103` | SHIP.md: count 102→104; add rows for PRs #103–#104 |
 
 ---
 

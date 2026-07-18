@@ -686,8 +686,7 @@ export default function SplitWizard() {
                 <li>When ready to tokenize: come back, toggle &ldquo;launch a token,&rdquo; and get the full deploy package</li>
               </ol>
               <p className="text-xs text-slate-600 mt-3">
-                No token required to have a working split. The 0xSplits contract pays collaborators
-                from any revenue you route to it — fan backing, licensing, tips.
+                No token required to have a working split. The 0xSplits contract holds revenue you route to it — collaborators claim at splits.org when ready. Works for fan backing, licensing, tips.
               </p>
             </div>
           )}

@@ -46,7 +46,7 @@ const STEPS = [
     step: '02',
     title: 'Deploy a 0xSplits contract',
     description:
-      'Go to app.splits.org and create a Split with your recipients and weights from step 1. This gives you a single contract address that holds the fee and distributes to your list. Recipients and weights are adjustable — your leaderboard changes weekly, your split can too.',
+      'Go to app.splits.org and create a Split with your recipients and weights from step 1. This gives you a single contract address that holds the fee — recipients claim at splits.org when ready. Recipients and weights are adjustable — your leaderboard changes weekly, your split can too.',
     cta: { label: 'app.splits.org ↗', href: 'https://app.splits.org', external: true },
   },
   {

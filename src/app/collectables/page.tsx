@@ -102,9 +102,9 @@ export default function CollectablesPage() {
             Proof you built the empire.
           </h1>
           <p className="text-slate-400 leading-relaxed text-lg">
-            Every weekly fee distribution mints an on-chain receipt for every contributor who
+            Every weekly snapshot mints an on-chain receipt for every contributor who
             earned a share. Not a badge you bought. Not a token you traded. A permanent record of
-            your contribution — week, points, percentage, payout.
+            your contribution — week, points, percentage, share.
           </p>
         </div>
 

@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 39 PRs are draft. Merge in order. One human click per step.
+> All 40 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -58,6 +58,7 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 37 | `feat/content-page-loading-skeletons` | Loading skeletons for /examples, /examples/[slug], and /launches |
 | 38 | `feat/education-page-loading-skeletons` | Loading skeletons for /lifecycle, /circles, /how-it-works, /collectables |
 | 39 | `feat/back-success-loading` | Loading skeleton for /back/success — completes full-site loading skeleton coverage |
+| 40 | `feat/launches-live-description` | Remove hardcoded "34 boosters" from static copy in launches.ts + vetted page (live detail page carries accurate counts) |
 
 ---
 

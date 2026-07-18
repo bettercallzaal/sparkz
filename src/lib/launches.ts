@@ -30,7 +30,7 @@ export const LAUNCHES: Launch[] = [
     emoji: '🟡',
     tagline: 'ZABAL × Boostr. Back the empire.',
     description:
-      '34 boosters built the ZABAL empire on Boostr before any token existed. $ZOOSTR is what the empire pays back with — 50% of every trading fee to the leaderboard by points, weekly.',
+      'Boosters built the ZABAL empire on Boostr before any token existed. $ZOOSTR is what the empire pays back with — 50% of every trading fee to the leaderboard by points, weekly.',
     type: 'leaderboard',
     status: 'live',
     siteUrl: 'https://zoostr.xyz',

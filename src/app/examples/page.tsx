@@ -129,7 +129,7 @@ export default function ExamplesPage() {
               <div className="font-bold text-white mb-2">The invariants</div>
               <ul className="space-y-1.5 text-sm text-slate-400">
                 <li className="flex gap-2"><span className="text-gold-500">✓</span> Community split is public</li>
-                <li className="flex gap-2"><span className="text-gold-500">✓</span> No claiming — fees flow</li>
+                <li className="flex gap-2"><span className="text-gold-500">✓</span> Fees accumulate on-chain — claim at splits.org</li>
                 <li className="flex gap-2"><span className="text-gold-500">✓</span> ZAO stake, not fee cut</li>
                 <li className="flex gap-2"><span className="text-gold-500">✓</span> No auto-mint, ever</li>
               </ul>

@@ -71,6 +71,7 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 50 | `feat/no-claiming-accuracy` | spark-examples.ts: fix "no claiming — lands in wallet" perk (Pull split requires claiming at splits.org); lifecycle/page.tsx stage 4: fix "ZOL updates split weights" (ZOL drafts, Zaal executes updateSplit) + "fees landing in wallets" (claim required) |
 | 51 | `feat/homepage-automatic-copy` | homepage: fix two "automatic" claims — USE_CASES fee-split description + Zoostr launch card; both implied auto-payout but Pull split requires claiming at splits.org |
 | 52 | `feat/readme-collectables-fix` | README: fix "Collectables come standard. Backing earns collectables automatically." — collectables are v2 roadmap; updated to describe spec page + v2 timeline |
+| 53 | `feat/examples-claiming-fix` | examples/page.tsx invariants: "No claiming — fees flow" → "Fees accumulate on-chain — claim at splits.org" |
 
 ---
 

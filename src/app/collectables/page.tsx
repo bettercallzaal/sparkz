@@ -199,7 +199,7 @@ export default function CollectablesPage() {
             Status: v2 roadmap
           </div>
           <p className="text-sm text-slate-400 leading-relaxed mb-4">
-            Collectables launch alongside the fee distribution contract — after the token is live
+            Collectables launch alongside the 0xSplits contract — after the token is live
             and the first split runs. Today, you can set up your splits, configure your tiers, and
             get your community moving. Collectables are the proof layer on top.
           </p>

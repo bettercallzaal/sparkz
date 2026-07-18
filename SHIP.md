@@ -52,6 +52,7 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 31 | `feat/loading-skeletons` | Homepage + advisor loading skeletons — shown during client-side navigation |
 | 32 | `feat/tool-loading-skeletons` | Loading skeletons for split-wizard, tiers, back, vetted — all four tool pages |
 | 33 | `feat/advisor-cast-copy` | Richer "Cast this result" text: shows actual split %, ZAO stake, token timing |
+| 34 | `feat/settings-audius-loading` | Loading skeletons for /settings (BYOK form) and /audius (handle input) |
 
 ---
 

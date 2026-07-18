@@ -384,7 +384,7 @@ export default async function LaunchDetailPage({
               className="card-dark p-5 hover:border-gold-500/30 transition-colors block"
             >
               <div className="text-lg font-bold text-white mb-1">📜 Weekly receipt</div>
-              <p className="text-sm text-slate-400">This week&rsquo;s distribution breakdown — shareable as a Farcaster Frame.</p>
+              <p className="text-sm text-slate-400">This week&rsquo;s allocation breakdown — shareable as a Farcaster Frame.</p>
             </a>
           )}
         </div>

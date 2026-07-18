@@ -223,6 +223,64 @@ export const SPARK_EXAMPLES: SparkExample[] = [
       'No token needed for a collab split. The 0xSplits contract handles direct payments to all contributors. If one artist later wants to launch a token for their solo work, they do that separately — the collab split stays independent.',
     advisorPreset: { situation: 'collab', tokenTiming: 'never', feeModel: 'low' },
   },
+  {
+    slug: 'record-label-roster',
+    emoji: '🎼',
+    title: 'Record label / artist roster',
+    tagline: 'Multiple artists, one Splits contract. The label earns when any artist does.',
+    situation:
+      'You run a small label (or artist collective) with 3–5 artists. You want fair splits between label overhead, each artist\'s share, and a community pool that rewards fans who support the whole roster — not just one act.',
+    noTokenAction:
+      'Use the split wizard to set each artist\'s percentage, the label cut, and the community pool. Everyone on the roster signs off on the JSON. Publish the split sheet — any fan can see exactly how fees route before any token launches.',
+    metric:
+      'Streaming plays or Boostr points per artist — weights update the Splits contract each week to reflect each artist\'s contribution to the shared pool.',
+    splitConfig: {
+      communityPool: 15,
+      creatorPool: 70,
+      treasury: 15,
+      zaoStake: 5,
+      note: 'Creator pool is divided among roster artists by their contract (e.g. 3 artists at 25%/25%/20% of the 70%). 0xSplits routes fees to all recipients automatically — the label just maintains the weights. Community pool allocated to fans of the whole roster — claim at splits.org.',
+    },
+    perks: [
+      'Fee share per artist proportional to their streaming performance — claim at splits.org',
+      'Roster membership — fans who back the label earn from every artist, not just one',
+      'Label event access and early release previews for top backers',
+      'On-chain split sheet — each artist\'s deal is publicly verifiable',
+    ],
+    tokenPath: 'later',
+    tokenNote:
+      'Launch a token for the label when the roster is established and the community has been earning for 2–3 months. The 0xSplits contract already routes fees to all stakeholders — a token just adds a trading volume layer. Each artist can also launch their own solo token independently; the label split stays separate.',
+    advisorPreset: { situation: 'collab', tokenTiming: 'later', feeModel: 'medium' },
+  },
+  {
+    slug: 'podcast-collective',
+    emoji: '🎙',
+    title: 'Podcast / show collective',
+    tagline: 'Multiple hosts, honest credits. Support the show without a coin.',
+    situation:
+      'You run a weekly show with co-hosts, an editor, and occasional guests. Your listeners want to support you consistently. You want to split that support transparently between everyone who makes the show happen — and you do NOT want a token or a speculation layer.',
+    noTokenAction:
+      'Set up three patronage tiers ($5/$25/$100) for your listeners. Use the split wizard to document what each contributor earns from the pool. Publish the terms before asking for support. Your community sees exactly who they\'re backing.',
+    metric:
+      'Active patron count per tier × monthly recurring revenue. The metric is paying listeners, not token holders.',
+    splitConfig: {
+      communityPool: 5,
+      creatorPool: 90,
+      treasury: 5,
+      zaoStake: 0,
+      note: 'Creator pool divided among contributors: e.g. 40% main host / 35% co-host / 15% editor / 10% per-episode guests. 5% community pool rewards top amplifiers who bring in new listeners. No token = no ZAO stake.',
+    },
+    perks: [
+      'Ad-free episodes for all tiers',
+      'Early access to new episodes (48h before public release)',
+      '$25 tier: Discord or group chat with the hosts',
+      '$100 tier: Monthly AMA + name in episode credits',
+    ],
+    tokenPath: 'never',
+    tokenNote:
+      'This is a permanent decision — the show runs on patronage, not speculation. No coin. If one host later wants to launch a solo token for their own work, they do it independently. The show\'s split stays separate and clean.',
+    advisorPreset: { situation: 'solo', tokenTiming: 'never', feeModel: 'low' },
+  },
 ]
 
 export function getExampleBySlug(slug: string): SparkExample | undefined {

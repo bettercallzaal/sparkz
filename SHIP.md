@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 76 PRs are draft. Merge in order. One human click per step.
+> All 78 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -95,6 +95,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 74 | `feat/collectables-body-snapshot-fix` | collectables/page.tsx hero body: "every weekly fee distribution mints" → "every weekly snapshot mints"; "percentage, payout" → "percentage, share" |
 | 75 | `feat/ship-md-pr-count-74` | SHIP.md: count 72→74; add rows for PRs #73–#74 |
 | 76 | `feat/collectables-fee-split-contract-fix` | collectables/page.tsx status box: "fee distribution contract" → "0xSplits contract" — avoids auto-distribution implication |
+| 77 | `feat/ship-md-pr-count-76` | SHIP.md: count 74→76; add rows for PRs #75–#76 |
+| 78 | `feat/collectables-specs-contract-name-fix` | collectables/page.tsx tech-specs row: "Sparkz distribution contract" → "0xSplits contract" |
 
 ---
 

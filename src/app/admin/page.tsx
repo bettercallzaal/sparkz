@@ -161,7 +161,21 @@ function AdminInner() {
         <Link href="/" className="text-sm text-muted hover:text-foreground">
           &larr; Capsules
         </Link>
-        <span className="text-sm font-medium">Meme Engine</span>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/admin/new"
+            className="text-sm text-accent hover:text-foreground"
+          >
+            + New Capsule
+          </Link>
+          <Link
+            href="/admin/empire"
+            className="text-sm text-accent hover:text-foreground"
+          >
+            Deploy Empire
+          </Link>
+          <span className="text-sm font-medium">Meme Engine</span>
+        </div>
       </div>
 
       {err && (

@@ -41,6 +41,11 @@ export const approveDraftSchema = z.object({
   lessons: z.string().max(2000).optional(),
 });
 
+export const linkEmpireSchema = z.object({
+  capsule_id: z.string().uuid(),
+  empire_id: z.string().min(2).max(120), // 0x..., fid..., c-..., or slug
+});
+
 export const boostSchema = z.object({
   capsule_id: z.string().uuid(),
   backer: z.string().min(1).max(200), // email or handle
@@ -79,4 +84,11 @@ export const createBackingSchema = z.object({
   amount_or_qty: z.number().nonnegative(),
   unit: z.string().max(40).optional(),
   provider: z.string().max(40).optional(), // defaults to 'ledger'
+});
+
+export const deployEmpireSchema = z.object({
+  capsule_id: z.string().uuid(),
+  name: z.string().min(1).max(100),
+  owner: z.string().regex(/^0x[a-fA-F0-9]{40}$/),
+  signature: z.string().regex(/^0x[a-fA-F0-9]+$/),
 });

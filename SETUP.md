@@ -21,6 +21,9 @@ cowork/ZAOOS):
 
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY` (server-only; never sent to the browser)
+- `SPARKZ_ADMIN_TOKEN` - gates the write routes (the service client bypasses RLS,
+  so the routes authz against this). Generate: `openssl rand -hex 24`. Fails closed
+  if unset (no writes allowed). In `/admin`, click Unlock and paste it once.
 
 Optional:
 

@@ -2,6 +2,7 @@ import type { NextRequest } from "next/server";
 import { getServiceClient } from "@/lib/supabase/server";
 import { approveDraftSchema } from "@/lib/validation/schemas";
 import { ok, badRequest, serverError, zodError } from "@/lib/http";
+import { requireAdmin } from "@/lib/auth";
 import type { MemeReceipt, Signal, SignalDraft } from "@/lib/supabase/types";
 
 // POST /api/signals/approve - human picks one draft. Marks it chosen, moves the
@@ -11,6 +12,9 @@ import type { MemeReceipt, Signal, SignalDraft } from "@/lib/supabase/types";
 // (first-approve-wins across the redundant approval channels).
 export async function POST(req: NextRequest) {
   try {
+    const denied = requireAdmin(req);
+    if (denied) return denied;
+
     const body = await req.json().catch(() => null);
     const parsed = approveDraftSchema.safeParse(body);
     if (!parsed.success) return zodError(parsed.error);

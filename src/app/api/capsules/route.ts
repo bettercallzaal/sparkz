@@ -2,6 +2,7 @@ import type { NextRequest } from "next/server";
 import { getServiceClient } from "@/lib/supabase/server";
 import { createCapsuleSchema } from "@/lib/validation/schemas";
 import { ok, serverError, zodError } from "@/lib/http";
+import { requireAdmin } from "@/lib/auth";
 
 export async function GET() {
   try {
@@ -19,6 +20,9 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
+    const denied = requireAdmin(req);
+    if (denied) return denied;
+
     const body = await req.json().catch(() => null);
     const parsed = createCapsuleSchema.safeParse(body);
     if (!parsed.success) return zodError(parsed.error);

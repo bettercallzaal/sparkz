@@ -12,10 +12,18 @@ import type {
 
 type SignalWithDrafts = Signal & { drafts: SignalDraft[] };
 
+class ApiError extends Error {
+  status: number;
+  constructor(status: number, message: string) {
+    super(message);
+    this.status = status;
+  }
+}
+
 async function apiGet<T>(url: string): Promise<T> {
   const res = await fetch(url);
   const json = await res.json();
-  if (!json.ok) throw new Error(json.error ?? "request failed");
+  if (!json.ok) throw new ApiError(res.status, json.error ?? "request failed");
   return json.data as T;
 }
 
@@ -26,7 +34,7 @@ async function apiPost<T>(url: string, body: unknown): Promise<T> {
     body: JSON.stringify(body),
   });
   const json = await res.json();
-  if (!json.ok) throw new Error(json.error ?? "request failed");
+  if (!json.ok) throw new ApiError(res.status, json.error ?? "request failed");
   return json.data as T;
 }
 
@@ -40,6 +48,8 @@ function AdminInner() {
   const [receipts, setReceipts] = useState<MemeReceipt[]>([]);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [needsAuth, setNeedsAuth] = useState(false);
+  const [token, setToken] = useState("");
 
   // flag form
   const [text, setText] = useState("");
@@ -64,10 +74,30 @@ function AdminInner() {
       ]);
       setSignals(s);
       setReceipts(r);
+      setNeedsAuth(false);
     } catch (e) {
+      if (e instanceof ApiError && (e.status === 401 || e.status === 503)) {
+        setNeedsAuth(true);
+        return;
+      }
       setErr(e instanceof Error ? e.message : "refresh failed");
     }
   }, []);
+
+  const login = async () => {
+    setBusy(true);
+    setErr(null);
+    try {
+      await apiPost("/api/admin/login", { token });
+      setToken("");
+      setNeedsAuth(false);
+      await refresh(capsuleId);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "login failed");
+    } finally {
+      setBusy(false);
+    }
+  };
 
   useEffect(() => {
     // Intentional: re-fetch signals + receipts when the selected capsule changes.
@@ -91,7 +121,11 @@ function AdminInner() {
       setWhy("");
       await refresh(capsuleId);
     } catch (e) {
-      setErr(e instanceof Error ? e.message : "flag failed");
+      if (e instanceof ApiError && (e.status === 401 || e.status === 503)) {
+        setNeedsAuth(true);
+      } else {
+        setErr(e instanceof Error ? e.message : "flag failed");
+      }
     } finally {
       setBusy(false);
     }
@@ -109,7 +143,11 @@ function AdminInner() {
       });
       await refresh(capsuleId);
     } catch (e) {
-      setErr(e instanceof Error ? e.message : "approve failed");
+      if (e instanceof ApiError && (e.status === 401 || e.status === 503)) {
+        setNeedsAuth(true);
+      } else {
+        setErr(e instanceof Error ? e.message : "approve failed");
+      }
     } finally {
       setBusy(false);
     }
@@ -130,6 +168,30 @@ function AdminInner() {
         <div className="mb-4 rounded-md border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-300">
           {err}
         </div>
+      )}
+
+      {needsAuth && (
+        <section className="mb-8 rounded-lg border border-border bg-card p-4">
+          <h2 className="mb-1 text-sm font-medium">Operator unlock</h2>
+          <p className="mb-3 text-xs text-muted">
+            Writes are gated. Enter the operator token (SPARKZ_ADMIN_TOKEN).
+          </p>
+          <input
+            type="password"
+            value={token}
+            onChange={(e) => setToken(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && token && login()}
+            placeholder="operator token"
+            className="mb-3 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+          />
+          <button
+            onClick={login}
+            disabled={busy || !token}
+            className="w-full rounded-md bg-accent px-3 py-2 text-sm font-medium text-white disabled:opacity-40"
+          >
+            {busy ? "Unlocking..." : "Unlock"}
+          </button>
+        </section>
       )}
 
       <label className="mb-1 block text-xs uppercase tracking-wide text-muted">

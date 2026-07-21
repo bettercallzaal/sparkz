@@ -3,6 +3,7 @@ import "@/lib/adapters/bootstrap";
 import { createBackingSchema } from "@/lib/validation/schemas";
 import { ok, badRequest, serverError, zodError } from "@/lib/http";
 import { getBackingProvider } from "@/lib/adapters/backing-provider";
+import { requireAdmin } from "@/lib/auth";
 
 // GET /api/backers?capsule_id=...&provider=ledger - list backings for a capsule.
 export async function GET(req: NextRequest) {
@@ -25,6 +26,9 @@ export async function GET(req: NextRequest) {
 // (m1: ledger, off-chain). Provider-agnostic so on-chain rails slot in later.
 export async function POST(req: NextRequest) {
   try {
+    const denied = requireAdmin(req);
+    if (denied) return denied;
+
     const body = await req.json().catch(() => null);
     const parsed = createBackingSchema.safeParse(body);
     if (!parsed.success) return zodError(parsed.error);

@@ -5,11 +5,16 @@ import { flagSignalSchema } from "@/lib/validation/schemas";
 import { ok, badRequest, serverError, zodError } from "@/lib/http";
 import { generateDrafts } from "@/lib/meme-engine/draft";
 import { routeApproval } from "@/lib/adapters/approval-channel";
+import { requireAdmin } from "@/lib/auth";
 import type { Capsule, Signal, SignalDraft } from "@/lib/supabase/types";
 
 // GET /api/signals?capsule_id=... - signals for a capsule (with their drafts).
+// Gated: drafts are internal (pre-publish) operator data.
 export async function GET(req: NextRequest) {
   try {
+    const denied = requireAdmin(req);
+    if (denied) return denied;
+
     const capsuleId = req.nextUrl.searchParams.get("capsule_id");
     if (!capsuleId) return badRequest("capsule_id is required");
 
@@ -47,6 +52,9 @@ export async function GET(req: NextRequest) {
 // drafts -> persist -> notify approval channels. The whole flag->3-drafts step.
 export async function POST(req: NextRequest) {
   try {
+    const denied = requireAdmin(req);
+    if (denied) return denied;
+
     const body = await req.json().catch(() => null);
     const parsed = flagSignalSchema.safeParse(body);
     if (!parsed.success) return zodError(parsed.error);

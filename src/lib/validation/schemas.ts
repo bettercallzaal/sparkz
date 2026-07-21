@@ -41,6 +41,11 @@ export const approveDraftSchema = z.object({
   lessons: z.string().max(2000).optional(),
 });
 
+export const boostSchema = z.object({
+  capsule_id: z.string().uuid(),
+  backer: z.string().min(1).max(200), // email or handle
+});
+
 export const joinWaitlistSchema = z.object({
   email: z.string().email().max(200),
   ref: z.string().max(120).optional(),

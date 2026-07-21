@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getServiceClient } from "@/lib/supabase/server";
 import type { Capsule, CapsuleBacker, MemeReceipt } from "@/lib/supabase/types";
 import type { OssCapsuleMetadata } from "@/lib/brand-audit/types";
+import BoostForm from "@/app/_components/BoostForm";
 
 export const dynamic = "force-dynamic";
 
@@ -39,7 +40,7 @@ interface CapsuleView {
   capsule: Capsule;
   receipts: MemeReceipt[];
   backers: CapsuleBacker[];
-  backingTotal: number;
+  boostCount: number;
 }
 
 async function load(slug: string): Promise<CapsuleView | null> {
@@ -70,7 +71,7 @@ async function load(slug: string): Promise<CapsuleView | null> {
     capsule: c,
     receipts: (receipts as MemeReceipt[]) ?? [],
     backers: backersList,
-    backingTotal: backersList.reduce((s, b) => s + Number(b.amount_or_qty), 0),
+    boostCount: backersList.filter((b) => b.kind === "boost").length,
   };
 }
 
@@ -92,7 +93,7 @@ export default async function CapsulePage({
   const view = await load(slug);
   if (!view) notFound();
 
-  const { capsule, receipts, backers, backingTotal } = view;
+  const { capsule, receipts, backers, boostCount } = view;
   const oss = capsule.type === "oss" ? (capsule.metadata as OssCapsuleMetadata) : null;
 
   return (
@@ -124,11 +125,20 @@ export default async function CapsulePage({
         )}
       </header>
 
-      <div className="mb-8 grid grid-cols-3 gap-2">
+      <div className="mb-6 grid grid-cols-3 gap-2">
         <Stat label="Backers" value={backers.length} />
-        <Stat label="Backing" value={backingTotal} />
+        <Stat label="Boosts" value={boostCount} />
         <Stat label="Receipts" value={receipts.length} />
       </div>
+
+      {/* Boost engine: free public support signal (not a payment). */}
+      <section className="mb-8 rounded-lg border border-border bg-card p-4">
+        <h2 className="mb-1 text-sm font-medium">Boost {capsule.name}</h2>
+        <p className="mb-3 text-xs text-muted">
+          Back the work with a free boost. Dollar backing opens with fiat/BYOK soon.
+        </p>
+        <BoostForm capsuleId={capsule.id} />
+      </section>
 
       <section className="mb-8">
         <h2 className="mb-3 text-sm font-medium">Meme Receipts</h2>

@@ -1,0 +1,61 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+export default function BoostForm({ capsuleId }: { capsuleId: string }) {
+  const router = useRouter();
+  const [backer, setBacker] = useState("");
+  const [state, setState] = useState<"idle" | "busy" | "done" | "error">("idle");
+
+  const boost = async () => {
+    if (!backer.trim()) return;
+    setState("busy");
+    try {
+      const res = await fetch("/api/boost", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ capsule_id: capsuleId, backer: backer.trim() }),
+      });
+      const json = await res.json();
+      if (json.ok) {
+        setState("done");
+        router.refresh();
+      } else {
+        setState("error");
+      }
+    } catch {
+      setState("error");
+    }
+  };
+
+  if (state === "done") {
+    return (
+      <div className="rounded-lg border border-accent/40 bg-accent/10 p-3 text-sm">
+        Boosted. Thanks for backing the work.
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-2 sm:flex-row">
+      <input
+        value={backer}
+        onChange={(e) => setBacker(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && backer.trim() && boost()}
+        placeholder="your email or handle"
+        className="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-accent"
+      />
+      <button
+        onClick={boost}
+        disabled={state === "busy" || !backer.trim()}
+        className="rounded-md bg-accent px-5 py-2 text-sm font-semibold text-white disabled:opacity-40"
+      >
+        {state === "busy" ? "Boosting..." : "Boost"}
+      </button>
+      {state === "error" && (
+        <span className="self-center text-xs text-red-400">try again</span>
+      )}
+    </div>
+  );
+}

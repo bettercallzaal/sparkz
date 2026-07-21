@@ -41,6 +41,11 @@ export const approveDraftSchema = z.object({
   lessons: z.string().max(2000).optional(),
 });
 
+export const linkEmpireSchema = z.object({
+  capsule_id: z.string().uuid(),
+  empire_id: z.string().min(2).max(120), // 0x..., fid..., c-..., or slug
+});
+
 export const boostSchema = z.object({
   capsule_id: z.string().uuid(),
   backer: z.string().min(1).max(200), // email or handle

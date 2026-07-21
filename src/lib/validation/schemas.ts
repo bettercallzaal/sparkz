@@ -85,3 +85,10 @@ export const createBackingSchema = z.object({
   unit: z.string().max(40).optional(),
   provider: z.string().max(40).optional(), // defaults to 'ledger'
 });
+
+export const deployEmpireSchema = z.object({
+  capsule_id: z.string().uuid(),
+  name: z.string().min(1).max(100),
+  owner: z.string().regex(/^0x[a-fA-F0-9]{40}$/),
+  signature: z.string().regex(/^0x[a-fA-F0-9]+$/),
+});

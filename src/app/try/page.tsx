@@ -1,9 +1,22 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { loadPublicCapsules } from "@/lib/public-capsules";
 import Ecosystem from "../_components/Ecosystem";
 import JoinForm from "../_components/JoinForm";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Spark your project, no token required",
+  description:
+    "Get early access to Sparkz - build community and backing first, tokenize later only if it makes sense.",
+  openGraph: {
+    title: "Try Sparkz",
+    description: "Spark your project. No token required.",
+    siteName: "Sparkz",
+    type: "website",
+  },
+};
 
 const POINTS = [
   "No token to start - back the work, not a coin",

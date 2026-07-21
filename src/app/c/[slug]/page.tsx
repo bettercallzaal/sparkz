@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getServiceClient } from "@/lib/supabase/server";
@@ -5,6 +6,34 @@ import type { Capsule, CapsuleBacker, MemeReceipt } from "@/lib/supabase/types";
 import type { OssCapsuleMetadata } from "@/lib/brand-audit/types";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  try {
+    const supabase = getServiceClient();
+    const { data } = await supabase
+      .from("capsules")
+      .select("name, bio")
+      .eq("slug", slug)
+      .maybeSingle();
+    if (data) {
+      const c = data as Pick<Capsule, "name" | "bio">;
+      const desc = c.bio ?? "A Sparkz Capsule - back the work, not a coin.";
+      return {
+        title: c.name,
+        description: desc,
+        openGraph: { title: `${c.name} - Sparkz`, description: desc, type: "website" },
+      };
+    }
+  } catch {
+    // fall through to default
+  }
+  return { title: "Capsule" };
+}
 
 interface CapsuleView {
   capsule: Capsule;

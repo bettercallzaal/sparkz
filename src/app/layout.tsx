@@ -13,9 +13,26 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sparkz - start with a spark, not a token",
+  metadataBase: new URL("https://trysparkz.com"),
+  title: {
+    default: "Sparkz - start with a spark, not a token",
+    template: "%s - Sparkz",
+  },
   description:
     "Every Sparkz project is a Capsule, not a coin. Back the album, not buy a coin.",
+  applicationName: "Sparkz",
+  openGraph: {
+    title: "Sparkz - start with a spark, not a token",
+    description:
+      "Every Sparkz project is a Capsule, not a coin. Back the album, not buy a coin.",
+    siteName: "Sparkz",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Sparkz - start with a spark, not a token",
+    description: "Back the album, not buy a coin.",
+  },
 };
 
 export default function RootLayout({

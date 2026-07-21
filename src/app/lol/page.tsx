@@ -1,9 +1,22 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { loadPublicCapsules } from "@/lib/public-capsules";
 import Ecosystem from "../_components/Ecosystem";
 import JoinForm from "../_components/JoinForm";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "back the album, not the coin",
+  description:
+    "Sparkz is where culture gets backed before it gets financialized. No day-one coin. Just the work, the crew, and receipts that compound.",
+  openGraph: {
+    title: "sparkz.lol",
+    description: "back the album, not the coin.",
+    siteName: "Sparkz",
+    type: "website",
+  },
+};
 
 const CHANTS = [
   "back the album, not buy a coin",

@@ -41,6 +41,12 @@ export const approveDraftSchema = z.object({
   lessons: z.string().max(2000).optional(),
 });
 
+export const joinWaitlistSchema = z.object({
+  email: z.string().email().max(200),
+  ref: z.string().max(120).optional(),
+  interest: z.string().max(60).optional(),
+});
+
 export const importRepoSchema = z.object({
   ref: z.string().min(3).max(200), // "owner/repo" or a github URL
 });

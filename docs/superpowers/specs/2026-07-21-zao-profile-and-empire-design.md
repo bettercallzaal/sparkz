@@ -39,19 +39,28 @@ mainnet immediately, then fold it into the profile layer.
 
 ## 3. Layer 0 - ZAO Profile
 
-**Auth:** Privy (`@privy-io/react-auth`). Login with email / social / wallet /
-Farcaster. Privy issues a verified user with an id and linked accounts.
+**Auth (decided 2026-07-21): Farcaster-first, Privy backup.**
+- **Primary: Sign-In-With-Farcaster** (Neynar SIWN / Farcaster AuthKit). Farcaster
+  is the identity spine (fits FEF + the agent path). A SIWF login yields a verified
+  `fid`.
+- **Backup: Privy** (`@privy-io/react-auth`) for users who do not have Farcaster -
+  login with email / social / wallet.
+- Both resolve to the SAME ZAO Profile. `profiles` therefore stores the auth origin
+  and, when present, the primary `fid`. Non-Farcaster users can link a Farcaster
+  account later (Layer 0 linking) to unlock the agent path.
 
-**Server verification:** every privileged API call carries the Privy access token;
-the server verifies it (Privy server SDK / JWKS) and maps `privy_user_id` -> a
-`profiles` row. Never trust a client-sent profile id.
+**Server verification:** every privileged API call carries the auth token (SIWF
+session or Privy access token); the server verifies it and maps the verified
+identity -> a `profiles` row. Never trust a client-sent profile id.
 
 **Data model:**
 
 ```
 profiles(
   id uuid pk,
-  privy_user_id text unique not null,   -- the Privy DID
+  auth_origin text check (auth_origin in ('farcaster','privy')),
+  auth_subject text unique not null,    -- SIWF fid-derived id OR Privy DID
+  fid bigint,                           -- primary Farcaster id when known
   handle text unique,                   -- ZAO handle (chosen)
   display_name text,
   avatar_url text,
@@ -138,7 +147,9 @@ identity + empire owner + the account approved memes publish from.
 ## 7. Parallel minimal deploy test (ships first, to test Empire on mainnet)
 
 Independent of the profile layer, to de-risk the Empire integration:
-- A gated operator page: connect a wallet (viem injected / Privy), enter a name,
+- **Test brand: ZLANK** (`bettercallzaal/zlank`, a Farcaster-native ZAO project) -
+  import it as a Capsule and deploy its tokenless empire as the first real test.
+- A gated operator page: connect a wallet (viem injected / Privy), enter the name,
   sign the custom message, `POST` to a deploy route, deploy ONE real tokenless
   empire on Base, resolve + display the SmartVault treasury.
 - Uses `EMPIRE_API_KEY` (operator-provided) + the connected wallet as owner.
@@ -147,8 +158,10 @@ Independent of the profile layer, to de-risk the Empire integration:
 
 ## 8. New dependencies
 
-- `@privy-io/react-auth` (+ server verify) - auth / wallet / linked accounts.
-- `viem` - EIP-191 signing + address handling.
+- Farcaster AuthKit (`@farcaster/auth-kit`) or Neynar SIWN - PRIMARY auth
+  (Sign-In-With-Farcaster).
+- `@privy-io/react-auth` (+ server verify) - BACKUP auth / wallet / linked accounts.
+- `viem` - EIP-191 signing + address handling (needed for the mainnet test too).
 - Neynar (HTTP API; `NEYNAR_API_KEY` already in `.env.example`) - agent Farcaster
   accounts + signers.
 
@@ -164,10 +177,10 @@ All require the user's approval before install (project rule).
 
 ## 10. Build sequence
 
-1. ZAO Profile foundation (Privy auth, `profiles` + `linked_accounts`, verify
-   middleware, minimal profile UI).
-2. In parallel: minimal operator empire-deploy test (section 7) - validate Empire
-   on mainnet.
+1. ZAO Profile foundation (Farcaster-first SIWF auth + Privy backup, `profiles` +
+   `linked_accounts`, verify middleware, minimal profile UI).
+2. In parallel: minimal operator empire-deploy test (section 7), test brand ZLANK -
+   validate Empire on Base mainnet.
 3. Capsule ownership (`owner_profile_id` + ownership checks).
 4. Empire free path folded onto profiles.
 5. Agents + Farcaster (both custody models).

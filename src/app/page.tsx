@@ -1,30 +1,9 @@
 import Link from "next/link";
-import { getServiceClient } from "@/lib/supabase/server";
-import type { Capsule, CapsuleType } from "@/lib/supabase/types";
+import { loadPublicCapsules } from "@/lib/public-capsules";
+import Ecosystem from "./_components/Ecosystem";
 import JoinForm from "./_components/JoinForm";
 
 export const dynamic = "force-dynamic";
-
-async function loadCapsules(): Promise<Capsule[]> {
-  try {
-    const supabase = getServiceClient();
-    const { data } = await supabase
-      .from("capsules")
-      .select("*")
-      .order("created_at", { ascending: false });
-    return (data as Capsule[]) ?? [];
-  } catch {
-    return [];
-  }
-}
-
-const TYPE_LABEL: Record<CapsuleType, string> = {
-  creator: "Creators",
-  culture: "Culture",
-  oss: "Open source",
-  meme: "Meme",
-};
-const TYPE_ORDER: CapsuleType[] = ["creator", "culture", "oss", "meme"];
 
 const STEPS = [
   {
@@ -45,12 +24,10 @@ const STEPS = [
 ];
 
 export default async function Home() {
-  const capsules = await loadCapsules();
-  const byType = (t: CapsuleType) => capsules.filter((c) => c.type === t);
+  const capsules = await loadPublicCapsules();
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-4">
-      {/* Hero */}
       <section className="pt-16 pb-12 sm:pt-24">
         <p className="mb-3 text-xs font-medium uppercase tracking-widest text-accent">
           Sparkz
@@ -64,14 +41,13 @@ export default async function Home() {
           optional, later, if ever. Back the album, not buy a coin.
         </p>
         <div className="mt-8 max-w-md">
-          <JoinForm interest="landing" />
+          <JoinForm interest="sparkz" />
           <p className="mt-2 text-xs text-muted">
             Join the list. Part of the ZAO ecosystem.
           </p>
         </div>
       </section>
 
-      {/* How it works */}
       <section className="border-t border-border py-12">
         <h2 className="mb-6 text-sm font-medium uppercase tracking-wide text-muted">
           How it works
@@ -87,7 +63,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Ecosystem showcase */}
       <section className="border-t border-border py-12">
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-sm font-medium uppercase tracking-wide text-muted">
@@ -97,47 +72,9 @@ export default async function Home() {
             Brand audit -&gt;
           </Link>
         </div>
-
-        {capsules.length === 0 ? (
-          <p className="text-sm text-muted">
-            Capsules are spinning up. Check back soon.
-          </p>
-        ) : (
-          <div className="space-y-6">
-            {TYPE_ORDER.filter((t) => byType(t).length > 0).map((t) => (
-              <div key={t}>
-                <h3 className="mb-2 text-xs uppercase tracking-wide text-muted">
-                  {TYPE_LABEL[t]}
-                </h3>
-                <ul className="grid gap-3 sm:grid-cols-2">
-                  {byType(t).map((c) => (
-                    <li key={c.id}>
-                      <Link
-                        href={`/c/${c.slug}`}
-                        className="block h-full rounded-lg border border-border bg-card p-4 transition-colors hover:border-accent"
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="font-medium">{c.name}</span>
-                          <span className="rounded bg-black/40 px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted">
-                            {c.status}
-                          </span>
-                        </div>
-                        {c.bio && (
-                          <p className="mt-1 line-clamp-2 text-sm text-muted">
-                            {c.bio}
-                          </p>
-                        )}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        )}
+        <Ecosystem capsules={capsules} />
       </section>
 
-      {/* Footer */}
       <footer className="border-t border-border py-10 text-sm text-muted">
         <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
           <a

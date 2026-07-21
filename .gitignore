@@ -42,3 +42,4 @@ next-env.d.ts
 
 # serena tooling
 .serena/
+.gstack/

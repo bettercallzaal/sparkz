@@ -41,12 +41,20 @@ export default async function Home() {
         <h2 className="text-sm font-medium uppercase tracking-wide text-muted">
           Capsules
         </h2>
-        <Link
-          href="/admin"
-          className="rounded-md bg-accent px-3 py-1.5 text-sm font-medium text-white"
-        >
-          Open Meme Engine
-        </Link>
+        <div className="flex gap-2">
+          <Link
+            href="/audit"
+            className="rounded-md border border-border px-3 py-1.5 text-sm font-medium text-foreground hover:border-accent"
+          >
+            Brand Audit
+          </Link>
+          <Link
+            href="/admin"
+            className="rounded-md bg-accent px-3 py-1.5 text-sm font-medium text-white"
+          >
+            Open Meme Engine
+          </Link>
+        </div>
       </div>
 
       {error && (

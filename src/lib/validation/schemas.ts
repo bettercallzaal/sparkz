@@ -41,6 +41,25 @@ export const approveDraftSchema = z.object({
   lessons: z.string().max(2000).optional(),
 });
 
+export const importRepoSchema = z.object({
+  ref: z.string().min(3).max(200), // "owner/repo" or a github URL
+});
+
+export const auditGateSchema = z.object({
+  capsule_id: z.string().uuid(),
+  gates: z
+    .object({
+      earn: z.enum(["pass", "fail", "unknown"]),
+      measurable: z.enum(["pass", "fail", "unknown"]),
+      proprietary_data: z.enum(["pass", "fail", "unknown"]),
+      testable_30d: z.enum(["pass", "fail", "unknown"]),
+    })
+    .partial()
+    .optional(),
+  security_reviewed: z.boolean().optional(),
+  notes: z.string().max(2000).optional(),
+});
+
 export const createBackingSchema = z.object({
   capsule_id: z.string().uuid(),
   backer_kind: backerKindEnum,

@@ -168,6 +168,12 @@ function AdminInner() {
           >
             + New Capsule
           </Link>
+          <Link
+            href="/admin/empire"
+            className="text-sm text-accent hover:text-foreground"
+          >
+            Deploy Empire
+          </Link>
           <span className="text-sm font-medium">Meme Engine</span>
         </div>
       </div>

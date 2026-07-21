@@ -21,11 +21,21 @@ export async function POST(req: NextRequest) {
     if (capErr) throw capErr;
     if (!capsule) return badRequest("capsule not found");
 
-    const { baseToken } = await deployTokenlessCustom({
-      owner: parsed.data.owner,
-      name: parsed.data.name,
-      signature: parsed.data.signature as `0x${string}`,
-    });
+    // Empire is an external upstream; surface its real error to the operator
+    // (this is a gated operator tool, not a public endpoint).
+    let baseToken: string;
+    try {
+      ({ baseToken } = await deployTokenlessCustom({
+        owner: parsed.data.owner,
+        name: parsed.data.name,
+        signature: parsed.data.signature as `0x${string}`,
+      }));
+    } catch (empireErr) {
+      const msg =
+        empireErr instanceof Error ? empireErr.message : "empire deploy failed";
+      console.error("[sparkz:empire.deploy] upstream:", msg);
+      return badRequest(msg);
+    }
     const resolved = baseToken ? await resolveEmpire(baseToken) : null;
 
     const econ = (capsule as Capsule).economic_config ?? {};

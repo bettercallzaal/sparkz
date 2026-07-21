@@ -78,7 +78,7 @@ export default async function Home() {
         {capsules.map((c) => (
           <li key={c.id}>
             <Link
-              href={`/admin?capsule=${c.id}`}
+              href={`/c/${c.slug}`}
               className="block rounded-lg border border-border bg-card p-4 transition-colors hover:border-accent"
             >
               <div className="flex items-center justify-between">

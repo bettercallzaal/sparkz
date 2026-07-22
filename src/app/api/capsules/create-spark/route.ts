@@ -1,18 +1,25 @@
 import type { NextRequest } from "next/server";
 import { getServiceClient } from "@/lib/supabase/server";
 import { createSparkSchema } from "@/lib/validation/schemas";
-import { ok, badRequest, serverError, zodError } from "@/lib/http";
+import { ok, badRequest, serverError, zodError, tooManyRequests } from "@/lib/http";
+import {
+  clientIpHash,
+  selfServeCountInWindow,
+  SELF_SERVE_LIMIT,
+  SELF_SERVE_WINDOW_MS,
+} from "@/lib/rate-limit";
 import type { Capsule } from "@/lib/supabase/types";
 
 // POST /api/capsules/create-spark - PUBLIC, self-serve spark creation for /start.
 // Deliberately narrow and constrained: a visitor may only set name/bio/type/email.
 // The server owns the slug, forces status='spark', and marks the row self_serve so
 // operator surfaces can tell community-made sparks apart. No operator token, no
-// economic_config, no arbitrary metadata. A honeypot absorbs simple bots.
+// economic_config, no arbitrary metadata.
 //
-// Note: this has no durable rate limit (that needs a KV/Redis the app doesn't run
-// yet). It relies on the honeypot + tight validation. Add IP rate limiting before
-// this sees real traffic.
+// Abuse defense, in order: a honeypot absorbs simple bots; a DB-backed per-IP rate
+// limit (SELF_SERVE_LIMIT/hour, see lib/rate-limit.ts) stops floods; tight Zod
+// validation bounds everything else. IP rotation can still get past the limit, so a
+// human-review gate on self-serve sparks is the next layer.
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => null);
@@ -23,6 +30,15 @@ export async function POST(req: NextRequest) {
     // Honeypot tripped: pretend success, create nothing.
     if (input.website && input.website.trim().length > 0) {
       return ok({ slug: null, ignored: true }, 200);
+    }
+
+    // IP rate limit: a handful of sparks per hour per address.
+    const ipHash = clientIpHash(req);
+    const recent = await selfServeCountInWindow(ipHash, SELF_SERVE_WINDOW_MS);
+    if (recent >= SELF_SERVE_LIMIT) {
+      return tooManyRequests(
+        "You have lit a few sparks recently. Give it an hour and try again.",
+      );
     }
 
     const supabase = getServiceClient();
@@ -39,7 +55,7 @@ export async function POST(req: NextRequest) {
         name: input.name.trim(),
         bio: input.bio?.trim() || null,
         status: "spark",
-        metadata: { self_serve: true, owner_email: input.email },
+        metadata: { self_serve: true, owner_email: input.email, ip_hash: ipHash },
       })
       .select("id, slug")
       .single();

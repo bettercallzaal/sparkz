@@ -131,14 +131,26 @@ export default function DemoPage() {
         <h2 className="mb-4 text-sm font-medium uppercase tracking-wide text-muted">
           See it live
         </h2>
+        <Link
+          href="/explore"
+          className="mb-2 flex items-center justify-between spark-gradient rounded-lg p-4 text-black"
+        >
+          <div>
+            <div className="font-semibold">Explore every ZAO Spark</div>
+            <div className="text-xs opacity-80">
+              Filter the whole ecosystem by type, status, backing, integrations
+            </div>
+          </div>
+          <span className="text-lg">-&gt;</span>
+        </Link>
         <div className="grid gap-2 sm:grid-cols-2">
           <Link href="/c/testing-spark" className="glass glass-hover p-3">
             <div className="font-medium">A Spark, end to end</div>
             <div className="text-xs text-muted">/c/testing-spark - boost, receipts, integrations</div>
           </Link>
-          <Link href="/" className="glass glass-hover p-3">
-            <div className="font-medium">The ecosystem</div>
-            <div className="text-xs text-muted">7 ZAO brands sparking</div>
+          <Link href="/explore" className="glass glass-hover p-3">
+            <div className="font-medium">The directory</div>
+            <div className="text-xs text-muted">every Spark + its parameters, filterable</div>
           </Link>
           <Link href="/admin/empire" className="glass glass-hover p-3">
             <div className="font-medium">Launch a tokenless empire</div>

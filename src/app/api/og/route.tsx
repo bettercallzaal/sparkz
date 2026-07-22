@@ -1,7 +1,5 @@
 import { ImageResponse } from "next/og";
 
-export const runtime = "edge";
-
 // Branded 3:2 card - used as the Farcaster Mini App embed image and the default
 // OG/share image. Query: ?title=...&subtitle=...
 export async function GET(req: Request) {

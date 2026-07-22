@@ -1,0 +1,7 @@
+# Default owner for everything in the repo.
+* @bettercallzaal
+
+# The moat: schema + adapter seams get extra eyes.
+/supabase/       @bettercallzaal
+/src/lib/adapters/ @bettercallzaal
+/agent/          @bettercallzaal

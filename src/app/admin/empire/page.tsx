@@ -72,8 +72,16 @@ export default function EmpirePage() {
     } else setErr("Invalid operator token");
   };
 
+  const walletConfigured = Boolean(process.env.NEXT_PUBLIC_REOWN_PROJECT_ID);
+
   const connect = () => {
     setErr(null);
+    if (!walletConfigured) {
+      setErr(
+        "Wallet connect isn't configured yet - set NEXT_PUBLIC_REOWN_PROJECT_ID.",
+      );
+      return;
+    }
     open();
   };
 

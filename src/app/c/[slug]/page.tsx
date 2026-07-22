@@ -26,10 +26,32 @@ export async function generateMetadata({
     if (data) {
       const c = data as Pick<Capsule, "name" | "bio">;
       const desc = c.bio ?? "A Sparkz Capsule - back the work, not a coin.";
+      const image = `https://trysparkz.com/api/og?slug=${encodeURIComponent(slug)}`;
+      const embed = JSON.stringify({
+        version: "1",
+        imageUrl: image,
+        button: {
+          title: `Open ${c.name}`,
+          action: {
+            type: "launch_miniapp",
+            name: "Sparkz",
+            url: `https://trysparkz.com/c/${slug}`,
+            splashImageUrl: "https://trysparkz.com/api/icon",
+            splashBackgroundColor: "#0a0a0a",
+          },
+        },
+      });
       return {
         title: c.name,
         description: desc,
-        openGraph: { title: `${c.name} - Sparkz`, description: desc, type: "website" },
+        openGraph: {
+          title: `${c.name} - Sparkz`,
+          description: desc,
+          type: "website",
+          images: [{ url: image, width: 1200, height: 800 }],
+        },
+        twitter: { card: "summary_large_image", title: `${c.name} - Sparkz`, description: desc, images: [image] },
+        other: { "fc:miniapp": embed, "fc:frame": embed },
       };
     }
   } catch {

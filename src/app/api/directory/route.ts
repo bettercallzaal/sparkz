@@ -1,5 +1,6 @@
 import { getServiceClient } from "@/lib/supabase/server";
 import { ok, serverError } from "@/lib/http";
+import { PUBLIC_REVIEW_FILTER } from "@/lib/sanitize";
 import type { Capsule, CapsuleBacker, MemeReceipt } from "@/lib/supabase/types";
 
 export const dynamic = "force-dynamic";
@@ -34,7 +35,7 @@ export async function GET() {
         supabase
           .from("capsules")
           .select("*")
-          .or("metadata->>review.is.null,metadata->>review.neq.pending")
+          .or(PUBLIC_REVIEW_FILTER)
           .order("created_at", { ascending: false }),
         supabase.from("capsule_backers").select("capsule_id, kind, backer_id"),
         supabase.from("meme_receipts").select("capsule_id"),

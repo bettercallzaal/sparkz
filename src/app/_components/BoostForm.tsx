@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Flame from "./Flame";
 
 export default function BoostForm({ capsuleId }: { capsuleId: string }) {
   const router = useRouter();
@@ -31,8 +32,9 @@ export default function BoostForm({ capsuleId }: { capsuleId: string }) {
 
   if (state === "done") {
     return (
-      <div className="rounded-lg border border-accent/40 bg-accent/10 p-3 text-sm">
-        Boosted. Thanks for backing the work.
+      <div className="flex items-center gap-3 rounded-lg border border-accent/40 bg-accent/10 p-3 text-sm">
+        <Flame className="h-7 w-7 shrink-0 flame-pop" />
+        <span>Boosted - you are in the data now. Thanks for backing the work.</span>
       </div>
     );
   }

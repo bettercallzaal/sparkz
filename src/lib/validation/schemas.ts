@@ -8,6 +8,19 @@ export const capsuleStatusEnum = z.enum(["spark", "tokenized", "dormant"]);
 export const backerKindEnum = z.enum(["wallet", "fid", "user"]);
 export const backingKindEnum = z.enum(["collectable", "backing", "boost"]);
 
+// Public self-serve spark creation (/start). Deliberately narrow: a visitor may
+// only set a name, an optional one-line bio, a type, and an email. The server owns
+// the slug, forces status='spark', and marks the row self_serve - no operator
+// powers, no economic_config, no arbitrary metadata. `website` is a honeypot: real
+// users never fill it; bots do.
+export const createSparkSchema = z.object({
+  name: z.string().min(2).max(80),
+  bio: z.string().max(280).optional(),
+  type: capsuleTypeEnum,
+  email: z.string().email().max(200),
+  website: z.string().max(200).optional(), // honeypot - real users leave it empty
+});
+
 export const createCapsuleSchema = z.object({
   slug: z
     .string()

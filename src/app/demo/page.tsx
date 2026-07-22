@@ -36,7 +36,7 @@ export default function DemoPage() {
       {/* Hero */}
       <section className="pt-14 pb-8">
         <div className="mb-3 flex items-center gap-2">
-          <Flame className="h-7 w-7" />
+          <Flame className="h-7 w-7 flame-live" />
           <span className="text-xs font-medium uppercase tracking-widest text-accent">
             How Sparkz works
           </span>

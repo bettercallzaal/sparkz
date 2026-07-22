@@ -256,6 +256,37 @@ h1, h2, h3 {
   animation: flame-flicker 2.6s ease-in-out infinite;
   filter: drop-shadow(0 6px 26px rgba(244, 114, 182, 0.5));
 }
+@keyframes flame-pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.4) rotate(-4deg);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.flame-pop {
+  transform-origin: 50% 90%;
+  animation: flame-pop 0.55s ease;
+}
+
+/* Loading skeleton shimmer. */
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+.skeleton {
+  background: color-mix(in srgb, var(--card) 80%, var(--muted));
+  border-radius: 0.5rem;
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
 
 @media (prefers-reduced-motion: reduce) {
   * {

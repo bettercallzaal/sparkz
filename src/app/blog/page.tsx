@@ -19,7 +19,7 @@ export default function BlogIndex() {
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-10">
       <div className="mb-8 flex items-center gap-2">
-        <Flame className="h-7 w-7" />
+        <Flame className="h-7 w-7 flame-live" />
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Blog</h1>
           <p className="text-sm text-muted">The thesis and the stack.</p>

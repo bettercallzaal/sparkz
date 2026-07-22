@@ -94,6 +94,9 @@ export default async function Home() {
           <a href="/architecture" className="hover:text-foreground">
             Architecture
           </a>
+          <Link href="/blog" className="hover:text-foreground">
+            Blog
+          </Link>
           <Link href="/profile" className="hover:text-foreground">
             Sign in with Farcaster
           </Link>

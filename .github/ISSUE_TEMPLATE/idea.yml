@@ -1,0 +1,33 @@
+name: Idea / feature
+description: Propose something Sparkz should do.
+title: "idea: "
+labels: ["idea"]
+body:
+  - type: markdown
+    attributes:
+      value: Sparkz is public on purpose - take the idea and run, or pitch one here.
+  - type: textarea
+    id: idea
+    attributes:
+      label: The idea
+      description: What should Sparkz do, and for whom?
+    validations:
+      required: true
+  - type: dropdown
+    id: gate
+    attributes:
+      label: Which gate does it pass?
+      description: Every feature passes at least one of the four anti-failure gates.
+      multiple: true
+      options:
+        - Helps someone earn, participate, or distribute
+        - We can measure whether it worked
+        - Strengthens the Capsule's proprietary data
+        - Testable with a real project within 30 days
+    validations:
+      required: true
+  - type: textarea
+    id: shape
+    attributes:
+      label: Rough shape
+      description: How might it work? What is the smallest testable version?

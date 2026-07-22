@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+title: Sparkz
+message: "Start with a spark, not a token. Every project is a Capsule, not a coin."
+type: software
+authors:
+  - name: The ZAO
+    website: "https://trysparkz.com"
+repository-code: "https://github.com/bettercallzaal/sparkz"
+url: "https://trysparkz.com"
+abstract: >-
+  Sparkz is a Farcaster-native creator platform where every project is a Capsule -
+  identity, backing, receipts, and Meme Engine memory that compounds - not a coin.
+  The token is an optional output; the moat is the accumulating data.
+keywords:
+  - farcaster
+  - base
+  - creator-economy
+  - capsules
+  - meme-engine
+  - clanker
+license: MIT

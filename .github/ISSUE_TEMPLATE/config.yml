@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Try Sparkz
+    url: https://trysparkz.com
+    about: The live app - explore Capsules, see the Meme Engine, back a spark.
+  - name: How it works
+    url: https://trysparkz.com/demo
+    about: The idea in one page.
+  - name: Discussions
+    url: https://github.com/bettercallzaal/sparkz/discussions
+    about: Open-ended questions, ideas, and show-and-tell.

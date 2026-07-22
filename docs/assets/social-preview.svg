@@ -1,0 +1,51 @@
+<svg width="1280" height="640" viewBox="0 0 1280 640" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sparkz - start with a spark, not a token">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1280" y2="640" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0b0b0f"/>
+      <stop offset="1" stop-color="#16101e"/>
+    </linearGradient>
+    <linearGradient id="spark" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#c084fc"/>
+      <stop offset="1" stop-color="#fbbf24"/>
+    </linearGradient>
+    <linearGradient id="flame" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbbf24"/>
+      <stop offset="0.5" stop-color="#f472b6"/>
+      <stop offset="1" stop-color="#c084fc"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.3" cy="0.28" r="0.7">
+      <stop offset="0" stop-color="#c084fc" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#c084fc" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .wm { font-family: 'Space Grotesk','Segoe UI',Helvetica,Arial,sans-serif; font-weight: 700; }
+      .body { font-family: 'Space Grotesk','Segoe UI',Helvetica,Arial,sans-serif; font-weight: 500; }
+      .chip { font-family: 'Space Grotesk','Segoe UI',Helvetica,Arial,sans-serif; font-weight: 600; letter-spacing: 0.14em; }
+    </style>
+  </defs>
+
+  <rect width="1280" height="640" fill="url(#bg)"/>
+  <rect width="1280" height="640" fill="url(#glow)"/>
+
+  <g transform="translate(96 92) scale(4.6)">
+    <path fill="url(#flame)" fill-rule="evenodd" clip-rule="evenodd"
+      d="M12.963 2.286a.75.75 0 0 0-1.071-.136 9.742 9.742 0 0 0-3.539 6.176 7.547 7.547 0 0 1-1.705-1.715.75.75 0 0 0-1.152-.082A9 9 0 1 0 15.68 4.534a7.46 7.46 0 0 1-2.717-2.248ZM15.75 14.25a3.75 3.75 0 1 1-7.313-1.172c.628.465 1.35.81 2.133 1a5.99 5.99 0 0 1 1.925-3.546 3.75 3.75 0 0 1 3.255 3.718Z"/>
+  </g>
+  <text x="188" y="150" class="wm" font-size="58" fill="#f5f5f4">Sparkz</text>
+
+  <text x="96" y="320" class="wm" font-size="92" fill="url(#spark)">Start with a spark,</text>
+  <text x="96" y="410" class="wm" font-size="92" fill="#ece9e6">not a token.</text>
+
+  <text x="98" y="474" class="body" font-size="30" fill="#a8a29e">Every project is a Capsule, not a coin. The moat is the accumulating data.</text>
+
+  <g transform="translate(98 528)">
+    <rect x="0"   y="0" width="150" height="46" rx="23" fill="#ffffff" fill-opacity="0.05" stroke="#c084fc" stroke-opacity="0.45"/>
+    <text x="75"  y="30" class="chip" font-size="16" fill="#d8b4fe" text-anchor="middle">CAPSULES</text>
+    <rect x="166" y="0" width="188" height="46" rx="23" fill="#ffffff" fill-opacity="0.05" stroke="#f472b6" stroke-opacity="0.45"/>
+    <text x="260" y="30" class="chip" font-size="16" fill="#f9a8d4" text-anchor="middle">MEME ENGINE</text>
+    <rect x="372" y="0" width="234" height="46" rx="23" fill="#ffffff" fill-opacity="0.05" stroke="#fbbf24" stroke-opacity="0.45"/>
+    <text x="489" y="30" class="chip" font-size="16" fill="#fcd34d" text-anchor="middle">FARCASTER-NATIVE</text>
+  </g>
+
+  <text x="1184" y="596" class="body" font-size="24" fill="#726f6b" text-anchor="end">trysparkz.com</text>
+</svg>

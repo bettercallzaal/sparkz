@@ -1,0 +1,36 @@
+name: Bug report
+description: Something in Sparkz is broken or behaving wrong.
+title: "bug: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for the report. One rule for this repo - bring a solution, not just a complaint. A concrete, actionable path gets read and acted on.
+  - type: input
+    id: where
+    attributes:
+      label: Where
+      description: Which page, route, or API? (e.g. /c/zoostr, /api/signals)
+      placeholder: /explore
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, what you got instead.
+    validations:
+      required: true
+  - type: textarea
+    id: fix
+    attributes:
+      label: A path to fix it
+      description: Even a rough idea. What would make this right?
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      description: Browser / device / anything relevant.
+      placeholder: iOS Safari, mobile

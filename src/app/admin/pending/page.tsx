@@ -23,11 +23,15 @@ export default function PendingReview() {
   const [list, setList] = useState<Capsule[]>([]);
   const [busy, setBusy] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    const r = await api<Capsule[]>("/api/capsules?review=pending");
-    if (r.status === 401) return setAuthed(false);
-    setAuthed(true);
-    setList(r.data ?? []);
+  const load = useCallback(() => {
+    api<Capsule[]>("/api/capsules?review=pending").then((r) => {
+      if (r.status === 401) {
+        setAuthed(false);
+        return;
+      }
+      setAuthed(true);
+      setList(r.data ?? []);
+    });
   }, []);
 
   useEffect(() => {

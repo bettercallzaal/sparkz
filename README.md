@@ -63,6 +63,7 @@ Not sure what a word means? Every coined term is defined in plain English in the
 - [Glossary](#glossary)
 - [The idea](#the-idea)
 - [Why it's different](#why-its-different)
+- [No lock-in, by design](#no-lock-in-by-design)
 - [The Capsule](#the-capsule)
 - [Architecture](#architecture)
 - [The Meme Engine loop](#the-meme-engine-loop)
@@ -78,6 +79,7 @@ Not sure what a word means? Every coined term is defined in plain English in the
 - [Security](#security)
 - [The four anti-failure gates](#the-four-anti-failure-gates)
 - [Roadmap](#roadmap)
+- [Still fluid - help us decide](#still-fluid---help-us-decide)
 - [Documentation](#documentation)
 - [Principles](#principles)
 - [Provenance](#provenance)
@@ -112,6 +114,18 @@ Most "creator coin" tools make you launch a coin on day one - which turns your c
 - **Backed by ZAO.** Not a permissionless farm. ZAO stands behind who launches, so it stays quality over speculation, and takes an aligned locked stake - never a fee slice.
 
 **The frame:** wherever there is a coin, there is speculation. So Sparkz leads with the work, not the coin: **back the album.** Perks are what backers enjoy today, not promises. If a token ever comes, it is plumbing - never the pitch.
+
+## No lock-in, by design
+
+Sparkz is built so a creator is never trapped - not in a token, not in a vendor, not even in our own stack. The whole point is to give creators the least-friction way to build, while keeping every exit open.
+
+- **No forced token.** Start with a spark. A coin is optional, later, if ever - and when you do launch, it is on open rails (Clanker on Base), not a Sparkz-only contract.
+- **Your data is yours.** A Capsule is an open record - identity, backers, receipts. Public and OSS-first, so you (or anyone) can read it, export it, or fork the whole thing. The moat is your accumulating data, not our grip on it.
+- **Swap any piece.** Every external system sits behind an adapter - [SignalSource, BackingProvider, ApprovalChannel](#adapter-seams). Back off-chain today and on-chain tomorrow; approve in-app or Discord or Telegram; source signals by hand or from Farcaster - no rewrite, no single vendor to be captured by.
+- **Bring the tools you already use.** Farcaster for identity and reach, GitHub for code, POIDH for bounties, Empire and 0xSplits for treasury. Sparkz is the connective tissue between them, not a walled garden that replaces them.
+- **Decentralized where it counts.** A Farcaster identity you own, Base for settlement, a 0xSplits treasury you control. Nothing goes on-chain until you choose it.
+
+The pitch in one line: **own your work, use any tool, leave any time.**
 
 ## The Capsule
 
@@ -403,6 +417,19 @@ Two tracks: ship a floor, keep innovating.
 - **The convergence** - each audited ZAO project is a Capsule candidate; CoCConcertZ is slated to become a Spark.
 
 Full vision: [ARCHITECTURE.md](docs/ARCHITECTURE.md) and [V1-SCOPE.md](docs/V1-SCOPE.md).
+
+## Still fluid - help us decide
+
+Sparkz is early and public on purpose. The things below are **not locked in**. If you have a take, that is exactly the kind of feedback we want - open a [Discussion](https://github.com/bettercallzaal/sparkz/discussions) or an [idea](https://github.com/bettercallzaal/sparkz/issues/new?template=idea.yml).
+
+- **Backing rails** - `ledger` (off-chain) is live; Clanker, Bankr, Privy, and Empire are candidates behind the same adapter. Which do creators actually want first?
+- **Fees + splits** - the creator-first default is 1/1/98. Is that the right floor? Should Sparkz ever take a slice, or only an aligned, locked stake - never a fee?
+- **The graduation moment** - when and how a spark becomes a token (Clanker v4 today, v5 / B20 soon). What should "graduate" feel like - a button, a vote, a threshold?
+- **Self-serve + moderation** - anyone can light a spark, held for review. How open should this be: fully self-serve, invite-only, or Sign-in-with-Farcaster gated?
+- **Agent autonomy** - the Meme Engine agent is human-in-the-loop by default. How much autonomy should a creator be able to hand it?
+- **Entry points** - Creator is proven; Culture, OSS-repo, and Meme are scaffolded. Which should we build out next?
+
+Bring a take with a concrete path (see [Contributing](CONTRIBUTING.md)) and it gets read and acted on.
 
 ## Documentation
 

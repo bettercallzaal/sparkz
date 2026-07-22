@@ -389,7 +389,7 @@ export default function EmpirePage() {
             <button
               onClick={deploy}
               disabled={busy || !owner || !name || !capsuleId}
-              className="w-full rounded-lg bg-gradient-to-r from-orange-500 via-pink-500 to-accent px-3 py-3 text-sm font-semibold text-white disabled:opacity-40"
+              className="btn-spark w-full rounded-lg px-3 py-3 text-sm disabled:opacity-40"
             >
               {busy ? "Deploying..." : "Sign + launch empire"}
             </button>

@@ -44,7 +44,7 @@ export default function JoinForm({ interest }: { interest?: string }) {
       <button
         onClick={join}
         disabled={state === "busy" || !email.trim()}
-        className="rounded-md bg-accent px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-40"
+        className="btn-spark rounded-md px-5 py-2.5 text-sm disabled:opacity-40"
       >
         {state === "busy" ? "Joining..." : "Join Sparkz"}
       </button>

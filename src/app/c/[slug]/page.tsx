@@ -5,6 +5,8 @@ import { getServiceClient } from "@/lib/supabase/server";
 import type { Capsule, CapsuleBacker, MemeReceipt } from "@/lib/supabase/types";
 import type { OssCapsuleMetadata } from "@/lib/brand-audit/types";
 import BoostForm from "@/app/_components/BoostForm";
+import ShareButton from "@/app/_components/ShareButton";
+import Flame from "@/app/_components/Flame";
 
 export const dynamic = "force-dynamic";
 
@@ -77,8 +79,8 @@ async function load(slug: string): Promise<CapsuleView | null> {
 
 function Stat({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="rounded-lg border border-border bg-card p-3">
-      <div className="text-lg font-semibold">{value}</div>
+    <div className="glass p-3 text-center sm:text-left">
+      <div className="stat-num spark-text text-2xl font-bold">{value}</div>
       <div className="text-[11px] uppercase tracking-wide text-muted">{label}</div>
     </div>
   );
@@ -103,14 +105,22 @@ export default async function CapsulePage({
       </Link>
 
       <header className="mt-4 mb-6">
-        <div className="flex items-center gap-2">
-          <h1 className="text-2xl font-semibold tracking-tight">{capsule.name}</h1>
-          <span className="rounded bg-black/40 px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted">
-            {capsule.type}
-          </span>
-          <span className="rounded bg-accent/20 px-2 py-0.5 text-[10px] uppercase tracking-wide text-accent">
-            {capsule.status}
-          </span>
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <Flame className="h-7 w-7 shrink-0" />
+            <h1 className="text-2xl font-semibold tracking-tight">{capsule.name}</h1>
+            <span className="rounded bg-black/40 px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted">
+              {capsule.type}
+            </span>
+            <span className="rounded bg-accent/20 px-2 py-0.5 text-[10px] uppercase tracking-wide text-accent">
+              {capsule.status}
+            </span>
+          </div>
+          <ShareButton
+            path={`/c/${capsule.slug}`}
+            text={`Backing ${capsule.name} on Sparkz - a spark, not a coin.`}
+            className="shrink-0"
+          />
         </div>
         {capsule.bio && <p className="mt-2 text-sm text-muted">{capsule.bio}</p>}
         {oss && (
@@ -132,7 +142,7 @@ export default async function CapsulePage({
       </div>
 
       {/* Boost engine: free public support signal (not a payment). */}
-      <section className="mb-8 rounded-lg border border-border bg-card p-4">
+      <section className="glass mb-8 p-4">
         <h2 className="mb-1 text-sm font-medium">Boost {capsule.name}</h2>
         <p className="mb-3 text-xs text-muted">
           Back the work with a free boost. Dollar backing opens with fiat/BYOK soon.

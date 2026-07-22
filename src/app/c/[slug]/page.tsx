@@ -77,6 +77,40 @@ async function load(slug: string): Promise<CapsuleView | null> {
   };
 }
 
+function IntegrationCard({
+  label,
+  sub,
+  value,
+  connected,
+  href,
+}: {
+  label: string;
+  sub: string;
+  value: string;
+  connected: boolean;
+  href?: string;
+}) {
+  const inner = (
+    <div className="glass glass-hover h-full p-3">
+      <div className="flex items-center justify-between">
+        <span className="text-sm font-medium">{label}</span>
+        <span
+          className={`h-1.5 w-1.5 rounded-full ${connected ? "bg-green-500" : "bg-zinc-600"}`}
+        />
+      </div>
+      <div className="mt-0.5 text-[10px] uppercase tracking-wide text-muted">{sub}</div>
+      <div className="mt-2 truncate font-mono text-xs text-foreground">{value}</div>
+    </div>
+  );
+  return href ? (
+    <a href={href} target="_blank" rel="noreferrer" className="block">
+      {inner}
+    </a>
+  ) : (
+    inner
+  );
+}
+
 function Stat({ label, value }: { label: string; value: string | number }) {
   return (
     <div className="glass p-3 text-center sm:text-left">
@@ -98,6 +132,16 @@ export default async function CapsulePage({
   const { capsule, receipts, backers, boostCount } = view;
   const oss = capsule.type === "oss" ? (capsule.metadata as OssCapsuleMetadata) : null;
   const fc = (capsule.metadata as { farcaster?: { fid?: number | null; username?: string | null; channel?: string | null } }).farcaster;
+  const econ = (capsule.economic_config ?? {}) as {
+    empire_address?: string | null;
+    empire_id?: string | null;
+    token_address?: string | null;
+    agent?: string | null;
+  };
+  const emailCount = new Set(
+    backers.filter((b) => b.backer_id.includes("@")).map((b) => b.backer_id),
+  ).size;
+  const short = (a: string) => `${a.slice(0, 6)}...${a.slice(-4)}`;
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-8">
@@ -171,6 +215,51 @@ export default async function CapsulePage({
         <Stat label="Boosts" value={boostCount} />
         <Stat label="Receipts" value={receipts.length} />
       </div>
+
+      {/* Integrations - the Spark as a hub */}
+      <section className="mb-8">
+        <h2 className="mb-3 text-sm font-medium">Integrations</h2>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+          <IntegrationCard
+            label="Treasury"
+            sub="Empire Builder"
+            connected={Boolean(econ.empire_address || econ.empire_id)}
+            value={econ.empire_address ? short(econ.empire_address) : econ.empire_id ? "linked" : "not deployed"}
+            href={econ.empire_id ? `https://www.empirebuilder.world/empire/${econ.empire_id}` : undefined}
+          />
+          <IntegrationCard
+            label="Token"
+            sub="Clanker"
+            connected={Boolean(econ.token_address)}
+            value={econ.token_address ? short(econ.token_address) : "spark (no coin)"}
+          />
+          <IntegrationCard
+            label="Email list"
+            sub="Community"
+            connected={emailCount > 0}
+            value={`${emailCount} on list`}
+          />
+          <IntegrationCard
+            label="Bounties"
+            sub="POIDH"
+            connected={false}
+            value="connect soon"
+          />
+          <IntegrationCard
+            label="Farcaster"
+            sub="Distribution"
+            connected={Boolean(fc?.channel || fc?.username || fc?.fid)}
+            value={fc?.channel ? `/${fc.channel}` : fc?.username ? `@${fc.username}` : fc?.fid ? `fid ${fc.fid}` : "not linked"}
+            href={fc?.channel ? `https://farcaster.xyz/~/channel/${fc.channel}` : fc?.username ? `https://farcaster.xyz/${fc.username}` : undefined}
+          />
+          <IntegrationCard
+            label="Agent"
+            sub="ElizaOS"
+            connected={Boolean(econ.agent)}
+            value={econ.agent ? "configured" : "scaffold"}
+          />
+        </div>
+      </section>
 
       {/* Boost engine: free public support signal (not a payment). */}
       <section className="glass mb-8 p-4">

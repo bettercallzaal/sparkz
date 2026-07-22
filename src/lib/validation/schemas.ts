@@ -41,6 +41,17 @@ export const approveDraftSchema = z.object({
   lessons: z.string().max(2000).optional(),
 });
 
+export const linkFarcasterSchema = z
+  .object({
+    capsule_id: z.string().uuid(),
+    fid: z.number().int().positive().optional(),
+    username: z.string().max(64).optional(),
+    channel: z.string().max(64).optional(), // channel id, e.g. "zao"
+  })
+  .refine((d) => d.fid || d.username || d.channel, {
+    message: "provide at least one of fid, username, or channel",
+  });
+
 export const linkEmpireSchema = z.object({
   capsule_id: z.string().uuid(),
   empire_id: z.string().min(2).max(120), // 0x..., fid..., c-..., or slug

@@ -97,6 +97,7 @@ export default async function CapsulePage({
 
   const { capsule, receipts, backers, boostCount } = view;
   const oss = capsule.type === "oss" ? (capsule.metadata as OssCapsuleMetadata) : null;
+  const fc = (capsule.metadata as { farcaster?: { fid?: number | null; username?: string | null; channel?: string | null } }).farcaster;
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-8">
@@ -119,6 +120,7 @@ export default async function CapsulePage({
           <ShareButton
             path={`/c/${capsule.slug}`}
             text={`Backing ${capsule.name} on Sparkz - a spark, not a coin.`}
+            channel={fc?.channel ?? undefined}
             className="shrink-0"
           />
         </div>
@@ -132,6 +134,35 @@ export default async function CapsulePage({
           >
             {oss.repo_owner}/{oss.repo_name} -&gt;
           </a>
+        )}
+        {fc && (fc.username || fc.channel || fc.fid) && (
+          <div className="mt-2 flex flex-wrap gap-2 text-xs">
+            {fc.username && (
+              <a
+                href={`https://farcaster.xyz/${fc.username}`}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-full border border-accent/40 bg-accent/10 px-2 py-0.5 text-accent hover:border-accent"
+              >
+                @{fc.username}
+              </a>
+            )}
+            {fc.channel && (
+              <a
+                href={`https://farcaster.xyz/~/channel/${fc.channel}`}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-full border border-accent/40 bg-accent/10 px-2 py-0.5 text-accent hover:border-accent"
+              >
+                /{fc.channel}
+              </a>
+            )}
+            {fc.fid && !fc.username && (
+              <span className="rounded-full border border-border px-2 py-0.5 text-muted">
+                fid {fc.fid}
+              </span>
+            )}
+          </div>
         )}
       </header>
 

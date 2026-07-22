@@ -68,8 +68,8 @@ export default async function Home() {
           <h2 className="text-sm font-medium uppercase tracking-wide text-muted">
             The ecosystem
           </h2>
-          <Link href="/audit" className="text-xs text-muted hover:text-foreground">
-            Brand audit -&gt;
+          <Link href="/explore" className="text-xs text-accent hover:underline">
+            Explore all -&gt;
           </Link>
         </div>
         <Ecosystem capsules={capsules} />
@@ -87,6 +87,9 @@ export default async function Home() {
           </a>
           <Link href="/demo" className="hover:text-foreground">
             How it works
+          </Link>
+          <Link href="/explore" className="hover:text-foreground">
+            Explore
           </Link>
           <Link href="/profile" className="hover:text-foreground">
             Sign in with Farcaster

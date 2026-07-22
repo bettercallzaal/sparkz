@@ -8,10 +8,10 @@ Most "creator coin" tools make you launch a coin on day one. Sparkz flips it: yo
 
 ## Why it's different
 
-- **No token to start.** Begin with a spark and collectables. A token is opt-in, later, if ever - so you build real momentum before anything is on-chain.
+- **No token to start.** Begin with a spark - identity, backing, receipts. A token is opt-in, later, if ever - so you build real momentum before anything is on-chain.
 - **Full customization + optimization.** When you do launch, an AI advisor tunes every knob Clanker gives you (fee split, vault, governance), deployed through a mutable 0xSplits contract so your split stays adjustable, then builds on top of Empire.
 - **A boost engine.** A leaderboard that amplifies the creator and rewards the community that actually shows up - the extra lift a plain coin never gives you.
-- **Collectables come standard.** Backing a creator's work earns collectables automatically.
+- **Collectables on the roadmap.** Backing a creator's work will earn collectables - a v2 layer, not live today.
 - **Backed by ZAO.** Not a permissionless farm. ZAO stands behind who launches, so it stays quality over speculation, and takes an aligned locked stake - never a fee slice.
 
 ## The frame

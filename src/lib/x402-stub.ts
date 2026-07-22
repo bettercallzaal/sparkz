@@ -5,8 +5,7 @@
 // STATIC imports do, so the names that cdp-sdk statically imports are provided as
 // no-ops to satisfy Turbopack's build-time export checking.
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-const noop = (..._args: any[]): any => {
+const noop = (): never => {
   throw new Error("x402 payment path is stubbed in Sparkz and must not be called");
 };
 
@@ -21,4 +20,5 @@ export const ExactEvmScheme = noop;
 export const ExactSvmScheme = noop;
 export const UptoEvmScheme = noop;
 
-export default {};
+const x402Stub = {};
+export default x402Stub;

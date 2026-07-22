@@ -19,13 +19,24 @@ export default function ShareButton({
   const url = () =>
     typeof window !== "undefined" ? `${window.location.origin}${path}` : path;
 
-  const farcaster = () => {
+  const farcaster = async () => {
     const u = url();
+    setOpen(false);
+    // Inside a Farcaster Mini App, open the native composer (composeCast). On plain
+    // web, fall back to the Warpcast compose deeplink.
+    try {
+      const { sdk } = await import("@farcaster/miniapp-sdk");
+      if (await sdk.isInMiniApp()) {
+        await sdk.actions.composeCast({ text, embeds: [u] });
+        return;
+      }
+    } catch {
+      // SDK unavailable / not in a Mini App - use the deeplink below.
+    }
     const compose = `https://warpcast.com/~/compose?text=${encodeURIComponent(
       text,
     )}&embeds[]=${encodeURIComponent(u)}`;
     window.open(compose, "_blank", "noopener,noreferrer");
-    setOpen(false);
   };
 
   const x = () => {

@@ -91,4 +91,9 @@ export const deployEmpireSchema = z.object({
   name: z.string().min(1).max(100),
   owner: z.string().regex(/^0x[a-fA-F0-9]{40}$/),
   signature: z.string().regex(/^0x[a-fA-F0-9]+$/),
+  logo_uri: z.string().url().max(500).optional(),
+  bio: z.string().max(2000).optional(),
+  website_url: z.string().url().max(300).optional(),
+  twitter_url: z.string().url().max(300).optional(),
+  telegram_url: z.string().url().max(300).optional(),
 });

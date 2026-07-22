@@ -29,6 +29,11 @@ export async function POST(req: NextRequest) {
         owner: parsed.data.owner,
         name: parsed.data.name,
         signature: parsed.data.signature as `0x${string}`,
+        logoUri: parsed.data.logo_uri,
+        bio: parsed.data.bio,
+        website_url: parsed.data.website_url,
+        twitter_url: parsed.data.twitter_url,
+        telegram_url: parsed.data.telegram_url,
       }));
     } catch (empireErr) {
       const msg =

@@ -36,6 +36,12 @@ export default function EmpirePage() {
   const [busy, setBusy] = useState(false);
   const [token, setToken] = useState("");
   const [needsAuth, setNeedsAuth] = useState(false);
+  const [logoUri, setLogoUri] = useState("");
+  const [bio, setBio] = useState("");
+  const [website, setWebsite] = useState("");
+  const [twitter, setTwitter] = useState("");
+  const [telegram, setTelegram] = useState("");
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     fetch("/api/capsules")
@@ -71,6 +77,30 @@ export default function EmpirePage() {
     }
   };
 
+  const uploadLogo = async (file: File) => {
+    setUploading(true);
+    setErr(null);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const r = await fetch("/api/upload", { method: "POST", body: fd });
+      const j = await r.json();
+      if (r.status === 401 || r.status === 503) {
+        setNeedsAuth(true);
+        return;
+      }
+      if (!j.ok) {
+        setErr(j.error);
+        return;
+      }
+      setLogoUri(j.data.url);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Upload failed");
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const deploy = async () => {
     setBusy(true);
     setErr(null);
@@ -79,7 +109,17 @@ export default function EmpirePage() {
       const r = await fetch("/api/empire/deploy", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ capsule_id: capsuleId, name, owner, signature }),
+        body: JSON.stringify({
+          capsule_id: capsuleId,
+          name,
+          owner,
+          signature,
+          logo_uri: logoUri || undefined,
+          bio: bio.trim() || undefined,
+          website_url: website.trim() || undefined,
+          twitter_url: twitter.trim() || undefined,
+          telegram_url: telegram.trim() || undefined,
+        }),
       });
       const j = await r.json();
       if (r.status === 401 || r.status === 503) {
@@ -179,9 +219,16 @@ export default function EmpirePage() {
           {/* Preview - what you're minting */}
           <div className="mb-5 overflow-hidden rounded-xl border border-border bg-card">
             <div className="flex items-center gap-3 border-b border-border p-4">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-black/40">
-                <Flame className="h-6 w-6" />
-              </div>
+              {logoUri ? (
+                <div
+                  className="h-11 w-11 shrink-0 rounded-lg bg-cover bg-center"
+                  style={{ backgroundImage: `url(${logoUri})` }}
+                />
+              ) : (
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-black/40">
+                  <Flame className="h-6 w-6" />
+                </div>
+              )}
               <div className="min-w-0">
                 <div className="truncate font-semibold">{name || "Your Capsule"}</div>
                 <div className="text-xs text-muted">Tokenless empire - Base</div>
@@ -226,6 +273,77 @@ export default function EmpirePage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Empire name"
+                className="w-full rounded-md border border-border bg-card px-3 py-2.5 text-sm"
+              />
+            </div>
+
+            {/* Logo */}
+            <div>
+              <label className="mb-1 block text-xs uppercase tracking-wide text-muted">
+                Logo (optional)
+              </label>
+              <div className="flex items-center gap-3">
+                {logoUri && (
+                  <div
+                    className="h-12 w-12 shrink-0 rounded-lg bg-cover bg-center"
+                    style={{ backgroundImage: `url(${logoUri})` }}
+                  />
+                )}
+                <label className="flex-1 cursor-pointer rounded-md border border-border bg-card px-3 py-2.5 text-center text-sm hover:border-accent">
+                  {uploading ? "Uploading..." : logoUri ? "Replace image" : "Upload image"}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const f = e.target.files?.[0];
+                      if (f) void uploadLogo(f);
+                    }}
+                  />
+                </label>
+                {logoUri && (
+                  <button
+                    onClick={() => setLogoUri("")}
+                    className="text-xs text-muted hover:text-foreground"
+                  >
+                    remove
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Description */}
+            <div>
+              <label className="mb-1 block text-xs uppercase tracking-wide text-muted">
+                Description (optional)
+              </label>
+              <textarea
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                rows={2}
+                placeholder="One line on what this empire is."
+                className="w-full rounded-md border border-border bg-card px-3 py-2.5 text-sm"
+              />
+            </div>
+
+            {/* Socials */}
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <input
+                value={website}
+                onChange={(e) => setWebsite(e.target.value)}
+                placeholder="Website URL"
+                className="w-full rounded-md border border-border bg-card px-3 py-2.5 text-sm"
+              />
+              <input
+                value={twitter}
+                onChange={(e) => setTwitter(e.target.value)}
+                placeholder="X URL"
+                className="w-full rounded-md border border-border bg-card px-3 py-2.5 text-sm"
+              />
+              <input
+                value={telegram}
+                onChange={(e) => setTelegram(e.target.value)}
+                placeholder="Telegram URL"
                 className="w-full rounded-md border border-border bg-card px-3 py-2.5 text-sm"
               />
             </div>

@@ -10,11 +10,15 @@
     "seed:zoostr": "node --env-file=.env.local scripts/seed-zoostr.mjs"
   },
   "dependencies": {
+    "@reown/appkit": "^1.8.22",
+    "@reown/appkit-adapter-wagmi": "^1.8.22",
     "@supabase/supabase-js": "^2.109.0",
+    "@tanstack/react-query": "^5.101.4",
     "next": "16.2.10",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "viem": "^2.55.4",
+    "wagmi": "^3.7.3",
     "zod": "^4.4.3"
   },
   "devDependencies": {

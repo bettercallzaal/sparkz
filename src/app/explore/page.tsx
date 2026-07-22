@@ -60,7 +60,8 @@ export default function ExplorePage() {
 
   const toggle = (set: Set<string>, v: string, setter: (s: Set<string>) => void) => {
     const n = new Set(set);
-    n.has(v) ? n.delete(v) : n.add(v);
+    if (n.has(v)) n.delete(v);
+    else n.add(v);
     setter(n);
   };
 

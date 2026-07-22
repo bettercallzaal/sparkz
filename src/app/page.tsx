@@ -85,8 +85,10 @@ export default async function Home() {
           >
             GitHub
           </a>
+          <Link href="/profile" className="hover:text-foreground">
+            Sign in with Farcaster
+          </Link>
           <span className="opacity-40">Discord - soon</span>
-          <span className="opacity-40">Farcaster - soon</span>
           <Link href="/admin" className="hover:text-foreground">
             Operator
           </Link>

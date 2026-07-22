@@ -1,5 +1,9 @@
 import { ImageResponse } from "next/og";
 
+// Render on-demand, never prerendered at build (ImageResponse can't prerender in
+// the Vercel build sandbox - it fails the build).
+export const dynamic = "force-dynamic";
+
 // 1024x1024 app icon for the Farcaster Mini App manifest (iconUrl must be a
 // 1024px PNG). Flame on a dark ground.
 export async function GET() {

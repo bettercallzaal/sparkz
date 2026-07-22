@@ -31,7 +31,11 @@ export async function GET() {
     const supabase = getServiceClient();
     const [{ data: capsules }, { data: backers }, { data: receipts }] =
       await Promise.all([
-        supabase.from("capsules").select("*").order("created_at", { ascending: false }),
+        supabase
+          .from("capsules")
+          .select("*")
+          .or("metadata->>review.is.null,metadata->>review.neq.pending")
+          .order("created_at", { ascending: false }),
         supabase.from("capsule_backers").select("capsule_id, kind, backer_id"),
         supabase.from("meme_receipts").select("capsule_id"),
       ]);

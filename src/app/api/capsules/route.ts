@@ -4,13 +4,26 @@ import { createCapsuleSchema } from "@/lib/validation/schemas";
 import { ok, serverError, zodError } from "@/lib/http";
 import { requireAdmin } from "@/lib/auth";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    const wantPending = new URL(req.url).searchParams.get("review") === "pending";
     const supabase = getServiceClient();
-    const { data, error } = await supabase
+    let query = supabase
       .from("capsules")
       .select("*")
       .order("created_at", { ascending: false });
+
+    if (wantPending) {
+      // The operator's review queue - admin only.
+      const denied = requireAdmin(req);
+      if (denied) return denied;
+      query = query.filter("metadata->>review", "eq", "pending");
+    } else {
+      // Public list: hide self-serve sparks awaiting review.
+      query = query.or("metadata->>review.is.null,metadata->>review.neq.pending");
+    }
+
+    const { data, error } = await query;
     if (error) throw error;
     return ok(data);
   } catch (err) {

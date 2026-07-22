@@ -5,6 +5,7 @@ import { getServiceClient } from "@/lib/supabase/server";
 import type { Capsule, CapsuleBacker, MemeReceipt } from "@/lib/supabase/types";
 import type { OssCapsuleMetadata } from "@/lib/brand-audit/types";
 import BoostForm from "@/app/_components/BoostForm";
+import Avatar from "@/app/_components/Avatar";
 import ShareButton from "@/app/_components/ShareButton";
 import Flame from "@/app/_components/Flame";
 
@@ -164,24 +165,39 @@ export default async function CapsulePage({
     backers.filter((b) => b.backer_id.includes("@")).map((b) => b.backer_id),
   ).size;
   const short = (a: string) => `${a.slice(0, 6)}...${a.slice(-4)}`;
+  const meta = capsule.metadata as { image?: string; review?: string };
+  const image = meta.image ?? null;
+  const pending = meta.review === "pending";
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-8">
-      <Link href="/" className="text-sm text-muted hover:text-foreground">
-        &larr; Capsules
+      <Link href="/explore" className="text-sm text-muted hover:text-foreground">
+        &larr; Explore
       </Link>
 
-      <header className="mt-4 mb-6">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <Flame className="h-7 w-7 shrink-0" />
-            <h1 className="text-2xl font-semibold tracking-tight">{capsule.name}</h1>
-            <span className="rounded bg-black/40 px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted">
-              {capsule.type}
-            </span>
-            <span className="rounded bg-accent/20 px-2 py-0.5 text-[10px] uppercase tracking-wide text-accent">
-              {capsule.status}
-            </span>
+      {pending && (
+        <div className="mt-4 flex items-center gap-2 rounded-lg border border-accent-3/40 bg-accent-3/10 p-3 text-sm">
+          <Flame className="h-5 w-5 shrink-0" />
+          <span>
+            This spark is <span className="font-semibold">pending review</span>. It is
+            live for you to share, but stays out of Explore until an operator approves it.
+          </span>
+        </div>
+      )}
+
+      <header className="mb-6 mt-4">
+        <div className="flex items-start gap-4">
+          <Avatar name={capsule.name} image={image} className="h-16 w-16 text-2xl" />
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <h1 className="text-2xl font-bold tracking-tight">{capsule.name}</h1>
+              <span className="rounded-md bg-black/40 px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted">
+                {capsule.type}
+              </span>
+              <span className="rounded-md bg-accent/20 px-2 py-0.5 text-[10px] uppercase tracking-wide text-accent">
+                {capsule.status}
+              </span>
+            </div>
           </div>
           <ShareButton
             path={`/c/${capsule.slug}`}
@@ -190,7 +206,7 @@ export default async function CapsulePage({
             className="shrink-0"
           />
         </div>
-        {capsule.bio && <p className="mt-2 text-sm text-muted">{capsule.bio}</p>}
+        {capsule.bio && <p className="mt-3 text-sm text-muted">{capsule.bio}</p>}
         {oss && (
           <a
             href={oss.repo_url}

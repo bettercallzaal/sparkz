@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Clean-install build + typecheck + lint on every PR. A fresh `npm install` pulls
+# the same transitive deps Vercel does (which local dev often doesn't), so this
+# catches build breaks - like the @x402/Turbopack failure - before they reach main.
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install (clean, matches Vercel resolution)
+        run: npm install --legacy-peer-deps
+      - name: Typecheck
+        run: npx tsc --noEmit
+      - name: Lint
+        run: npm run lint
+      - name: Build
+        run: npm run build

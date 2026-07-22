@@ -1,7 +1,5 @@
 import { ImageResponse } from "next/og";
 
-export const runtime = "edge";
-
 // 1024x1024 app icon for the Farcaster Mini App manifest (iconUrl must be a
 // 1024px PNG). Flame on a dark ground.
 export async function GET() {

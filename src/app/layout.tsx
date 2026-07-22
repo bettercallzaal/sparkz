@@ -1,6 +1,23 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import MiniAppReady from "./_components/MiniAppReady";
+
+// Farcaster Mini App embed - makes a link to Sparkz render a launch card in-feed.
+const fcMiniapp = JSON.stringify({
+  version: "1",
+  imageUrl: "https://trysparkz.com/api/og",
+  button: {
+    title: "Open Sparkz",
+    action: {
+      type: "launch_miniapp",
+      name: "Sparkz",
+      url: "https://trysparkz.com",
+      splashImageUrl: "https://trysparkz.com/api/icon",
+      splashBackgroundColor: "#0a0a0a",
+    },
+  },
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,6 +57,11 @@ export const metadata: Metadata = {
     title: "Sparkz - start with a spark, not a token",
     description: "Back the album, not buy a coin.",
   },
+  other: {
+    "fc:miniapp": fcMiniapp,
+    // back-compat alias some clients still read
+    "fc:frame": fcMiniapp,
+  },
 };
 
 export default function RootLayout({
@@ -52,7 +74,10 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <MiniAppReady />
+        {children}
+      </body>
     </html>
   );
 }

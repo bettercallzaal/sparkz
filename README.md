@@ -27,7 +27,7 @@
 </p>
 
 <p align="center">
-  <a href="https://claude.ai/code/artifact/2f7eff18-ddae-41f5-92e8-935cf0166a5d"><img src="https://img.shields.io/badge/View%20the%20interactive%20architecture%20%E2%86%92-c084fc?style=for-the-badge" alt="Interactive architecture" /></a>
+  <a href="https://trysparkz.com/architecture"><img src="https://img.shields.io/badge/View%20the%20interactive%20architecture%20%E2%86%92-c084fc?style=for-the-badge" alt="Interactive architecture" /></a>
 </p>
 
 ---
@@ -93,7 +93,7 @@ The Capsule type lives in `capsules.type` (`creator | culture | oss | meme`); ty
 
 Server-first Next.js App Router. All privileged work runs server-side with the Supabase service-role key; the browser never sees a secret. Every external system sits behind an adapter or a thin client so it can be swapped without touching the UI.
 
-> [View the interactive architecture](https://claude.ai/code/artifact/2f7eff18-ddae-41f5-92e8-935cf0166a5d) - step through the Meme Engine loop, the system map, the data model, and the adapter seams.
+> [View the interactive architecture](https://trysparkz.com/architecture) - step through the Meme Engine loop, the system map, the data model, and the adapter seams.
 
 ```mermaid
 flowchart TB

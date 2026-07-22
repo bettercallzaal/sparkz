@@ -18,6 +18,10 @@ const nextConfig: NextConfig = {
       "@x402/svm/exact/client": x402Stub,
     },
   },
+  // Clean URL for the static interactive architecture page (public/architecture.html).
+  async rewrites() {
+    return [{ source: "/architecture", destination: "/architecture.html" }];
+  },
 };
 
 export default nextConfig;

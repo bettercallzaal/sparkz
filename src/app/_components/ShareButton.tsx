@@ -8,10 +8,12 @@ import { useState } from "react";
 export default function ShareButton({
   path,
   text,
+  channel,
   className = "",
 }: {
   path: string;
   text: string;
+  channel?: string | null;
   className?: string;
 }) {
   const [open, setOpen] = useState(false);
@@ -27,15 +29,20 @@ export default function ShareButton({
     try {
       const { sdk } = await import("@farcaster/miniapp-sdk");
       if (await sdk.isInMiniApp()) {
-        await sdk.actions.composeCast({ text, embeds: [u] });
+        await sdk.actions.composeCast({
+          text,
+          embeds: [u],
+          ...(channel ? { channelKey: channel } : {}),
+        });
         return;
       }
     } catch {
       // SDK unavailable / not in a Mini App - use the deeplink below.
     }
-    const compose = `https://warpcast.com/~/compose?text=${encodeURIComponent(
-      text,
-    )}&embeds[]=${encodeURIComponent(u)}`;
+    const compose =
+      `https://warpcast.com/~/compose?text=${encodeURIComponent(text)}` +
+      `&embeds[]=${encodeURIComponent(u)}` +
+      (channel ? `&channelKey=${encodeURIComponent(channel)}` : "");
     window.open(compose, "_blank", "noopener,noreferrer");
   };
 

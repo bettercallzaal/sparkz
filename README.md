@@ -34,8 +34,33 @@
 
 **Sparkz lets a creator start with a spark, not a token.** Build community and momentum first - backing, receipts, a boost engine that amplifies you - and launch a token only if and when it makes sense. No token required to get started. Back the album, not buy a coin.
 
+## New here? Start with this
+
+**Sparkz is for creators - artists, musicians, writers, builders - and the people around them. You do not need to code to use it, or to help.**
+
+Here is the whole idea in plain words: instead of launching a coin on day one and hoping people trade it, you open a **Capsule** - a home for your project that holds your identity, the people backing you, and a record of everything you have made. You build real support first. A token is optional, and only later, if it ever makes sense.
+
+<p align="center">
+  <a href="https://trysparkz.com"><img src="https://img.shields.io/badge/Try%20Sparkz%20%E2%86%92-fbbf24?style=for-the-badge" alt="Try Sparkz" /></a>
+  &nbsp;
+  <a href="https://trysparkz.com/demo"><img src="https://img.shields.io/badge/See%20how%20it%20works-c084fc?style=for-the-badge" alt="See how it works" /></a>
+</p>
+
+- **Earn** - supporters back your work, and you keep what you make.
+- **Connect** - your project gets a Farcaster home and a community that shows up.
+- **Build** - every moment you share becomes a post and a permanent record.
+
+<!-- DEMO GIF SLOT: record a 20-30s screen capture of the loop on trysparkz.com
+     (open a Capsule -> boost -> Meme Engine drafts -> approve -> cast), save it as
+     docs/assets/demo.gif, and replace this comment with:
+     <p align="center"><img src="docs/assets/demo.gif" alt="Sparkz in 30 seconds" width="100%" /></p> -->
+
+Not sure what a word means? Every coined term is defined in plain English in the [Glossary](#glossary). Want to help without writing code? See [Contribute without coding](CONTRIBUTING.md#contribute-without-coding).
+
 ## Contents
 
+- [New here? Start with this](#new-here-start-with-this)
+- [Glossary](#glossary)
 - [The idea](#the-idea)
 - [Why it's different](#why-its-different)
 - [The Capsule](#the-capsule)
@@ -56,6 +81,23 @@
 - [Documentation](#documentation)
 - [Principles](#principles)
 - [Provenance](#provenance)
+
+## Glossary
+
+Plain-language definitions. If a coined word shows up anywhere and you are not sure what it means, it is here.
+
+| Term | In plain words |
+| --- | --- |
+| **Spark** | A project before it is a coin. You start here. |
+| **Capsule** | Your project's home base on Sparkz - its identity, its backers, and a record of what it has made. Not a coin. |
+| **Back / Boost** | To support a creator you believe in. Free - no wallet, no coin required. |
+| **Meme Engine** | The part of Sparkz that turns a cultural moment into a post and a permanent record. |
+| **Meme Receipt** | The proof - which moment, why it mattered, and what it earned. |
+| **Graduate** | To launch a token later, only if the momentum is real. Optional, always. |
+| **Farcaster** | An open social network (like Twitter, but you own your identity). Sparkz posts there first. |
+| **Base** | The low-cost blockchain (built by Coinbase) Sparkz uses if a project ever graduates to a token. |
+| **Empire** | A treasury a project can set up before any token exists - a shared account for its money. |
+| **The ZAO** | The creator collective Sparkz is part of. |
 
 ## The idea
 

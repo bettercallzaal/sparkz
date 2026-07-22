@@ -1,0 +1,45 @@
+name: Feedback (no coding needed)
+description: Tell us what would make Sparkz better for you. For creators and community - no technical knowledge required.
+title: "feedback: "
+labels: ["feedback", "non-code"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for helping shape Sparkz. There are no wrong answers here - just tell us what you think in plain words.
+  - type: dropdown
+    id: who
+    attributes:
+      label: What kind of creator are you?
+      options:
+        - Musician
+        - Visual artist
+        - Writer
+        - Community builder
+        - Developer
+        - Just curious
+    validations:
+      required: true
+  - type: textarea
+    id: better
+    attributes:
+      label: What would make Sparkz better for you?
+      description: Anything - a feature you wish existed, something confusing, something you loved.
+      placeholder: "Example: an easier way to share my Capsule to Farcaster, or a mobile app."
+    validations:
+      required: true
+  - type: dropdown
+    id: matters
+    attributes:
+      label: What matters most to you?
+      multiple: true
+      options:
+        - Earning from my work
+        - My community
+        - Creative tools
+        - Owning my data
+        - Not needing a wallet or coin
+  - type: input
+    id: link
+    attributes:
+      label: A link (optional)
+      description: Your Capsule, your work, or anything that gives context.

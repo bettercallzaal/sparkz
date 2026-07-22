@@ -3,6 +3,27 @@
 Sparkz is public on purpose. If you want to take the idea and run, go for it. If you
 want to contribute here, welcome.
 
+## Contribute without coding
+
+You do not need to write code to make Sparkz better. Some of the most useful help has
+nothing to do with the codebase:
+
+- **Creators and artists** - open a Capsule, use it, and tell us what is missing or
+  confusing. File a [feedback issue](https://github.com/bettercallzaal/sparkz/issues/new?template=feedback.yml).
+  Design a flame sticker, a Capsule icon, or a Meme Receipt look.
+- **Community** - welcome new people and answer questions in
+  [Discussions](https://github.com/bettercallzaal/sparkz/discussions). Suggest a
+  real project that should become a Spark.
+- **Writers** - improve the [Glossary](README.md#glossary), write a plain-language
+  explainer, or a short "why I tried Sparkz" post.
+- **Translators** - translate the README or the Glossary into another language
+  (edit right in the GitHub web UI, no tools needed).
+- **Testers** - try the live app at [trysparkz.com](https://trysparkz.com), find what
+  breaks, and file a [bug report](https://github.com/bettercallzaal/sparkz/issues/new?template=bug_report.yml).
+
+Not sure where to start? Say hi in [Discussions](https://github.com/bettercallzaal/sparkz/discussions)
+and we will point you at something.
+
 ## One rule
 
 Bring solutions, not just complaints. Feedback with a concrete, actionable path gets

@@ -111,42 +111,6 @@ export default async function Home() {
         </div>
         <Ecosystem capsules={capsules} />
       </section>
-
-      <footer className="border-t border-border py-10 text-sm text-muted">
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-          <a
-            href="https://github.com/bettercallzaal/sparkz"
-            target="_blank"
-            rel="noreferrer"
-            className="hover:text-foreground"
-          >
-            GitHub
-          </a>
-          <Link href="/demo" className="hover:text-foreground">
-            How it works
-          </Link>
-          <Link href="/explore" className="hover:text-foreground">
-            Explore
-          </Link>
-          <a href="/architecture" className="hover:text-foreground">
-            Architecture
-          </a>
-          <Link href="/blog" className="hover:text-foreground">
-            Blog
-          </Link>
-          <Link href="/profile" className="hover:text-foreground">
-            Sign in with Farcaster
-          </Link>
-          <span className="opacity-40">Discord - soon</span>
-          <Link href="/admin" className="hover:text-foreground">
-            Operator
-          </Link>
-        </div>
-        <p className="mt-4 text-xs">
-          Sparkz - back the work, build the collective, earn transparently. Part of
-          the ZAO ecosystem.
-        </p>
-      </footer>
     </main>
   );
 }

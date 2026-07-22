@@ -55,7 +55,15 @@ export async function POST(req: NextRequest) {
         name: input.name.trim(),
         bio: input.bio?.trim() || null,
         status: "spark",
-        metadata: { self_serve: true, owner_email: input.email, ip_hash: ipHash },
+        // Pending review: created but held out of public listings until an operator
+        // approves it (see loadPublicCapsules, /api/directory, /api/capsules GET).
+        // The creator can still reach and share their own /c/[slug] page.
+        metadata: {
+          self_serve: true,
+          owner_email: input.email,
+          ip_hash: ipHash,
+          review: "pending",
+        },
       })
       .select("id, slug")
       .single();

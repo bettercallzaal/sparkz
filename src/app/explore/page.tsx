@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Flame from "@/app/_components/Flame";
+import Avatar from "@/app/_components/Avatar";
 import type { DirectoryItem } from "@/app/api/directory/route";
 
 type SortKey = "new" | "backers" | "boosts" | "receipts" | "name";
@@ -163,9 +164,10 @@ export default function ExplorePage() {
         {filtered.map((c) => (
           <li key={c.id}>
             <Link href={`/c/${c.slug}`} className="glass glass-hover block p-4">
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2">
+              <div className="flex items-start gap-3">
+                <Avatar name={c.name} className="h-10 w-10 text-sm" />
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
                     <span className="font-medium">{c.name}</span>
                     <span className="rounded bg-black/40 px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-muted">
                       {c.type}

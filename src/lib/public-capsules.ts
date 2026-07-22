@@ -9,6 +9,8 @@ export async function loadPublicCapsules(): Promise<Capsule[]> {
     const { data } = await supabase
       .from("capsules")
       .select("*")
+      // Hide self-serve sparks awaiting review (keep everything with no review flag).
+      .or("metadata->>review.is.null,metadata->>review.neq.pending")
       .order("created_at", { ascending: false });
     return (data as Capsule[]) ?? [];
   } catch {

@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import MiniAppReady from "./_components/MiniAppReady";
 import Header from "./_components/Header";
+import Footer from "./_components/Footer";
 
 // Farcaster Mini App embed - makes a link to Sparkz render a launch card in-feed.
 const fcMiniapp = JSON.stringify({
@@ -81,6 +82,7 @@ export default function RootLayout({
         <MiniAppReady />
         <Header />
         {children}
+        <Footer />
       </body>
     </html>
   );

@@ -160,6 +160,103 @@ h1, h2, h3 {
   color: var(--muted);
 }
 
+/* Meme-native hero -------------------------------------------------------- */
+.hero-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  z-index: 0;
+  pointer-events: none;
+}
+.hero-blob-v {
+  width: 380px;
+  height: 380px;
+  background: #7c3aed;
+  opacity: 0.42;
+  top: -140px;
+  left: -120px;
+}
+.hero-blob-a {
+  width: 320px;
+  height: 320px;
+  background: #f59e0b;
+  opacity: 0.22;
+  top: 20px;
+  right: -120px;
+}
+.eyebrow-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  color: #ffd873;
+  border: 1.5px solid rgba(251, 191, 36, 0.4);
+  background: rgba(251, 191, 36, 0.08);
+  padding: 7px 14px;
+  border-radius: 999px;
+  transform: rotate(-1.5deg);
+}
+.sticker {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 9px 15px;
+  border-radius: 14px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  box-shadow: 0 6px 20px -12px rgba(0, 0, 0, 0.7);
+}
+.sticker-v {
+  border-color: rgba(192, 132, 252, 0.5);
+  color: #ddb8ff;
+  transform: rotate(-2deg);
+}
+.sticker-p {
+  border-color: rgba(244, 114, 182, 0.5);
+  color: #f9a8d4;
+  transform: rotate(1.5deg);
+}
+.sticker-a {
+  border-color: rgba(251, 191, 36, 0.5);
+  color: #fcd34d;
+  transform: rotate(-1deg);
+}
+.squig {
+  position: relative;
+  white-space: nowrap;
+}
+.squig > svg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.16em;
+  width: 100%;
+  height: 0.18em;
+  overflow: visible;
+}
+@keyframes flame-flicker {
+  0%,
+  100% {
+    transform: scale(1) rotate(-1deg);
+  }
+  25% {
+    transform: scale(1.05, 1.08) rotate(1deg);
+  }
+  50% {
+    transform: scale(0.98, 1.03) rotate(-1.5deg);
+  }
+  75% {
+    transform: scale(1.04, 1.06) rotate(0.5deg);
+  }
+}
+.flame-live {
+  transform-origin: 50% 90%;
+  animation: flame-flicker 2.6s ease-in-out infinite;
+  filter: drop-shadow(0 6px 26px rgba(244, 114, 182, 0.5));
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.001ms !important;

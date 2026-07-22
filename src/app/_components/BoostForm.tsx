@@ -49,7 +49,7 @@ export default function BoostForm({ capsuleId }: { capsuleId: string }) {
       <button
         onClick={boost}
         disabled={state === "busy" || !backer.trim()}
-        className="rounded-md bg-accent px-5 py-2 text-sm font-semibold text-white disabled:opacity-40"
+        className="btn-spark rounded-md px-5 py-2 text-sm disabled:opacity-40"
       >
         {state === "busy" ? "Boosting..." : "Boost"}
       </button>

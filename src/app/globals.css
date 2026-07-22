@@ -1,19 +1,23 @@
 @import "tailwindcss";
 
-/* Sparkz visual system - dark, culture-forward, mobile-first. */
+/* Sparkz visual system v2 - Zora-grade: dark, creator-first, premium-but-human.
+   Deep black scale + violet->amber "spark" gradient. Space Grotesk display. */
 :root {
-  --background: #0a0a0b;
-  --foreground: #ededed;
-  --muted: #a1a1aa;
-  --card: #131316;
-  --border: #26262b;
-  --accent: #a855f7;   /* violet - primary */
-  --accent-2: #ec4899; /* pink */
-  --accent-3: #f97316; /* orange - the flame warm end */
+  --background: #0a0a0a;   /* deep black */
+  --surface: #141416;      /* raised surface */
+  --card: #17171a;         /* card */
+  --foreground: #f5f5f5;
+  --muted: #9a9aa2;
+  --border: #262629;
+  --accent: #c084fc;       /* violet - primary (Farcaster-adjacent) */
+  --accent-2: #ec4899;     /* pink - flame mid */
+  --accent-3: #fbbf24;     /* amber - warmth, gradient end */
+  --flame-1: #f97316;      /* orange - flame identity */
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-card: var(--card);
@@ -22,6 +26,7 @@
   --color-accent-2: var(--accent-2);
   --color-accent-3: var(--accent-3);
   --font-sans: var(--font-geist-sans);
+  --font-display: var(--font-display);
   --font-mono: var(--font-geist-mono);
 }
 
@@ -32,34 +37,65 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
-/* The Sparkz flame gradient - orange -> pink -> violet. */
+/* Headings use the display face - the premium hierarchy signal. */
+h1, h2, h3 {
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  letter-spacing: -0.02em;
+}
+
+/* Flame gradient (orange->pink->violet) - the Sparkz identity mark. */
 .spark-gradient {
-  background-image: linear-gradient(120deg, var(--accent-3), var(--accent-2), var(--accent));
+  background-image: linear-gradient(120deg, var(--flame-1), var(--accent-2), var(--accent));
 }
 .spark-text {
-  background-image: linear-gradient(120deg, var(--accent-3), var(--accent-2), var(--accent));
+  background-image: linear-gradient(120deg, var(--flame-1), var(--accent-2), var(--accent));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-/* Glass card - subtle depth on the dark surface. */
+/* The signature CTA: violet->amber with a glow that expands on hover. */
+.btn-spark {
+  background-image: linear-gradient(135deg, var(--accent) 0%, var(--accent-3) 100%);
+  color: #0a0a0a;
+  font-weight: 600;
+  box-shadow: 0 8px 24px -6px color-mix(in srgb, var(--accent) 45%, transparent);
+  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+}
+.btn-spark:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 44px -10px color-mix(in srgb, var(--accent) 60%, transparent);
+  filter: saturate(1.08);
+}
+.btn-spark:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* Glass - for data/secondary surfaces (selective, not everywhere). */
 .glass {
-  background: color-mix(in srgb, var(--card) 88%, transparent);
+  background: color-mix(in srgb, var(--card) 72%, transparent);
+  backdrop-filter: blur(10px);
   border: 1px solid var(--border);
   border-radius: 0.75rem;
   transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
 }
 .glass-hover:hover {
   border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent),
-    0 8px 30px -12px color-mix(in srgb, var(--accent) 40%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent),
+    0 10px 34px -14px color-mix(in srgb, var(--accent) 45%, transparent);
 }
 
-/* Big gradient stat number. */
+/* Solid card - for content/primary surfaces. */
+.card-solid {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+}
+
 .stat-num {
+  font-family: var(--font-display), var(--font-sans), sans-serif;
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 
 @media (prefers-reduced-motion: reduce) {

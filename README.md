@@ -26,6 +26,10 @@
   <img src="https://img.shields.io/badge/status-Milestone%201-fbbf24" alt="Milestone 1" />
 </p>
 
+<p align="center">
+  <a href="https://claude.ai/code/artifact/2f7eff18-ddae-41f5-92e8-935cf0166a5d"><img src="https://img.shields.io/badge/View%20the%20interactive%20architecture%20%E2%86%92-c084fc?style=for-the-badge" alt="Interactive architecture" /></a>
+</p>
+
 ---
 
 **Sparkz lets a creator start with a spark, not a token.** Build community and momentum first - backing, receipts, a boost engine that amplifies you - and launch a token only if and when it makes sense. No token required to get started. Back the album, not buy a coin.
@@ -88,6 +92,8 @@ The Capsule type lives in `capsules.type` (`creator | culture | oss | meme`); ty
 ## Architecture
 
 Server-first Next.js App Router. All privileged work runs server-side with the Supabase service-role key; the browser never sees a secret. Every external system sits behind an adapter or a thin client so it can be swapped without touching the UI.
+
+> [View the interactive architecture](https://claude.ai/code/artifact/2f7eff18-ddae-41f5-92e8-935cf0166a5d) - step through the Meme Engine loop, the system map, the data model, and the adapter seams.
 
 ```mermaid
 flowchart TB
@@ -322,11 +328,11 @@ npm run dev                  # http://localhost:3000
 npm run seed:zoostr          # optional: the first spark
 ```
 
-Full walkthrough (env vars, keys, migrations, one at a time): [SETUP.md](SETUP.md).
+Full walkthrough (env vars, keys, migrations, one at a time): [SETUP.md](docs/SETUP.md).
 
 ## Deploy
 
-Vercel + the two domains (trysparkz.com / sparkz.lol). PR-only to `main`; the GitHub integration auto-deploys on merge. Full steps: [DEPLOY.md](DEPLOY.md).
+Vercel + the two domains (trysparkz.com / sparkz.lol). PR-only to `main`; the GitHub integration auto-deploys on merge. Full steps: [DEPLOY.md](docs/DEPLOY.md).
 
 ## Security
 
@@ -335,7 +341,7 @@ Vercel + the two domains (trysparkz.com / sparkz.lol). PR-only to `main`; the Gi
 - RLS on every table, deny-anon by default.
 - Operator token: `timingSafeEqual`, httpOnly cookie, fails closed.
 
-Full posture: [SECURITY.md](SECURITY.md).
+Full posture: [SECURITY.md](docs/SECURITY.md).
 
 ## The four anti-failure gates
 
@@ -354,20 +360,20 @@ Two tracks: ship a floor, keep innovating.
 - **Next** - Community Swarm (supporters remix + get attributed), the autonomous ElizaOS agent (the Meme Engine casts itself), dollar backing, OSS-repo Capsules for the ZAO brand audit.
 - **The convergence** - each audited ZAO project is a Capsule candidate; CoCConcertZ is slated to become a Spark.
 
-Full vision: [ARCHITECTURE.md](ARCHITECTURE.md) and [V1-SCOPE.md](V1-SCOPE.md).
+Full vision: [ARCHITECTURE.md](docs/ARCHITECTURE.md) and [V1-SCOPE.md](docs/V1-SCOPE.md).
 
 ## Documentation
 
 | Doc | What's in it |
 | --- | --- |
-| [ARCHITECTURE.md](ARCHITECTURE.md) | The full two-track vision (the 9 upgrades, gates, moat) |
-| [V1-SCOPE.md](V1-SCOPE.md) | The shippable floor + product gates |
-| [BUILD-MILESTONE-1.md](BUILD-MILESTONE-1.md) | Milestone 1 scope (the Capsule foundation) |
-| [MVP.md](MVP.md) | Readiness + brand-test playbook |
-| [DEMO.md](DEMO.md) | Live-stream demo script |
-| [SETUP.md](SETUP.md) | Local setup, step by step |
-| [DEPLOY.md](DEPLOY.md) | Vercel + domains |
-| [SECURITY.md](SECURITY.md) | Security posture |
+| [ARCHITECTURE.md](docs/ARCHITECTURE.md) | The full two-track vision (the 9 upgrades, gates, moat) |
+| [V1-SCOPE.md](docs/V1-SCOPE.md) | The shippable floor + product gates |
+| [BUILD-MILESTONE-1.md](docs/BUILD-MILESTONE-1.md) | Milestone 1 scope (the Capsule foundation) |
+| [MVP.md](docs/MVP.md) | Readiness + brand-test playbook |
+| [DEMO.md](docs/DEMO.md) | Live-stream demo script |
+| [SETUP.md](docs/SETUP.md) | Local setup, step by step |
+| [DEPLOY.md](docs/DEPLOY.md) | Vercel + domains |
+| [SECURITY.md](docs/SECURITY.md) | Security posture |
 | [docs/STACK.md](docs/STACK.md) | File-by-file stack map |
 
 ## Principles

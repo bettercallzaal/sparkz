@@ -51,11 +51,13 @@ export const metadata: Metadata = {
       "Every Sparkz project is a Capsule, not a coin. Back the album, not buy a coin.",
     siteName: "Sparkz",
     type: "website",
+    images: [{ url: "/api/og", width: 1200, height: 800 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Sparkz - start with a spark, not a token",
     description: "Back the album, not buy a coin.",
+    images: ["/api/og"],
   },
   other: {
     "fc:miniapp": fcMiniapp,

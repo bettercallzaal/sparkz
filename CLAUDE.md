@@ -14,9 +14,9 @@ Open-Source repo / Meme Engine) so v1.5 is additive.
 
 ## Read these before coding (in order)
 
-1. `BUILD-MILESTONE-1.md` - the current scope (the Capsule foundation).
-2. `V1-SCOPE.md` - the shippable floor + product gates.
-3. `ARCHITECTURE.md` - the full vision (the 9 upgrades).
+1. `docs/BUILD-MILESTONE-1.md` - the current scope (the Capsule foundation).
+2. `docs/V1-SCOPE.md` - the shippable floor + product gates.
+3. `docs/ARCHITECTURE.md` - the full vision (the 9 upgrades).
 
 ## Operating mode (right now)
 

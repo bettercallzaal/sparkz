@@ -15,6 +15,10 @@ export function badRequest(message: string, details?: unknown) {
   );
 }
 
+export function tooManyRequests(message: string) {
+  return NextResponse.json({ ok: false, error: message }, { status: 429 });
+}
+
 export function serverError(err: unknown, where: string) {
   console.error(`[sparkz:${where}]`, err);
   return NextResponse.json(

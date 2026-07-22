@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { Capsule } from "@/lib/supabase/types";
 import { tokenlessCustomMessage } from "@/lib/empire/client";
-import { getInjectedAddress, signMessageInjected } from "@/lib/wallet/injected";
+import { useAppKit } from "@reown/appkit/react";
+import { useAccount, useSignMessage } from "wagmi";
 
 function Flame({ className = "" }: { className?: string }) {
   return (
@@ -30,7 +31,10 @@ export default function EmpirePage() {
   const [capsules, setCapsules] = useState<Capsule[]>([]);
   const [capsuleId, setCapsuleId] = useState("");
   const [name, setName] = useState("");
-  const [owner, setOwner] = useState("");
+  const { address } = useAccount();
+  const { open } = useAppKit();
+  const { signMessageAsync } = useSignMessage();
+  const owner = address ?? "";
   const [result, setResult] = useState<{ id: string; treasury: string | null } | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -68,13 +72,9 @@ export default function EmpirePage() {
     } else setErr("Invalid operator token");
   };
 
-  const connect = async () => {
+  const connect = () => {
     setErr(null);
-    try {
-      setOwner(await getInjectedAddress());
-    } catch (e) {
-      setErr(e instanceof Error ? e.message : "Wallet connect failed");
-    }
+    open();
   };
 
   const uploadLogo = async (file: File) => {
@@ -105,7 +105,9 @@ export default function EmpirePage() {
     setBusy(true);
     setErr(null);
     try {
-      const signature = await signMessageInjected(tokenlessCustomMessage(name));
+      const signature = await signMessageAsync({
+        message: tokenlessCustomMessage(name),
+      });
       const r = await fetch("/api/empire/deploy", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

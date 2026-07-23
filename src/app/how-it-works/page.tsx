@@ -7,10 +7,10 @@ const OG_URL = `${BASE_URL}/api/og?title=${encodeURIComponent('How it works')}&s
 export const metadata: Metadata = {
   title: 'How it works — Sparkz',
   description:
-    'How Sparkz wires 0xSplits to Clanker for adjustable, on-chain community fee distribution. The technical pattern and the trust model.',
+    'How Sparkz wires 0xSplits to Clanker for adjustable, on-chain community fee allocation. The technical pattern and the trust model.',
   openGraph: {
     title: 'How it works — Sparkz',
-    description: '0xSplits + Clanker. Adjustable fee splits, on-chain distribution, music-native — not a frozen wallet address.',
+    description: '0xSplits + Clanker. Adjustable fee splits, on-chain allocation, music-native — not a frozen wallet address.',
     url: `${BASE_URL}/how-it-works`,
     images: [{ url: OG_URL, width: 1200, height: 630, alt: 'How it works — Sparkz' }],
     type: 'website',

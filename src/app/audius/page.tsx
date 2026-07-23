@@ -3,7 +3,7 @@ import Link from 'next/link'
 import AudiusConnect from '@/components/AudiusConnect'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://sparkz.xyz'
-const OG_URL = `${BASE_URL}/api/og?title=${encodeURIComponent('Audius × Sparkz')}&sub=${encodeURIComponent('Your streams. Your split. Music-native fee distribution.')}`
+const OG_URL = `${BASE_URL}/api/og?title=${encodeURIComponent('Audius × Sparkz')}&sub=${encodeURIComponent('Your streams. Your split. Music-native fee allocation.')}`
 
 export const metadata: Metadata = {
   title: 'Audius integration — Sparkz',
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     'Connect your Audius catalog to Sparkz. See your stream stats today — plays, favorites, reposts. In v2, fan engagement maps directly to fee split weights for your community pool.',
   openGraph: {
     title: 'Audius × Sparkz',
-    description: 'Your Audius streams wired to a 0xSplits contract. Music-native community fee distribution.',
+    description: 'Your Audius streams wired to a 0xSplits contract. Music-native community fee allocation.',
     url: `${BASE_URL}/audius`,
     images: [{ url: OG_URL, width: 1200, height: 630, alt: 'Audius × Sparkz' }],
     type: 'website',
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Audius × Sparkz',
-    description: 'Your streams. Your split. Music-native fee distribution.',
+    description: 'Your streams. Your split. Music-native fee allocation.',
     images: [OG_URL],
   },
   other: {

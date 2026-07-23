@@ -200,7 +200,7 @@ export default function SplitWizard() {
       address: c.address || `[WALLET_FOR_${c.name.replace(/\s+/g, '_').toUpperCase() || c.role.toUpperCase()}]`,
       shareOfCreatorPool: `${c.percent}%`,
     })),
-    feeDistribution: {
+    feeAllocation: {
       communityPool: `${splitConfig.communityPool}%`,
       creatorPool: `${splitConfig.creatorPool}%`,
       treasury: `${splitConfig.treasury}%`,

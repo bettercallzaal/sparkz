@@ -4,6 +4,7 @@ import Link from "next/link";
 import { SignInButton, useProfile } from "@farcaster/auth-kit";
 import Flame from "@/app/_components/Flame";
 import CreateSparkAsFarcaster from "@/app/_components/CreateSparkAsFarcaster";
+import YourSparks from "@/app/_components/YourSparks";
 
 export default function ProfilePage() {
   const {
@@ -78,6 +79,7 @@ export default function ProfilePage() {
             )}
           </div>
 
+          {fid && <YourSparks fid={fid} />}
           {fid && <CreateSparkAsFarcaster fid={fid} username={username ?? undefined} />}
         </section>
       )}

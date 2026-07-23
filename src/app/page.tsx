@@ -3,6 +3,7 @@ import { loadPublicCapsules } from "@/lib/public-capsules";
 import Ecosystem from "./_components/Ecosystem";
 import JoinForm from "./_components/JoinForm";
 import Flame from "./_components/Flame";
+import ActivityStrip from "./_components/ActivityStrip";
 
 export const dynamic = "force-dynamic";
 
@@ -84,6 +85,8 @@ export default async function Home() {
           </span>
         </div>
       </section>
+
+      <ActivityStrip />
 
       <section className="py-12">
         <h2 className="mb-6 text-sm font-medium uppercase tracking-wide text-muted">

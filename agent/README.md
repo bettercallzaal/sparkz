@@ -78,10 +78,28 @@ Start in `propose` (nothing publishes without a human). Move to `confidence` wit
 high threshold once the scorer earns trust for a given Capsule. `auto` is for a
 Capsule whose voice is well-established and whose operator wants a hands-off engine.
 
-## Upgrade path: ElizaOS
+## Persona: the cheeky intern, not the billboard
 
-`character.json` holds the persona (system prompt, style, knowledge) in ElizaOS format.
-The lean loop here is the runnable core; dropping it into an ElizaOS runtime (adding
-the Farcaster + Base plugins) is the path to a richer agent that also converses, reads
-Farcaster for its own signals, and triggers on-chain graduation. The seams
-(`SparkzClient`, `NeynarClient`, the scorer) carry over unchanged.
+The persona (`character.json`) is steered by the Nounish Prof brainstorm
+(`docs/notes/nounish-prof-brainstorm.md`): a brand agent should be the "cheeky
+intern" - a little funny, a little human, that **replies to other people on the
+timeline** rather than broadcasting top-level "look at me" casts. That is where the
+connection is. Human-in-the-loop stays the default: the agent drafts, a human
+approves or kills it before it goes out (the same model Clanker droids use).
+
+## Agent backends - creator's choice, BYOK
+
+Sparkz should not lock a creator to one agent runtime. The direction is to surface
+options and let the creator pick:
+
+- **This lean agent** (runnable now) - the flag -> score -> approve -> cast loop.
+- **ElizaOS** - drop the persona into a full runtime for a richer agent that also
+  converses and reads Farcaster for its own signals.
+- **Clanker droids** - Farcaster-native agent accounts (watch where they are going;
+  today you do not own the FID and there is no BYOK).
+- **OpenClaw / Hermes** - other agent runtimes worth offering as options.
+
+Across all of them the non-negotiable is **BYOK** (bring your own key): the creator
+supplies their own model/API key so Sparkz never sits in the profit path. The seams
+(`SparkzClient`, `NeynarClient`, the scorer) carry over unchanged whichever runtime
+a creator chooses.

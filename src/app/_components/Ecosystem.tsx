@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Avatar from "./Avatar";
 import type { Capsule, CapsuleType } from "@/lib/supabase/types";
 
 const TYPE_LABEL: Record<CapsuleType, string> = {
@@ -29,17 +30,24 @@ export default function Ecosystem({ capsules }: { capsules: Capsule[] }) {
               <li key={c.id}>
                 <Link
                   href={`/c/${c.slug}`}
-                  className="block h-full rounded-lg border border-border bg-card p-4 transition-colors hover:border-accent"
+                  className="flex h-full items-start gap-3 rounded-lg border border-border bg-card p-4 transition-colors hover:border-accent"
                 >
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium">{c.name}</span>
-                    <span className="rounded bg-black/40 px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted">
-                      {c.status}
-                    </span>
+                  <Avatar
+                    name={c.name}
+                    image={(c.metadata as { image?: string })?.image ?? null}
+                    className="h-9 w-9 text-sm"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-medium">{c.name}</span>
+                      <span className="shrink-0 rounded bg-black/40 px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted">
+                        {c.status}
+                      </span>
+                    </div>
+                    {c.bio && (
+                      <p className="mt-1 line-clamp-2 text-sm text-muted">{c.bio}</p>
+                    )}
                   </div>
-                  {c.bio && (
-                    <p className="mt-1 line-clamp-2 text-sm text-muted">{c.bio}</p>
-                  )}
                 </Link>
               </li>
             ))}

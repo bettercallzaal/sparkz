@@ -44,6 +44,7 @@ function Chip({
 
 export default function ExplorePage() {
   const [items, setItems] = useState<DirectoryItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const [q, setQ] = useState("");
   const [types, setTypes] = useState<Set<string>>(new Set());
   const [statuses, setStatuses] = useState<Set<string>>(new Set());
@@ -55,7 +56,9 @@ export default function ExplorePage() {
       .then((r) => r.json())
       .then((j) => {
         if (j.ok) setItems(j.data);
-      });
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
   const toggle = (set: Set<string>, v: string, setter: (s: Set<string>) => void) => {
@@ -161,7 +164,20 @@ export default function ExplorePage() {
       </div>
 
       {/* Results */}
-      <ul className="space-y-2">
+      {loading && (
+        <ul className="space-y-2">
+          {[0, 1, 2, 3].map((i) => (
+            <li key={i} className="glass flex items-center gap-3 p-4">
+              <div className="skeleton h-10 w-10 rounded-2xl" />
+              <div className="flex-1 space-y-2">
+                <div className="skeleton h-4 w-40" />
+                <div className="skeleton h-3 w-full max-w-md" />
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+      <ul className={loading ? "hidden" : "space-y-2"}>
         {filtered.map((c) => (
           <li key={c.id}>
             <Link href={`/c/${c.slug}`} className="glass glass-hover block p-4">
@@ -204,7 +220,9 @@ export default function ExplorePage() {
           </li>
         ))}
         {filtered.length === 0 && (
-          <li className="py-8 text-center text-sm text-muted">No Sparks match those filters.</li>
+          <li className="py-10 text-center text-sm text-muted">
+            {anyFilter ? "No sparks match those filters - try clearing some." : "No sparks yet."}
+          </li>
         )}
       </ul>
     </main>

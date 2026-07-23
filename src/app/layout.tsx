@@ -4,6 +4,7 @@ import "./globals.css";
 import MiniAppReady from "./_components/MiniAppReady";
 import Header from "./_components/Header";
 import Footer from "./_components/Footer";
+import Providers from "./_components/Providers";
 
 // Farcaster Mini App embed - makes a link to Sparkz render a launch card in-feed.
 const fcMiniapp = JSON.stringify({
@@ -79,10 +80,12 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col overflow-x-hidden">
-        <MiniAppReady />
-        <Header />
-        {children}
-        <Footer />
+        <Providers>
+          <MiniAppReady />
+          <Header />
+          {children}
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

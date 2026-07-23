@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Flame from "./Flame";
+import HeaderAuth from "./HeaderAuth";
 
 // Global sticky header - every page gets it via the root layout. Flame home,
 // a few key destinations, and a persistent "Try Sparkz" CTA so a first-time
@@ -32,6 +33,7 @@ export default function Header() {
           <Link href="/explore" className="text-sm text-muted hover:text-foreground sm:hidden">
             Explore
           </Link>
+          <HeaderAuth />
           <Link href="/start" className="btn-spark rounded-lg px-4 py-1.5 text-sm">
             Try Sparkz
           </Link>

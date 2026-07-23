@@ -17,8 +17,15 @@ export const createSparkSchema = z.object({
   name: z.string().min(2).max(80),
   bio: z.string().max(280).optional(),
   type: capsuleTypeEnum,
-  email: z.string().email().max(200),
+  email: z.string().email().max(200).optional(), // optional when signed in with Farcaster
   website: z.string().max(200).optional(), // honeypot - real users leave it empty
+  // Optional Farcaster identity (set when the creator signed in with Farcaster).
+  owner_fid: z.number().int().positive().optional(),
+  fc_username: z.string().max(64).optional(),
+  fc_channel: z.string().max(64).optional(),
+}).refine((v) => v.email || v.owner_fid, {
+  message: "Provide an email or sign in with Farcaster",
+  path: ["email"],
 });
 
 export const createCapsuleSchema = z.object({

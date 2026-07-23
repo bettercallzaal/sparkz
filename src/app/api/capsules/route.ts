@@ -3,6 +3,8 @@ import { getServiceClient } from "@/lib/supabase/server";
 import { createCapsuleSchema } from "@/lib/validation/schemas";
 import { ok, serverError, zodError } from "@/lib/http";
 import { requireAdmin } from "@/lib/auth";
+import { publicCapsule, PUBLIC_REVIEW_FILTER } from "@/lib/sanitize";
+import type { Capsule } from "@/lib/supabase/types";
 
 export async function GET(req: NextRequest) {
   try {
@@ -14,18 +16,21 @@ export async function GET(req: NextRequest) {
       .order("created_at", { ascending: false });
 
     if (wantPending) {
-      // The operator's review queue - admin only.
+      // The operator's review queue - admin only. Full rows (incl owner_email).
       const denied = requireAdmin(req);
       if (denied) return denied;
       query = query.filter("metadata->>review", "eq", "pending");
-    } else {
-      // Public list: hide self-serve sparks awaiting review.
-      query = query.or("metadata->>review.is.null,metadata->>review.neq.pending");
+      const { data, error } = await query;
+      if (error) throw error;
+      return ok(data);
     }
 
+    // Public list: only unreviewed + approved (hides pending AND rejected), and
+    // strip PII from metadata before it leaves the server.
+    query = query.or(PUBLIC_REVIEW_FILTER);
     const { data, error } = await query;
     if (error) throw error;
-    return ok(data);
+    return ok(((data as Capsule[]) ?? []).map(publicCapsule));
   } catch (err) {
     return serverError(err, "capsules.GET");
   }

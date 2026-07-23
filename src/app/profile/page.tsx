@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { SignInButton, useProfile } from "@farcaster/auth-kit";
 import Flame from "@/app/_components/Flame";
+import CreateSparkAsFarcaster from "@/app/_components/CreateSparkAsFarcaster";
 
 export default function ProfilePage() {
   const {
@@ -77,9 +78,7 @@ export default function ProfilePage() {
             )}
           </div>
 
-          <p className="mt-5 text-xs text-muted">
-            Next: link this identity to your Capsules and cast receipts from it.
-          </p>
+          {fid && <CreateSparkAsFarcaster fid={fid} username={username ?? undefined} />}
         </section>
       )}
     </main>

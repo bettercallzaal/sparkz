@@ -26,6 +26,19 @@ export function verifyAdminToken(token: string): boolean {
   return safeEqual(token, expected);
 }
 
+// Boolean predicate: is this request from the operator? For routes that stay open
+// to the public but want to grant the operator an exemption (e.g. skip the
+// self-serve rate limit) without returning a 401.
+export function isAdmin(req: NextRequest): boolean {
+  const expected = process.env.SPARKZ_ADMIN_TOKEN;
+  if (!expected) return false;
+  const provided =
+    req.cookies.get(ADMIN_COOKIE)?.value ??
+    req.headers.get("x-sparkz-admin-token") ??
+    "";
+  return safeEqual(provided, expected);
+}
+
 // Returns null when authorized; otherwise the response to return immediately.
 export function requireAdmin(req: NextRequest): NextResponse | null {
   const expected = process.env.SPARKZ_ADMIN_TOKEN;

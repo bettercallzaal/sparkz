@@ -1,4 +1,5 @@
 import { getServiceClient } from "@/lib/supabase/server";
+import { publicCapsule, PUBLIC_REVIEW_FILTER } from "@/lib/sanitize";
 import type { Capsule } from "@/lib/supabase/types";
 
 // Shared public read of Capsules for the landing surfaces. Server-side, never
@@ -9,10 +10,10 @@ export async function loadPublicCapsules(): Promise<Capsule[]> {
     const { data } = await supabase
       .from("capsules")
       .select("*")
-      // Hide self-serve sparks awaiting review (keep everything with no review flag).
-      .or("metadata->>review.is.null,metadata->>review.neq.pending")
+      // Only unreviewed (operator-made) + approved sparks; strip PII defensively.
+      .or(PUBLIC_REVIEW_FILTER)
       .order("created_at", { ascending: false });
-    return (data as Capsule[]) ?? [];
+    return ((data as Capsule[]) ?? []).map(publicCapsule);
   } catch {
     return [];
   }

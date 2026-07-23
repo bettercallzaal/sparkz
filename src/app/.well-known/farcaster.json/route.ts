@@ -20,6 +20,7 @@ export function GET() {
       version: "1",
       name: "Sparkz",
       homeUrl: ORIGIN,
+      canonicalDomain: "trysparkz.com",
       iconUrl: `${ORIGIN}/api/icon`,
       imageUrl: `${ORIGIN}/api/og`,
       buttonTitle: "Open Sparkz",

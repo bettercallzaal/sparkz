@@ -6,7 +6,7 @@ status: research-complete
 last-validated: 2026-07-23
 original-query: "keep researching (Farcaster Mini Apps - what is Sparkz missing)"
 outcome: BUILD
-pr: "https://github.com/bettercallzaal/sparkz/pull/187"
+pr: "https://github.com/bettercallzaal/sparkz/pull/189"
 ---
 
 # Farcaster Mini Apps - what Sparkz was missing

@@ -81,6 +81,20 @@ export default function GraduationPanel() {
           told directly, and we are showing it anyway rather than leave you guessing - we
           will correct it the moment we can confirm it in writing.
         </p>
+        <div className="mt-4 rounded-lg border border-accent/30 bg-accent/5 p-3">
+          <div className="text-xs font-semibold text-accent">Your token, provably yours</div>
+          <p className="mt-1 text-xs leading-relaxed text-muted">
+            Base&apos;s new token standard (B20) ships real freeze-and-seize powers - an
+            issuer can be given the ability to freeze or seize holder tokens. Those powers
+            are opt-in, and a token can launch with{" "}
+            <span className="font-mono text-foreground">no admin at all</span>. Sparkz
+            defaults every graduation to admin-less: nobody - not Sparkz, not the launcher
+            - can freeze, seize, mint, or pause your holders. When you graduate, the
+            token&apos;s role configuration is shown right here, so it is a fact you can
+            check, not a promise you have to trust.
+          </p>
+        </div>
+
         <p className="mt-3 text-xs text-muted">
           The test: <span className="text-foreground">what would the token do?</span> Until
           there is a real answer, stay a spark. No vendor lock - your data, audience, and

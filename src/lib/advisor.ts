@@ -58,11 +58,29 @@ const TOKEN_ADVICE: Record<TokenTiming, string> = {
     'No token needed. Use the patronage tier system ($5/$25/$100 recurring) with Stripe. Patronage revenue flows through Stripe — set up 0xSplits separately if you want to split payouts between collaborators.',
 }
 
-const FEE_ADVICE: Record<FeeModel, string> = {
-  low: 'At low volume ($1k–10k/day): community pool generates $35–350/week. This is early stages — the value is community signal and fee transparency, not dollar amounts.',
-  medium:
-    'At medium volume ($10k–100k/day): community pool generates $350–3,500/week. Enough that top contributors feel it. Weekly receipts build the compounding trust loop.',
-  high: 'At high volume ($100k+/day): community pool generates $3,500+/week. At this scale, the split contract becomes a significant on-chain revenue mechanism. ZAO stake starts mattering financially.',
+const FEE_ADVICE_TEMPLATE: Record<FeeModel, (poolMin: string, poolMax: string | null) => string> = {
+  low: (min, max) =>
+    `At low volume ($1k–10k/day): community pool projected at ${min}${max ? `–${max}` : '+'}/week. Early stages — the value is community signal and fee transparency, not dollar amounts.`,
+  medium: (min, max) =>
+    `At medium volume ($10k–100k/day): community pool projected at ${min}${max ? `–${max}` : '+'}/week. Enough that top contributors start feeling it. Weekly receipts build the compounding trust loop.`,
+  high: (min) =>
+    `At high volume ($100k+/day): community pool projected at ${min}+/week. At this scale, the split contract becomes a significant on-chain revenue mechanism. ZAO stake starts mattering financially.`,
+}
+
+function getFeeAdvice(feeModel: FeeModel, communityPoolPct: number): string {
+  const pct = communityPoolPct / 100
+  const feeRate = 0.01
+  const days = 7
+  const ranges: Record<FeeModel, [number, number | null]> = {
+    low: [1_000, 10_000],
+    medium: [10_000, 100_000],
+    high: [100_000, null],
+  }
+  const [minVol, maxVol] = ranges[feeModel]
+  const fmt = (n: number) => n < 1 ? `$${n.toFixed(2)}` : `$${Math.round(n).toLocaleString()}`
+  const poolMin = fmt(minVol * feeRate * pct * days)
+  const poolMax = maxVol ? fmt(maxVol * feeRate * pct * days) : null
+  return FEE_ADVICE_TEMPLATE[feeModel](poolMin, poolMax)
 }
 
 const SPLIT_WIZARD_HINTS: Record<SituationType, string> = {
@@ -77,7 +95,7 @@ export function getAdvisorRecommendation(answers: AdvisorAnswers): AdvisorRecomm
     ...base,
     zaoStake: 5,
     tokenAdvice: TOKEN_ADVICE[answers.tokenTiming],
-    feeAdvice: FEE_ADVICE[answers.feeModel],
+    feeAdvice: getFeeAdvice(answers.feeModel, base.communityPool),
     splitWizardHint: SPLIT_WIZARD_HINTS[answers.situation],
   }
 }

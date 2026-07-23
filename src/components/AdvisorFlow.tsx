@@ -84,17 +84,17 @@ const FEE_MODELS: { value: FeeModel; label: string; description: string }[] = [
   {
     value: 'low',
     label: 'Early stage ($1k–10k/day)',
-    description: 'Community pool: $35–350/week. Prove the model before scaling.',
+    description: 'Gross fees: $70–700/week (1% of volume). Community pool share depends on your split config.',
   },
   {
     value: 'medium',
     label: 'Growing ($10k–100k/day)',
-    description: 'Community pool: $350–3,500/week. Contributors start feeling it.',
+    description: 'Gross fees: $700–7,000/week. Top contributors start feeling the pool.',
   },
   {
     value: 'high',
     label: 'At scale ($100k+/day)',
-    description: 'Community pool: $3,500+/week. The split becomes a real revenue mechanism.',
+    description: 'Gross fees: $7,000+/week. The split contract becomes a significant revenue mechanism.',
   },
 ]
 

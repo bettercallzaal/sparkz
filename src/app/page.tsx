@@ -84,7 +84,7 @@ const USE_CASES = [
     emoji: '🏆',
     title: 'Community leaderboard',
     description:
-      'The community that shows up the most earns the most. A boost engine amplifies your reach and pays the people who built your empire — proportional to their contribution.',
+      'The community that shows up the most earns the most. A boost engine amplifies your reach and allocates fee share to the people who built your empire — proportional to their contribution, claimed at splits.org.',
     cta: 'See it live (Zoostr)',
     href: 'https://zoostr.xyz',
   },

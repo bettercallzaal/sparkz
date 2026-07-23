@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 128 PRs are draft. Merge in order. One human click per step.
+> All 130 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -147,6 +147,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 126 | `feat/ship-md-pr-count-125` | SHIP.md: count 124→126; add rows for PRs #125–#126 |
 | 127 | `feat/split-wizard-how-it-works-accuracy-fixes` | SplitWizard tokenless list: 'direct on-chain payments' → pull-model claim language; how-it-works CTA renderer: native &lt;a&gt; → &lt;Link&gt; for internal /split-wizard route |
 | 128 | `feat/ship-md-pr-count-127` | SHIP.md: count 126→128; add rows for PRs #127–#128 |
+| 129 | `feat/split-wizard-fee-allocation-key` | SplitWizard.tsx: rename exported JSON key feeDistribution → feeAllocation |
+| 130 | `feat/ship-md-pr-count-129` | SHIP.md: count 128→130; add rows for PRs #129–#130 |
 
 ---
 

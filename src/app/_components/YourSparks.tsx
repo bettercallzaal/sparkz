@@ -30,7 +30,36 @@ export default function YourSparks({ fid }: { fid: number }) {
     };
   }, [fid]);
 
-  if (!rows || rows.length === 0) return null;
+  if (!rows) return null; // still loading
+
+  // Empty state: rather than render nothing, show what a spark looks like (the Figma
+  // "see a real example before you create" pattern) so a first-timer has a reference.
+  if (rows.length === 0) {
+    return (
+      <div className="mt-5 border-t border-border pt-5">
+        <h2 className="mb-2 text-sm font-semibold">Your sparks</h2>
+        <p className="mb-3 text-xs text-muted">
+          Nothing here yet. Light one above - it takes seconds. Here is a live one to see
+          what yours becomes:
+        </p>
+        <Link
+          href="/c/zoostr"
+          className="flex items-center gap-3 rounded-lg border border-dashed border-border p-3 hover:border-accent/60"
+        >
+          <Avatar name="Zoostr" className="h-8 w-8 text-xs" />
+          <span className="min-w-0 flex-1">
+            <span className="block truncate text-sm font-medium">Zoostr</span>
+            <span className="block truncate text-[11px] text-muted">
+              an example Creator Capsule
+            </span>
+          </span>
+          <span className="shrink-0 text-[10px] uppercase tracking-wide text-muted">
+            example
+          </span>
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="mt-5 border-t border-border pt-5">

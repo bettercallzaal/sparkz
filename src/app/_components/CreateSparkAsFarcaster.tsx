@@ -48,7 +48,7 @@ export default function CreateSparkAsFarcaster({
       });
       const json = await res.json();
       if (json.ok && json.data?.slug) {
-        router.push(`/c/${json.data.slug}`);
+        router.push(`/c/${json.data.slug}?lit=1`);
       } else {
         setState("error");
         const m = json.error ?? "Something went wrong - try again.";
@@ -70,8 +70,10 @@ export default function CreateSparkAsFarcaster({
       </p>
       <div className="space-y-3">
         <input
+          autoFocus
           value={name}
           onChange={(e) => setName(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && !e.nativeEvent.isComposing && create()}
           placeholder="Project name"
           maxLength={80}
           className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-accent"

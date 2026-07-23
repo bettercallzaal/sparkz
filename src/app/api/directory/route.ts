@@ -22,6 +22,7 @@ export interface DirectoryItem {
   farcaster: string | null;
   stars: number | null;
   contributors: number | null;
+  newThisWeek: number; // backers + receipts added in the last 7 days (momentum)
   created_at: string;
 }
 
@@ -37,12 +38,14 @@ export async function GET() {
           .select("*")
           .or(PUBLIC_REVIEW_FILTER)
           .order("created_at", { ascending: false }),
-        supabase.from("capsule_backers").select("capsule_id, kind, backer_id"),
-        supabase.from("meme_receipts").select("capsule_id"),
+        supabase.from("capsule_backers").select("capsule_id, kind, backer_id, created_at"),
+        supabase.from("meme_receipts").select("capsule_id, created_at"),
       ]);
 
-    const b = (backers as Pick<CapsuleBacker, "capsule_id" | "kind" | "backer_id">[]) ?? [];
-    const r = (receipts as Pick<MemeReceipt, "capsule_id">[]) ?? [];
+    const b =
+      (backers as Pick<CapsuleBacker, "capsule_id" | "kind" | "backer_id" | "created_at">[]) ?? [];
+    const r = (receipts as Pick<MemeReceipt, "capsule_id" | "created_at">[]) ?? [];
+    const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
     const items: DirectoryItem[] = ((capsules as Capsule[]) ?? []).map((c) => {
       const mine = b.filter((x) => x.capsule_id === c.id);
@@ -63,6 +66,9 @@ export async function GET() {
         emails: new Set(mine.filter((x) => x.backer_id.includes("@")).map((x) => x.backer_id))
           .size,
         receipts: r.filter((x) => x.capsule_id === c.id).length,
+        newThisWeek:
+          mine.filter((x) => x.created_at >= weekAgo).length +
+          r.filter((x) => x.capsule_id === c.id && x.created_at >= weekAgo).length,
         empire: Boolean(econ.empire_address || econ.empire_id || econ.empire),
         token: Boolean(econ.token_address),
         agent: Boolean(econ.agent),

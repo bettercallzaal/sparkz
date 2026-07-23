@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 134 PRs are draft. Merge in order. One human click per step.
+> All 136 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -153,6 +153,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 132 | `feat/ship-md-pr-count-131` | SHIP.md: count 130→132; add rows for PRs #131–#132 |
 | 133 | `feat/remove-aziz-specific-copy` | SplitWizard + how-it-works: remove Zoostr-specific 'Aziz' references — generic product copy should not name a specific co-builder |
 | 134 | `feat/ship-md-pr-count-133` | SHIP.md: count 132→134; add rows for PRs #133–#134 |
+| 135 | `feat/audius-how-it-works-fee-allocation` | audius/page.tsx + how-it-works/page.tsx: 'fee distribution' → 'fee allocation' in metadata + OG copy |
+| 136 | `feat/ship-md-pr-count-135` | SHIP.md: count 134→136; add rows for PRs #135–#136 |
 
 ---
 

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useToast } from "./toast";
 
 const TYPES = [
   { v: "creator", label: "Creator" },
@@ -21,6 +22,7 @@ export default function CreateSparkAsFarcaster({
   username?: string;
 }) {
   const router = useRouter();
+  const toast = useToast();
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
   const [type, setType] = useState("creator");
@@ -49,11 +51,14 @@ export default function CreateSparkAsFarcaster({
         router.push(`/c/${json.data.slug}`);
       } else {
         setState("error");
-        setErr(json.error ?? "Something went wrong - try again.");
+        const m = json.error ?? "Something went wrong - try again.";
+        setErr(m);
+        toast(m, "error");
       }
     } catch {
       setState("error");
       setErr("Something went wrong - try again.");
+      toast("Something went wrong - try again.", "error");
     }
   };
 

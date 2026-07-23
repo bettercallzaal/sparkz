@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useToast } from "./toast";
 
 export default function JoinForm({ interest }: { interest?: string }) {
+  const toast = useToast();
   const [email, setEmail] = useState("");
   const [state, setState] = useState<"idle" | "busy" | "done" | "error">("idle");
 
@@ -17,8 +19,13 @@ export default function JoinForm({ interest }: { interest?: string }) {
       });
       const json = await res.json();
       setState(json.ok ? "done" : "error");
+      toast(
+        json.ok ? "You're on the list - welcome to Sparkz." : json.error ?? "Try again.",
+        json.ok ? "success" : "error",
+      );
     } catch {
       setState("error");
+      toast("Something went wrong - try again.", "error");
     }
   };
 

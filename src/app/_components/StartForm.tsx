@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useToast } from "./toast";
 
 const TYPES = [
   { v: "creator", label: "Creator - an artist, musician, or builder" },
@@ -12,6 +13,7 @@ const TYPES = [
 
 export default function StartForm() {
   const router = useRouter();
+  const toast = useToast();
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
   const [type, setType] = useState("creator");
@@ -35,11 +37,14 @@ export default function StartForm() {
         router.push(`/c/${json.data.slug}`);
       } else {
         setState("error");
-        setErr(json.error ?? "Something went wrong - try again.");
+        const m = json.error ?? "Something went wrong - try again.";
+        setErr(m);
+        toast(m, "error");
       }
     } catch {
       setState("error");
       setErr("Something went wrong - try again.");
+      toast("Something went wrong - try again.", "error");
     }
   };
 

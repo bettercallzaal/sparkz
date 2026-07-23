@@ -7,6 +7,7 @@ import type { OssCapsuleMetadata } from "@/lib/brand-audit/types";
 import BoostForm from "@/app/_components/BoostForm";
 import Avatar from "@/app/_components/Avatar";
 import CopyButton from "@/app/_components/CopyButton";
+import OwnerBadge from "@/app/_components/OwnerBadge";
 import { maskBacker } from "@/lib/sanitize";
 import ShareButton from "@/app/_components/ShareButton";
 import Flame from "@/app/_components/Flame";
@@ -203,6 +204,7 @@ export default async function CapsulePage({
               <span className="rounded-md bg-accent/20 px-2 py-0.5 text-[10px] uppercase tracking-wide text-accent">
                 {capsule.status}
               </span>
+              <OwnerBadge ownerFid={capsule.owner_fid} />
             </div>
           </div>
           <div className="flex shrink-0 items-center gap-2">

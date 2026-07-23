@@ -6,6 +6,7 @@ import type { Capsule, CapsuleBacker, MemeReceipt } from "@/lib/supabase/types";
 import type { OssCapsuleMetadata } from "@/lib/brand-audit/types";
 import BoostForm from "@/app/_components/BoostForm";
 import Avatar from "@/app/_components/Avatar";
+import { maskBacker } from "@/lib/sanitize";
 import ShareButton from "@/app/_components/ShareButton";
 import Flame from "@/app/_components/Flame";
 
@@ -114,7 +115,7 @@ function IntegrationCard({
   href?: string;
 }) {
   const inner = (
-    <div className="glass glass-hover h-full p-3">
+    <div className={`glass glass-hover h-full p-3 ${connected ? "" : "opacity-60"}`}>
       <div className="flex items-center justify-between">
         <span className="text-sm font-medium">{label}</span>
         <span
@@ -122,7 +123,11 @@ function IntegrationCard({
         />
       </div>
       <div className="mt-0.5 text-[10px] uppercase tracking-wide text-muted">{sub}</div>
-      <div className="mt-2 truncate font-mono text-xs text-foreground">{value}</div>
+      <div
+        className={`mt-2 truncate font-mono text-xs ${connected ? "text-foreground" : "text-muted"}`}
+      >
+        {value}
+      </div>
     </div>
   );
   return href ? (
@@ -254,50 +259,58 @@ export default async function CapsulePage({
         <Stat label="Receipts" value={receipts.length} />
       </div>
 
-      {/* Integrations - the Spark as a hub */}
-      <section className="mb-8">
-        <h2 className="mb-3 text-sm font-medium">Integrations</h2>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-          <IntegrationCard
-            label="Treasury"
-            sub="Empire Builder"
-            connected={Boolean(econ.empire_address || econ.empire_id)}
-            value={econ.empire_address ? short(econ.empire_address) : econ.empire_id ? "linked" : "not deployed"}
-            href={econ.empire_id ? `https://www.empirebuilder.world/empire/${econ.empire_id}` : undefined}
-          />
-          <IntegrationCard
-            label="Token"
-            sub="Clanker"
-            connected={Boolean(econ.token_address)}
-            value={econ.token_address ? short(econ.token_address) : "spark (no coin)"}
-          />
-          <IntegrationCard
-            label="Email list"
-            sub="Community"
-            connected={emailCount > 0}
-            value={`${emailCount} on list`}
-          />
-          <IntegrationCard
-            label="Bounties"
-            sub="POIDH"
-            connected={false}
-            value="connect soon"
-          />
-          <IntegrationCard
-            label="Farcaster"
-            sub="Distribution"
-            connected={Boolean(fc?.channel || fc?.username || fc?.fid)}
-            value={fc?.channel ? `/${fc.channel}` : fc?.username ? `@${fc.username}` : fc?.fid ? `fid ${fc.fid}` : "not linked"}
-            href={fc?.channel ? `https://farcaster.xyz/~/channel/${fc.channel}` : fc?.username ? `https://farcaster.xyz/${fc.username}` : undefined}
-          />
-          <IntegrationCard
-            label="Agent"
-            sub="ElizaOS"
-            connected={Boolean(econ.agent)}
-            value={econ.agent ? "configured" : "scaffold"}
-          />
-        </div>
-      </section>
+      {/* Integrations - the Spark as a hub. Connected first, available ones dimmed. */}
+      {(() => {
+        const integrations = [
+          {
+            label: "Farcaster",
+            sub: "Distribution",
+            connected: Boolean(fc?.channel || fc?.username || fc?.fid),
+            value: fc?.channel ? `/${fc.channel}` : fc?.username ? `@${fc.username}` : fc?.fid ? `fid ${fc.fid}` : "not linked",
+            href: fc?.channel ? `https://farcaster.xyz/~/channel/${fc.channel}` : fc?.username ? `https://farcaster.xyz/${fc.username}` : undefined,
+          },
+          {
+            label: "Treasury",
+            sub: "Empire Builder",
+            connected: Boolean(econ.empire_address || econ.empire_id),
+            value: econ.empire_address ? short(econ.empire_address) : econ.empire_id ? "linked" : "not deployed",
+            href: econ.empire_id ? `https://www.empirebuilder.world/empire/${econ.empire_id}` : undefined,
+          },
+          {
+            label: "Email list",
+            sub: "Community",
+            connected: emailCount > 0,
+            value: `${emailCount} on list`,
+          },
+          {
+            label: "Token",
+            sub: "Clanker",
+            connected: Boolean(econ.token_address),
+            value: econ.token_address ? short(econ.token_address) : "spark (no coin)",
+          },
+          {
+            label: "Agent",
+            sub: "ElizaOS",
+            connected: Boolean(econ.agent),
+            value: econ.agent ? "configured" : "scaffold",
+          },
+          { label: "Bounties", sub: "POIDH", connected: false, value: "soon" },
+        ].sort((a, b) => Number(b.connected) - Number(a.connected));
+        const liveCount = integrations.filter((i) => i.connected).length;
+        return (
+          <section className="mb-8">
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="text-sm font-medium">Integrations</h2>
+              <span className="text-xs text-muted">{liveCount} live</span>
+            </div>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {integrations.map((i) => (
+                <IntegrationCard key={i.label} {...i} />
+              ))}
+            </div>
+          </section>
+        );
+      })()}
 
       {/* Boost engine: free public support signal (not a payment). */}
       <section className="glass mb-8 p-4">
@@ -311,26 +324,38 @@ export default async function CapsulePage({
       <section className="mb-8">
         <h2 className="mb-3 text-sm font-medium">Meme Receipts</h2>
         {receipts.length === 0 ? (
-          <p className="text-sm text-muted">No published receipts yet.</p>
+          <p className="rounded-lg border border-dashed border-border p-5 text-sm text-muted">
+            No receipts yet. When a moment lands, the Meme Engine writes one here - the
+            proof of what it matched and what it earned.
+          </p>
         ) : (
           <ul className="space-y-2">
             {receipts.map((r) => (
-              <li
-                key={r.id}
-                className="rounded-md border border-border bg-card p-3 text-xs"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="font-medium text-foreground">
-                    {r.id.slice(0, 8)}
+              <li key={r.id} className="rounded-lg border border-border bg-card p-4">
+                <div className="flex items-center gap-2">
+                  <span className="rounded-full bg-accent-2/15 px-2 py-0.5 text-[10px] uppercase tracking-wide text-accent-2">
+                    Meme Receipt
                   </span>
-                  <span className="text-muted">
-                    reach {r.reach} - refs {r.referrals} - backing{" "}
-                    {r.backing_generated}
-                  </span>
+                  {r.published_at && (
+                    <span className="text-xs text-muted">
+                      {new Date(r.published_at).toLocaleDateString()}
+                    </span>
+                  )}
                 </div>
                 {r.why_it_matched && (
-                  <p className="mt-1 text-muted">why: {r.why_it_matched}</p>
+                  <p className="mt-2 text-sm leading-relaxed">{r.why_it_matched}</p>
                 )}
+                <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-xs text-muted">
+                  <span>
+                    <span className="spark-text stat-num font-semibold">{r.reach}</span> reach
+                  </span>
+                  <span>
+                    <span className="spark-text stat-num font-semibold">{r.referrals}</span> referrals
+                  </span>
+                  <span>
+                    <span className="spark-text stat-num font-semibold">{r.backing_generated}</span> backing
+                  </span>
+                </div>
               </li>
             ))}
           </ul>
@@ -340,20 +365,21 @@ export default async function CapsulePage({
       <section>
         <h2 className="mb-3 text-sm font-medium">Backers</h2>
         {backers.length === 0 ? (
-          <p className="text-sm text-muted">No backers yet.</p>
+          <p className="rounded-lg border border-dashed border-border p-5 text-sm text-muted">
+            No backers yet. Be the first - boost above, no wallet or coin needed.
+          </p>
         ) : (
           <ul className="space-y-2">
             {backers.map((b) => (
               <li
                 key={b.id}
-                className="flex items-center justify-between rounded-md border border-border bg-card p-3 text-xs"
+                className="flex items-center justify-between rounded-lg border border-border bg-card px-4 py-2.5 text-sm"
               >
-                <span>
-                  {b.kind} - {b.backer_kind}:{b.backer_id}
+                <span className="flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-accent-3" />
+                  {maskBacker(b.backer_id)}
                 </span>
-                <span className="text-muted">
-                  {b.amount_or_qty} {b.unit ?? ""} - {b.provider}
-                </span>
+                <span className="text-xs uppercase tracking-wide text-muted">{b.kind}</span>
               </li>
             ))}
           </ul>

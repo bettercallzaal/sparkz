@@ -167,14 +167,23 @@ export default function HowItWorksPage() {
                     </pre>
                   )}
                   {s.cta && (
-                    <a
-                      href={s.cta.href}
-                      target={s.cta.external ? '_blank' : undefined}
-                      rel={s.cta.external ? 'noopener noreferrer' : undefined}
-                      className="text-gold-400 text-sm font-semibold hover:text-gold-300 transition-colors"
-                    >
-                      {s.cta.label} →
-                    </a>
+                    s.cta.external ? (
+                      <a
+                        href={s.cta.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gold-400 text-sm font-semibold hover:text-gold-300 transition-colors"
+                      >
+                        {s.cta.label} →
+                      </a>
+                    ) : (
+                      <Link
+                        href={s.cta.href}
+                        className="text-gold-400 text-sm font-semibold hover:text-gold-300 transition-colors"
+                      >
+                        {s.cta.label} →
+                      </Link>
+                    )
                   )}
                 </div>
               </div>

@@ -37,6 +37,13 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
+/* Keyboard focus - visible ring for a11y (mouse clicks stay clean via :focus-visible). */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 /* Headings use the display face - the premium hierarchy signal. */
 h1, h2, h3 {
   font-family: var(--font-display), var(--font-sans), sans-serif;

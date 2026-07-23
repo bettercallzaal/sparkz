@@ -6,6 +6,7 @@ import type { Capsule, CapsuleBacker, MemeReceipt } from "@/lib/supabase/types";
 import type { OssCapsuleMetadata } from "@/lib/brand-audit/types";
 import BoostForm from "@/app/_components/BoostForm";
 import Avatar from "@/app/_components/Avatar";
+import CopyButton from "@/app/_components/CopyButton";
 import { maskBacker } from "@/lib/sanitize";
 import ShareButton from "@/app/_components/ShareButton";
 import Flame from "@/app/_components/Flame";
@@ -204,12 +205,18 @@ export default async function CapsulePage({
               </span>
             </div>
           </div>
-          <ShareButton
-            path={`/c/${capsule.slug}`}
-            text={`Backing ${capsule.name} on Sparkz - a spark, not a coin.`}
-            channel={fc?.channel ?? undefined}
-            className="shrink-0"
-          />
+          <div className="flex shrink-0 items-center gap-2">
+            <CopyButton
+              value={`https://trysparkz.com/c/${capsule.slug}`}
+              label="Capsule link copied"
+              className="h-8 w-8"
+            />
+            <ShareButton
+              path={`/c/${capsule.slug}`}
+              text={`Backing ${capsule.name} on Sparkz - a spark, not a coin.`}
+              channel={fc?.channel ?? undefined}
+            />
+          </div>
         </div>
         {capsule.bio && <p className="mt-3 text-sm text-muted">{capsule.bio}</p>}
         {oss && (

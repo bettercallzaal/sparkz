@@ -17,16 +17,22 @@ const RAILS = [
     accent: "text-accent",
   },
   {
-    rail: "Empire → token",
-    fee: "~20% to the Empire Builder team",
+    rail: "Empire -> token",
+    fee: "~20% to the Empire Builder team*",
     get: "The launchpad, liquidity handled, LP locked, fees routed to your 0xSplits split.",
     accent: "text-accent-3",
   },
   {
-    rail: "Clanker (V5 soon)",
-    fee: "creator-first split, shown at launch",
-    get: "A Farcaster-native token on Base, permanent liquidity. Exact % finalizes with V5.",
+    rail: "Clanker token",
+    fee: "you set 1-3%; Clanker takes 20% of that",
+    get: "A Farcaster-native token on Base with permanent liquidity. Your 1/2/3% means a 1.2/2.4/3.6% total swap fee.",
     accent: "text-accent-3",
+  },
+  {
+    rail: "Add an agent (optional)",
+    fee: "10% of LP rewards by default (1-50%)",
+    get: "A token-funded agent that casts and replies. The carve-out is yours to set, and can route to your own treasury.",
+    accent: "text-accent-2",
   },
 ];
 
@@ -65,7 +71,17 @@ export default function GraduationPanel() {
           </table>
         </div>
 
-        <p className="mt-4 text-xs text-muted">
+        <p className="mt-4 text-xs leading-relaxed text-muted">
+          One catch worth knowing up front: on Clanker you earn rewards from the{" "}
+          <span className="text-foreground">initial liquidity pool only</span> - not from
+          secondary pools or LP other people add.
+        </p>
+        <p className="mt-2 text-xs leading-relaxed text-muted">
+          *Empire Builder does not publish its cut publicly. The ~20% is what we have been
+          told directly, and we are showing it anyway rather than leave you guessing - we
+          will correct it the moment we can confirm it in writing.
+        </p>
+        <p className="mt-3 text-xs text-muted">
           The test: <span className="text-foreground">what would the token do?</span> Until
           there is a real answer, stay a spark. No vendor lock - your data, audience, and
           IP stay yours whichever path you take.

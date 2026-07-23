@@ -2,6 +2,7 @@
 
 import { AuthKitProvider } from "@farcaster/auth-kit";
 import "@farcaster/auth-kit/styles.css";
+import { ToastProvider } from "./toast";
 
 // App-wide Sign-In-With-Farcaster context, so the header, /profile, and the create
 // flow can all read the signed-in identity. Protocol-native (no Neynar key); the
@@ -14,5 +15,9 @@ const config = {
 };
 
 export default function Providers({ children }: { children: React.ReactNode }) {
-  return <AuthKitProvider config={config}>{children}</AuthKitProvider>;
+  return (
+    <AuthKitProvider config={config}>
+      <ToastProvider>{children}</ToastProvider>
+    </AuthKitProvider>
+  );
 }

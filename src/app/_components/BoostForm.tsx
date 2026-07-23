@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Flame from "./Flame";
+import { useToast } from "./toast";
 
 export default function BoostForm({ capsuleId }: { capsuleId: string }) {
   const router = useRouter();
+  const toast = useToast();
   const [backer, setBacker] = useState("");
   const [state, setState] = useState<"idle" | "busy" | "done" | "error">("idle");
 
@@ -21,12 +23,15 @@ export default function BoostForm({ capsuleId }: { capsuleId: string }) {
       const json = await res.json();
       if (json.ok) {
         setState("done");
+        toast("Boost sent - you're backing the work now.");
         router.refresh();
       } else {
         setState("error");
+        toast(json.error ?? "Could not boost - try again.", "error");
       }
     } catch {
       setState("error");
+      toast("Could not boost - try again.", "error");
     }
   };
 

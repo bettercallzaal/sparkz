@@ -8,6 +8,7 @@ import BoostForm from "@/app/_components/BoostForm";
 import Avatar from "@/app/_components/Avatar";
 import CopyButton from "@/app/_components/CopyButton";
 import OwnerBadge from "@/app/_components/OwnerBadge";
+import GraduationPanel from "@/app/_components/GraduationPanel";
 import { maskBacker } from "@/lib/sanitize";
 import ShareButton from "@/app/_components/ShareButton";
 import Flame from "@/app/_components/Flame";
@@ -329,6 +330,8 @@ export default async function CapsulePage({
         </p>
         <BoostForm capsuleId={capsule.id} />
       </section>
+
+      {capsule.status === "spark" && <GraduationPanel />}
 
       <section className="mb-8">
         <h2 className="mb-3 text-sm font-medium">Meme Receipts</h2>

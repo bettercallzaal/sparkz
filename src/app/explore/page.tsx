@@ -6,7 +6,7 @@ import Flame from "@/app/_components/Flame";
 import Avatar from "@/app/_components/Avatar";
 import type { DirectoryItem } from "@/app/api/directory/route";
 
-type SortKey = "new" | "backers" | "boosts" | "receipts" | "name";
+type SortKey = "momentum" | "new" | "backers" | "boosts" | "receipts" | "name";
 
 const TYPES = ["creator", "culture", "oss", "meme"];
 const STATUSES = ["spark", "tokenized", "dormant"];
@@ -87,6 +87,7 @@ export default function ExplorePage() {
     out = [...out].sort((a, b) => {
       if (sort === "name") return a.name.localeCompare(b.name);
       if (sort === "new") return b.created_at.localeCompare(a.created_at);
+      if (sort === "momentum") return b.newThisWeek - a.newThisWeek;
       return (b[sort] as number) - (a[sort] as number);
     });
     return out;
@@ -145,6 +146,7 @@ export default function ExplorePage() {
               onChange={(e) => setSort(e.target.value as SortKey)}
               className="rounded-md border border-border bg-card px-2 py-1 text-xs"
             >
+              <option value="momentum">Momentum this week</option>
               <option value="backers">Most backers</option>
               <option value="boosts">Most boosts</option>
               <option value="receipts">Most receipts</option>
@@ -194,6 +196,11 @@ export default function ExplorePage() {
                     </span>
                     {c.farcaster && (
                       <span className="text-[11px] text-accent">{c.farcaster}</span>
+                    )}
+                    {c.newThisWeek > 0 && (
+                      <span className="rounded-full border border-accent-3/40 bg-accent-3/10 px-1.5 py-0.5 text-[10px] font-medium text-accent-3">
+                        &uarr; {c.newThisWeek} this week
+                      </span>
                     )}
                   </div>
                   {c.bio && (

@@ -11,6 +11,15 @@ export function publicCapsule<T extends { metadata: Capsule["metadata"] }>(c: T)
   return { ...c, metadata: meta };
 }
 
+// A backer's public-safe label. Shows a public @handle or a shortened wallet;
+// everything else (emails, fids, raw ids) becomes "a supporter" so no PII or raw
+// identifier is ever rendered publicly.
+export function maskBacker(id: string): string {
+  if (id.startsWith("@")) return id;
+  if (id.startsWith("0x") && id.length >= 10) return `${id.slice(0, 6)}...${id.slice(-4)}`;
+  return "a supporter";
+}
+
 // PostgREST `.or()` filter for public listings: show capsules with no review flag
 // (operator-created) OR explicitly approved. Hides both `pending` and `rejected`
 // self-serve sparks. Use everywhere a public read lists capsules.

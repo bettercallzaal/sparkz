@@ -34,7 +34,7 @@ export default function StartForm() {
       });
       const json = await res.json();
       if (json.ok && json.data?.slug) {
-        router.push(`/c/${json.data.slug}`);
+        router.push(`/c/${json.data.slug}?lit=1`);
       } else {
         setState("error");
         const m = json.error ?? "Something went wrong - try again.";
@@ -53,6 +53,7 @@ export default function StartForm() {
       <label className="block">
         <span className="mb-1 block text-sm font-medium">Project name</span>
         <input
+          autoFocus
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="e.g. Midnight Sessions"

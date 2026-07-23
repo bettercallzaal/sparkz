@@ -12,6 +12,7 @@ import GraduationPanel from "@/app/_components/GraduationPanel";
 import { maskBacker } from "@/lib/sanitize";
 import ShareButton from "@/app/_components/ShareButton";
 import Flame from "@/app/_components/Flame";
+import SparkLit from "@/app/_components/SparkLit";
 
 export const dynamic = "force-dynamic";
 
@@ -179,6 +180,7 @@ export default async function CapsulePage({
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-8">
+      <SparkLit />
       <Link href="/explore" className="text-sm text-muted hover:text-foreground">
         &larr; Explore
       </Link>

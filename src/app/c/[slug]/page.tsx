@@ -174,9 +174,32 @@ export default async function CapsulePage({
     backers.filter((b) => b.backer_id.includes("@")).map((b) => b.backer_id),
   ).size;
   const short = (a: string) => `${a.slice(0, 6)}...${a.slice(-4)}`;
-  const meta = capsule.metadata as { image?: string; review?: string };
+  const meta = capsule.metadata as {
+    image?: string;
+    review?: string;
+    about?: string;
+    tags?: string[];
+    links?: {
+      website?: string;
+      github?: string;
+      docs?: string;
+      x?: string;
+      farcaster?: string;
+      discord?: string;
+    };
+  };
   const image = meta.image ?? null;
   const pending = meta.review === "pending";
+  const tags = Array.isArray(meta.tags) ? meta.tags : [];
+  const links = meta.links ?? {};
+  const linkRow: { label: string; href: string }[] = [
+    links.website ? { label: "Website", href: links.website } : null,
+    links.github ? { label: "GitHub", href: links.github } : null,
+    links.docs ? { label: "Docs", href: links.docs } : null,
+    links.x ? { label: "X", href: links.x } : null,
+    links.farcaster ? { label: "Farcaster", href: links.farcaster } : null,
+    links.discord ? { label: "Discord", href: links.discord } : null,
+  ].filter((l): l is { label: string; href: string } => l !== null);
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-8">
@@ -224,6 +247,18 @@ export default async function CapsulePage({
           </div>
         </div>
         {capsule.bio && <p className="mt-3 text-sm text-muted">{capsule.bio}</p>}
+        {tags.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {tags.map((t) => (
+              <span
+                key={t}
+                className="rounded-full border border-border px-2 py-0.5 text-[11px] text-muted"
+              >
+                {t}
+              </span>
+            ))}
+          </div>
+        )}
         {oss && (
           <a
             href={oss.repo_url}
@@ -263,6 +298,21 @@ export default async function CapsulePage({
             )}
           </div>
         )}
+        {linkRow.length > 0 && (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {linkRow.map((l) => (
+              <a
+                key={l.label}
+                href={l.href}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-md border border-border px-3 py-1 text-xs text-muted hover:border-accent hover:text-foreground"
+              >
+                {l.label} -&gt;
+              </a>
+            ))}
+          </div>
+        )}
       </header>
 
       <div className="mb-6 grid grid-cols-3 gap-2">
@@ -270,6 +320,17 @@ export default async function CapsulePage({
         <Stat label="Boosts" value={boostCount} />
         <Stat label="Receipts" value={receipts.length} />
       </div>
+
+      {meta.about && (
+        <section className="mb-8">
+          <h2 className="mb-3 text-sm font-medium">About</h2>
+          <div className="card-solid p-4">
+            <p className="whitespace-pre-line text-sm leading-relaxed text-muted">
+              {meta.about}
+            </p>
+          </div>
+        </section>
+      )}
 
       {/* Integrations - the Spark as a hub. Connected first, available ones dimmed. */}
       {(() => {

@@ -40,14 +40,15 @@ export default function GraduationPanel() {
   return (
     <section className="mb-8">
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-sm font-medium">Graduate to a token? Only if it fits.</h2>
+        <h2 className="text-sm font-medium">Graduate to independence? Only if it fits.</h2>
         <span className="text-xs text-muted">transparent by default</span>
       </div>
       <div className="card-solid p-4">
         <p className="text-sm leading-relaxed text-muted">
-          This is a spark - no coin. If the momentum is real, you can graduate later. Here
-          is exactly what each path costs and what you get for it. You always see the
-          number, and you decide.
+          This is a spark - no coin. Graduating means the project standing on its own: its
+          own treasury, and a token only if it fits. Like WaveWarZ graduating to its own
+          repo and domain - independence, not a coin launch. Here is exactly what each path
+          costs and what you get for it. You always see the number, and you decide.
         </p>
 
         <div className="mt-4 overflow-x-auto">

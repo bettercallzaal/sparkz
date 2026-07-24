@@ -32,3 +32,27 @@ export async function selfServeCountInWindow(
 
 export const SELF_SERVE_LIMIT = 3;
 export const SELF_SERVE_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+
+// How many boosts a single ip_hash may cast inside the window. Boost is a public,
+// unauthenticated write whose `backer` is a caller-supplied string, so without a
+// cap one actor can inflate a Capsule's public boost/backer counts (rendered as
+// social proof) and spam rows. Same DB-backed, no-KV pattern as create-spark;
+// the ip_hash is stored on capsule_backers.metadata at insert time. IP rotation
+// can bypass it, so pair with a verified-identity requirement for real defense.
+export const BOOST_LIMIT = 20;
+export const BOOST_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+
+export async function boostCountInWindow(
+  ipHash: string,
+  windowMs: number,
+): Promise<number> {
+  const supabase = getServiceClient();
+  const since = new Date(Date.now() - windowMs).toISOString();
+  const { count } = await supabase
+    .from("capsule_backers")
+    .select("id", { count: "exact", head: true })
+    .eq("kind", "boost")
+    .filter("metadata->>ip_hash", "eq", ipHash)
+    .gte("created_at", since);
+  return count ?? 0;
+}

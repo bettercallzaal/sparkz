@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 136 PRs are draft. Merge in order. One human click per step.
+> All 142 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -159,6 +159,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 138 | `feat/ship-md-pr-count-137` | SHIP.md: count 136→138; add rows for PRs #137–#138 |
 | 139 | `feat/remove-aziz-from-product-copy` | SplitWizard.tsx + how-it-works/page.tsx: remove Zoostr-specific 'Aziz' references — generic product copy uses 'co-builder' instead |
 | 140 | `feat/ship-md-pr-count-139` | SHIP.md: count 138→140; add rows for PRs #139–#140 |
+| 141 | `feat/generic-frame-buttons-141` | back/page.tsx + collectables/page.tsx: genericize Zoostr-specific frame buttons — /back says 'See who to back' → /launches; /collectables says 'See a live leaderboard' → /launches |
+| 142 | `feat/ship-md-pr-count-141` | SHIP.md: count 140→142; add rows for PRs #141–#142 |
 
 ---
 

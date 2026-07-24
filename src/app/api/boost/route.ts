@@ -1,7 +1,9 @@
 import type { NextRequest } from "next/server";
 import { getServiceClient } from "@/lib/supabase/server";
 import { boostSchema } from "@/lib/validation/schemas";
-import { ok, badRequest, serverError, zodError } from "@/lib/http";
+import { ok, badRequest, serverError, zodError, tooManyRequests } from "@/lib/http";
+import { clientIpHash, boostCountInWindow, BOOST_LIMIT, BOOST_WINDOW_MS } from "@/lib/rate-limit";
+import { isAdmin } from "@/lib/auth";
 
 // POST /api/boost - public "Boost this Capsule" (the boost engine): a free support
 // signal, not a payment. Records a ledger backing of kind='boost', qty 1. Public
@@ -15,6 +17,16 @@ export async function POST(req: NextRequest) {
 
     const backerId = parsed.data.backer.trim().toLowerCase();
     const supabase = getServiceClient();
+
+    // Per-IP rate limit (operator exempt). Boost is public + unauthenticated, so
+    // this is what stops one actor from inflating public counts / spamming rows.
+    const ipHash = clientIpHash(req);
+    if (!isAdmin(req)) {
+      const recent = await boostCountInWindow(ipHash, BOOST_WINDOW_MS);
+      if (recent >= BOOST_LIMIT) {
+        return tooManyRequests("You have boosted a lot recently. Give it an hour and try again.");
+      }
+    }
 
     // Capsule must exist.
     const { data: capsule, error: capErr } = await supabase
@@ -43,7 +55,7 @@ export async function POST(req: NextRequest) {
       amount_or_qty: 1,
       unit: "boost",
       provider: "ledger",
-      metadata: { pledge: true },
+      metadata: { pledge: true, ip_hash: ipHash },
     });
     if (error) throw error;
 

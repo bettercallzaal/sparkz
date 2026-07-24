@@ -1,11 +1,9 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// Two-domain split (see src/lib/origins.ts):
-// - trysparkz.com (and the default) serve the SEO/GEO marketing homepage at `/`.
-// - sparkz.lol is the app - its `/` sends visitors into the app at /explore. Every
-//   app path (/explore, /start, /profile, /c/..., /admin) is served on both hosts, so
-//   cross-domain app links resolve; sparkz.lol just makes the app its front door.
+// trysparkz.com (and the default) serve the canonical redesigned homepage at `/`.
+// sparkz.lol gets its own culture-angle landing at /lol. Subpaths (/admin, /c/...,
+// /start) are shared across every host.
 export function middleware(req: NextRequest) {
   const host = (req.headers.get("host") ?? "").toLowerCase();
   const url = req.nextUrl;
@@ -13,8 +11,8 @@ export function middleware(req: NextRequest) {
   if (url.pathname !== "/") return NextResponse.next();
 
   if (host.includes("sparkz.lol")) {
-    url.pathname = "/explore";
-    return NextResponse.redirect(url);
+    url.pathname = "/lol";
+    return NextResponse.rewrite(url);
   }
   return NextResponse.next();
 }

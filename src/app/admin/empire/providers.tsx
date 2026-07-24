@@ -18,8 +18,8 @@ createAppKit({
   metadata: {
     name: "Sparkz",
     description: "Start with a spark, not a token.",
-    url: "https://sparkz.lol",
-    icons: ["https://sparkz.lol/icon.svg"],
+    url: "https://trysparkz.com",
+    icons: ["https://trysparkz.com/icon.svg"],
   },
   features: { analytics: false, email: false, socials: [] },
 });

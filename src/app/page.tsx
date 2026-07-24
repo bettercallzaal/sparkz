@@ -1,4 +1,4 @@
-import { appUrl } from "@/lib/origins";
+import Link from "next/link";
 import { loadPublicCapsules } from "@/lib/public-capsules";
 import Ecosystem from "./_components/Ecosystem";
 import JoinForm from "./_components/JoinForm";
@@ -69,9 +69,9 @@ export default async function Home() {
             <JoinForm interest="sparkz" />
             <p className="mt-2 text-xs text-muted">
               Light your spark - join the list.{" "}
-              <a href={appUrl("/explore")} className="text-accent hover:underline">
+              <Link href="/explore" className="text-accent hover:underline">
                 or explore the sparks -&gt;
-              </a>
+              </Link>
             </p>
           </div>
         </div>
@@ -108,9 +108,9 @@ export default async function Home() {
           <h2 className="text-sm font-medium uppercase tracking-wide text-muted">
             The ecosystem
           </h2>
-          <a href={appUrl("/explore")} className="text-xs text-accent hover:underline">
+          <Link href="/explore" className="text-xs text-accent hover:underline">
             Explore all -&gt;
-          </a>
+          </Link>
         </div>
         <Ecosystem capsules={capsules} />
       </section>

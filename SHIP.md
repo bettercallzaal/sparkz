@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 144 PRs are draft. Merge in order. One human click per step.
+> All 152 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -169,6 +169,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 148 | `feat/ship-md-pr-count-147` | SHIP.md: count 146→148; add rows for PRs #147–#148 |
 | 149 | `feat/launches-frame-button-fix` | launches/page.tsx: frame button 'See Zoostr — live now' → 'Zoostr — first live launch' |
 | 150 | `feat/ship-md-pr-count-149` | SHIP.md: count 148→150; add rows for PRs #149–#150 |
+| 151 | `feat/spark-examples-zabal-metric-generic` | spark-examples.ts: genericize zabalLikesCount metric desc (ZABAL-specific field); TiersWizard: genericize project name hint |
+| 152 | `feat/ship-md-pr-count-151` | SHIP.md: count 150→152; add rows for PRs #151–#152 |
 
 ---
 

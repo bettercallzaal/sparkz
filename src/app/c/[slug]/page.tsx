@@ -13,6 +13,7 @@ import { maskBacker } from "@/lib/sanitize";
 import ShareButton from "@/app/_components/ShareButton";
 import Flame from "@/app/_components/Flame";
 import SparkLit from "@/app/_components/SparkLit";
+import { APP_ORIGIN, SEO_ORIGIN } from "@/lib/origins";
 
 export const dynamic = "force-dynamic";
 
@@ -32,17 +33,21 @@ export async function generateMetadata({
     if (data) {
       const c = data as Pick<Capsule, "name" | "bio">;
       const desc = c.bio ?? "A Sparkz Capsule - back the work, not a coin.";
-      const image = `https://trysparkz.com/api/og?slug=${encodeURIComponent(slug)}`;
+      // Web share/canonical live on the app domain (sparkz.lol). The Farcaster Mini App
+      // embed keeps pointing at SEO_ORIGIN because that is where the signed manifest /
+      // accountAssociation is valid - it moves to sparkz.lol once re-signed.
+      const image = `${APP_ORIGIN}/api/og?slug=${encodeURIComponent(slug)}`;
+      const miniImage = `${SEO_ORIGIN}/api/og?slug=${encodeURIComponent(slug)}`;
       const embed = JSON.stringify({
         version: "1",
-        imageUrl: image,
+        imageUrl: miniImage,
         button: {
           title: `Open ${c.name}`,
           action: {
             type: "launch_miniapp",
             name: "Sparkz",
-            url: `https://trysparkz.com/c/${slug}`,
-            splashImageUrl: "https://trysparkz.com/api/icon",
+            url: `${SEO_ORIGIN}/c/${slug}`,
+            splashImageUrl: `${SEO_ORIGIN}/api/icon`,
             splashBackgroundColor: "#0a0a0a",
           },
         },
@@ -50,10 +55,12 @@ export async function generateMetadata({
       return {
         title: c.name,
         description: desc,
+        alternates: { canonical: `${APP_ORIGIN}/c/${slug}` },
         openGraph: {
           title: `${c.name} - Sparkz`,
           description: desc,
           type: "website",
+          url: `${APP_ORIGIN}/c/${slug}`,
           images: [{ url: image, width: 1200, height: 800 }],
         },
         twitter: { card: "summary_large_image", title: `${c.name} - Sparkz`, description: desc, images: [image] },
@@ -235,7 +242,7 @@ export default async function CapsulePage({
           </div>
           <div className="flex shrink-0 items-center gap-2">
             <CopyButton
-              value={`https://trysparkz.com/c/${capsule.slug}`}
+              value={`${APP_ORIGIN}/c/${capsule.slug}`}
               label="Capsule link copied"
               className="h-8 w-8"
             />

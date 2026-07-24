@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { appUrl } from "@/lib/origins";
 import type { ActivityResponse, ActivityEvent } from "@/app/api/activity/route";
 
 const DOT: Record<ActivityEvent["kind"], string> = {
@@ -57,14 +57,14 @@ export default function ActivityStrip() {
         <ul className="mt-3 space-y-2">
           {events.map((e, i) => (
             <li key={`${e.slug}-${e.at}-${i}`}>
-              <Link
-                href={`/c/${e.slug}`}
+              <a
+                href={appUrl(`/c/${e.slug}`)}
                 className="flex items-center gap-2.5 text-sm text-muted hover:text-foreground"
               >
                 <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${DOT[e.kind]}`} />
                 <span className="min-w-0 flex-1 truncate">{e.label}</span>
                 <span className="shrink-0 text-xs text-muted opacity-70">{ago(e.at)}</span>
-              </Link>
+              </a>
             </li>
           ))}
         </ul>

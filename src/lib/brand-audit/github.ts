@@ -25,13 +25,27 @@ export interface RepoInfo {
   contributors: RepoContributor[];
 }
 
+// Reject a path segment that could traverse the GitHub API path once
+// interpolated into `${API}/repos/${owner}/${repo}`. `..` normalizes the URL to a
+// different endpoint (reachable with the server's GITHUB_TOKEN), and a dot-only
+// segment is never a real owner/repo.
+function unsafeSegment(s: string): boolean {
+  return s === "" || s.includes("..") || /^\.+$/.test(s);
+}
+
 export function parseRepoRef(input: string): { owner: string; repo: string } | null {
   const trimmed = input.trim();
   // accept "owner/repo" or a github URL
   const url = trimmed.match(/github\.com\/([^/]+)\/([^/#?]+)/i);
-  if (url) return { owner: url[1], repo: url[2].replace(/\.git$/, "") };
+  if (url) {
+    const owner = url[1];
+    const repo = url[2].replace(/\.git$/, "");
+    return unsafeSegment(owner) || unsafeSegment(repo) ? null : { owner, repo };
+  }
   const slug = trimmed.match(/^([\w.-]+)\/([\w.-]+)$/);
-  if (slug) return { owner: slug[1], repo: slug[2] };
+  if (slug) {
+    return unsafeSegment(slug[1]) || unsafeSegment(slug[2]) ? null : { owner: slug[1], repo: slug[2] };
+  }
   return null;
 }
 

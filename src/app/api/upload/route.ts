@@ -5,7 +5,16 @@ import { requireAdmin } from "@/lib/auth";
 
 const BUCKET = "empire-logos";
 const MAX_BYTES = 2 * 1024 * 1024; // 2 MB
-const ALLOWED = ["image/png", "image/jpeg", "image/webp", "image/gif", "image/svg+xml"];
+// Raster images only. SVG is intentionally excluded: it can carry embedded script,
+// and this bucket is PUBLIC, so an uploaded SVG is a stored-XSS / phishing hosting
+// vector. The object key extension is derived from this validated MIME map - never
+// from the caller-supplied filename (which could smuggle a "/" into the key).
+const EXT_BY_MIME: Record<string, string> = {
+  "image/png": "png",
+  "image/jpeg": "jpg",
+  "image/webp": "webp",
+  "image/gif": "gif",
+};
 
 // POST /api/upload - multipart form with a single `file`. Uploads to the public
 // empire-logos bucket (server-side, service role) and returns the public URL.
@@ -19,9 +28,9 @@ export async function POST(req: NextRequest) {
     const file = form?.get("file");
     if (!(file instanceof File)) return badRequest("no file");
     if (file.size > MAX_BYTES) return badRequest("file too large (max 2MB)");
-    if (!ALLOWED.includes(file.type)) return badRequest("unsupported image type");
+    const ext = EXT_BY_MIME[file.type];
+    if (!ext) return badRequest("unsupported image type (png, jpeg, webp, gif)");
 
-    const ext = file.name.split(".").pop()?.toLowerCase() || "png";
     const key = `${crypto.randomUUID()}.${ext}`;
 
     const supabase = getServiceClient();

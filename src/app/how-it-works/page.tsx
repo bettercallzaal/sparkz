@@ -80,7 +80,7 @@ const TRUST_MODEL = [
   },
   {
     label: 'What is adjustable',
-    value: 'The recipients and weights inside 0xSplits. Controlled by the designated controller wallet(s) — typically a 2-of-3 multisig: creator + Aziz + ZAO.',
+    value: 'The recipients and weights inside 0xSplits. Controlled by the designated controller wallet(s) — typically a 2-of-3 multisig: creator + co-builder + ZAO.',
   },
   {
     label: 'What is public',

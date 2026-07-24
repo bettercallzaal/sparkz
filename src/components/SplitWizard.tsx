@@ -671,7 +671,7 @@ export default function SplitWizard() {
                 <li>Run <code className="text-gold-400 font-mono">SPLITS_ADDRESS=0x… npm run snapshot</code> weekly</li>
               </ol>
               <p className="text-xs text-slate-600 mt-3">
-                ZOL never deploys on-chain. You (or Aziz) click deploy. The prep is done — the
+                ZOL never deploys on-chain. You click deploy. The prep is done — the
                 signing is yours.
               </p>
             </div>

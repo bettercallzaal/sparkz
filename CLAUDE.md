@@ -12,6 +12,18 @@ data - NOT the token contract, NOT image generation. V1 proves ONE loop with Zoo
 (a Creator Capsule); the schema supports all four entry points (Creator / Culture /
 Open-Source repo / Meme Engine) so v1.5 is additive.
 
+## Positioning (non-negotiable framing)
+
+Sparkz monetizes like an **OSS protocol + data network, not a per-seat SaaS**: it earns
+on value that flows through the rails it enables (graduations, backing/boost/bounty
+flows) and on the compounding Meme Receipt graph - not on subscriptions. Managed-pilot
+services are how we *bootstrap the network*, not the identity. Never position or price
+Sparkz as SaaS. Hard rule: **back the album, not buy a coin** - no "raise" language,
+token is optional/opt-in/later, distribution is human-approved, token upside is option
+value only. Full frame + provenance: `docs/strategy/positioning.md`. (Commercial
+specifics - pricing, financial model, targets - stay in the private lab, never this
+public repo.)
+
 ## Read these before coding (in order)
 
 1. `docs/BUILD-MILESTONE-1.md` - the current scope (the Capsule foundation).

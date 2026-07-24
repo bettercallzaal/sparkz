@@ -157,6 +157,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 136 | `feat/ship-md-pr-count-135` | SHIP.md: count 134→136; add rows for PRs #135–#136 |
 | 137 | `feat/lifecycle-advisor-payout-fix` | lifecycle/page.tsx + advisor.ts: 'payouts' → 'fee allocation' / 'earnings' — pull-model accuracy |
 | 138 | `feat/ship-md-pr-count-137` | SHIP.md: count 136→138; add rows for PRs #137–#138 |
+| 139 | `feat/remove-aziz-from-product-copy` | SplitWizard.tsx + how-it-works/page.tsx: remove Zoostr-specific 'Aziz' references — generic product copy uses 'co-builder' instead |
+| 140 | `feat/ship-md-pr-count-139` | SHIP.md: count 138→140; add rows for PRs #139–#140 |
 
 ---
 

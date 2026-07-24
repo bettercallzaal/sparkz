@@ -9,9 +9,9 @@
   --foreground: #f5f5f5;
   --muted: #9a9aa2;
   --border: #262629;
-  --accent: #c084fc;       /* violet - primary (Farcaster-adjacent) */
+  --accent: #c084fc;       /* violet - secondary (Farcaster nod) */
   --accent-2: #ec4899;     /* pink - flame mid */
-  --accent-3: #fbbf24;     /* amber - warmth, gradient end */
+  --accent-3: #ffd700;     /* ZAO Gold - on-chain moments, CTAs, gradient end */
   --flame-1: #f97316;      /* orange - flame identity */
 }
 
@@ -25,7 +25,7 @@
   --color-accent: var(--accent);
   --color-accent-2: var(--accent-2);
   --color-accent-3: var(--accent-3);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-display);
   --font-display: var(--font-display);
   --font-mono: var(--font-geist-mono);
 }
@@ -50,12 +50,13 @@ h1, h2, h3 {
   letter-spacing: -0.02em;
 }
 
-/* Flame gradient (orange->pink->violet) - the Sparkz identity mark. */
+/* Spark gradient (orange->pink->ZAO Gold) - the Sparkz mark, landing on ZAO Gold so it
+   shares the estate's on-chain accent instead of the Farcaster-default violet. */
 .spark-gradient {
-  background-image: linear-gradient(120deg, var(--flame-1), var(--accent-2), var(--accent));
+  background-image: linear-gradient(120deg, var(--flame-1), var(--accent-2), var(--accent-3));
 }
 .spark-text {
-  background-image: linear-gradient(120deg, var(--flame-1), var(--accent-2), var(--accent));
+  background-image: linear-gradient(120deg, var(--flame-1), var(--accent-2), var(--accent-3));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

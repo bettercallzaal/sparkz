@@ -615,7 +615,7 @@ export default function SplitWizard() {
                     <label className="text-xs text-slate-500 block mb-1">Token name</label>
                     <input
                       type="text"
-                      placeholder="Zoostr"
+                      placeholder="e.g. My Creator Coin"
                       value={tokenName}
                       onChange={(e) => setTokenName(e.target.value)}
                       className="w-full bg-zao-dark border border-zao-border rounded-lg px-3 py-2 text-sm text-white placeholder-slate-700 focus:outline-none focus:border-gold-500/50"
@@ -625,7 +625,7 @@ export default function SplitWizard() {
                     <label className="text-xs text-slate-500 block mb-1">Ticker</label>
                     <input
                       type="text"
-                      placeholder="ZOOSTR"
+                      placeholder="SPARK"
                       value={tokenTicker}
                       onChange={(e) => setTokenTicker(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''))}
                       className="w-full bg-zao-dark border border-zao-border rounded-lg px-3 py-2 text-sm text-white placeholder-slate-700 focus:outline-none focus:border-gold-500/50 font-mono"

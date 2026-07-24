@@ -55,7 +55,7 @@ const TOKEN_ADVICE: Record<TokenTiming, string> = {
   later:
     'Hold on the token and start tokenless: build your leaderboard, prove the boost engine, collect a few dozen real supporters. When you launch, the token backs existing momentum — not speculation.',
   never:
-    'No token needed. Use the patronage tier system ($5/$25/$100 recurring) with Stripe. Patronage revenue flows through Stripe — set up 0xSplits separately if you want to split payouts between collaborators.',
+    'No token needed. Use the patronage tier system ($5/$25/$100 recurring) with Stripe. Patronage revenue flows through Stripe — set up 0xSplits separately if you want to split earnings between collaborators.',
 }
 
 const FEE_ADVICE_TEMPLATE: Record<FeeModel, (poolMin: string, poolMax: string | null) => string> = {

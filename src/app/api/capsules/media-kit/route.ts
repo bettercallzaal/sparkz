@@ -9,22 +9,37 @@ import {
   DEFAULT_ANCHOR,
   MAX_SCRIPT_CHARS,
   type SegmentRequest,
+  type SegmentJob,
 } from "@/lib/adapters/media-kit";
+import {
+  mediaKitKey,
+  usableCachedSegment,
+  writeCachedSegment,
+  toStored,
+  type StoredSegment,
+} from "@/lib/adapters/media-kit/capsule-cache";
 import type { Capsule } from "@/lib/supabase/types";
 
 // POST /api/capsules/media-kit - render a Capsule (or an ad-hoc script) into an
-// AI-anchor video segment through the Baraza TV media kit. This is the operator test
-// surface for the partnership: with no Baraza env set it runs against the offline
-// stub (deterministic, no spend), and it flips to the live Baraza renderer the moment
+// AI-anchor video segment through the Baraza TV media kit. Operator test surface for
+// the partnership: with no Baraza env set it runs against the offline stub
+// (deterministic, no spend), and flips to the live Baraza renderer when
 // BARAZA_API_URL is configured.
 //
-// Operator-only (requireAdmin): it triggers external render cost and reads via the
-// service client. Per-creator auth lands with real user accounts later.
+// Cost control: when a Capsule is rendered, the result is cached on the Capsule
+// (`metadata.mediaKit`, no migration) keyed by (anchor, script). A repeat request
+// returns the stored segment for free instead of paying HeyGen again; an in-flight
+// render is reused so a retry mid-render does not double-bill. Pass `refresh: true`
+// to force a new render.
 //
-// Body: { capsuleId?, script?, anchor?, brand?, format? }
-//   - Provide `script` OR `capsuleId` (script wins; capsuleId derives a default read).
+// Operator-only (requireAdmin): triggers external render cost + service-client reads.
 //
-// GET /api/capsules/media-kit?jobId=... - poll a render job to completion.
+// Body: { capsuleId?, script?, anchor?, brand?, format?, refresh? }
+//   - Provide `script` OR `capsuleId` (script wins; capsuleId derives a default read
+//     and enables caching/persistence).
+//
+// GET /api/capsules/media-kit?jobId=...[&capsuleId=...] - poll a render job. When
+// capsuleId is given and the job is ready, the cached record is updated to ready.
 
 // Kept in lockstep with BarazaAnchor in the media-kit contract (types.ts).
 const anchorEnum = z.enum(["amina", "jabari"]);
@@ -36,16 +51,28 @@ const bodySchema = z
     anchor: anchorEnum.optional(),
     brand: z.string().max(80).optional(),
     format: z.enum(["vertical", "landscape"]).optional(),
+    refresh: z.boolean().optional(),
   })
   .refine((b) => Boolean(b.capsuleId || b.script), {
     message: "provide either capsuleId or script",
   });
 
 // Build a default anchor read from a Capsule when no explicit script is given.
-function scriptFromCapsule(c: Capsule): string {
+function scriptFromCapsule(c: Pick<Capsule, "name" | "bio">): string {
   const line = c.bio?.trim() || `${c.name} is a new spark on Sparkz.`;
   const read = `${c.name}. ${line} Back it, boost it, or start your own spark on Sparkz.`;
   return read.slice(0, MAX_SCRIPT_CHARS);
+}
+
+function jobFromStored(s: StoredSegment): SegmentJob {
+  return {
+    jobId: s.jobId,
+    status: s.status,
+    videoUrl: s.videoUrl,
+    provider: s.provider as SegmentJob["provider"],
+    anchor: s.anchor,
+    createdAt: s.renderedAt,
+  };
 }
 
 export async function POST(req: NextRequest) {
@@ -57,36 +84,65 @@ export async function POST(req: NextRequest) {
     if (!parsed.success) return zodError(parsed.error);
     const input = parsed.data;
 
+    const anchor = input.anchor ?? DEFAULT_ANCHOR;
     let script = input.script?.trim() ?? "";
     let brand = input.brand;
     let sourceRef: string | undefined;
 
-    if (!script && input.capsuleId) {
+    // Capsule path: derive the read (if no explicit script), and use the Capsule as
+    // the cache + persistence home.
+    let capsule: Capsule | null = null;
+    if (input.capsuleId) {
       const supabase = getServiceClient();
-      const { data: capsule, error } = await supabase
+      const { data, error } = await supabase
         .from("capsules")
-        .select("id, slug, name, bio")
+        .select("id, slug, name, bio, metadata")
         .eq("id", input.capsuleId)
         .single();
-      if (error || !capsule) return badRequest("capsule not found");
-      const c = capsule as Capsule;
-      script = scriptFromCapsule(c);
-      brand = brand ?? c.name;
-      sourceRef = `capsule:${c.slug}`;
+      if (error || !data) return badRequest("capsule not found");
+      capsule = data as Capsule;
+      if (!script) script = scriptFromCapsule(capsule);
+      brand = brand ?? capsule.name;
+      sourceRef = `capsule:${capsule.slug}`;
     }
 
     if (!script) return badRequest("empty script");
 
+    // Cache check (Capsule renders only).
+    if (capsule && !input.refresh) {
+      const key = mediaKitKey(script, anchor);
+      const cached = usableCachedSegment(capsule.metadata, key, Date.now());
+      if (cached) {
+        return ok({ mode: mediaKitMode(), cached: true, job: jobFromStored(cached) });
+      }
+    }
+
     const request: SegmentRequest = {
       script,
-      anchor: input.anchor ?? DEFAULT_ANCHOR,
+      anchor,
       brand,
       format: input.format ?? "vertical",
       sourceRef,
     };
 
     const job = await getMediaKitProvider().renderSegment(request);
-    return ok({ mode: mediaKitMode(), request: { ...request, script }, job });
+
+    // Persist onto the Capsule so it is cached + retrievable.
+    if (capsule) {
+      const key = mediaKitKey(script, anchor);
+      const nextMetadata = writeCachedSegment(
+        capsule.metadata,
+        toStored(job, key, script.length),
+      );
+      const supabase = getServiceClient();
+      const { error } = await supabase
+        .from("capsules")
+        .update({ metadata: nextMetadata })
+        .eq("id", capsule.id);
+      if (error) console.error("[capsules/media-kit] persist failed:", error.message);
+    }
+
+    return ok({ mode: mediaKitMode(), cached: false, job });
   } catch (err) {
     return serverError(err, "capsules/media-kit:POST");
   }
@@ -97,10 +153,34 @@ export async function GET(req: NextRequest) {
     const authFail = requireAdmin(req);
     if (authFail) return authFail;
 
-    const jobId = new URL(req.url).searchParams.get("jobId")?.trim();
+    const url = new URL(req.url);
+    const jobId = url.searchParams.get("jobId")?.trim();
+    const capsuleId = url.searchParams.get("capsuleId")?.trim();
     if (!jobId) return badRequest("jobId is required");
 
     const job = await getMediaKitProvider().getSegment(jobId);
+
+    // If this job belongs to a Capsule and has resolved to ready, update the cached
+    // record so future POSTs hit the cache instead of re-rendering.
+    if (capsuleId && job.status === "ready" && job.videoUrl) {
+      const supabase = getServiceClient();
+      const { data } = await supabase
+        .from("capsules")
+        .select("id, metadata")
+        .eq("id", capsuleId)
+        .single();
+      const capsule = data as Pick<Capsule, "id" | "metadata"> | null;
+      if (capsule) {
+        // Find the stored key for this jobId and refresh it.
+        const store = (capsule.metadata?.mediaKit as { segments?: Record<string, StoredSegment> } | undefined)?.segments ?? {};
+        const entry = Object.values(store).find((s) => s.jobId === jobId);
+        if (entry && entry.status !== "ready") {
+          const next = writeCachedSegment(capsule.metadata, { ...entry, status: "ready", videoUrl: job.videoUrl });
+          await supabase.from("capsules").update({ metadata: next }).eq("id", capsuleId);
+        }
+      }
+    }
+
     return ok({ mode: mediaKitMode(), job });
   } catch (err) {
     return serverError(err, "capsules/media-kit:GET");

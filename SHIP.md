@@ -165,6 +165,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 144 | `feat/ship-md-pr-count-143` | SHIP.md: count 142→144; add rows for PRs #143–#144 |
 | 145 | `feat/split-wizard-generic-placeholders` | SplitWizard.tsx: genericize token name/ticker placeholders — 'Zoostr'/'ZOOSTR' → 'e.g. My Creator Coin'/'SPARK' |
 | 146 | `feat/ship-md-pr-count-145` | SHIP.md: count 144→146; add rows for PRs #145–#146 |
+| 147 | `feat/circles-frame-button-fix` | circles/page.tsx: frame button 'Back Zoostr now' → 'Zoostr — the first Circle'; target boostr.itscashless.com → /launches/zoostr |
+| 148 | `feat/ship-md-pr-count-147` | SHIP.md: count 146→148; add rows for PRs #147–#148 |
 
 ---
 

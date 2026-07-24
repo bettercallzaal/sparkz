@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     'fc:frame': 'vNext',
     'fc:frame:image': OG_URL,
     'fc:frame:image:aspect_ratio': '1.91:1',
-    'fc:frame:button:1': '🟡 See Zoostr — live now',
+    'fc:frame:button:1': '🟡 Zoostr — first live launch',
     'fc:frame:button:1:action': 'link',
     'fc:frame:button:1:target': `${BASE_URL}/launches/zoostr`,
     'fc:frame:button:2': '🏅 Apply for a slot',

@@ -163,6 +163,12 @@ function AdminInner() {
         </Link>
         <div className="flex items-center gap-3">
           <Link
+            href="/admin/add-repo"
+            className="text-sm text-accent hover:text-foreground"
+          >
+            + Add repo
+          </Link>
+          <Link
             href="/admin/new"
             className="text-sm text-accent hover:text-foreground"
           >

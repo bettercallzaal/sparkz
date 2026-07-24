@@ -155,6 +155,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 134 | `feat/ship-md-pr-count-133` | SHIP.md: count 132→134; add rows for PRs #133–#134 |
 | 135 | `feat/audius-how-it-works-fee-allocation` | audius/page.tsx + how-it-works/page.tsx: 'fee distribution' → 'fee allocation' in metadata + OG copy |
 | 136 | `feat/ship-md-pr-count-135` | SHIP.md: count 134→136; add rows for PRs #135–#136 |
+| 137 | `feat/lifecycle-advisor-payout-fix` | lifecycle/page.tsx + advisor.ts: 'payouts' → 'fee allocation' / 'earnings' — pull-model accuracy |
+| 138 | `feat/ship-md-pr-count-137` | SHIP.md: count 136→138; add rows for PRs #137–#138 |
 
 ---
 

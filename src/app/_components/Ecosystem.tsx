@@ -1,5 +1,5 @@
-import Link from "next/link";
 import Avatar from "./Avatar";
+import { appUrl } from "@/lib/origins";
 import type { Capsule, CapsuleType } from "@/lib/supabase/types";
 
 const TYPE_LABEL: Record<CapsuleType, string> = {
@@ -28,8 +28,8 @@ export default function Ecosystem({ capsules }: { capsules: Capsule[] }) {
           <ul className="grid gap-3 sm:grid-cols-2">
             {byType(t).map((c) => (
               <li key={c.id}>
-                <Link
-                  href={`/c/${c.slug}`}
+                <a
+                  href={appUrl(`/c/${c.slug}`)}
                   className="flex h-full items-start gap-3 rounded-lg border border-border bg-card p-4 transition-colors hover:border-accent"
                 >
                   <Avatar
@@ -48,7 +48,7 @@ export default function Ecosystem({ capsules }: { capsules: Capsule[] }) {
                       <p className="mt-1 line-clamp-2 text-sm text-muted">{c.bio}</p>
                     )}
                   </div>
-                </Link>
+                </a>
               </li>
             ))}
           </ul>

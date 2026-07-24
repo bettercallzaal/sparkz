@@ -347,7 +347,7 @@ export default function TiersWizard() {
               key: 'projectName' as const,
               label: 'Project name',
               placeholder: 'Album title, collab name, show name…',
-              hint: 'What your fans are backing — e.g. "ZABAL × Boostr" or "The Third Album"',
+              hint: 'What your fans are backing — e.g. "The Third Album" or "My Creator Community"',
             },
             {
               key: 'bio' as const,

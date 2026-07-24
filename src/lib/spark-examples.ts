@@ -34,7 +34,7 @@ export const SPARK_EXAMPLES: SparkExample[] = [
       'You have a community that boosts your content. They like your posts, share your drops, show up in comments. You want to reward the ones who actually show up — not just whoever buys the most.',
     noTokenAction:
       'Start the leaderboard now. Connect Boostr (or any points platform). Your top fans see their ranking and projected earnings before any token exists. The leaderboard is live; the token is optional.',
-    metric: 'Leaderboard points (zabalLikesCount from Boostr, or equivalent)',
+    metric: 'Leaderboard engagement score from your platform API (e.g. Boostr boost score, or any rank-based metric)',
     splitConfig: {
       communityPool: 50,
       creatorPool: 25,

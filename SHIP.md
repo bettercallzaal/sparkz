@@ -163,6 +163,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 142 | `feat/ship-md-pr-count-141` | SHIP.md: count 140→142; add rows for PRs #141–#142 |
 | 143 | `feat/back-success-generic-link-143` | back/success/page.tsx: replace hardcoded 'zoostr.xyz' CTA with generic /launches link — wrong for multi-creator platform |
 | 144 | `feat/ship-md-pr-count-143` | SHIP.md: count 142→144; add rows for PRs #143–#144 |
+| 145 | `feat/split-wizard-generic-placeholders` | SplitWizard.tsx: genericize token name/ticker placeholders — 'Zoostr'/'ZOOSTR' → 'e.g. My Creator Coin'/'SPARK' |
+| 146 | `feat/ship-md-pr-count-145` | SHIP.md: count 144→146; add rows for PRs #145–#146 |
 
 ---
 

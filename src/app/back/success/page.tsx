@@ -32,14 +32,9 @@ export default async function BackSuccessPage({
           Perks are what backers enjoy today — not guarantees. Not financial advice.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <a
-            href="https://zoostr.xyz"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-gold text-sm py-2 px-5 inline-block"
-          >
-            See the launch → zoostr.xyz ↗
-          </a>
+          <Link href="/launches" className="btn-gold text-sm py-2 px-5 inline-block">
+            See active launches →
+          </Link>
           <a
             href={warpcastUrl}
             target="_blank"

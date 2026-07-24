@@ -3,7 +3,6 @@ import Flame from "./Flame";
 import HeaderAuth from "./HeaderAuth";
 import MobileNav from "./MobileNav";
 import AddMiniApp from "./AddMiniApp";
-import { appUrl } from "@/lib/origins";
 
 // Global sticky header - every page gets it via the root layout. Flame home,
 // a few key destinations, and a persistent "Try Sparkz" CTA so a first-time
@@ -18,9 +17,9 @@ export default function Header() {
         </Link>
 
         <nav className="ml-2 hidden items-center gap-5 text-sm text-muted sm:flex">
-          <a href={appUrl("/explore")} className="hover:text-foreground">
+          <Link href="/explore" className="hover:text-foreground">
             Explore
-          </a>
+          </Link>
           <Link href="/demo" className="hover:text-foreground">
             How it works
           </Link>
@@ -35,9 +34,9 @@ export default function Header() {
         <div className="ml-auto flex items-center gap-3">
           <AddMiniApp />
           <HeaderAuth />
-          <a href={appUrl("/start")} className="btn-spark rounded-lg px-4 py-1.5 text-sm">
+          <Link href="/start" className="btn-spark rounded-lg px-4 py-1.5 text-sm">
             Try Sparkz
-          </a>
+          </Link>
           <MobileNav />
         </div>
       </div>

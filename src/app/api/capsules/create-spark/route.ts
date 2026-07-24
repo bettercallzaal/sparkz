@@ -89,16 +89,10 @@ export async function POST(req: NextRequest) {
     if (error) throw error;
     const created = capsule as Pick<Capsule, "id" | "slug">;
 
-    // Seed the owner as the first backer so a fresh spark is not empty.
-    const backerId =
-      input.email ?? (input.fc_username ? `@${input.fc_username}` : `fid:${input.owner_fid}`);
-    await supabase.from("capsule_backers").insert({
-      capsule_id: created.id,
-      backer_kind: input.owner_fid ? "fid" : "user",
-      backer_id: backerId,
-      kind: "boost",
-      provider: "ledger",
-    });
+    // A fresh spark starts with real, honest counts: 0 backers, 0 boosts, 0 receipts.
+    // We do NOT seed a self-boost from the owner - that reads as "a supporter backed
+    // this" on the Capsule and in the activity feed when nobody actually has. The
+    // empty state ("No backers yet. Be the first") carries the moment instead.
 
     return ok({ slug: created.slug }, 201);
   } catch (err) {

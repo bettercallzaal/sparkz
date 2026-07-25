@@ -1,7 +1,8 @@
 import type { MetadataRoute } from "next";
 import { loadPublicCapsules } from "@/lib/public-capsules";
+import { canonicalOrigin } from "@/lib/origin";
 
-const BASE = "https://trysparkz.com";
+const BASE = canonicalOrigin();
 
 // Dynamic sitemap: the static marketing/product routes + every public Capsule.
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

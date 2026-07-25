@@ -44,7 +44,16 @@ export default function Footer() {
         </div>
         <p className="mt-4 text-xs">
           Sparkz - start with a spark, not a token. Back the work, build the collective,
-          earn transparently. Part of the ZAO ecosystem.
+          earn transparently. Part of{" "}
+          <a
+            href="https://zaoos.com"
+            target="_blank"
+            rel="noreferrer"
+            className="text-accent-3 hover:underline"
+          >
+            The ZAO
+          </a>
+          .
         </p>
       </div>
     </footer>

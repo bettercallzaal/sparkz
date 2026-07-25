@@ -12,6 +12,21 @@ import { timingSafeEqual } from "node:crypto";
 // Fails CLOSED: if SPARKZ_ADMIN_TOKEN is unset, no writes are allowed at all.
 
 export const ADMIN_COOKIE = "sparkz_admin";
+export const ADMIN_COOKIE_MAX_AGE = 60 * 60 * 8; // 8h
+
+// Set the operator session cookie on a response. Shared by /api/admin/login (prod
+// path, token from the operator) and /api/admin/dev-login (dev-only convenience).
+// httpOnly so the raw token never touches client JS; secure only in production so
+// the cookie still sets over http://localhost in dev.
+export function setAdminCookie(res: NextResponse, token: string): void {
+  res.cookies.set(ADMIN_COOKIE, token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: ADMIN_COOKIE_MAX_AGE,
+  });
+}
 
 function safeEqual(a: string, b: string): boolean {
   const ab = Buffer.from(a);

@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { z } from "zod";
-import { ADMIN_COOKIE, verifyAdminToken } from "@/lib/auth";
+import { setAdminCookie, verifyAdminToken } from "@/lib/auth";
 import { ok, badRequest, serverError, zodError } from "@/lib/http";
 
 const loginSchema = z.object({ token: z.string().min(1).max(200) });
@@ -21,13 +21,7 @@ export async function POST(req: NextRequest) {
     }
 
     const res = ok({ authed: true });
-    res.cookies.set(ADMIN_COOKIE, parsed.data.token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-      maxAge: 60 * 60 * 8, // 8h
-    });
+    setAdminCookie(res, parsed.data.token);
     return res;
   } catch (err) {
     return serverError(err, "admin.login.POST");

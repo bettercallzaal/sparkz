@@ -93,7 +93,24 @@ export async function POST(req: NextRequest) {
       })
       .select("*")
       .single();
-    if (recErr) throw recErr;
+    if (recErr) {
+      // Lost the double-publish race: a concurrent approval already wrote THE
+      // receipt for this signal (unique index meme_receipts_signal_unique, 23505).
+      // Return the winner's receipt idempotently instead of erroring.
+      if ((recErr as { code?: string }).code === "23505") {
+        const { data: winner } = await supabase
+          .from("meme_receipts")
+          .select("*")
+          .eq("signal_id", signal.id)
+          .maybeSingle();
+        return ok({
+          signal: { ...signal, status: "published" },
+          receipt: winner as MemeReceipt | null,
+          alreadyApproved: true,
+        });
+      }
+      throw recErr;
+    }
 
     return ok(
       {

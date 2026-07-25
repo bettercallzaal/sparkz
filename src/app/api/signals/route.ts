@@ -6,6 +6,7 @@ import { ok, badRequest, serverError, zodError } from "@/lib/http";
 import { generateDrafts } from "@/lib/meme-engine/draft";
 import { routeApproval } from "@/lib/adapters/approval-channel";
 import { requireAdmin } from "@/lib/auth";
+import { canonicalOrigin } from "@/lib/origin";
 import type { Capsule, Signal, SignalDraft } from "@/lib/supabase/types";
 
 // GET /api/signals?capsule_id=... - signals for a capsule (with their drafts).
@@ -111,7 +112,10 @@ export async function POST(req: NextRequest) {
       .update({ status: "drafted" })
       .eq("id", signal.id);
 
-    const origin = req.nextUrl.origin;
+    // Trusted origin from server env - NOT req.nextUrl.origin. This URL is sent
+    // outward to operators via approval channels; a spoofed Host header must not
+    // be able to inject a phishing domain into the link they click.
+    const origin = canonicalOrigin();
     const routing = await routeApproval({
       signalId: signal.id,
       capsuleId: signal.capsule_id,

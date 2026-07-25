@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server";
 import { getServiceClient } from "@/lib/supabase/server";
 import { ok, badRequest, serverError } from "@/lib/http";
+import { isAdmin } from "@/lib/auth";
 
 // Public-safe columns of a Meme Receipt. This is a public endpoint, so it must not
 // `select("*")`: MemeReceipt also carries internal fields - `approver` (operator
@@ -17,10 +18,15 @@ export async function GET(req: NextRequest) {
     const capsuleId = req.nextUrl.searchParams.get("capsule_id");
     if (!capsuleId) return badRequest("capsule_id is required");
 
+    // The operator console needs the full record (approver, creator, lessons) to
+    // audit its own work; the public trail gets the safe subset only. Same endpoint,
+    // gated by the admin cookie.
+    const columns = isAdmin(req) ? "*" : PUBLIC_RECEIPT_COLUMNS;
+
     const supabase = getServiceClient();
     const { data, error } = await supabase
       .from("meme_receipts")
-      .select(PUBLIC_RECEIPT_COLUMNS)
+      .select(columns)
       .eq("capsule_id", capsuleId)
       .order("created_at", { ascending: false });
     if (error) throw error;

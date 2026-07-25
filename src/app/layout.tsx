@@ -75,6 +75,11 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      // Browser extensions (Grammarly, Scribe recorder, etc) inject attributes on
+      // <html>/<body> before React hydrates, which triggers a dev-only hydration
+      // mismatch warning. Suppress it at the root - it's noise from the client env,
+      // not our markup.
+      suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col overflow-x-hidden">
         <Providers>

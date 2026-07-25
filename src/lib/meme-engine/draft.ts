@@ -78,14 +78,25 @@ export async function generateDrafts(
       }),
     });
 
-    if (!res.ok) return fallbackDrafts(capsule, signal);
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      console.warn(
+        `[meme-engine] OpenRouter ${res.status} for model "${model}" - using fallback drafts. ${body.slice(0, 300)}`,
+      );
+      return fallbackDrafts(capsule, signal);
+    }
 
     const json = (await res.json()) as {
       choices?: { message?: { content?: string } }[];
     };
     const content = json.choices?.[0]?.message?.content ?? "";
     const parts = splitIntoThree(content);
-    if (parts.length === 0) return fallbackDrafts(capsule, signal);
+    if (parts.length === 0) {
+      console.warn(
+        `[meme-engine] OpenRouter returned no parseable drafts (content length ${content.length}) - using fallback.`,
+      );
+      return fallbackDrafts(capsule, signal);
+    }
 
     // Pad to 3 so the UI always shows three slots.
     while (parts.length < 3) parts.push(parts[parts.length - 1]);
@@ -96,7 +107,11 @@ export async function generateDrafts(
       model,
       promptVersion: PROMPT_VERSION,
     }));
-  } catch {
+  } catch (err) {
+    console.warn(
+      `[meme-engine] OpenRouter request threw - using fallback drafts.`,
+      err,
+    );
     return fallbackDrafts(capsule, signal);
   }
 }

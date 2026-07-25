@@ -2,14 +2,21 @@ import { createHash } from "node:crypto";
 import type { NextRequest } from "next/server";
 import { getServiceClient } from "@/lib/supabase/server";
 
-// Client IP, hashed so we never store raw addresses. Salted with a server-only
-// secret so the hash cannot be reversed by guessing IPs.
+// Client IP, hashed so we never store raw addresses. Salted so the hash cannot be
+// reversed by guessing IPs. The salt is a FIXED constant, never the admin token:
+// coupling it to SPARKZ_ADMIN_TOKEN meant rotating the token silently changed every
+// hash, so all existing rate-limit rows stopped matching and every actor got a fresh
+// quota (a bypass). Keep this value immutable post-launch.
+const RATE_SALT = "sparkz-v1-rate-salt-immutable";
+
 export function clientIpHash(req: NextRequest): string {
   const xff = req.headers.get("x-forwarded-for") ?? "";
   const ip =
     xff.split(",")[0]?.trim() || req.headers.get("x-real-ip") || "unknown";
-  const salt = process.env.SPARKZ_ADMIN_TOKEN ?? "sparkz-rate-salt";
-  return createHash("sha256").update(`${salt}:${ip}`).digest("hex").slice(0, 32);
+  return createHash("sha256")
+    .update(`${RATE_SALT}:${ip}`)
+    .digest("hex")
+    .slice(0, 32);
 }
 
 // How many self-serve capsules this ip_hash created inside the window. Durable -
@@ -22,11 +29,15 @@ export async function selfServeCountInWindow(
 ): Promise<number> {
   const supabase = getServiceClient();
   const since = new Date(Date.now() - windowMs).toISOString();
-  const { count } = await supabase
+  const { count, error } = await supabase
     .from("capsules")
     .select("id", { count: "exact", head: true })
     .filter("metadata->>ip_hash", "eq", ipHash)
     .gte("created_at", since);
+  // Fail CLOSED: a failed count must never read as 0, or a DB hiccup lifts the
+  // limit entirely and lets an actor flood. Throw so the caller returns a 500
+  // instead of granting an un-counted write.
+  if (error) throw error;
   return count ?? 0;
 }
 
@@ -48,11 +59,13 @@ export async function boostCountInWindow(
 ): Promise<number> {
   const supabase = getServiceClient();
   const since = new Date(Date.now() - windowMs).toISOString();
-  const { count } = await supabase
+  const { count, error } = await supabase
     .from("capsule_backers")
     .select("id", { count: "exact", head: true })
     .eq("kind", "boost")
     .filter("metadata->>ip_hash", "eq", ipHash)
     .gte("created_at", since);
+  // Fail CLOSED (see selfServeCountInWindow) - a failed count must not read as 0.
+  if (error) throw error;
   return count ?? 0;
 }

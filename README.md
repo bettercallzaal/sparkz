@@ -558,3 +558,10 @@ Point any AI at this context box to load the full Sparkz picture and give ground
 This is public on purpose - if someone wants to take the idea and run, go for it. I would rather learn from others and hear real suggestions.
 
 One rule: bring solutions, not just complaints. If you want to comment, make sure there is something actionable I can do to rectify your perspective. Feedback with a concrete fix gets read and acted on. A complaint with no actionable path will just be ignored.
+
+## License
+
+[Apache-2.0](LICENSE). Public and OSS-first - fork it, build on it, ship commercial
+work with it. The Apache license adds an explicit patent grant and trademark
+protection, which suit a protocol others build on. See [LICENSE](LICENSE) and
+[NOTICE](NOTICE).

@@ -5,18 +5,21 @@ import MiniAppReady from "./_components/MiniAppReady";
 import Header from "./_components/Header";
 import Footer from "./_components/Footer";
 import Providers from "./_components/Providers";
+import { canonicalOrigin } from "@/lib/origin";
+
+const ORIGIN = canonicalOrigin();
 
 // Farcaster Mini App embed - makes a link to Sparkz render a launch card in-feed.
 const fcMiniapp = JSON.stringify({
   version: "1",
-  imageUrl: "https://trysparkz.com/api/og",
+  imageUrl: `${ORIGIN}/api/og`,
   button: {
     title: "Open Sparkz",
     action: {
       type: "launch_miniapp",
       name: "Sparkz",
-      url: "https://trysparkz.com",
-      splashImageUrl: "https://trysparkz.com/api/icon",
+      url: ORIGIN,
+      splashImageUrl: `${ORIGIN}/api/icon`,
       splashBackgroundColor: "#0a0a0a",
     },
   },
@@ -37,7 +40,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://trysparkz.com"),
+  metadataBase: new URL(ORIGIN),
   title: {
     default: "Sparkz - start with a spark, not a token",
     template: "%s - Sparkz",

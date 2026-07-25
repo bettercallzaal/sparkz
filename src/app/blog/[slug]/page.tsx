@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getArticle, listArticles } from "@/lib/articles";
+import { canonicalOrigin } from "@/lib/origin";
 
 export const dynamic = "force-static";
 
@@ -17,7 +18,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const a = getArticle(slug);
   if (!a) return { title: "Article" };
-  const image = `https://trysparkz.com/api/og?title=${encodeURIComponent(a.title)}&subtitle=${encodeURIComponent(a.subtitle)}`;
+  const image = `${canonicalOrigin()}/api/og?title=${encodeURIComponent(a.title)}&subtitle=${encodeURIComponent(a.subtitle)}`;
   return {
     title: a.title,
     description: a.subtitle,

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
+import { canonicalOrigin } from "@/lib/origin";
 
-const image =
-  "https://trysparkz.com/api/og?title=Explore%20Sparkz&subtitle=Every%20ZAO%20Spark%20-%20filter%20by%20anything.";
+const image = `${canonicalOrigin()}/api/og?title=Explore%20Sparkz&subtitle=Every%20ZAO%20Spark%20-%20filter%20by%20anything.`;
 
 export const metadata: Metadata = {
   title: "Explore Sparkz",

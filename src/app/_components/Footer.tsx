@@ -17,6 +17,9 @@ export default function Footer() {
           <Link href="/start" className="hover:text-foreground">
             Light a spark
           </Link>
+          <Link href="/vetted" className="hover:text-foreground">
+            Vetted by ZAO
+          </Link>
           <Link href="/demo" className="hover:text-foreground">
             How it works
           </Link>

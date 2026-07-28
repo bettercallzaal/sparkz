@@ -29,9 +29,9 @@ export const metadata: Metadata = {
     'fc:frame:button:1': '⚡ Start with a spark',
     'fc:frame:button:1:action': 'link',
     'fc:frame:button:1:target': BASE_URL,
-    'fc:frame:button:2': '📖 See examples',
+    'fc:frame:button:2': '🔍 Discover sparks',
     'fc:frame:button:2:action': 'link',
-    'fc:frame:button:2:target': `${BASE_URL}/examples`,
+    'fc:frame:button:2:target': `${BASE_URL}/discover`,
   },
 }
 

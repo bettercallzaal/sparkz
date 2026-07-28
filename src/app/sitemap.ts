@@ -32,6 +32,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/how-it-works`, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE}/examples`, changeFrequency: 'weekly', priority: 0.7 },
     { url: `${BASE}/audius`, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${BASE}/rewards`, changeFrequency: 'monthly', priority: 0.7 },
     ...launchPages,
     ...examplePages,
   ]

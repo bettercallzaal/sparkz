@@ -458,6 +458,7 @@ export default async function HomePage() {
                 {[
                   { label: 'How it works', href: '/how-it-works' },
                   { label: 'Spark lifecycle', href: '/lifecycle' },
+                  { label: 'Rewards', href: '/rewards' },
                   { label: 'Collectables', href: '/collectables' },
                   { label: 'Get vetted', href: '/vetted' },
                 ].map((l) => (

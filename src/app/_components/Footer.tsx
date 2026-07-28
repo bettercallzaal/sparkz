@@ -37,6 +37,9 @@ export default function Footer() {
           >
             GitHub
           </a>
+          <a href="/llm.txt" className="hover:text-foreground">
+            llm.txt
+          </a>
           <span className="opacity-40">Discord - soon</span>
           <Link href="/admin" className="ml-auto opacity-60 hover:opacity-100">
             Operator

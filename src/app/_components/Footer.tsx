@@ -26,6 +26,9 @@ export default function Footer() {
           <Link href="/token-timing" className="hover:text-foreground">
             Token timing
           </Link>
+          <Link href="/examples" className="hover:text-foreground">
+            Templates
+          </Link>
           <a href="/architecture" className="hover:text-foreground">
             Architecture
           </a>

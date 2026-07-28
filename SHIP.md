@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 158 PRs are draft. Merge in order. One human click per step.
+> All 160 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -177,6 +177,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 156 | `feat/ship-md-pr-count-155` | SHIP.md: count 154→156; add rows for PRs #155–#156 |
 | 157 | `feat/discover-page` | /discover: ZAO-curated spark feed — live launches, what-gets-built examples, tools sidebar; wired into sitemap + homepage footer Discovery section |
 | 158 | `feat/ship-md-pr-count-157` | SHIP.md: count 156→158; add rows for PRs #157–#158 |
+| 159 | `feat/discover-nav-link` | homepage top nav: replace Examples with Discover — promotes broader discoverability surface |
+| 160 | `feat/ship-md-pr-count-159` | SHIP.md: count 158→160; add rows for PRs #159–#160 |
 
 ---
 

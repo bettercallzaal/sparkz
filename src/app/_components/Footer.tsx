@@ -23,6 +23,9 @@ export default function Footer() {
           <Link href="/blog" className="hover:text-foreground">
             Blog
           </Link>
+          <Link href="/token-timing" className="hover:text-foreground">
+            Token timing
+          </Link>
           <a href="/architecture" className="hover:text-foreground">
             Architecture
           </a>

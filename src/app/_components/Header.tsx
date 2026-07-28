@@ -20,6 +20,9 @@ export default function Header() {
           <Link href="/explore" className="hover:text-foreground">
             Explore
           </Link>
+          <Link href="/advisor" className="hover:text-foreground">
+            Split advisor
+          </Link>
           <Link href="/demo" className="hover:text-foreground">
             How it works
           </Link>

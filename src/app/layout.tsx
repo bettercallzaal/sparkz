@@ -59,12 +59,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   <FooterLink href="/split-wizard">Split sheet wizard</FooterLink>
                   <FooterLink href="/tiers">Patronage tiers</FooterLink>
                   <FooterLink href="/back">Fan backing</FooterLink>
+                  <FooterLink href="/settings">BYOK settings</FooterLink>
                 </div>
               </div>
               <div>
                 <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Learn</h4>
                 <div className="space-y-1.5">
                   <FooterLink href="/how-it-works">How it works</FooterLink>
+                  <FooterLink href="/rewards">Rewards mechanics</FooterLink>
                   <FooterLink href="/lifecycle">Spark lifecycle</FooterLink>
                   <FooterLink href="/circles">Culture Circles</FooterLink>
                   <FooterLink href="/collectables">Collectables</FooterLink>

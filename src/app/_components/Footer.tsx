@@ -35,6 +35,9 @@ export default function Footer() {
           <Link href="/community-pool" className="hover:text-foreground">
             Community pool
           </Link>
+          <Link href="/contribution" className="hover:text-foreground">
+            Contribution
+          </Link>
           <a href="/architecture" className="hover:text-foreground">
             Architecture
           </a>

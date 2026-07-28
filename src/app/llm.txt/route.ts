@@ -57,7 +57,7 @@ Fee default for new sparks: creator 98% / treasury 1% / community 1%. Zoostr (fi
 ### Core tools
 - /advisor — 3-question microflow → recommended split + token timing + fee model
 - /split-wizard — roles + % + collaborators → 0xSplits JSON export
-- /tiers — patronage tier wizard ($5/$25/$100 recurring, no token required)
+- /tiers — patronage tier wizard ($5/$25/$100 tiers, no token required; v1 checkout is one-time via Stripe, recurring is v2)
 - /back — fan fiat backing (card, no wallet/gas required)
 - /settings — BYOK (bring-your-own-key for AI advisor)
 

@@ -182,8 +182,8 @@ export default async function HomePage() {
             <span className="text-white">KZ</span>
           </span>
           <div className="flex items-center gap-3">
-            <Link href="/examples" className="text-sm text-slate-400 hover:text-white transition-colors hidden sm:inline">
-              Examples
+            <Link href="/discover" className="text-sm text-slate-400 hover:text-white transition-colors hidden sm:inline">
+              Discover
             </Link>
             <Link href="/launches" className="text-sm text-slate-400 hover:text-white transition-colors hidden sm:inline">
               Launches

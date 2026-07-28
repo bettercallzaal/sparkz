@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 156 PRs are draft. Merge in order. One human click per step.
+> All 158 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -175,6 +175,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 154 | `feat/ship-md-pr-count-153` | SHIP.md: count 152→154; add rows for PRs #153–#154 |
 | 155 | `feat/sparkz-principles-doc` | docs/sparkz-principles.md: extraction guardrails (5 principles), culture lifecycle (5 stages), ZOL autonomy tiers (4 levels), framing rules, V1 human-gate table, fee config constraints |
 | 156 | `feat/ship-md-pr-count-155` | SHIP.md: count 154→156; add rows for PRs #155–#156 |
+| 157 | `feat/discover-page` | /discover: ZAO-curated spark feed — live launches, what-gets-built examples, tools sidebar; wired into sitemap + homepage footer Discovery section |
+| 158 | `feat/ship-md-pr-count-157` | SHIP.md: count 156→158; add rows for PRs #157–#158 |
 
 ---
 
@@ -218,7 +220,8 @@ After Vercel deploys:
 - [ ] `https://sparkz.xyz/collectables` — page loads; steps visible
 - [ ] `https://sparkz.xyz/how-it-works` — 0xSplits + Clanker walkthrough visible
 - [ ] `https://sparkz.xyz/rewards` — 4-step how-it-works visible; booster tiers (1×/5×/20×) render; no-governance callout visible
-- [ ] `https://sparkz.xyz/sitemap.xml` — all routes listed (18+ entries)
+- [ ] `https://sparkz.xyz/discover` — Zoostr live card visible; "what gets built here" examples render; tools sidebar links working
+- [ ] `https://sparkz.xyz/sitemap.xml` — all routes listed (19+ entries)
 - [ ] `POST https://sparkz.xyz/api/advisor` with `{"situation":"solo","tokenTiming":"later","feeModel":"low"}` → returns `{"recommendation":{...}}`
 - [ ] `https://sparkz.xyz` — OG image and Farcaster Frame tags present (paste in Warpcast composer → preview renders)
 - [ ] `https://sparkz.xyz/advisor` — answer Q1 → URL updates to `?situation=...`; answer all 3 → "Cast this result ↗" link appears; advisor result links to split wizard pre-filled

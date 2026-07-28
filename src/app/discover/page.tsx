@@ -44,7 +44,7 @@ const BUILDING_EXAMPLES = [
     type: 'collab' as const,
     tagline: 'Three producers. One split sheet. No disputes.',
     description:
-      'Each contributor gets a share of streaming and token fees proportional to their role — producer, vocalist, engineer. IPFS-attested before the first track drops.',
+      'Each contributor gets a share of streaming and token fees proportional to their role — producer, vocalist, engineer. Split sheet locked in before the first track drops.',
     stage: 'Stage 2 — Emerging',
     stageNote: 'Building leaderboard before token',
   },

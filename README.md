@@ -36,6 +36,8 @@ Built to work with the ecosystem: ZAO, Viniapp (Chris Dolinski), Kismet, POIDH, 
 | `/launches/[slug]` | Live launch detail: stats, boosters, split config, receipts |
 | `/examples` | 9 spark templates — leaderboard, collab, crowdfund, PFP/NFT, light DAO, solo patronage, collab-no-token, record label roster, podcast collective |
 | `/examples/[slug]` | Template detail: situation, split config, perks, token path, advisor deep-link |
+| `/discover` | ZAO-curated discovery feed — live launches, "what gets built here" examples, tools sidebar |
+| `/rewards` | How Sparkz rewards work: contribution → points → fee share. No governance, no voting. |
 | `/lifecycle` | 5-stage spark model (Proposed → Federated) |
 | `/circles` | Culture Circles — sparks back each other before any token |
 | `/how-it-works` | 0xSplits → Clanker technical walkthrough |
@@ -43,6 +45,7 @@ Built to work with the ecosystem: ZAO, Viniapp (Chris Dolinski), Kismet, POIDH, 
 | `/audius` | Audius catalog → engagement metric connector |
 | `/settings` | BYOK (bring your own Anthropic key) |
 | `POST /api/advisor` | Advisor JSON endpoint for Viniapp relay |
+| `GET /llm.txt` | Machine-readable context for AI agents — framing rules, architecture, API docs, integration guide |
 
 ## Deploying
 

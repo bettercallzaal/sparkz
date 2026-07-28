@@ -23,6 +23,9 @@ export default function Footer() {
           <Link href="/blog" className="hover:text-foreground">
             Blog
           </Link>
+          <Link href="/patronage" className="hover:text-foreground">
+            Backing tiers
+          </Link>
           <a href="/architecture" className="hover:text-foreground">
             Architecture
           </a>

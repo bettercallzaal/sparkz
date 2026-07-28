@@ -79,6 +79,7 @@ Sparkz is NOT:
 - /zao — The ZAO (Zaal Agent Operator): curator (50 vetted sparks/quarter, self-serve review), aligned stakeholder (locked token stake not a fee slice), ZOL operator (advisory/creative/guarded AI tiers, human-gated), protocol guardian (5 extraction guardrails). Apply via @zaal on Warpcast. zaoos.com.
 - /capsule — The Capsule concept: 10-field anatomy (name, bio, type, status, backers, boosts, receipts, Farcaster identity, ZAO review state, economic config), 3-stage lifecycle (spark/tokenized/dormant), /c/[slug] URL pattern, 1/1/98 default economics. Token is optional output, not starting point.
 - /graduation — Capsule graduation Spark→Tokenized: 4 triggers (community pull, 30+ proven contributors, 0xSplits locked, ZAO review), 3 anti-triggers (price pressure, small count, no split-sheet), 5 steps (ZAO review → split-wizard → 0xSplits deploy → Clanker launch → weekly snapshot). Zoostr live example. Token optional.
+- /community-pool — The community pool: 1% default (adjustable, 1% floor), contribution → points → proportional fee share, 4-step earn flow (contribute → weekly snapshot → 0xSplits weights updated → claim at splits.org), pull model guardrails (holding ≠ contribution, no auto-payout, no deadline). Zoostr live example: 50% community pool.
 
 ### API endpoints (public, read-only unless noted)
 - GET /api/directory — Capsule directory; returns: id, name, slug, bio, type, status, backers, boosts, receipts, emails, stars, farcaster, empire, token, agent, newThisWeek, created_at

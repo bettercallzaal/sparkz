@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 154 PRs are draft. Merge in order. One human click per step.
+> All 156 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -173,6 +173,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 152 | `feat/ship-md-pr-count-151` | SHIP.md: count 150→152; add rows for PRs #151–#152 |
 | 153 | `feat/rewards-page` | /rewards: contribution → points → fee share, no governance; 4-step flow, pool math, booster tiers (1×/5×/20×), collectables teaser, human-gate callout; sitemap + homepage footer link |
 | 154 | `feat/ship-md-pr-count-153` | SHIP.md: count 152→154; add rows for PRs #153–#154 |
+| 155 | `feat/sparkz-principles-doc` | docs/sparkz-principles.md: extraction guardrails (5 principles), culture lifecycle (5 stages), ZOL autonomy tiers (4 levels), framing rules, V1 human-gate table, fee config constraints |
+| 156 | `feat/ship-md-pr-count-155` | SHIP.md: count 154→156; add rows for PRs #155–#156 |
 
 ---
 

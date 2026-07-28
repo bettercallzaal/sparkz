@@ -214,13 +214,19 @@ export default async function HomePage() {
           Some never do. Both are fine.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-4">
-          <Link href="/split-wizard" className="btn-gold">
-            Set up your split →
+          <Link href="/advisor" className="btn-gold">
+            Get my split in 3 questions →
           </Link>
           <Link href="/back" className="btn-outline">
             Back the work
           </Link>
         </div>
+        <p className="mt-5 text-xs text-slate-600">
+          Already know your config?{' '}
+          <Link href="/split-wizard" className="text-slate-500 hover:text-slate-300 underline transition-colors">
+            Go straight to the split wizard →
+          </Link>
+        </p>
       </section>
 
       {/* The frame */}

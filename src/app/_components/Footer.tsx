@@ -26,6 +26,9 @@ export default function Footer() {
           <a href="/architecture" className="hover:text-foreground">
             Architecture
           </a>
+          <Link href="/farcaster" className="hover:text-foreground">
+            Farcaster
+          </Link>
           <Link href="/profile" className="hover:text-foreground">
             Sign in with Farcaster
           </Link>

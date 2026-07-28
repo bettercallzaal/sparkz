@@ -17,6 +17,12 @@ export default function Footer() {
           <Link href="/start" className="hover:text-foreground">
             Light a spark
           </Link>
+          <Link href="/split-wizard" className="hover:text-foreground">
+            Split wizard
+          </Link>
+          <Link href="/audius" className="hover:text-foreground">
+            Audius
+          </Link>
           <Link href="/demo" className="hover:text-foreground">
             How it works
           </Link>

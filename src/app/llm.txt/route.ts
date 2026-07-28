@@ -66,6 +66,10 @@ Sparkz is NOT:
 - /profile — Sign in with Farcaster (SIWE)
 - /admin — Operator dashboard: add capsules, review pending, empire deploy
 - /advisor — 3-question split advisor: situation (solo/collab/crowdfund) + token timing (now/later/never) + fee model (low/medium/high) → recommended split percentages, token advice, fee sizing, and split-wizard hint
+- /examples — 7 spark templates: community leaderboard, music collab, group crowdfund, solo patronage, PFP community, podcast split, gaming clan — each shows no-token starting point + split config + token timing
+- /vetted — ZAO vetting program: 50 slots/quarter, badge, ZOL support, aligned ZAO stake; apply via @zaal on Warpcast
+- /audius — Audius × Sparkz integration: connect Audius catalog to 0xSplits, per-track split config (v1 read-only stats; v2 per-listener weights planned)
+- /split-wizard — Interactive split-sheet builder: roles + % + wallets → 0xSplits JSON export + IPFS-attestable markdown; client-side, no data sent to Sparkz
 
 ### API endpoints (public, read-only unless noted)
 - GET /api/directory — Capsule directory; returns: id, name, slug, bio, type, status, backers, boosts, receipts, emails, stars, farcaster, empire, token, agent, newThisWeek, created_at

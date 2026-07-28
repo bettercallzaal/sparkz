@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 178 PRs are draft. Merge in order. One human click per step.
+> All 180 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -197,6 +197,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 176 | `feat/ship-md-pr-count-175` | SHIP.md: count 174→176; add rows for PRs #175–#176 |
 | 177 | `feat/footer-rewards-settings-links` | global footer: add /rewards to Learn section + /settings to Tools section — complete site map |
 | 178 | `feat/ship-md-pr-count-177` | SHIP.md: count 176→178; add rows for PRs #177–#178 |
+| 179 | `feat/llm-txt-recurring-fix` | llm.txt: fix /tiers entry — remove 'recurring'; v1 checkout is one-time via Stripe; recurring is v2 |
+| 180 | `feat/ship-md-pr-count-179` | SHIP.md: count 178→180; add rows for PRs #179–#180 |
 
 ---
 

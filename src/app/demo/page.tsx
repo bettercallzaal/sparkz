@@ -148,6 +148,14 @@ export default function DemoPage() {
             <div className="font-medium">A Spark, end to end</div>
             <div className="text-xs text-muted">/c/testing-spark - boost, receipts, integrations</div>
           </Link>
+          <Link href="/examples" className="glass glass-hover p-3">
+            <div className="font-medium">7 spark templates</div>
+            <div className="text-xs text-muted">leaderboard, collab, crowdfund, patronage &amp; more</div>
+          </Link>
+          <Link href="/advisor" className="glass glass-hover p-3">
+            <div className="font-medium">Split advisor</div>
+            <div className="text-xs text-muted">3 questions → recommended split + token timing</div>
+          </Link>
           <Link href="/explore" className="glass glass-hover p-3">
             <div className="font-medium">The directory</div>
             <div className="text-xs text-muted">every Spark + its parameters, filterable</div>
@@ -156,10 +164,6 @@ export default function DemoPage() {
             <div className="font-medium">The architecture</div>
             <div className="text-xs text-muted">interactive - the loop, system map, data model</div>
           </a>
-          <Link href="/admin/empire" className="glass glass-hover p-3">
-            <div className="font-medium">Launch a tokenless empire</div>
-            <div className="text-xs text-muted">create2 treasury on Base</div>
-          </Link>
           <Link href="/profile" className="glass glass-hover p-3">
             <div className="font-medium">Sign in with Farcaster</div>
             <div className="text-xs text-muted">your identity across Sparkz</div>

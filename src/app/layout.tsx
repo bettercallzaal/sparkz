@@ -73,6 +73,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <div>
                 <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">ZAO</h4>
                 <div className="space-y-1.5">
+                  <FooterLink href="/discover">Discover sparks</FooterLink>
                   <FooterLink href="/vetted">Get vetted</FooterLink>
                   <FooterLink href="/launches">Live launches</FooterLink>
                   <FooterLink href="https://zoostr.xyz">Zoostr (first launch)</FooterLink>

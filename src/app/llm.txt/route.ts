@@ -74,6 +74,7 @@ Sparkz is NOT:
 - /economics — The Sparkz default fee split: 98% creator distribution wallet (via 0xSplits, routes to collaborators), 1% community pool (backers claim proportional share at splits.org), 1% treasury (compute upkeep — powers AI advisor for non-technical creators). Fully adjustable. Must sum to 100 and pass extraction test.
 - /meme-engine — The 6-step Meme Engine loop: flag moment → ZOL drafts 3 variants (grounded in real Capsule data) → human approves → post goes live → Community Swarm remixes (24h) → receipt + reward. ZOL never posts without explicit human approval. v1 guardrails: advisory/creative/guarded tiers only; no autonomous posting; no on-chain signing.
 - /farcaster — FEF (Farcaster Eats First): first announcements, first participation windows, and first backing go to Farcaster before any other channel. Integrations: SIWE, Warpcast miniapp (fc:miniapp), fc:frame on every page, ZOL casts to Farcaster via Neynar (human-gated).
+- /token-timing — Token timing decision framework: Now (50+ proven backers, 0xSplits ready), Later (community forming, patronage covers costs), Never (tokenless loop works, regulatory uncertainty). Core principles: culture before token, community pull not creator push, 0xSplits before launch day, access mandatory. Zoostr live example.
 
 ### API endpoints (public, read-only unless noted)
 - GET /api/directory — Capsule directory; returns: id, name, slug, bio, type, status, backers, boosts, receipts, emails, stars, farcaster, empire, token, agent, newThisWeek, created_at

@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 152 PRs are draft. Merge in order. One human click per step.
+> All 154 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -171,6 +171,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 150 | `feat/ship-md-pr-count-149` | SHIP.md: count 148→150; add rows for PRs #149–#150 |
 | 151 | `feat/spark-examples-zabal-metric-generic` | spark-examples.ts: genericize zabalLikesCount metric desc (ZABAL-specific field); TiersWizard: genericize project name hint |
 | 152 | `feat/ship-md-pr-count-151` | SHIP.md: count 150→152; add rows for PRs #151–#152 |
+| 153 | `feat/rewards-page` | /rewards: contribution → points → fee share, no governance; 4-step flow, pool math, booster tiers (1×/5×/20×), collectables teaser, human-gate callout; sitemap + homepage footer link |
+| 154 | `feat/ship-md-pr-count-153` | SHIP.md: count 152→154; add rows for PRs #153–#154 |
 
 ---
 
@@ -213,7 +215,8 @@ After Vercel deploys:
 - [ ] `https://sparkz.xyz/audius` — Audius handle input renders; lookup returns catalog stats
 - [ ] `https://sparkz.xyz/collectables` — page loads; steps visible
 - [ ] `https://sparkz.xyz/how-it-works` — 0xSplits + Clanker walkthrough visible
-- [ ] `https://sparkz.xyz/sitemap.xml` — all routes listed (17+ entries)
+- [ ] `https://sparkz.xyz/rewards` — 4-step how-it-works visible; booster tiers (1×/5×/20×) render; no-governance callout visible
+- [ ] `https://sparkz.xyz/sitemap.xml` — all routes listed (18+ entries)
 - [ ] `POST https://sparkz.xyz/api/advisor` with `{"situation":"solo","tokenTiming":"later","feeModel":"low"}` → returns `{"recommendation":{...}}`
 - [ ] `https://sparkz.xyz` — OG image and Farcaster Frame tags present (paste in Warpcast composer → preview renders)
 - [ ] `https://sparkz.xyz/advisor` — answer Q1 → URL updates to `?situation=...`; answer all 3 → "Cast this result ↗" link appears; advisor result links to split wizard pre-filled

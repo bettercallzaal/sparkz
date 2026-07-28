@@ -436,6 +436,7 @@ export default async function HomePage() {
               </div>
               <ul className="space-y-2">
                 {[
+                  { label: 'Discover sparks', href: '/discover' },
                   { label: 'Launches', href: '/launches' },
                   { label: 'Spark examples', href: '/examples' },
                   { label: 'Culture Circles', href: '/circles' },

@@ -65,6 +65,7 @@ Sparkz is NOT:
 - /audit — Brand audit tool for ZAO projects
 - /profile — Sign in with Farcaster (SIWE)
 - /admin — Operator dashboard: add capsules, review pending, empire deploy
+- /advisor — 3-question split advisor: situation (solo/collab/crowdfund) + token timing (now/later/never) + fee model (low/medium/high) → recommended split percentages, token advice, fee sizing, and split-wizard hint
 
 ### API endpoints (public, read-only unless noted)
 - GET /api/directory — Capsule directory; returns: id, name, slug, bio, type, status, backers, boosts, receipts, emails, stars, farcaster, empire, token, agent, newThisWeek, created_at
@@ -74,6 +75,7 @@ Sparkz is NOT:
 - POST /api/boost — Boost a capsule; body: { slug, fid?, comment? }
 - GET /api/backers?slug=X — Backer list for a capsule (PII masked)
 - GET /api/receipts?slug=X — Meme receipts for a capsule
+- POST /api/advisor — Split advisor; body: { situation: 'solo'|'collab'|'crowdfund', tokenTiming: 'now'|'later'|'never', feeModel: 'low'|'medium'|'high' } → { recommendation: { communityPool, creatorPool, treasury, zaoStake, headline, rationale, tokenAdvice, feeAdvice, splitWizardHint } }
 - POST /api/waitlist — Join waitlist; body: { email, interest? }
 - GET /api/og?title=X&subtitle=Y&slug=Z — OG image generation
 - GET /api/icon — App icon (SVG)

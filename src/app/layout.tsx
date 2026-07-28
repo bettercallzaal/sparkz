@@ -65,6 +65,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Learn</h4>
                 <div className="space-y-1.5">
                   <FooterLink href="/how-it-works">How it works</FooterLink>
+                  <FooterLink href="/lifecycle">Spark lifecycle</FooterLink>
+                  <FooterLink href="/circles">Culture Circles</FooterLink>
                   <FooterLink href="/collectables">Collectables</FooterLink>
                   <FooterLink href="/examples">Spark examples</FooterLink>
                   <FooterLink href="/audius">Audius integration</FooterLink>

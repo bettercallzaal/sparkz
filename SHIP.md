@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 162 PRs are draft. Merge in order. One human click per step.
+> All 164 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -181,6 +181,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 160 | `feat/ship-md-pr-count-159` | SHIP.md: count 158→160; add rows for PRs #159–#160 |
 | 161 | `feat/homepage-advisor-hero-cta` | homepage hero: promote /advisor as primary CTA ("Get my split in 3 questions"); /split-wizard demoted to inline text link below CTA |
 | 162 | `feat/ship-md-pr-count-161` | SHIP.md: count 160→162; add rows for PRs #161–#162 |
+| 163 | `feat/llm-txt-context-endpoint` | sparkz.xyz/llm.txt: machine-readable context for AI agents — framing rules, tech architecture, API docs, integration guide, Culture Lifecycle |
+| 164 | `feat/ship-md-pr-count-163` | SHIP.md: count 162→164; add rows for PRs #163–#164 |
 
 ---
 
@@ -225,6 +227,7 @@ After Vercel deploys:
 - [ ] `https://sparkz.xyz/how-it-works` — 0xSplits + Clanker walkthrough visible
 - [ ] `https://sparkz.xyz/rewards` — 4-step how-it-works visible; booster tiers (1×/5×/20×) render; no-governance callout visible
 - [ ] `https://sparkz.xyz/discover` — Zoostr live card visible; "what gets built here" examples render; tools sidebar links working
+- [ ] `https://sparkz.xyz/llm.txt` — returns plain text with framing rules, tech architecture, and /api/advisor docs
 - [ ] `https://sparkz.xyz/sitemap.xml` — all routes listed (19+ entries)
 - [ ] `POST https://sparkz.xyz/api/advisor` with `{"situation":"solo","tokenTiming":"later","feeModel":"low"}` → returns `{"recommendation":{...}}`
 - [ ] `https://sparkz.xyz` — OG image and Farcaster Frame tags present (paste in Warpcast composer → preview renders)

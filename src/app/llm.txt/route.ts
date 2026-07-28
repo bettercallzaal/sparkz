@@ -71,6 +71,7 @@ Sparkz is NOT:
 - /audius — Audius × Sparkz integration: connect Audius catalog to 0xSplits, per-track split config (v1 read-only stats; v2 per-listener weights planned)
 - /split-wizard — Interactive split-sheet builder: roles + % + wallets → 0xSplits JSON export + IPFS-attestable markdown; client-side, no data sent to Sparkz
 - /patronage — Tokenless backing tiers ($5 Spark / $25 Booster / $100 Patron); fans back with a card (no wallet, no gas); V1 is one-time (not recurring); earns leaderboard weight; fee share via 0xSplits — claim at splits.org, no deadline
+- /economics — The Sparkz default fee split: 98% creator distribution wallet (via 0xSplits, routes to collaborators), 1% community pool (backers claim proportional share at splits.org), 1% treasury (compute upkeep — powers AI advisor for non-technical creators). Fully adjustable. Must sum to 100 and pass extraction test.
 
 ### API endpoints (public, read-only unless noted)
 - GET /api/directory — Capsule directory; returns: id, name, slug, bio, type, status, backers, boosts, receipts, emails, stars, farcaster, empire, token, agent, newThisWeek, created_at

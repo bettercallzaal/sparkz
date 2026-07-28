@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 160 PRs are draft. Merge in order. One human click per step.
+> All 162 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -179,6 +179,8 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 158 | `feat/ship-md-pr-count-157` | SHIP.md: count 156→158; add rows for PRs #157–#158 |
 | 159 | `feat/discover-nav-link` | homepage top nav: replace Examples with Discover — promotes broader discoverability surface |
 | 160 | `feat/ship-md-pr-count-159` | SHIP.md: count 158→160; add rows for PRs #159–#160 |
+| 161 | `feat/homepage-advisor-hero-cta` | homepage hero: promote /advisor as primary CTA ("Get my split in 3 questions"); /split-wizard demoted to inline text link below CTA |
+| 162 | `feat/ship-md-pr-count-161` | SHIP.md: count 160→162; add rows for PRs #161–#162 |
 
 ---
 

@@ -1,7 +1,7 @@
 # SHIP — sparkz.xyz launch sequence
 
 > This is the exact sequence to merge PRs and deploy sparkz.xyz.
-> All 164 PRs are draft. Merge in order. One human click per step.
+> All 172 PRs are draft. Merge in order. One human click per step.
 
 ---
 
@@ -183,6 +183,14 @@ Merge each PR to `main` before the next. They are stacked and depend on each oth
 | 162 | `feat/ship-md-pr-count-161` | SHIP.md: count 160→162; add rows for PRs #161–#162 |
 | 163 | `feat/llm-txt-context-endpoint` | sparkz.xyz/llm.txt: machine-readable context for AI agents — framing rules, tech architecture, API docs, integration guide, Culture Lifecycle |
 | 164 | `feat/ship-md-pr-count-163` | SHIP.md: count 162→164; add rows for PRs #163–#164 |
+| 165 | `feat/frame-button-discover` | layout: Farcaster Frame button 2 — "See examples" → "Discover sparks" → /discover |
+| 166 | `feat/ship-md-pr-count-165` | SHIP.md: count 164→166; add rows for PRs #165–#166 |
+| 167 | `feat/footer-discover-link` | global footer: add "Discover sparks" → /discover to ZAO section |
+| 168 | `feat/ship-md-pr-count-167` | SHIP.md: count 166→168; add rows for PRs #167–#168 |
+| 169 | `feat/footer-lifecycle-link` | global footer: add /lifecycle and /circles to Learn section |
+| 170 | `feat/ship-md-pr-count-169` | SHIP.md: count 168→170; add rows for PRs #169–#170 |
+| 171 | `feat/readme-discover-rewards` | README: add /discover, /rewards, /llm.txt to pages table |
+| 172 | `feat/ship-md-pr-count-171` | SHIP.md: count 170→172; add rows for PRs #171–#172 |
 
 ---
 

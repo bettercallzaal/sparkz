@@ -29,6 +29,9 @@ export default function Footer() {
           <Link href="/examples" className="hover:text-foreground">
             Templates
           </Link>
+          <Link href="/zao" className="hover:text-foreground">
+            The ZAO
+          </Link>
           <a href="/architecture" className="hover:text-foreground">
             Architecture
           </a>

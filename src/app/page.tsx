@@ -2,7 +2,6 @@ import Link from "next/link";
 import { loadPublicCapsules } from "@/lib/public-capsules";
 import Ecosystem from "./_components/Ecosystem";
 import JoinForm from "./_components/JoinForm";
-import Flame from "./_components/Flame";
 import ActivityStrip from "./_components/ActivityStrip";
 
 export const dynamic = "force-dynamic";
@@ -36,7 +35,19 @@ export default async function Home() {
         <div className="relative">
           <span className="eyebrow-pill">Sparkz - for you, the creator</span>
           <div className="mt-6">
-            <Flame className="h-20 w-20 flame-live" />
+            <video
+              className="h-40 w-40 rounded-2xl sm:h-52 sm:w-52"
+              style={{ filter: "drop-shadow(0 12px 48px rgba(232,198,106,0.28))" }}
+              autoPlay
+              loop
+              muted
+              playsInline
+              poster="/brand/sparkz-logo.png"
+              aria-label="Sparkz - gold flame logo"
+            >
+              <source src="/brand/sparkz-logo.webm" type="video/webm" />
+              <source src="/brand/sparkz-logo.mp4" type="video/mp4" />
+            </video>
           </div>
           <h1 className="mt-5 max-w-3xl text-[clamp(2.1rem,8.5vw,4rem)] font-bold leading-[0.98] tracking-tight">
             Start with a{" "}

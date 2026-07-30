@@ -1,6 +1,9 @@
 <p align="center">
-  <img src="docs/assets/hero.svg" alt="Sparkz - start with a spark, not a token" width="100%" />
+  <img src="public/brand/sparkz-logo.gif" alt="Sparkz - start with a spark, not a token" width="300" />
 </p>
+
+<h1 align="center">Sparkz</h1>
+<p align="center"><em>Start with a spark, not a token.</em><br/>Part of The ZAO.</p>
 
 <p align="center">
   <a href="https://trysparkz.com">trysparkz.com</a>

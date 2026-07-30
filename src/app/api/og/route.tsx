@@ -8,8 +8,8 @@ import type { Capsule } from "@/lib/supabase/types";
 //   ?title=..&subtitle=.. -> a generic card (landing, /explore, etc.)
 export const dynamic = "force-dynamic";
 
-const V = "#c084fc"; // violet
-const A = "#fbbf24"; // amber
+const V = "#e8c66a"; // gold - primary brand
+const A = "#ffd700"; // bright gold - highlight
 
 function Flame({ size = 96 }: { size?: number }) {
   return (
@@ -17,8 +17,8 @@ function Flame({ size = 96 }: { size?: number }) {
       <defs>
         <linearGradient id="f" x1="12" y1="2" x2="12" y2="22" gradientUnits="userSpaceOnUse">
           <stop offset="0" stopColor={A} />
-          <stop offset="0.55" stopColor="#f472b6" />
-          <stop offset="1" stopColor={V} />
+          <stop offset="0.5" stopColor={V} />
+          <stop offset="1" stopColor="#f97316" />
         </linearGradient>
       </defs>
       <path
@@ -51,8 +51,8 @@ function Card({
         flexDirection: "column",
         justifyContent: "center",
         padding: "80px",
-        background: "radial-gradient(1200px 700px at 28% -10%, #2a0f3a 0%, #0a0a0b 62%)",
-        color: "#f5f5f5",
+        background: "radial-gradient(1200px 700px at 28% -10%, #3a2b0d 0%, #0a0908 62%)",
+        color: "#f6f3ec",
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: "22px" }}>

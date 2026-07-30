@@ -3,9 +3,9 @@ export default function Flame({ className = "" }: { className?: string }) {
     <svg viewBox="0 0 24 24" className={className} aria-hidden>
       <defs>
         <linearGradient id="flame-grad" x1="12" y1="2" x2="12" y2="22" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#f97316" />
-          <stop offset="0.55" stopColor="#ec4899" />
-          <stop offset="1" stopColor="#a855f7" />
+          <stop offset="0" stopColor="#ffd700" />
+          <stop offset="0.5" stopColor="#e8c66a" />
+          <stop offset="1" stopColor="#f97316" />
         </linearGradient>
       </defs>
       <path

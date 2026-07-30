@@ -1,18 +1,47 @@
 @import "tailwindcss";
 
-/* Sparkz visual system v2 - Zora-grade: dark, creator-first, premium-but-human.
-   Deep black scale + violet->amber "spark" gradient. Space Grotesk display. */
+/* Sparkz visual system v3 - GOLD rebrand: warm near-black + rich metallic gold as
+   the primary, holographic foil as the signature accent, flame identity kept.
+   Matches the gold-Z-flame logo. Space Grotesk display. */
 :root {
-  --background: #0a0a0a;   /* deep black */
-  --surface: #141416;      /* raised surface */
-  --card: #17171a;         /* card */
-  --foreground: #f5f5f5;
-  --muted: #9a9aa2;
-  --border: #262629;
-  --accent: #c084fc;       /* violet - secondary (Farcaster nod) */
-  --accent-2: #ec4899;     /* pink - flame mid */
-  --accent-3: #ffd700;     /* ZAO Gold - on-chain moments, CTAs, gradient end */
-  --flame-1: #f97316;      /* orange - flame identity */
+  --background: #0a0908;   /* warm near-black (lets gold read richer) */
+  --surface: #16130d;      /* raised surface, warm */
+  --card: #191510;         /* card, warm */
+  --foreground: #f6f3ec;   /* warm off-white */
+  --muted: #a29a88;        /* warm muted */
+  --border: #2b2418;       /* warm border */
+  --accent: #e8c66a;       /* rich metallic gold - PRIMARY */
+  --accent-2: #ffd700;     /* bright gold - highlights / glow peaks */
+  --accent-3: #ffd700;     /* alias kept for existing refs (bright gold) */
+  --gold: #e8c66a;         /* semantic alias of --accent */
+  --gold-bright: #ffd700;
+  --violet: #c084fc;       /* demoted: holographic sheen bit-player only */
+  --flame-1: #f97316;      /* orange - flame identity (unchanged) */
+}
+
+/* Holographic foil - the oil-slick shimmer from the logo. Use SPARINGLY (logo,
+   hero heading, CTA hover, select borders) so gold stays the lead. */
+@property --holo-a { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+@keyframes holo-spin { to { --holo-a: 360deg; } }
+.holo-text {
+  background-image: conic-gradient(from var(--holo-a),
+    var(--gold-bright), var(--violet), #67e8f9, var(--gold), #f9a8d4, var(--gold-bright));
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: holo-spin 8s linear infinite;
+}
+.holo-border {
+  position: relative;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--card), var(--card)) padding-box,
+    conic-gradient(from var(--holo-a), var(--gold), var(--violet), #67e8f9, var(--gold-bright), var(--gold)) border-box;
+  animation: holo-spin 8s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .holo-text, .holo-border { animation: none; }
 }
 
 @theme inline {
@@ -50,30 +79,46 @@ h1, h2, h3 {
   letter-spacing: -0.02em;
 }
 
-/* Spark gradient (orange->pink->ZAO Gold) - the Sparkz mark, landing on ZAO Gold so it
-   shares the estate's on-chain accent instead of the Farcaster-default violet. */
+/* Spark gradient (flame-orange -> gold -> bright gold) - the Sparkz mark, gold-led
+   to match the logo foil and the ZAO estate's on-chain accent. */
 .spark-gradient {
-  background-image: linear-gradient(120deg, var(--flame-1), var(--accent-2), var(--accent-3));
+  background-image: linear-gradient(120deg, var(--flame-1), var(--gold), var(--gold-bright));
 }
 .spark-text {
-  background-image: linear-gradient(120deg, var(--flame-1), var(--accent-2), var(--accent-3));
+  background-image: linear-gradient(120deg, var(--flame-1), var(--gold), var(--gold-bright));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-/* The signature CTA: violet->amber with a glow that expands on hover. */
+/* The signature CTA: metallic gold with a warm glow that expands on hover, plus a
+   holographic sheen that sweeps across on hover. */
 .btn-spark {
-  background-image: linear-gradient(135deg, var(--accent) 0%, var(--accent-3) 100%);
-  color: #0a0a0a;
-  font-weight: 600;
-  box-shadow: 0 8px 24px -6px color-mix(in srgb, var(--accent) 45%, transparent);
+  position: relative;
+  overflow: hidden;
+  background-image: linear-gradient(135deg, var(--gold) 0%, var(--gold-bright) 100%);
+  color: #0a0908;
+  font-weight: 700;
+  box-shadow: 0 8px 24px -6px color-mix(in srgb, var(--gold) 50%, transparent);
   transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+}
+.btn-spark::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 30%,
+    rgba(255,255,255,0.55) 45%, rgba(192,132,252,0.35) 52%, transparent 62%);
+  transform: translateX(-120%);
+  transition: transform 620ms ease;
+  pointer-events: none;
 }
 .btn-spark:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 16px 44px -10px color-mix(in srgb, var(--accent) 60%, transparent);
-  filter: saturate(1.08);
+  box-shadow: 0 16px 44px -10px color-mix(in srgb, var(--gold-bright) 65%, transparent);
+  filter: saturate(1.06) brightness(1.03);
+}
+.btn-spark:hover:not(:disabled)::after {
+  transform: translateX(120%);
 }
 .btn-spark:active:not(:disabled) {
   transform: scale(0.98);
@@ -179,16 +224,16 @@ h1, h2, h3 {
 .hero-blob-v {
   width: 380px;
   height: 380px;
-  background: #7c3aed;
-  opacity: 0.42;
+  background: #b8860b;   /* deep gold glow */
+  opacity: 0.4;
   top: -140px;
   left: -120px;
 }
 .hero-blob-a {
   width: 320px;
   height: 320px;
-  background: #f59e0b;
-  opacity: 0.22;
+  background: #f59e0b;   /* warm amber */
+  opacity: 0.24;
   top: 20px;
   right: -120px;
 }
@@ -262,7 +307,7 @@ h1, h2, h3 {
 .flame-live {
   transform-origin: 50% 90%;
   animation: flame-flicker 2.6s ease-in-out infinite;
-  filter: drop-shadow(0 6px 26px rgba(244, 114, 182, 0.5));
+  filter: drop-shadow(0 6px 26px rgba(255, 183, 0, 0.55));
 }
 @keyframes flame-pop {
   0% {

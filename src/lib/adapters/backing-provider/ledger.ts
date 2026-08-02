@@ -4,7 +4,6 @@ import {
   type BackingProvider,
   type BackingRecord,
   type CreateBackingInput,
-  registerBackingProvider,
 } from "./index";
 
 // Off-chain ledger. The m1 default: fiat / BYOK / treasury-credit backing with
@@ -82,4 +81,5 @@ export class LedgerProvider implements BackingProvider {
   }
 }
 
-registerBackingProvider(new LedgerProvider());
+// Singleton instance - registered into the seam by the built-in plugin.
+export const ledgerProvider = new LedgerProvider();

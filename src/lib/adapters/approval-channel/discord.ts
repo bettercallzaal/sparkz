@@ -1,8 +1,4 @@
-import {
-  type ApprovalChannel,
-  type ApprovalRequest,
-  registerApprovalChannel,
-} from "./index";
+import { type ApprovalChannel, type ApprovalRequest } from "./index";
 
 // Discord channel. Wired but DARK until DISCORD_WEBHOOK_URL is set (enabled is
 // gated on the env var). When live, it posts the signal + the 3 drafts + a click
@@ -47,4 +43,5 @@ export class DiscordChannel implements ApprovalChannel {
   }
 }
 
-registerApprovalChannel(new DiscordChannel());
+// Singleton instance - registered into the seam by the built-in plugin.
+export const discordChannel = new DiscordChannel();

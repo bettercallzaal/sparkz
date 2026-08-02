@@ -1,10 +1,6 @@
 import { getServiceClient } from "@/lib/supabase/server";
 import type { Signal } from "@/lib/supabase/types";
-import {
-  type CulturalSignal,
-  type SignalSource,
-  registerSignalSource,
-} from "./index";
+import { type CulturalSignal, type SignalSource } from "./index";
 
 // v1 SignalSource = a human (or ZOL) flags a cultural moment. The "detection
 // event" is a human submission, persisted as a flagged signal. detectSignals
@@ -35,4 +31,6 @@ export class HumanSignalSource implements SignalSource {
   }
 }
 
-registerSignalSource(new HumanSignalSource());
+// Singleton instance - registered into the seam by the built-in plugin (see
+// src/lib/plugins/built-in.ts), not by a self-register side effect.
+export const humanSignalSource = new HumanSignalSource();

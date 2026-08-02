@@ -1,8 +1,4 @@
-import {
-  type ApprovalChannel,
-  type ApprovalRequest,
-  registerApprovalChannel,
-} from "./index";
+import { type ApprovalChannel, type ApprovalRequest } from "./index";
 
 // In-app channel. The admin UI polls for drafted signals, so "notification" is
 // the UI itself - notify is a no-op that just records the request server-side.
@@ -22,4 +18,5 @@ export class InAppChannel implements ApprovalChannel {
   }
 }
 
-registerApprovalChannel(new InAppChannel());
+// Singleton instance - registered into the seam by the built-in plugin.
+export const inAppChannel = new InAppChannel();

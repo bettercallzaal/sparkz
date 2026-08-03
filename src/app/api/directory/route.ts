@@ -2,6 +2,7 @@ import { getServiceClient } from "@/lib/supabase/server";
 import { ok, serverError } from "@/lib/http";
 import { PUBLIC_REVIEW_FILTER } from "@/lib/sanitize";
 import type { Capsule, CapsuleBacker, MemeReceipt } from "@/lib/supabase/types";
+import { capsuleConnections } from "@/lib/capsule-connections";
 
 export const dynamic = "force-dynamic";
 
@@ -23,6 +24,7 @@ export interface DirectoryItem {
   stars: number | null;
   contributors: number | null;
   newThisWeek: number; // backers + receipts added in the last 7 days (momentum)
+  connections: { id: string; label: string }[]; // which integrations this Spark is wired to
   created_at: string;
 }
 
@@ -72,6 +74,7 @@ export async function GET() {
         empire: Boolean(econ.empire_address || econ.empire_id || econ.empire),
         token: Boolean(econ.token_address),
         agent: Boolean(econ.agent),
+        connections: capsuleConnections(c),
         farcaster: fc
           ? fc.channel
             ? `/${fc.channel}`

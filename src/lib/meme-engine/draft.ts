@@ -1,4 +1,62 @@
+import { getServiceClient } from "@/lib/supabase/server";
 import type { Capsule, Signal } from "@/lib/supabase/types";
+
+// What this Capsule has learned: the drafts a human APPROVED (winners - match this
+// voice) and the ones they PASSED ON with a reason (avoid these). This is the moat
+// made real - draft quality compounds per-Capsule instead of every draft starting
+// cold. Fallback-model drafts are excluded so placeholder text never trains the prompt.
+export interface DraftMemory {
+  winners: string[];
+  passedOn: { text: string; reason: string }[];
+}
+
+const EMPTY_MEMORY: DraftMemory = { winners: [], passedOn: [] };
+
+export async function fetchDraftMemory(capsuleId: string): Promise<DraftMemory> {
+  try {
+    const supabase = getServiceClient();
+    const [won, passed] = await Promise.all([
+      supabase
+        .from("signal_drafts")
+        .select("draft_text")
+        .eq("capsule_id", capsuleId)
+        .eq("chosen", true)
+        .neq("model", "fallback")
+        .order("created_at", { ascending: false })
+        .limit(5),
+      supabase
+        .from("signal_drafts")
+        .select("draft_text, reject_reason")
+        .eq("capsule_id", capsuleId)
+        .eq("chosen", false)
+        .neq("model", "fallback")
+        .not("reject_reason", "is", null)
+        .order("created_at", { ascending: false })
+        .limit(4),
+    ]);
+    // Memory is an enhancement - a fetch error must not block drafting. Log and
+    // degrade to no-memory (still a good draft), never throw.
+    if (won.error || passed.error) {
+      console.warn(
+        "[meme-engine] draft-memory fetch failed - drafting without memory.",
+        won.error ?? passed.error,
+      );
+      return EMPTY_MEMORY;
+    }
+    return {
+      winners: (won.data ?? []).map((r) => r.draft_text as string).filter(Boolean),
+      passedOn: (passed.data ?? [])
+        .map((r) => ({
+          text: r.draft_text as string,
+          reason: (r.reject_reason as string) ?? "",
+        }))
+        .filter((p) => p.text),
+    };
+  } catch (err) {
+    console.warn("[meme-engine] draft-memory fetch threw - no memory.", err);
+    return EMPTY_MEMORY;
+  }
+}
 
 // The Meme Engine core: given a Capsule + a flagged signal, draft 3 Capsule-
 // grounded responses. Uses the CHEAP model tier (OpenRouter) per CLAUDE.md -
@@ -15,12 +73,33 @@ export interface GeneratedDraft {
   promptVersion: string;
 }
 
-function buildPrompt(capsule: Capsule, signal: Signal): string {
+function buildPrompt(
+  capsule: Capsule,
+  signal: Signal,
+  memory: DraftMemory = EMPTY_MEMORY,
+): string {
+  const winnersBlock = memory.winners.length
+    ? [
+        "",
+        "Responses this Capsule APPROVED before (match this voice and energy - do NOT copy them):",
+        ...memory.winners.map((w) => `- ${w}`),
+      ]
+    : [];
+  const passedBlock = memory.passedOn.length
+    ? [
+        "",
+        "Angles the human PASSED ON before (avoid these):",
+        ...memory.passedOn.map((p) => `- "${p.text}"${p.reason ? ` (${p.reason})` : ""}`),
+      ]
+    : [];
+
   return [
     `You are the Meme Engine for "${capsule.name}", a ${capsule.type} Capsule on Sparkz.`,
     capsule.bio ? `Capsule bio: ${capsule.bio}` : "",
     `A cultural moment was flagged: "${signal.text}"`,
     signal.why_it_matched ? `Why it matches this Capsule: ${signal.why_it_matched}` : "",
+    ...winnersBlock,
+    ...passedBlock,
     "",
     "Write 3 distinct short response options grounded in this Capsule's identity -",
     "punchy, postable, Farcaster-first. Number them 1-3. No preamble, no hash# spam.",
@@ -63,6 +142,9 @@ export async function generateDrafts(
 
   if (!apiKey) return fallbackDrafts(capsule, signal);
 
+  // Ground the drafts in what this Capsule has already learned (approved + passed-on).
+  const memory = await fetchDraftMemory(capsule.id);
+
   try {
     const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
@@ -72,7 +154,7 @@ export async function generateDrafts(
       },
       body: JSON.stringify({
         model,
-        messages: [{ role: "user", content: buildPrompt(capsule, signal) }],
+        messages: [{ role: "user", content: buildPrompt(capsule, signal, memory) }],
         temperature: 0.9,
         max_tokens: 500,
       }),

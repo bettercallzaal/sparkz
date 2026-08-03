@@ -206,6 +206,18 @@ export default function ExplorePage() {
                   {c.bio && (
                     <p className="mt-1 line-clamp-1 text-xs text-muted">{c.bio}</p>
                   )}
+                  {c.connections.length > 0 && (
+                    <div className="mt-1.5 flex flex-wrap gap-1">
+                      {c.connections.map((conn) => (
+                        <span
+                          key={conn.id}
+                          className="rounded border border-accent/30 bg-accent/10 px-1.5 py-0.5 text-[10px] font-medium text-accent"
+                        >
+                          {conn.label}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 <div className="flex shrink-0 items-center gap-1">
                   {c.empire && <Dot title="Treasury" />}

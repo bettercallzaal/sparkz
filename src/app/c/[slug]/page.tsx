@@ -13,6 +13,7 @@ import { maskBacker } from "@/lib/sanitize";
 import ShareButton from "@/app/_components/ShareButton";
 import Flame from "@/app/_components/Flame";
 import SparkLit from "@/app/_components/SparkLit";
+import EmpireLeaderboard from "@/app/_components/EmpireLeaderboard";
 import { canonicalOrigin } from "@/lib/origin";
 
 export const dynamic = "force-dynamic";
@@ -322,6 +323,15 @@ export default async function CapsulePage({
         <Stat label="Boosts" value={boostCount} />
         <Stat label="Receipts" value={receipts.length} />
       </div>
+
+      {econ.empire_id && (
+        <section className="mb-8">
+          <h2 className="mb-3 text-sm font-medium">Empire leaderboard</h2>
+          <div className="card-solid p-4">
+            <EmpireLeaderboard empireId={econ.empire_id} showHeader={false} />
+          </div>
+        </section>
+      )}
 
       {meta.about && (
         <section className="mb-8">

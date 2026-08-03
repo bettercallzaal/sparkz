@@ -8,6 +8,7 @@ import { farcasterSignalSource } from "@/lib/adapters/signal-source/farcaster";
 import { ledgerProvider } from "@/lib/adapters/backing-provider/ledger";
 import { inAppChannel } from "@/lib/adapters/approval-channel/in-app";
 import { discordChannel } from "@/lib/adapters/approval-channel/discord";
+import { telegramChannel } from "@/lib/adapters/approval-channel/telegram";
 import type { CapsulePlugin } from "./types";
 
 export const signalHumanPlugin: CapsulePlugin = {
@@ -65,11 +66,33 @@ export const approvalDiscordPlugin: CapsulePlugin = {
   },
 };
 
-// The default set registered at boot (identical to the pre-plugin bootstrap).
+export const approvalTelegramPlugin: CapsulePlugin = {
+  id: "approval-telegram",
+  version: "1.0.0",
+  name: "Telegram Approval",
+  description:
+    "Posts the signal + drafts + approve link to Telegram, so approval reaches you on your phone. Dark until configured.",
+  approvalChannels: [telegramChannel],
+  configSchema: {
+    TELEGRAM_BOT_TOKEN: {
+      required: false,
+      secret: true,
+      description: "Telegram bot token (from @BotFather). Needed with the chat id to go live.",
+    },
+    TELEGRAM_CHAT_ID: {
+      required: false,
+      secret: false,
+      description: "Destination chat id (your DM or a group). Set with the token to go live.",
+    },
+  },
+};
+
+// The default set registered at boot.
 export const BUILT_IN_PLUGINS: CapsulePlugin[] = [
   signalHumanPlugin,
   signalFarcasterPlugin,
   backingLedgerPlugin,
   approvalInAppPlugin,
   approvalDiscordPlugin,
+  approvalTelegramPlugin,
 ];

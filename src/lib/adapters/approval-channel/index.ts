@@ -30,8 +30,13 @@ export interface ApprovalChannel {
 
 const channels: ApprovalChannel[] = [];
 
+// Dedupe by id so registering the same channel twice (e.g. two route entry points each
+// ensuring the built-in plugins) can never fan a notification out twice. Replace the
+// existing entry rather than push a duplicate.
 export function registerApprovalChannel(channel: ApprovalChannel): void {
-  channels.push(channel);
+  const i = channels.findIndex((c) => c.id === channel.id);
+  if (i >= 0) channels[i] = channel;
+  else channels.push(channel);
 }
 
 export function listApprovalChannels(): ApprovalChannel[] {

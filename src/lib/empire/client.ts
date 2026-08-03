@@ -37,6 +37,67 @@ export async function resolveEmpire(empireId: string): Promise<EmpireResolved | 
   };
 }
 
+// --- Public read surface (no key). All verified live 2026-08-03 against empirebuilder.world. ---
+// empireId accepts a base_token (0x...), fid<number>, or a custom slug.
+
+async function getJson(path: string): Promise<unknown | null> {
+  const res = await fetch(`${BASE}${path}`, { headers: { Accept: "application/json" } });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`Empire GET ${path} failed: ${res.status}`);
+  return res.json();
+}
+
+// GET /empires?type=top|native|recent&page&limit - paginated empire list.
+export function listEmpires(opts: { type?: string; page?: number; limit?: number } = {}) {
+  const q = new URLSearchParams();
+  if (opts.type) q.set("type", opts.type);
+  if (opts.page) q.set("page", String(opts.page));
+  if (opts.limit) q.set("limit", String(opts.limit));
+  return getJson(`/empires?${q.toString()}`);
+}
+
+// GET /empires/search?q=... - search by name; ?farcaster_name= for a handle lookup.
+export function searchEmpires(query: string) {
+  return getJson(`/empires/search?q=${encodeURIComponent(query)}`);
+}
+
+// GET /empires/owner/{wallet} - every empire a wallet owns.
+export function empiresByOwner(wallet: string) {
+  return getJson(`/empires/owner/${encodeURIComponent(wallet)}`);
+}
+
+// GET /leaderboards?tokenAddress={empireId} - the empire's leaderboards (ids + meta).
+export function listEmpireLeaderboards(empireId: string) {
+  return getJson(`/leaderboards?tokenAddress=${encodeURIComponent(empireId)}`);
+}
+
+// GET /leaderboards/{leaderboardId} - a leaderboard's ranked entries (address, rank, points).
+export function getLeaderboard(leaderboardId: string) {
+  return getJson(`/leaderboards/${encodeURIComponent(leaderboardId)}`);
+}
+
+// GET /leaderboards/{leaderboardId}/address/{wallet} - one address's rank/score/boosters.
+export function getLeaderboardAddress(leaderboardId: string, wallet: string) {
+  return getJson(
+    `/leaderboards/${encodeURIComponent(leaderboardId)}/address/${encodeURIComponent(wallet)}`,
+  );
+}
+
+// GET /boosters/{empireId} - the empire's score-multiplier boosters.
+export function getBoosters(empireId: string) {
+  return getJson(`/boosters/${encodeURIComponent(empireId)}`);
+}
+
+// GET /empire-rewards/{empireId} - reward history (distribute / burned / airdrop totals).
+export function getEmpireRewards(empireId: string) {
+  return getJson(`/empire-rewards/${encodeURIComponent(empireId)}`);
+}
+
+// GET /distribution-records/{empireAddress} - cumulative USD distributed per recipient.
+export function getDistributionRecords(empireAddress: string) {
+  return getJson(`/distribution-records/${encodeURIComponent(empireAddress)}`);
+}
+
 // The exact byte-exact message the tokenless deploy endpoint enforces (custom mode).
 export function tokenlessCustomMessage(name: string): string {
   return `I am deploying a custom tokenless Empire named ${name.trim()}`;

@@ -4,6 +4,7 @@
 // side-effect imports.
 
 import { humanSignalSource } from "@/lib/adapters/signal-source/human";
+import { farcasterSignalSource } from "@/lib/adapters/signal-source/farcaster";
 import { ledgerProvider } from "@/lib/adapters/backing-provider/ledger";
 import { inAppChannel } from "@/lib/adapters/approval-channel/in-app";
 import { discordChannel } from "@/lib/adapters/approval-channel/discord";
@@ -15,6 +16,22 @@ export const signalHumanPlugin: CapsulePlugin = {
   name: "Human Signal Source",
   description: "A human (or ZOL) flags a cultural moment - the v1 Meme Engine source.",
   signalSources: [humanSignalSource],
+};
+
+export const signalFarcasterPlugin: CapsulePlugin = {
+  id: "signal-farcaster",
+  version: "1.0.0",
+  name: "Farcaster Signal Source",
+  description:
+    "Surfaces candidate cultural moments from Farcaster (casts about the Capsule) so the operator curates instead of authoring. Dark until configured.",
+  signalSources: [farcasterSignalSource],
+  configSchema: {
+    NEYNAR_API_KEY: {
+      required: false,
+      secret: true,
+      description: "Neynar API key (read-only cast search). When set, the source goes live.",
+    },
+  },
 };
 
 export const backingLedgerPlugin: CapsulePlugin = {
@@ -51,6 +68,7 @@ export const approvalDiscordPlugin: CapsulePlugin = {
 // The default set registered at boot (identical to the pre-plugin bootstrap).
 export const BUILT_IN_PLUGINS: CapsulePlugin[] = [
   signalHumanPlugin,
+  signalFarcasterPlugin,
   backingLedgerPlugin,
   approvalInAppPlugin,
   approvalDiscordPlugin,

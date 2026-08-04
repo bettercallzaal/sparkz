@@ -365,7 +365,8 @@ Surfaced on each Capsule page (`/c/[slug]`) as an integrations panel - a Spark i
 | `/` | Landing - the pitch, join form, the ecosystem |
 | `/start` | Self-serve: light your own spark in under a minute |
 | `/c/[slug]` | A Capsule: identity, stats, integrations, boost, receipts, backers |
-| `/explore` | Filterable directory of every Spark (type, status, integrations, sort) |
+| `/explore` | Filterable directory of every Spark (type, status, integrations, sort) - each shows its connected-integration badges |
+| `/empire/[id]` | Live Empire panel - any empire's treasury, reward flow, and boost leaderboard (also embedded on a Spark's `/c/[slug]` page) |
 | `/blog` | Short pieces on the thesis and the stack |
 | `/demo` | The idea in one page - live-stream explainer |
 | `/architecture` | The interactive architecture explorer |
@@ -390,13 +391,17 @@ Routes validate request data with Zod `safeParse`, wrap handlers in try/catch, l
 | `POST` | `/api/capsules/create-spark` | Public self-serve spark creation (rate-limited, held for review) |
 | `POST` | `/api/capsules/approve` | Operator: approve / reject a pending spark |
 | `POST` | `/api/capsules/import-repo` | Import a GitHub repo as an OSS Capsule |
+| `POST` | `/api/capsules/import-empire` | Import an existing Empire Builder empire AS a Spark |
 | `POST` | `/api/capsules/link-empire` | Attach an Empire treasury to a Capsule |
 | `POST` | `/api/capsules/link-farcaster` | Attach a Farcaster identity |
+| `GET/POST` | `/api/capsules/plugins` | Read / toggle a Capsule's plugins + per-Capsule config |
 | `GET/POST` | `/api/signals` | List operator-visible signals / flag a moment + generate 3 drafts |
+| `POST` | `/api/signals/detect` | Surface candidate moments from a signal source (e.g. Farcaster) for the operator to flag |
 | `POST` | `/api/signals/approve` | Approve a draft -> write a Meme Receipt |
 | `GET/POST`  | `/api/backers` | List backers / record operator-gated ledger backing |
 | `POST` | `/api/boost` | Back / boost a Capsule (email, no wallet) |
 | `GET`  | `/api/receipts` | Meme Receipts timeline |
+| `GET`  | `/api/empire/{id}` | Full public Empire read bundle (resolve + leaderboards + entries + rewards + boosters) |
 | `POST` | `/api/empire/deploy` | Deploy a tokenless empire |
 | `POST` | `/api/audit` | Update the readiness audit for an OSS Capsule |
 | `POST` | `/api/waitlist` | Join the list |
@@ -530,6 +535,10 @@ Bring a take with a concrete path (see [Contributing](CONTRIBUTING.md)) and it g
 | [DEPLOY.md](docs/DEPLOY.md) | Vercel + domains |
 | [SECURITY.md](docs/SECURITY.md) | Security posture |
 | [STACK.md](docs/STACK.md) | File-by-file stack map |
+| [strategy/positioning.md](docs/strategy/positioning.md) | Why Sparkz is an OSS protocol + data network, not SaaS |
+| [strategy/graduation-timing.md](docs/strategy/graduation-timing.md) | When a Spark should become a coin - the token-timing readiness framework |
+| [research/sparkz-improvements-and-plugin-system.md](docs/research/sparkz-improvements-and-plugin-system.md) | The Capsule plugin system (elizaOS-modeled) + easy Farcaster/integration wins |
+| [research/empire-builder-api-integration.md](docs/research/empire-builder-api-integration.md) | Empire Builder endpoint audit + the Sparkz integration |
 
 ## Principles
 

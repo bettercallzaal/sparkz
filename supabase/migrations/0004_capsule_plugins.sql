@@ -1,3 +1,4 @@
+-- APPLIED 2026-08-04 to Supabase project noytvuorbdmgjfxwbufj (verified: toggles persist).
 -- Per-Capsule plugin toggles - the control plane that lets each Capsule turn
 -- capabilities on/off and connect to ITS OWN communities (its Discord, its Farcaster
 -- channel, its Telegram) instead of one global config.

@@ -43,3 +43,6 @@ next-env.d.ts
 # serena tooling
 .serena/
 .gstack/
+
+# Security audit reports - LOCAL ONLY (public repo; unfixed-vuln detail must not be published)
+docs/security/audits/

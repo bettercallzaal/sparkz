@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { canonicalOrigin } from "@/lib/origin";
+import { canonicalOrigin, CANONICAL_HOST } from "@/lib/origin";
 
 const BASE = canonicalOrigin();
 const OG = `${BASE}/api/og?title=${encodeURIComponent("The Capsule")}&subtitle=${encodeURIComponent("Identity · backers · receipts - before any token")}`;
@@ -133,7 +133,7 @@ export default function CapsulePage() {
         </h2>
         <p className="text-muted text-sm leading-relaxed mb-4">
           Every approved Capsule gets a public page at{" "}
-          <span className="font-mono text-xs">trysparkz.com/c/[slug]</span> - identity,
+          <span className="font-mono text-xs">{CANONICAL_HOST}/c/[slug]</span> - identity,
           boost button, Meme Engine receipts, backers list, graduation panel, and Farcaster
           Mini App embed. Browse the directory at{" "}
           <Link href="/explore" className="text-accent hover:underline">

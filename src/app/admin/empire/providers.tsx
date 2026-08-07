@@ -5,6 +5,7 @@ import { base } from "@reown/appkit/networks";
 import { WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { wagmiAdapter, projectId, wagmiConfig } from "@/lib/wallet/config";
+import { CANONICAL_URL } from "@/lib/origin";
 
 const queryClient = new QueryClient();
 
@@ -18,8 +19,8 @@ createAppKit({
   metadata: {
     name: "Sparkz",
     description: "Start with a spark, not a token.",
-    url: "https://trysparkz.com",
-    icons: ["https://trysparkz.com/icon.svg"],
+    url: CANONICAL_URL,
+    icons: [`${CANONICAL_URL}/icon.svg`],
   },
   features: { analytics: false, email: false, socials: [] },
 });

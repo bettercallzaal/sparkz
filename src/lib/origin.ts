@@ -5,7 +5,19 @@
 //
 // Set SPARKZ_ORIGIN in prod (e.g. https://trysparkz.com). Falls back to the known
 // production domain so links are never broken, but the env var should always be set.
-const DEFAULT_ORIGIN = "https://trysparkz.com";
+
+// The canonical host + URL as PLAIN LITERALS - the single source of truth for the
+// domain. Use these (not canonicalOrigin()) in the two places that can't read the
+// server-only SPARKZ_ORIGIN env var and must be pinned to the exact FQDN:
+//   1. Client components ("use client") - SPARKZ_ORIGIN is not bundled to the browser.
+//   2. Cryptographically domain-bound configs - the SIWE `domain` field and the
+//      Farcaster manifest `canonicalDomain` are signed for this exact host; changing
+//      the domain requires re-signing, not just an env swap. Defining it once here
+//      means a domain move is a single edit (plus the re-sign).
+export const CANONICAL_HOST = "trysparkz.com";
+export const CANONICAL_URL = `https://${CANONICAL_HOST}`;
+
+const DEFAULT_ORIGIN = CANONICAL_URL;
 
 export function canonicalOrigin(): string {
   const raw = process.env.SPARKZ_ORIGIN?.trim();

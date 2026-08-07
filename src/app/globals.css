@@ -261,18 +261,19 @@ h1, h2, h3 {
   border: 1.5px solid var(--border);
   box-shadow: 0 6px 20px -12px rgba(0, 0, 0, 0.7);
 }
+/* One cohesive warm-gold family - subtle tonal variation, no clashing hues. */
 .sticker-v {
-  border-color: rgba(192, 132, 252, 0.5);
-  color: #ddb8ff;
+  border-color: rgba(232, 198, 106, 0.5);
+  color: #f0d68a;
   transform: rotate(-2deg);
 }
 .sticker-p {
-  border-color: rgba(244, 114, 182, 0.5);
-  color: #f9a8d4;
+  border-color: rgba(245, 158, 11, 0.5);
+  color: #fbbf24;
   transform: rotate(1.5deg);
 }
 .sticker-a {
-  border-color: rgba(251, 191, 36, 0.5);
+  border-color: rgba(255, 215, 0, 0.55);
   color: #fcd34d;
   transform: rotate(-1deg);
 }

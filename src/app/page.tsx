@@ -3,6 +3,7 @@ import { loadPublicCapsules } from "@/lib/public-capsules";
 import Ecosystem from "./_components/Ecosystem";
 import JoinForm from "./_components/JoinForm";
 import ActivityStrip from "./_components/ActivityStrip";
+import HeroCapsulePreview from "./_components/HeroCapsulePreview";
 
 export const dynamic = "force-dynamic";
 
@@ -28,62 +29,70 @@ export default async function Home() {
   const capsules = await loadPublicCapsules();
 
   return (
-    <main className="mx-auto w-full min-w-0 max-w-3xl flex-1 overflow-x-hidden px-4">
-      <section className="relative overflow-hidden pt-12 pb-12 sm:pt-16">
+    <main className="mx-auto w-full min-w-0 max-w-5xl flex-1 overflow-x-hidden px-4">
+      <section className="relative overflow-hidden pt-10 pb-12 sm:pt-14">
         <div className="hero-blob hero-blob-v" aria-hidden />
         <div className="hero-blob hero-blob-a" aria-hidden />
-        <div className="relative">
-          <span className="eyebrow-pill">Sparkz - for you, the creator</span>
-          <div className="mt-6">
-            <video
-              className="h-40 w-40 rounded-2xl sm:h-52 sm:w-52"
-              style={{ filter: "drop-shadow(0 12px 48px rgba(232,198,106,0.28))" }}
-              autoPlay
-              loop
-              muted
-              playsInline
-              poster="/brand/sparkz-logo.png"
-              aria-label="Sparkz - gold flame logo"
-            >
-              <source src="/brand/sparkz-logo.webm" type="video/webm" />
-              <source src="/brand/sparkz-logo.mp4" type="video/mp4" />
-            </video>
-          </div>
-          <h1 className="mt-5 max-w-3xl text-[clamp(2.1rem,8.5vw,4rem)] font-bold leading-[0.98] tracking-tight">
-            Start with a{" "}
-            <span className="squig spark-text">
-              spark
-              <svg viewBox="0 0 200 16" preserveAspectRatio="none" aria-hidden>
-                <path
-                  d="M2 11 Q 50 2 100 9 T 198 6"
-                  fill="none"
-                  stroke="#fbbf24"
-                  strokeWidth="4"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </span>
-            ,<br />
-            not a token.
-          </h1>
-          <p className="mt-6 max-w-md text-lg leading-relaxed text-muted">
-            Open your project&apos;s home -{" "}
-            <span className="font-semibold text-foreground">identity, backers, receipts</span>. No
-            wallet, no coin to start. The token comes later, if ever.
-          </p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <span className="sticker sticker-v">no wallet needed</span>
-            <span className="sticker sticker-p">back the album</span>
-            <span className="sticker sticker-a">Farcaster-native</span>
-          </div>
-          <div className="mt-8 max-w-md">
-            <JoinForm interest="sparkz" />
-            <p className="mt-2 text-xs text-muted">
-              Light your spark - join the list.{" "}
-              <Link href="/explore" className="text-accent hover:underline">
-                or explore the sparks -&gt;
-              </Link>
+        <div className="relative grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
+          {/* Left - the pitch */}
+          <div>
+            <div className="flex items-center gap-3">
+              <video
+                className="h-14 w-14 rounded-xl sm:h-16 sm:w-16"
+                style={{ filter: "drop-shadow(0 8px 28px rgba(232,198,106,0.32))" }}
+                autoPlay
+                loop
+                muted
+                playsInline
+                poster="/brand/sparkz-logo.png"
+                aria-label="Sparkz - gold flame logo"
+              >
+                <source src="/brand/sparkz-logo.webm" type="video/webm" />
+                <source src="/brand/sparkz-logo.mp4" type="video/mp4" />
+              </video>
+              <span className="eyebrow-pill">Sparkz - for you, the creator</span>
+            </div>
+            <h1 className="mt-6 text-[clamp(2.1rem,7vw,3.6rem)] font-bold leading-[0.98] tracking-tight">
+              Start with a{" "}
+              <span className="squig spark-text">
+                spark
+                <svg viewBox="0 0 200 16" preserveAspectRatio="none" aria-hidden>
+                  <path
+                    d="M2 11 Q 50 2 100 9 T 198 6"
+                    fill="none"
+                    stroke="#fbbf24"
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </span>
+              ,<br />
+              not a token.
+            </h1>
+            <p className="mt-6 max-w-md text-lg leading-relaxed text-muted">
+              Open your project&apos;s home -{" "}
+              <span className="font-semibold text-foreground">identity, backers, receipts</span>. No
+              wallet, no coin to start. The token comes later, if ever.
             </p>
+            <div className="mt-6 flex flex-wrap gap-2.5">
+              <span className="sticker sticker-v">no wallet needed</span>
+              <span className="sticker sticker-p">back the album</span>
+              <span className="sticker sticker-a">Farcaster-native</span>
+            </div>
+            <div className="mt-8 max-w-md">
+              <JoinForm interest="sparkz" />
+              <p className="mt-2 text-xs text-muted">
+                Light your spark - join the list.{" "}
+                <Link href="/explore" className="text-accent hover:underline">
+                  or explore the sparks -&gt;
+                </Link>
+              </p>
+            </div>
+          </div>
+
+          {/* Right - see the product */}
+          <div className="flex justify-center lg:justify-end">
+            <HeroCapsulePreview />
           </div>
         </div>
       </section>

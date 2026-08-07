@@ -29,11 +29,20 @@ export default async function Home() {
   const capsules = await loadPublicCapsules();
 
   return (
-    <main className="mx-auto w-full min-w-0 max-w-5xl flex-1 overflow-x-hidden px-4">
-      <section className="relative overflow-hidden pt-10 pb-12 sm:pt-14">
+    <main className="w-full min-w-0 flex-1 overflow-x-hidden">
+      {/* Hero - full-bleed background, centered content (no black bars on wide screens) */}
+      <section className="relative overflow-hidden">
         <div className="hero-blob hero-blob-v" aria-hidden />
         <div className="hero-blob hero-blob-a" aria-hidden />
-        <div className="relative grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
+        <div
+          className="pointer-events-none absolute inset-0 -z-10"
+          aria-hidden
+          style={{
+            background:
+              "radial-gradient(120% 80% at 50% -10%, rgba(232,198,106,0.10), transparent 60%)",
+          }}
+        />
+        <div className="relative mx-auto grid max-w-5xl items-center gap-10 px-4 pt-10 pb-12 sm:pt-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
           {/* Left - the pitch */}
           <div>
             <div className="flex items-center gap-3">
@@ -97,18 +106,22 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="border-y border-border py-5">
-        <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-          <span className="spark-text text-xl font-bold">You make the work.</span>
-          <span className="text-sm text-muted">
-            Sparkz makes it back-able, postable, and provable - before any coin exists.
-          </span>
+      <section className="border-y border-border">
+        <div className="mx-auto max-w-5xl px-4 py-5">
+          <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+            <span className="spark-text text-xl font-bold">You make the work.</span>
+            <span className="text-sm text-muted">
+              Sparkz makes it back-able, postable, and provable - before any coin exists.
+            </span>
+          </div>
         </div>
       </section>
 
-      <ActivityStrip />
+      <div className="mx-auto max-w-5xl px-4">
+        <ActivityStrip />
+      </div>
 
-      <section className="py-12">
+      <section className="mx-auto max-w-5xl px-4 py-12">
         <h2 className="mb-6 text-sm font-medium uppercase tracking-wide text-muted">
           How it works
         </h2>
@@ -123,16 +136,18 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="border-t border-border py-12">
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-sm font-medium uppercase tracking-wide text-muted">
-            The ecosystem
-          </h2>
-          <Link href="/explore" className="text-xs text-accent hover:underline">
-            Explore all -&gt;
-          </Link>
+      <section className="border-t border-border">
+        <div className="mx-auto max-w-5xl px-4 py-12">
+          <div className="mb-6 flex items-center justify-between">
+            <h2 className="text-sm font-medium uppercase tracking-wide text-muted">
+              The ecosystem
+            </h2>
+            <Link href="/explore" className="text-xs text-accent hover:underline">
+              Explore all -&gt;
+            </Link>
+          </div>
+          <Ecosystem capsules={capsules} />
         </div>
-        <Ecosystem capsules={capsules} />
       </section>
     </main>
   );

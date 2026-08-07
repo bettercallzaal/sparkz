@@ -222,20 +222,20 @@ h1, h2, h3 {
   pointer-events: none;
 }
 .hero-blob-v {
-  width: 380px;
-  height: 380px;
+  width: 520px;
+  height: 520px;
   background: #b8860b;   /* deep gold glow */
-  opacity: 0.4;
-  top: -140px;
-  left: -120px;
+  opacity: 0.32;
+  top: -200px;
+  left: -160px;
 }
 .hero-blob-a {
-  width: 320px;
-  height: 320px;
+  width: 460px;
+  height: 460px;
   background: #f59e0b;   /* warm amber */
-  opacity: 0.24;
-  top: 20px;
-  right: -120px;
+  opacity: 0.2;
+  top: -40px;
+  right: -180px;
 }
 .eyebrow-pill {
   display: inline-flex;

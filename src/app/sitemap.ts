@@ -6,7 +6,13 @@ const BASE = canonicalOrigin();
 
 // Dynamic sitemap: the static marketing/product routes + every public Capsule.
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const staticRoutes = ["", "/explore", "/start", "/demo", "/blog", "/architecture"].map(
+  const staticRoutes = [
+    "", "/explore", "/start", "/demo", "/blog", "/architecture",
+    // Content pages (consolidated from the ZOL page set).
+    "/manifesto", "/capsule", "/meme-engine", "/economics", "/token-timing", "/graduation",
+    "/examples", "/patronage", "/contribution", "/split-wizard", "/advisor", "/community-pool",
+    "/zao", "/farcaster", "/audius", "/vetted",
+  ].map(
     (p) => ({ url: `${BASE}${p}`, changeFrequency: "weekly" as const, priority: p === "" ? 1 : 0.7 }),
   );
 

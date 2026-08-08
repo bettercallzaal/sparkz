@@ -15,13 +15,13 @@ export class HumanSignalSource implements SignalSource {
     const { data, error } = await supabase
       .from("signals")
       .select("*")
-      .eq("capsule_id", hearthId)
+      .eq("hearth_id", hearthId)
       .eq("source", this.id)
       .eq("status", "flagged");
     if (error) throw error;
 
     return (data as Signal[]).map((s) => ({
-      hearthId: s.capsule_id,
+      hearthId: s.hearth_id,
       text: s.text,
       whyItMatched: s.why_it_matched ?? undefined,
       source: s.source,

@@ -35,7 +35,7 @@ async function uniqueSlug(base: string): Promise<string> {
   for (let i = 0; i < 25; i++) {
     const candidate = i === 0 ? root : `${root}-${i + 1}`;
     const { data, error } = await supabase
-      .from("capsules")
+      .from("hearths")
       .select("id")
       .eq("slug", candidate)
       .maybeSingle();
@@ -57,7 +57,7 @@ export async function importEmpireAsHearth(empireId: string): Promise<Hearth> {
 
   // Dedup: has any Hearth already imported/linked this empire?
   const { data: existing, error: exErr } = await supabase
-    .from("capsules")
+    .from("hearths")
     .select("*")
     .eq("economic_config->>empire_id", resolved.empireId)
     .maybeSingle();
@@ -69,7 +69,7 @@ export async function importEmpireAsHearth(empireId: string): Promise<Hearth> {
   const hasToken = e.token_type === "clanker" || e.token_type === "token";
 
   const { data, error } = await supabase
-    .from("capsules")
+    .from("hearths")
     .insert({
       slug,
       type: "culture",

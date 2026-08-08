@@ -95,7 +95,7 @@ export async function POST(req: NextRequest) {
     if (input.hearthId) {
       const supabase = getServiceClient();
       const { data, error } = await supabase
-        .from("capsules")
+        .from("hearths")
         .select("id, slug, name, bio, metadata")
         .eq("id", input.hearthId)
         .single();
@@ -136,7 +136,7 @@ export async function POST(req: NextRequest) {
       );
       const supabase = getServiceClient();
       const { error } = await supabase
-        .from("capsules")
+        .from("hearths")
         .update({ metadata: nextMetadata })
         .eq("id", hearth.id);
       if (error) console.error("[hearths/media-kit] persist failed:", error.message);
@@ -165,7 +165,7 @@ export async function GET(req: NextRequest) {
     if (hearthId && job.status === "ready" && job.videoUrl) {
       const supabase = getServiceClient();
       const { data } = await supabase
-        .from("capsules")
+        .from("hearths")
         .select("id, metadata")
         .eq("id", hearthId)
         .single();
@@ -176,7 +176,7 @@ export async function GET(req: NextRequest) {
         const entry = Object.values(store).find((s) => s.jobId === jobId);
         if (entry && entry.status !== "ready") {
           const next = writeCachedSegment(hearth.metadata, { ...entry, status: "ready", videoUrl: job.videoUrl });
-          await supabase.from("capsules").update({ metadata: next }).eq("id", hearthId);
+          await supabase.from("hearths").update({ metadata: next }).eq("id", hearthId);
         }
       }
     }

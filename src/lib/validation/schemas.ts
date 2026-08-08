@@ -45,7 +45,7 @@ export const createHearthSchema = z.object({
 });
 
 export const flagSignalSchema = z.object({
-  capsule_id: z.string().uuid(),
+  hearth_id: z.string().uuid(),
   text: z.string().min(1).max(1000),
   why_it_matched: z.string().max(1000).optional(),
   flagged_by: z.string().max(120).optional(),
@@ -63,7 +63,7 @@ export const approveDraftSchema = z.object({
 
 export const linkFarcasterSchema = z
   .object({
-    capsule_id: z.string().uuid(),
+    hearth_id: z.string().uuid(),
     fid: z.number().int().positive().optional(),
     username: z.string().max(64).optional(),
     channel: z.string().max(64).optional(), // channel id, e.g. "zao"
@@ -73,12 +73,12 @@ export const linkFarcasterSchema = z
   });
 
 export const linkEmpireSchema = z.object({
-  capsule_id: z.string().uuid(),
+  hearth_id: z.string().uuid(),
   empire_id: z.string().min(2).max(120), // 0x..., fid..., c-..., or slug
 });
 
 export const boostSchema = z.object({
-  capsule_id: z.string().uuid(),
+  hearth_id: z.string().uuid(),
   backer: z.string().min(1).max(200), // email or handle
 });
 
@@ -93,7 +93,7 @@ export const importRepoSchema = z.object({
 });
 
 export const auditGateSchema = z.object({
-  capsule_id: z.string().uuid(),
+  hearth_id: z.string().uuid(),
   gates: z
     .object({
       earn: z.enum(["pass", "fail", "unknown"]),
@@ -108,7 +108,7 @@ export const auditGateSchema = z.object({
 });
 
 export const createBackingSchema = z.object({
-  capsule_id: z.string().uuid(),
+  hearth_id: z.string().uuid(),
   backer_kind: backerKindEnum,
   backer_id: z.string().min(1).max(200),
   kind: backingKindEnum,
@@ -118,7 +118,7 @@ export const createBackingSchema = z.object({
 });
 
 export const deployEmpireSchema = z.object({
-  capsule_id: z.string().uuid(),
+  hearth_id: z.string().uuid(),
   name: z.string().min(1).max(100),
   owner: z.string().regex(/^0x[a-fA-F0-9]{40}$/),
   signature: z.string().regex(/^0x[a-fA-F0-9]+$/),

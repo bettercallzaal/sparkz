@@ -18,7 +18,7 @@ export default function BoostForm({ hearthId }: { hearthId: string }) {
       const res = await fetch("/api/boost", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ capsule_id: hearthId, backer: backer.trim() }),
+        body: JSON.stringify({ hearth_id: hearthId, backer: backer.trim() }),
       });
       const json = await res.json();
       if (json.ok) {

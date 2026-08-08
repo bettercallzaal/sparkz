@@ -33,7 +33,7 @@ export async function GET() {
     const supabase = getServiceClient();
 
     const { data: hearthRows } = await supabase
-      .from("capsules")
+      .from("hearths")
       .select("id, name, slug, created_at")
       .or(PUBLIC_REVIEW_FILTER)
       .order("created_at", { ascending: false });
@@ -43,13 +43,13 @@ export async function GET() {
 
     const [{ data: backerRows }, { data: receiptRows }] = await Promise.all([
       supabase
-        .from("capsule_backers")
-        .select("capsule_id, backer_id, kind, created_at")
+        .from("hearth_backers")
+        .select("hearth_id, backer_id, kind, created_at")
         .order("created_at", { ascending: false })
         .limit(20),
       supabase
         .from("meme_receipts")
-        .select("capsule_id, reach, published_at, created_at")
+        .select("hearth_id, reach, published_at, created_at")
         .order("created_at", { ascending: false })
         .limit(20),
     ]);
@@ -57,7 +57,7 @@ export async function GET() {
     const events: ActivityEvent[] = [];
 
     for (const b of (backerRows as HearthBacker[]) ?? []) {
-      const c = byId.get(b.capsule_id);
+      const c = byId.get(b.hearth_id);
       if (!c) continue; // not public
       events.push({
         kind: "boost",
@@ -69,7 +69,7 @@ export async function GET() {
     }
 
     for (const r of (receiptRows as MemeReceipt[]) ?? []) {
-      const c = byId.get(r.capsule_id);
+      const c = byId.get(r.hearth_id);
       if (!c) continue;
       const reach = r.reach && r.reach > 0 ? ` (reach ${r.reach})` : "";
       events.push({
@@ -96,7 +96,7 @@ export async function GET() {
     // Distinct public backers for the headline count.
     const backerIds = new Set(
       ((backerRows as HearthBacker[]) ?? [])
-        .filter((b) => publicIds.has(b.capsule_id))
+        .filter((b) => publicIds.has(b.hearth_id))
         .map((b) => b.backer_id),
     );
 

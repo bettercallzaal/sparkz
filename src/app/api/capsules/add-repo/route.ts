@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
     // can enrich/un-hide the existing one instead of creating a second row.
     const canonicalRepo = `https://github.com/${target.owner}/${target.repo}`;
     const { data: existing } = await supabase
-      .from("capsules")
+      .from("hearths")
       .select("*")
       .eq("metadata->>repo_owner", target.owner)
       .eq("metadata->>repo_name", target.repo)
@@ -99,7 +99,7 @@ export async function POST(req: NextRequest) {
     if (gh.homepage && /^https?:\/\//i.test(gh.homepage)) links.website = gh.homepage;
 
     const { data, error } = await supabase
-      .from("capsules")
+      .from("hearths")
       .insert({
         slug,
         type: "oss",
@@ -137,7 +137,7 @@ async function uniqueSlug(
   for (let n = 0; n < 50; n++) {
     const candidate = n === 0 ? base : `${base}-${n + 1}`;
     const { data } = await supabase
-      .from("capsules")
+      .from("hearths")
       .select("id")
       .eq("slug", candidate)
       .maybeSingle();

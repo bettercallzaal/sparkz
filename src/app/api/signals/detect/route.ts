@@ -11,7 +11,7 @@ import { requireAdmin } from "@/lib/auth";
 //
 // Defaults to the Farcaster source (dark until NEYNAR_API_KEY is set - returns []).
 const detectSchema = z.object({
-  capsule_id: z.string().uuid(),
+  hearth_id: z.string().uuid(),
   source: z.string().min(1).max(40).optional(),
 });
 
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const candidates = await source.detectSignals(parsed.data.capsule_id);
+    const candidates = await source.detectSignals(parsed.data.hearth_id);
     return ok({ source: sourceId, count: candidates.length, candidates });
   } catch (err) {
     return serverError(err, "signals.detect.POST");

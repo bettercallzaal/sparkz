@@ -117,7 +117,7 @@ export async function GET(req: Request) {
     try {
       const supabase = getServiceClient();
       const { data } = await supabase
-        .from("capsules")
+        .from("hearths")
         .select("id, name, type, status, bio, metadata")
         .eq("slug", slug)
         .maybeSingle();
@@ -125,9 +125,9 @@ export async function GET(req: Request) {
       if (data) {
         const c = data as Pick<Hearth, "id" | "name" | "type" | "status" | "bio" | "metadata">;
         const [{ count: backers }, { data: boostRows }, { count: receipts }] = await Promise.all([
-          supabase.from("capsule_backers").select("id", { count: "exact", head: true }).eq("capsule_id", c.id),
-          supabase.from("capsule_backers").select("id").eq("capsule_id", c.id).eq("kind", "boost"),
-          supabase.from("meme_receipts").select("id", { count: "exact", head: true }).eq("capsule_id", c.id),
+          supabase.from("hearth_backers").select("id", { count: "exact", head: true }).eq("hearth_id", c.id),
+          supabase.from("hearth_backers").select("id").eq("hearth_id", c.id).eq("kind", "boost"),
+          supabase.from("meme_receipts").select("id", { count: "exact", head: true }).eq("hearth_id", c.id),
         ]);
         const meta = (c.metadata ?? {}) as Record<string, unknown>;
         const fc = meta.farcaster as { channel?: string; username?: string } | undefined;

@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
 
     const supabase = getServiceClient();
     const { data: row, error: getErr } = await supabase
-      .from("capsules")
+      .from("hearths")
       .select("id, metadata")
       .eq("id", id)
       .maybeSingle();
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
 
     const meta = ((row as Hearth).metadata ?? {}) as Record<string, unknown>;
     const { error: updErr } = await supabase
-      .from("capsules")
+      .from("hearths")
       .update({ metadata: { ...meta, review: decision } })
       .eq("id", id);
     if (updErr) throw updErr;

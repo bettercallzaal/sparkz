@@ -9,14 +9,14 @@ import { isAdmin } from "@/lib/auth";
 // are not for public consumption. The moat trail (content + reach metrics) is; the
 // operational internals are not.
 const PUBLIC_RECEIPT_COLUMNS =
-  "id, capsule_id, why_it_matched, source_assets, parent_meme_id, versions, remixes, " +
+  "id, hearth_id, why_it_matched, source_assets, parent_meme_id, versions, remixes, " +
   "contributors, reach, referrals, backing_generated, published_at, created_at";
 
-// GET /api/receipts?capsule_id=... - the Meme Receipt trail for a hearth (the moat).
+// GET /api/receipts?hearth_id=... - the Meme Receipt trail for a hearth (the moat).
 export async function GET(req: NextRequest) {
   try {
-    const hearthId = req.nextUrl.searchParams.get("capsule_id");
-    if (!hearthId) return badRequest("capsule_id is required");
+    const hearthId = req.nextUrl.searchParams.get("hearth_id");
+    if (!hearthId) return badRequest("hearth_id is required");
 
     // The operator console needs the full record (approver, creator, lessons) to
     // audit its own work; the public trail gets the safe subset only. Same endpoint,
@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
     const { data, error } = await supabase
       .from("meme_receipts")
       .select(columns)
-      .eq("capsule_id", hearthId)
+      .eq("hearth_id", hearthId)
       .order("created_at", { ascending: false });
     if (error) throw error;
     return ok(data);

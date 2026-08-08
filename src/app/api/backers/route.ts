@@ -5,11 +5,11 @@ import { ok, badRequest, serverError, zodError } from "@/lib/http";
 import { getBackingProvider } from "@/lib/adapters/backing-provider";
 import { requireAdmin } from "@/lib/auth";
 
-// GET /api/backers?capsule_id=...&provider=ledger - list backings for a hearth.
+// GET /api/backers?hearth_id=...&provider=ledger - list backings for a hearth.
 export async function GET(req: NextRequest) {
   try {
-    const hearthId = req.nextUrl.searchParams.get("capsule_id");
-    if (!hearthId) return badRequest("capsule_id is required");
+    const hearthId = req.nextUrl.searchParams.get("hearth_id");
+    if (!hearthId) return badRequest("hearth_id is required");
     const providerId = req.nextUrl.searchParams.get("provider") ?? "ledger";
 
     const provider = getBackingProvider(providerId);
@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
     if (!provider) return badRequest(`unknown backing provider: ${providerId}`);
 
     const record = await provider.createBacking({
-      hearthId: input.capsule_id,
+      hearthId: input.hearth_id,
       backerKind: input.backer_kind,
       backerId: input.backer_id,
       kind: input.kind,

@@ -27,7 +27,7 @@ export class FarcasterSignalSource implements SignalSource {
 
     const supabase = getServiceClient();
     const { data: hearth, error } = await supabase
-      .from("capsules")
+      .from("hearths")
       .select("*")
       .eq("id", hearthId)
       .maybeSingle();

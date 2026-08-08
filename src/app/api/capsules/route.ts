@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
     const wantPending = new URL(req.url).searchParams.get("review") === "pending";
     const supabase = getServiceClient();
     let query = supabase
-      .from("capsules")
+      .from("hearths")
       .select("*")
       .order("created_at", { ascending: false });
 
@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
 
     const supabase = getServiceClient();
     const { data, error } = await supabase
-      .from("capsules")
+      .from("hearths")
       .insert({ status: "spark", ...parsed.data })
       .select("*")
       .single();

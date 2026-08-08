@@ -81,7 +81,7 @@ export async function POST(req: NextRequest) {
     const { data: receiptRow, error: recErr } = await supabase
       .from("meme_receipts")
       .insert({
-        capsule_id: signal.capsule_id,
+        hearth_id: signal.hearth_id,
         signal_id: signal.id,
         chosen_draft_id: chosen.id,
         why_it_matched: signal.why_it_matched,

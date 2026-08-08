@@ -30,7 +30,7 @@ export async function selfServeCountInWindow(
   const supabase = getServiceClient();
   const since = new Date(Date.now() - windowMs).toISOString();
   const { count, error } = await supabase
-    .from("capsules")
+    .from("hearths")
     .select("id", { count: "exact", head: true })
     .filter("metadata->>ip_hash", "eq", ipHash)
     .gte("created_at", since);
@@ -60,7 +60,7 @@ export async function boostCountInWindow(
   const supabase = getServiceClient();
   const since = new Date(Date.now() - windowMs).toISOString();
   const { count, error } = await supabase
-    .from("capsule_backers")
+    .from("hearth_backers")
     .select("id", { count: "exact", head: true })
     .eq("kind", "boost")
     .filter("metadata->>ip_hash", "eq", ipHash)

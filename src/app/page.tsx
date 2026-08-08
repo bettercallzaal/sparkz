@@ -25,6 +25,23 @@ const STEPS = [
   },
 ];
 
+// The anti-SaaS social contract (from docs/strategy/positioning.md) - made visible.
+// ZAO voice: plain, receipts over claims, no hype.
+const OWNERSHIP = [
+  {
+    h: "Member-owned, not investor-owned",
+    p: "No cap table, no investors. The people who build it own it - earned Respect and the ZAO estate.",
+  },
+  {
+    h: "Contributors earn, not subscribe",
+    p: "Sparkz is not a subscription you pay. Contributors earn - aligned upside through ZOLs and the estate, not extraction.",
+  },
+  {
+    h: "Transparent by default",
+    p: "Receipts on-chain, revenue in the open. Back the album, not buy a coin.",
+  },
+];
+
 export default async function Home() {
   const hearths = await loadPublicHearths();
 
@@ -133,6 +150,38 @@ export default async function Home() {
               <p className="text-sm text-muted">{s.p}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="border-t border-border">
+        <div className="mx-auto max-w-5xl px-4 py-12">
+          <h2 className="mb-2 text-sm font-medium uppercase tracking-wide text-muted">
+            Not a SaaS - a collective
+          </h2>
+          <p className="mb-6 max-w-xl text-sm text-muted">
+            Sparkz is open-source and member-owned. It earns on what flows through the rails
+            it opens, never on renting you a login.
+          </p>
+          <div className="grid gap-4 sm:grid-cols-3">
+            {OWNERSHIP.map((o) => (
+              <div key={o.h} className="rounded-lg border border-border bg-card p-4">
+                <div className="mb-1 font-medium text-foreground">{o.h}</div>
+                <p className="text-sm text-muted">{o.p}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-4 text-xs text-muted">
+            Part of{" "}
+            <a
+              href="https://zaoos.com"
+              target="_blank"
+              rel="noreferrer"
+              className="text-accent hover:underline"
+            >
+              The ZAO
+            </a>
+            .
+          </p>
         </div>
       </section>
 

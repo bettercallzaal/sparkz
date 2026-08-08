@@ -7,23 +7,23 @@ import { generateDrafts } from "@/lib/meme-engine/draft";
 import { routeApproval } from "@/lib/adapters/approval-channel";
 import { requireAdmin } from "@/lib/auth";
 import { canonicalOrigin } from "@/lib/origin";
-import type { Capsule, Signal, SignalDraft } from "@/lib/supabase/types";
+import type { Hearth, Signal, SignalDraft } from "@/lib/supabase/types";
 
-// GET /api/signals?capsule_id=... - signals for a capsule (with their drafts).
+// GET /api/signals?capsule_id=... - signals for a hearth (with their drafts).
 // Gated: drafts are internal (pre-publish) operator data.
 export async function GET(req: NextRequest) {
   try {
     const denied = requireAdmin(req);
     if (denied) return denied;
 
-    const capsuleId = req.nextUrl.searchParams.get("capsule_id");
-    if (!capsuleId) return badRequest("capsule_id is required");
+    const hearthId = req.nextUrl.searchParams.get("capsule_id");
+    if (!hearthId) return badRequest("capsule_id is required");
 
     const supabase = getServiceClient();
     const { data: signals, error } = await supabase
       .from("signals")
       .select("*")
-      .eq("capsule_id", capsuleId)
+      .eq("capsule_id", hearthId)
       .order("created_at", { ascending: false });
     if (error) throw error;
 
@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// POST /api/signals - flag a moment, then run the Meme Engine: 3 Capsule-grounded
+// POST /api/signals - flag a moment, then run the Meme Engine: 3 Hearth-grounded
 // drafts -> persist -> notify approval channels. The whole flag->3-drafts step.
 export async function POST(req: NextRequest) {
   try {
@@ -63,13 +63,13 @@ export async function POST(req: NextRequest) {
 
     const supabase = getServiceClient();
 
-    const { data: capsule, error: capErr } = await supabase
+    const { data: hearth, error: capErr } = await supabase
       .from("capsules")
       .select("*")
       .eq("id", input.capsule_id)
       .maybeSingle();
     if (capErr) throw capErr;
-    if (!capsule) return badRequest("capsule not found");
+    if (!hearth) return badRequest("hearth not found");
 
     // 1. Persist the flagged signal (the human "detection event").
     const { data: signalRow, error: sigErr } = await supabase
@@ -88,8 +88,8 @@ export async function POST(req: NextRequest) {
     if (sigErr) throw sigErr;
     const signal = signalRow as Signal;
 
-    // 2. Draft 3 Capsule-grounded responses (cheap tier / fallback).
-    const generated = await generateDrafts(capsule as Capsule, signal);
+    // 2. Draft 3 Hearth-grounded responses (cheap tier / fallback).
+    const generated = await generateDrafts(hearth as Hearth, signal);
     const { data: draftRows, error: draftErr } = await supabase
       .from("signal_drafts")
       .insert(
@@ -118,11 +118,11 @@ export async function POST(req: NextRequest) {
     const origin = canonicalOrigin();
     const routing = await routeApproval({
       signalId: signal.id,
-      capsuleId: signal.capsule_id,
-      capsuleName: (capsule as Capsule).name,
+      hearthId: signal.capsule_id,
+      hearthName: (hearth as Hearth).name,
       signalText: signal.text,
       drafts: drafts.map((d) => ({ id: d.id, rank: d.rank, text: d.draft_text })),
-      approveUrl: `${origin}/admin?capsule=${signal.capsule_id}&signal=${signal.id}`,
+      approveUrl: `${origin}/admin?hearth=${signal.capsule_id}&signal=${signal.id}`,
     });
 
     return ok(

@@ -1,10 +1,10 @@
 import { z } from "zod";
 
 // Zod schemas for every API input (safeParse in the routes). Keep the enums in
-// lockstep with the CHECK constraints in 0001_capsule_foundation.sql.
+// lockstep with the CHECK constraints in 0001_hearth_foundation.sql.
 
-export const capsuleTypeEnum = z.enum(["creator", "culture", "oss", "meme"]);
-export const capsuleStatusEnum = z.enum(["spark", "tokenized", "dormant"]);
+export const hearthTypeEnum = z.enum(["creator", "culture", "oss", "meme"]);
+export const hearthStatusEnum = z.enum(["spark", "tokenized", "dormant"]);
 export const backerKindEnum = z.enum(["wallet", "fid", "user"]);
 export const backingKindEnum = z.enum(["collectable", "backing", "boost"]);
 
@@ -16,7 +16,7 @@ export const backingKindEnum = z.enum(["collectable", "backing", "boost"]);
 export const createSparkSchema = z.object({
   name: z.string().min(2).max(80),
   bio: z.string().max(280).optional(),
-  type: capsuleTypeEnum,
+  type: hearthTypeEnum,
   email: z.string().email().max(200).optional(), // optional when signed in with Farcaster
   website: z.string().max(200).optional(), // honeypot - real users leave it empty
   // Optional Farcaster identity (set when the creator signed in with Farcaster).
@@ -28,18 +28,18 @@ export const createSparkSchema = z.object({
   path: ["email"],
 });
 
-export const createCapsuleSchema = z.object({
+export const createHearthSchema = z.object({
   slug: z
     .string()
     .min(1)
     .max(64)
     .regex(/^[a-z0-9-]+$/, "slug must be kebab-case (a-z, 0-9, -)"),
-  type: capsuleTypeEnum,
+  type: hearthTypeEnum,
   name: z.string().min(1).max(120),
   bio: z.string().max(2000).optional(),
   owner_wallet: z.string().max(64).optional(),
   owner_fid: z.number().int().positive().optional(),
-  status: capsuleStatusEnum.optional(),
+  status: hearthStatusEnum.optional(),
   economic_config: z.record(z.string(), z.unknown()).optional(),
   metadata: z.record(z.string(), z.unknown()).optional(),
 });

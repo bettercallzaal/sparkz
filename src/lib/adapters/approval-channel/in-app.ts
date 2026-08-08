@@ -13,7 +13,7 @@ export class InAppChannel implements ApprovalChannel {
     // The drafted signal is already persisted; the admin UI surfaces it. Nothing
     // to push. Logged server-side for traceability.
     console.log(
-      `[approval:in_app] signal ${req.signalId} (${req.capsuleName}) ready with ${req.drafts.length} drafts`,
+      `[approval:in_app] signal ${req.signalId} (${req.hearthName}) ready with ${req.drafts.length} drafts`,
     );
   }
 }

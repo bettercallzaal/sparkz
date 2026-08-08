@@ -1,8 +1,8 @@
-// A static, illustrative Capsule card for the landing hero. NOT live data - it is a
+// A static, illustrative Hearth card for the landing hero. NOT live data - it is a
 // product preview (like an app-store screenshot) so a first-time visitor immediately
-// sees what a Sparkz Capsule is: identity, backers, boosts, receipts, a boost action.
+// sees what a Sparkz Hearth is: identity, backers, boosts, receipts, a boost action.
 // Kept purely presentational; the real thing lives at /c/[slug].
-export default function HeroCapsulePreview() {
+export default function HeroHearthPreview() {
   return (
     <div className="relative w-full max-w-sm" aria-hidden>
       {/* soft gold glow behind the card */}
@@ -17,7 +17,7 @@ export default function HeroCapsulePreview() {
         {/* label so it reads as a preview, never as real activity */}
         <div className="mb-4 flex items-center justify-between">
           <span className="text-[11px] font-medium uppercase tracking-wide text-muted">
-            A Capsule
+            A Hearth
           </span>
           <span className="rounded-full border border-accent/40 bg-accent/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-accent">
             preview

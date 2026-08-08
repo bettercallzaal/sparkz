@@ -3,13 +3,13 @@ import { z } from "zod";
 import { getServiceClient } from "@/lib/supabase/server";
 import { ok, badRequest, serverError, zodError } from "@/lib/http";
 import { requireAdmin } from "@/lib/auth";
-import type { Capsule } from "@/lib/supabase/types";
+import type { Hearth } from "@/lib/supabase/types";
 
 export const dynamic = "force-dynamic";
 
 // POST /api/capsules/add-repo - operator-only. Add a project by its GitHub repo:
 // paste a repo URL, we pull the real repo metadata (description, homepage, stars,
-// language, topics) and open an OSS Capsule pre-filled with it. The rest of the
+// language, topics) and open an OSS Hearth pre-filled with it. The rest of the
 // project's info + integrations get layered on after. No invented data - every field
 // comes from GitHub or is left empty.
 const schema = z.object({ repo_url: z.string().trim().min(1).max(300) });
@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
 
     const supabase = getServiceClient();
 
-    // Do not duplicate: if this repo already has a Capsule, return it so the operator
+    // Do not duplicate: if this repo already has a Hearth, return it so the operator
     // can enrich/un-hide the existing one instead of creating a second row.
     const canonicalRepo = `https://github.com/${target.owner}/${target.repo}`;
     const { data: existing } = await supabase
@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
       .eq("metadata->>repo_name", target.repo)
       .maybeSingle();
     if (existing) {
-      return ok({ ...(existing as Capsule), already: true }, 200);
+      return ok({ ...(existing as Hearth), already: true }, 200);
     }
 
     // Pull real repo metadata from GitHub. Uses GITHUB_TOKEN if present (higher rate
@@ -124,7 +124,7 @@ export async function POST(req: NextRequest) {
       .select("*")
       .single();
     if (error) throw error;
-    return ok(data as Capsule, 201);
+    return ok(data as Hearth, 201);
   } catch (err) {
     return serverError(err, "add-repo.POST");
   }

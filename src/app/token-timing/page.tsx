@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     "fc:miniapp": "true",
     "fc:frame": "vNext",
     "fc:frame:image": OG,
-    "fc:frame:button:1": "🔥 Start a Capsule",
+    "fc:frame:button:1": "🔥 Start a Hearth",
     "fc:frame:button:1:action": "link",
     "fc:frame:button:1:target": `${BASE}/start`,
     "fc:frame:button:2": "🎯 Ask the advisor",
@@ -90,7 +90,7 @@ const TIMINGS: {
       "Waiting too long while others launch can feel like missing out - that feeling is usually wrong",
       "Culture compounds faster without token speculation in the room - trust the process",
     ],
-    action: "Open a Capsule now. Start with /patronage backing tiers ($5/$25/$100). Set a concrete graduation trigger - e.g. '200 backers and a live 0xSplits config.'",
+    action: "Open a Hearth now. Start with /patronage backing tiers ($5/$25/$100). Set a concrete graduation trigger - e.g. '200 backers and a live 0xSplits config.'",
   },
   {
     id: "never",
@@ -108,7 +108,7 @@ const TIMINGS: {
     ],
     risks: [
       "Tokenless communities can struggle with onboarding people who expect a liquid stake",
-      "Backers may eventually push for a token - address this in your Capsule FAQ early",
+      "Backers may eventually push for a token - address this in your Hearth FAQ early",
     ],
     action: "Lean into the patronage tier model + 0xSplits for collaborators. A token is optional, not mandatory. Plenty of lasting communities never tokenize.",
   },
@@ -246,7 +246,7 @@ export default function TokenTimingPage() {
           href="/start"
           className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
         >
-          🔥 Open a Capsule
+          🔥 Open a Hearth
         </Link>
         <Link
           href="/split-wizard"

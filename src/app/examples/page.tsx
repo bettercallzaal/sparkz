@@ -103,7 +103,7 @@ const TEMPLATES = [
     name: "Solo Creator Patronage",
     subtitle: "Fans back the work, not the coin",
     description:
-      "A solo artist or writer launches a Sparkz Capsule. Fans can back with a card (no wallet, no gas) at $5/$25/$100. The creator earns directly; no token required. Ideal for non-crypto audiences.",
+      "A solo artist or writer launches a Sparkz Hearth. Fans can back with a card (no wallet, no gas) at $5/$25/$100. The creator earns directly; no token required. Ideal for non-crypto audiences.",
     realExample: null,
     realLink: null,
     tokenless:
@@ -317,7 +317,7 @@ export default function ExamplesPage() {
       <section className="space-y-4">
         <h2 className="text-xl font-bold">Start your Spark</h2>
         <p className="text-muted text-sm leading-relaxed">
-          Pick the template that fits, then open a Capsule. ZAO reviews every
+          Pick the template that fits, then open a Hearth. ZAO reviews every
           self-serve submission - no permissionless minting.
         </p>
         <div className="flex flex-wrap gap-3">
@@ -325,7 +325,7 @@ export default function ExamplesPage() {
             href="/start"
             className="btn-spark px-5 py-2.5 text-sm font-semibold rounded-lg"
           >
-            🔥 Open a Capsule
+            🔥 Open a Hearth
           </Link>
           <Link
             href="/advisor"

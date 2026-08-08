@@ -2,12 +2,12 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import type { Capsule } from "@/lib/supabase/types";
+import type { Hearth } from "@/lib/supabase/types";
 import {
   GATE_LABELS,
   type GateKey,
   type GateVerdict,
-  type OssCapsuleMetadata,
+  type OssHearthMetadata,
 } from "@/lib/brand-audit/types";
 
 class ApiError extends Error {
@@ -46,7 +46,7 @@ const DOT: Record<GateVerdict, string> = {
 };
 
 export default function AuditPage() {
-  const [capsules, setCapsules] = useState<Capsule[]>([]);
+  const [hearths, setHearths] = useState<Hearth[]>([]);
   const [ref, setRef] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -55,8 +55,8 @@ export default function AuditPage() {
 
   const load = useCallback(async () => {
     try {
-      const all = await api<Capsule[]>("/api/capsules");
-      setCapsules(all.filter((c) => c.type === "oss"));
+      const all = await api<Hearth[]>("/api/capsules");
+      setHearths(all.filter((c) => c.type === "oss"));
     } catch (e) {
       setErr(e instanceof Error ? e.message : "load failed");
     }
@@ -105,8 +105,8 @@ export default function AuditPage() {
     }
   };
 
-  const cycleGate = async (c: Capsule, key: GateKey) => {
-    const meta = c.metadata as OssCapsuleMetadata;
+  const cycleGate = async (c: Hearth, key: GateKey) => {
+    const meta = c.metadata as OssHearthMetadata;
     const cur = meta.audit_result?.gates?.[key] ?? "unknown";
     try {
       await api("/api/audit", {
@@ -123,7 +123,7 @@ export default function AuditPage() {
     <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-8">
       <div className="mb-6 flex items-center justify-between">
         <Link href="/" className="text-sm text-muted hover:text-foreground">
-          &larr; Capsules
+          &larr; Hearths
         </Link>
         <span className="text-sm font-medium">Brand Audit - repo -&gt; Spark</span>
       </div>
@@ -157,7 +157,7 @@ export default function AuditPage() {
       )}
 
       <section className="mb-8 rounded-lg border border-border bg-card p-4">
-        <h2 className="mb-3 text-sm font-medium">Import a ZAO repo as a Capsule candidate</h2>
+        <h2 className="mb-3 text-sm font-medium">Import a ZAO repo as a Hearth candidate</h2>
         <input
           value={ref}
           onChange={(e) => setRef(e.target.value)}
@@ -175,13 +175,13 @@ export default function AuditPage() {
       </section>
 
       <section>
-        <h2 className="mb-3 text-sm font-medium">OSS Capsule candidates</h2>
-        {capsules.length === 0 && (
+        <h2 className="mb-3 text-sm font-medium">OSS Hearth candidates</h2>
+        {hearths.length === 0 && (
           <p className="text-sm text-muted">None yet. Import a repo above.</p>
         )}
         <ul className="space-y-4">
-          {capsules.map((c) => {
-            const meta = c.metadata as OssCapsuleMetadata;
+          {hearths.map((c) => {
+            const meta = c.metadata as OssHearthMetadata;
             const gates = meta.audit_result?.gates ?? {};
             return (
               <li key={c.id} className="rounded-lg border border-border bg-card p-4">

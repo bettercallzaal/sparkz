@@ -191,7 +191,7 @@ export default function PatronagePage() {
         <div className="grid gap-2 sm:grid-cols-2">
           <Link href="/start" className="glass glass-hover p-3">
             <div className="font-medium text-sm">Light a spark</div>
-            <div className="text-xs text-muted">Open your Capsule - no token needed</div>
+            <div className="text-xs text-muted">Open your Hearth - no token needed</div>
           </Link>
           <Link href="/advisor" className="glass glass-hover p-3">
             <div className="font-medium text-sm">Configure your split</div>

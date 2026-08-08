@@ -3,23 +3,23 @@ import Link from "next/link";
 import { canonicalOrigin, CANONICAL_HOST } from "@/lib/origin";
 
 const BASE = canonicalOrigin();
-const OG = `${BASE}/api/og?title=${encodeURIComponent("The Capsule")}&subtitle=${encodeURIComponent("Identity · backers · receipts - before any token")}`;
+const OG = `${BASE}/api/og?title=${encodeURIComponent("The Hearth")}&subtitle=${encodeURIComponent("Identity · backers · receipts - before any token")}`;
 
 export const metadata: Metadata = {
-  title: "The Capsule - Sparkz",
+  title: "The Hearth - Sparkz",
   description:
-    "A Capsule is the core Sparkz entity: identity, backers, boosts, meme receipts, Farcaster identity, economic config. The community lives here before any token exists.",
+    "A Hearth is the core Sparkz entity: identity, backers, boosts, meme receipts, Farcaster identity, economic config. The community lives here before any token exists.",
   openGraph: {
-    title: "The Capsule - Sparkz",
+    title: "The Hearth - Sparkz",
     description:
-      "Identity, backers, receipts, and fee config - all before a token. The Capsule is where community starts.",
-    url: `${BASE}/capsule`,
-    images: [{ url: OG, width: 1200, height: 630, alt: "The Capsule - Sparkz" }],
+      "Identity, backers, receipts, and fee config - all before a token. The Hearth is where community starts.",
+    url: `${BASE}/hearth`,
+    images: [{ url: OG, width: 1200, height: 630, alt: "The Hearth - Sparkz" }],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "The Capsule - Sparkz",
+    title: "The Hearth - Sparkz",
     description: "The Sparkz core entity: identity + backers + receipts before any token.",
     images: [OG],
   },
@@ -27,10 +27,10 @@ export const metadata: Metadata = {
     "fc:miniapp": "true",
     "fc:frame": "vNext",
     "fc:frame:image": OG,
-    "fc:frame:button:1": "🔥 Open a Capsule",
+    "fc:frame:button:1": "🔥 Open a Hearth",
     "fc:frame:button:1:action": "link",
     "fc:frame:button:1:target": `${BASE}/start`,
-    "fc:frame:button:2": "🔍 Browse Capsules",
+    "fc:frame:button:2": "🔍 Browse Hearths",
     "fc:frame:button:2:action": "link",
     "fc:frame:button:2:target": `${BASE}/explore`,
   },
@@ -52,7 +52,7 @@ const FIELDS = [
 const LIFECYCLE = [
   {
     stage: "Spark",
-    desc: "A creator opens a Capsule. ZAO reviews and approves. First backers appear. Boosts and Meme Engine receipts accumulate. No token.",
+    desc: "A creator opens a Hearth. ZAO reviews and approves. First backers appear. Boosts and Meme Engine receipts accumulate. No token.",
     icon: "🔥",
     color: "text-accent",
   },
@@ -64,13 +64,13 @@ const LIFECYCLE = [
   },
   {
     stage: "Dormant",
-    desc: "The community has gone quiet. The Capsule is preserved. The creator can re-spark at any time.",
+    desc: "The community has gone quiet. The Hearth is preserved. The creator can re-spark at any time.",
     icon: "💤",
     color: "text-muted",
   },
 ];
 
-export default function CapsulePage() {
+export default function HearthPage() {
   return (
     <main className="mx-auto max-w-2xl px-4 py-16 space-y-14">
       {/* Header */}
@@ -78,21 +78,21 @@ export default function CapsulePage() {
         <p className="text-accent text-sm font-semibold mb-3 uppercase tracking-wider">
           Core concept
         </p>
-        <h1 className="text-4xl font-bold mb-4">The Capsule</h1>
+        <h1 className="text-4xl font-bold mb-4">The Hearth</h1>
         <p className="text-muted text-lg leading-relaxed">
-          A Capsule is where a Sparkz community lives - before any token exists.
+          A Hearth is where a Sparkz community lives - before any token exists.
           Identity, backers, boosts, Meme Engine receipts, Farcaster identity,
           economic config. The culture starts here.
         </p>
         <p className="text-muted text-sm mt-3">
-          A token is the Capsule&rsquo;s optional economic output, not its starting point.
-          Most Capsules stay tokenless - that&rsquo;s a feature, not a limitation.
+          A token is the Hearth&rsquo;s optional economic output, not its starting point.
+          Most Hearths stay tokenless - that&rsquo;s a feature, not a limitation.
         </p>
       </section>
 
-      {/* What's in a Capsule */}
+      {/* What's in a Hearth */}
       <section>
-        <h2 className="text-xl font-bold mb-5">What&rsquo;s inside a Capsule</h2>
+        <h2 className="text-xl font-bold mb-5">What&rsquo;s inside a Hearth</h2>
         <div className="card-solid border border-border rounded-2xl divide-y divide-border">
           {FIELDS.map(({ label, desc }) => (
             <div key={label} className="px-5 py-3">
@@ -107,7 +107,7 @@ export default function CapsulePage() {
 
       {/* Lifecycle */}
       <section>
-        <h2 className="text-xl font-bold mb-5">Capsule lifecycle</h2>
+        <h2 className="text-xl font-bold mb-5">Hearth lifecycle</h2>
         <div className="space-y-4">
           {LIFECYCLE.map((l) => (
             <div key={l.stage} className="card-solid border border-border rounded-xl p-5 flex gap-4">
@@ -120,19 +120,19 @@ export default function CapsulePage() {
           ))}
         </div>
         <p className="text-xs text-muted mt-4 leading-relaxed">
-          Token is NOT required to advance beyond Spark. Many Capsules stay tokenless
+          Token is NOT required to advance beyond Spark. Many Hearths stay tokenless
           and thrive. The community pull determines when (or whether) to tokenize.
         </p>
       </section>
 
-      {/* Capsule at /c/[slug] */}
+      {/* Hearth at /c/[slug] */}
       <section className="card-solid border border-border rounded-2xl p-6">
         <h2 className="font-bold text-lg mb-3">
-          Each Capsule lives at{" "}
+          Each Hearth lives at{" "}
           <code className="text-accent text-base font-mono">/c/[slug]</code>
         </h2>
         <p className="text-muted text-sm leading-relaxed mb-4">
-          Every approved Capsule gets a public page at{" "}
+          Every approved Hearth gets a public page at{" "}
           <span className="font-mono text-xs">{CANONICAL_HOST}/c/[slug]</span> - identity,
           boost button, Meme Engine receipts, backers list, graduation panel, and Farcaster
           Mini App embed. Browse the directory at{" "}
@@ -146,7 +146,7 @@ export default function CapsulePage() {
             href="/explore"
             className="text-sm px-4 py-2 border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
           >
-            🔍 Browse Capsules →
+            🔍 Browse Hearths →
           </Link>
           <a
             href="https://zoostr.xyz"
@@ -163,7 +163,7 @@ export default function CapsulePage() {
       <section>
         <h2 className="text-xl font-bold mb-3">Default economics</h2>
         <p className="text-muted text-sm leading-relaxed mb-4">
-          Every new Capsule starts with the 1/1/98 default: 1% Sparkz treasury
+          Every new Hearth starts with the 1/1/98 default: 1% Sparkz treasury
           (compute upkeep), 1% community pool (backers claim at splits.org), 98% creator
           distribution wallet (routes through 0xSplits to collaborators). Fully
           adjustable. Must sum to 100 and pass the extraction test.
@@ -202,13 +202,13 @@ export default function CapsulePage() {
           href="/start"
           className="btn-spark px-5 py-2.5 text-sm font-semibold rounded-lg"
         >
-          🔥 Open a Capsule
+          🔥 Open a Hearth
         </Link>
         <Link
           href="/explore"
           className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
         >
-          🔍 Browse Capsules
+          🔍 Browse Hearths
         </Link>
         <Link
           href="/economics"

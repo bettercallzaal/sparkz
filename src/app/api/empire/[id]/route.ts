@@ -11,7 +11,7 @@ import { ok, badRequest, serverError } from "@/lib/http";
 // GET /api/empire/{id} - the full public read bundle for an Empire (empirebuilder.world):
 // resolve + leaderboards + the top leaderboard's ranked entries + rewards + boosters, in
 // one call. {id} is a base_token (0x...), fid<number>, or a custom slug. Public data (the
-// Empire API is public); this is a cached-friendly proxy so the UI can render a Capsule's
+// Empire API is public); this is a cached-friendly proxy so the UI can render a Hearth's
 // Empire leaderboard + reward flow (Zoostr: the boost leaderboard + 50% fees to it).
 export const revalidate = 60;
 

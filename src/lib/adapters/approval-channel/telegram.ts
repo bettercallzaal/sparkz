@@ -26,7 +26,7 @@ export class TelegramChannel implements ApprovalChannel {
       .join("\n\n");
 
     const text = [
-      `Signal flagged for ${req.capsuleName}`,
+      `Signal flagged for ${req.hearthName}`,
       req.signalText,
       "",
       draftLines,

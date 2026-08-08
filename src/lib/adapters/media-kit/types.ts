@@ -1,10 +1,10 @@
 // The Baraza TV "streaming media kit" contract.
 //
 // This is the shared spec between Sparkz and Baraza TV (Aziz). Sparkz calls it to
-// turn a Capsule into an AI-anchor video segment - a promo, a recap, or a spark
+// turn a Hearth into an AI-anchor video segment - a promo, a recap, or a spark
 // announcement read by one of Baraza TV's anchors. It mirrors the four-tool surface
 // from the partnership pitch (render / live / distribute / transcribe); v1 wires the
-// one tool a Capsule needs today: renderSegment.
+// one tool a Hearth needs today: renderSegment.
 //
 // Rendering is asynchronous on Baraza TV's side (HeyGen/Hedra + ElevenLabs), so a
 // render is a JOB:
@@ -26,11 +26,11 @@ export interface SegmentRequest {
   script: string;
   /** Which anchor delivers it. */
   anchor: BarazaAnchor;
-  /** Overlay / lower-third label, e.g. the Capsule name or "Sparkz". */
+  /** Overlay / lower-third label, e.g. the Hearth name or "Sparkz". */
   brand?: string;
   /** Aspect. Default vertical - Farcaster / mobile-first. */
   format?: SegmentFormat;
-  /** Caller correlation id, e.g. `capsule:<slug>`. Echoed back for traceability. */
+  /** Caller correlation id, e.g. `hearth:<slug>`. Echoed back for traceability. */
   sourceRef?: string;
 }
 

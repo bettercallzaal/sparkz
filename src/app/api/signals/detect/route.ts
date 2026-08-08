@@ -5,7 +5,7 @@ import { getSignalSource, listSignalSources } from "@/lib/adapters/signal-source
 import { ok, badRequest, serverError, zodError } from "@/lib/http";
 import { requireAdmin } from "@/lib/auth";
 
-// POST /api/signals/detect - run a signal source's detectSignals for a Capsule and
+// POST /api/signals/detect - run a signal source's detectSignals for a Hearth and
 // return the CANDIDATE moments (not persisted). The "curator, not author" surface:
 // the operator reviews these and flags the good ones via POST /api/signals. Admin-gated.
 //

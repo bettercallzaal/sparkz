@@ -28,13 +28,13 @@ const STEPS = [
   {
     n: "1",
     title: "Flag a moment",
-    body: "A milestone hits - leaderboard milestone, cultural moment, community achievement. You (or ZOL's detect-moment script) flag it. ZOL reads live Capsule data: leaderboard stats, recent boosts, treasury balance.",
+    body: "A milestone hits - leaderboard milestone, cultural moment, community achievement. You (or ZOL's detect-moment script) flag it. ZOL reads live Hearth data: leaderboard stats, recent boosts, treasury balance.",
     tag: "Human or auto-detect",
   },
   {
     n: "2",
     title: "ZOL drafts 3 variants",
-    body: "ZOL generates three cast drafts - different angles, tones, or hooks - all grounded in real Capsule data (not hallucinated stats). Drafts land in the /zol approve panel.",
+    body: "ZOL generates three cast drafts - different angles, tones, or hooks - all grounded in real Hearth data (not hallucinated stats). Drafts land in the /zol approve panel.",
     tag: "ZOL (advisory tier)",
   },
   {
@@ -46,7 +46,7 @@ const STEPS = [
   {
     n: "4",
     title: "Post goes live",
-    body: "The approved cast goes live on Farcaster via Neynar. Timestamp, attribution, and Capsule link are included. The cast is canonical - it's the record of the moment.",
+    body: "The approved cast goes live on Farcaster via Neynar. Timestamp, attribution, and Hearth link are included. The cast is canonical - it's the record of the moment.",
     tag: "Human-gated post",
   },
   {
@@ -70,7 +70,7 @@ const GUARDRAILS = [
   },
   {
     title: "No fabricated data",
-    body: "All drafts are grounded in live Capsule data - real leaderboard counts, real pool math. ZOL does not invent stats.",
+    body: "All drafts are grounded in live Hearth data - real leaderboard counts, real pool math. ZOL does not invent stats.",
   },
   {
     title: "No on-chain signing",
@@ -94,11 +94,11 @@ export default function MemeEnginePage() {
           The loop that turns culture into content.
         </h1>
         <p className="mt-4 text-lg text-muted">
-          One human-in-the-loop creative intelligence loop. ZOL reads your Capsule data, drafts three variants, and waits for your approval. You post. Community remixes. Attribution flows.
+          One human-in-the-loop creative intelligence loop. ZOL reads your Hearth data, drafts three variants, and waits for your approval. You post. Community remixes. Attribution flows.
         </p>
         <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted">
           <span className="rounded-full border border-border px-2 py-0.5">✓ ZOL drafts, human approves</span>
-          <span className="rounded-full border border-border px-2 py-0.5">✓ Grounded in real Capsule data</span>
+          <span className="rounded-full border border-border px-2 py-0.5">✓ Grounded in real Hearth data</span>
           <span className="rounded-full border border-border px-2 py-0.5">✓ No autonomous posting (v1)</span>
         </div>
       </section>
@@ -165,7 +165,7 @@ export default function MemeEnginePage() {
         <div className="grid gap-2 sm:grid-cols-2">
           <Link href="/start" className="glass glass-hover p-3">
             <div className="font-medium text-sm">Light a spark</div>
-            <div className="text-xs text-muted">Open your Capsule - Meme Engine activates at your first milestone</div>
+            <div className="text-xs text-muted">Open your Hearth - Meme Engine activates at your first milestone</div>
           </Link>
           <Link href="/vetted" className="glass glass-hover p-3">
             <div className="font-medium text-sm">Get ZOL support</div>

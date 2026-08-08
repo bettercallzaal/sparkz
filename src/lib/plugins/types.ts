@@ -1,13 +1,13 @@
-// Capsule Plugin system (Upgrade: unified adapter toggling), modeled on elizaOS.
+// Hearth Plugin system (Upgrade: unified adapter toggling), modeled on elizaOS.
 //
-// A CapsulePlugin bundles one or more of Sparkz's existing adapter components -
+// A HearthPlugin bundles one or more of Sparkz's existing adapter components -
 // signal sources, backing providers, approval channels - behind a single id +
 // metadata + config contract. This is the ADDITIVE layer over the four seams that
 // already exist (src/lib/adapters/*): registering a plugin just fans its components
-// into those registries, so the flag -> draft -> approve loop is untouched. Per-Capsule
-// enable/disable + config lands next (the capsule_plugins table).
+// into those registries, so the flag -> draft -> approve loop is untouched. Per-Hearth
+// enable/disable + config lands next (the hearth_plugins table).
 //
-// elizaOS parallel: Plugin -> CapsulePlugin, character.plugins[] -> capsule_plugins
+// elizaOS parallel: Plugin -> HearthPlugin, character.plugins[] -> hearth_plugins
 // rows, AgentRuntime.registerPlugin -> registerPlugin below.
 
 import type { SignalSource } from "@/lib/adapters/signal-source";
@@ -22,7 +22,7 @@ export interface PluginConfigField {
   description: string;
 }
 
-export interface CapsulePlugin {
+export interface HearthPlugin {
   /** Stable unique id, e.g. "signal-human", "backing-ledger", "approval-discord". */
   readonly id: string;
   readonly version: string;

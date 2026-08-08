@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     "fc:miniapp": "true",
     "fc:frame": "vNext",
     "fc:frame:image": OG,
-    "fc:frame:button:1": "🔥 Start a Capsule",
+    "fc:frame:button:1": "🔥 Start a Hearth",
     "fc:frame:button:1:action": "link",
     "fc:frame:button:1:target": `${BASE}/start`,
     "fc:frame:button:2": "📊 See the split",
@@ -40,7 +40,7 @@ const HOW_IT_WORKS = [
   {
     n: "1",
     icon: "⚡",
-    title: "Contribute to the Capsule",
+    title: "Contribute to the Hearth",
     body: "Boost, back, remix, or participate. Every action earns points on the leaderboard. Holding the token earns nothing - contribution earns the fee share.",
   },
   {
@@ -73,7 +73,7 @@ const FACTS = [
   { label: "Auto-payout", value: "No - pull, not push" },
   { label: "Eligibility metric", value: "Leaderboard points (contribution-weighted)" },
   { label: "Update cadence", value: "Weekly snapshot → 0xSplits weight update" },
-  { label: "Zoostr pool size", value: "50% (community-first Capsule)" },
+  { label: "Zoostr pool size", value: "50% (community-first Hearth)" },
 ];
 
 const GUARDRAILS = [
@@ -85,7 +85,7 @@ const GUARDRAILS = [
   {
     rule: "1% floor - always",
     detail:
-      "Every Sparkz Capsule keeps at least 1% of the fee tier for the community pool. Creators can raise it. They cannot eliminate it.",
+      "Every Sparkz Hearth keeps at least 1% of the fee tier for the community pool. Creators can raise it. They cannot eliminate it.",
   },
   {
     rule: "Pull, not push",
@@ -109,7 +109,7 @@ export default function CommunityPoolPage() {
         </p>
         <h1 className="text-4xl font-bold mb-4">Community Pool</h1>
         <p className="text-muted text-lg leading-relaxed">
-          Every Sparkz Capsule reserves a share of its trading fees for the people who
+          Every Sparkz Hearth reserves a share of its trading fees for the people who
           actually built the culture. That share lives in a 0xSplits contract. Contributors
           claim their proportional cut at splits.org - no auto-payout, no deadline, no
           minimum.
@@ -248,7 +248,7 @@ export default function CommunityPoolPage() {
           href="/start"
           className="btn-spark px-5 py-2.5 text-sm font-semibold rounded-lg"
         >
-          🔥 Start a Capsule
+          🔥 Start a Hearth
         </Link>
         <Link
           href="/economics"

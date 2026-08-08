@@ -19,7 +19,7 @@ export function clientIpHash(req: NextRequest): string {
     .slice(0, 32);
 }
 
-// How many self-serve capsules this ip_hash created inside the window. Durable -
+// How many self-serve hearths this ip_hash created inside the window. Durable -
 // it uses the Postgres we already run, no KV/Redis to provision. IP rotation can
 // bypass it, so pair it with a review gate for real abuse defense; this stops the
 // casual flood.
@@ -46,9 +46,9 @@ export const SELF_SERVE_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 
 // How many boosts a single ip_hash may cast inside the window. Boost is a public,
 // unauthenticated write whose `backer` is a caller-supplied string, so without a
-// cap one actor can inflate a Capsule's public boost/backer counts (rendered as
+// cap one actor can inflate a Hearth's public boost/backer counts (rendered as
 // social proof) and spam rows. Same DB-backed, no-KV pattern as create-spark;
-// the ip_hash is stored on capsule_backers.metadata at insert time. IP rotation
+// the ip_hash is stored on hearth_backers.metadata at insert time. IP rotation
 // can bypass it, so pair with a verified-identity requirement for real defense.
 export const BOOST_LIMIT = 20;
 export const BOOST_WINDOW_MS = 60 * 60 * 1000; // 1 hour

@@ -8,7 +8,7 @@ import {
   listSegments,
   QUEUED_TTL_MS,
   type StoredSegment,
-} from "./capsule-cache";
+} from "./hearth-cache";
 import type { SegmentJob } from "./types";
 
 const NOW = Date.parse("2026-07-23T12:00:00.000Z");

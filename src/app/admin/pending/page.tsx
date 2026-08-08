@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import Avatar from "@/app/_components/Avatar";
-import type { Capsule } from "@/lib/supabase/types";
+import type { Hearth } from "@/lib/supabase/types";
 
 export const dynamic = "force-dynamic";
 
@@ -20,11 +20,11 @@ async function api<T>(url: string, body?: unknown): Promise<{ ok: boolean; statu
 export default function PendingReview() {
   const [authed, setAuthed] = useState<boolean | null>(null);
   const [token, setToken] = useState("");
-  const [list, setList] = useState<Capsule[]>([]);
+  const [list, setList] = useState<Hearth[]>([]);
   const [busy, setBusy] = useState<string | null>(null);
 
   const load = useCallback(() => {
-    api<Capsule[]>("/api/capsules?review=pending").then((r) => {
+    api<Hearth[]>("/api/capsules?review=pending").then((r) => {
       if (r.status === 401) {
         setAuthed(false);
         return;

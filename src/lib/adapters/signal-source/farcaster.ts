@@ -1,10 +1,10 @@
 import { getServiceClient } from "@/lib/supabase/server";
-import type { Capsule } from "@/lib/supabase/types";
+import type { Hearth } from "@/lib/supabase/types";
 import { type CulturalSignal, type SignalSource } from "./index";
 
 // Farcaster SignalSource - the "curator, not author" upgrade. Instead of a human
 // noticing a cultural moment and typing it in, this surfaces CANDIDATE moments from
-// Farcaster (casts about the Capsule) so the operator reviews + flags the good ones.
+// Farcaster (casts about the Hearth) so the operator reviews + flags the good ones.
 // Read-only: needs a Neynar API key, NOT a signer (no posting). DARK until
 // NEYNAR_API_KEY is set (same pattern as the Discord approval channel).
 //
@@ -21,25 +21,25 @@ interface NeynarCast {
 export class FarcasterSignalSource implements SignalSource {
   readonly id = "farcaster";
 
-  async detectSignals(capsuleId: string): Promise<CulturalSignal[]> {
+  async detectSignals(hearthId: string): Promise<CulturalSignal[]> {
     const apiKey = process.env.NEYNAR_API_KEY;
     if (!apiKey) return []; // dark
 
     const supabase = getServiceClient();
-    const { data: capsule, error } = await supabase
+    const { data: hearth, error } = await supabase
       .from("capsules")
       .select("*")
-      .eq("id", capsuleId)
+      .eq("id", hearthId)
       .maybeSingle();
     if (error) throw error;
-    if (!capsule) return [];
+    if (!hearth) return [];
 
-    const meta = ((capsule as Capsule).metadata ?? {}) as {
+    const meta = ((hearth as Hearth).metadata ?? {}) as {
       farcaster?: { username?: string | null; channel?: string | null };
     };
-    // Search by the linked Farcaster username, else the Capsule name. Without a
+    // Search by the linked Farcaster username, else the Hearth name. Without a
     // handle there is nothing to look up, so bail cleanly.
-    const query = meta.farcaster?.username || (capsule as Capsule).name;
+    const query = meta.farcaster?.username || (hearth as Hearth).name;
     if (!query) return [];
 
     const url = new URL("https://api.neynar.com/v2/farcaster/cast/search");
@@ -63,7 +63,7 @@ export class FarcasterSignalSource implements SignalSource {
     return casts
       .filter((c) => c.text && c.hash)
       .map((c) => ({
-        capsuleId,
+        hearthId,
         text: c.text as string,
         source: this.id,
         sourceMeta: {

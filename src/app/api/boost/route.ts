@@ -5,9 +5,9 @@ import { ok, badRequest, serverError, zodError, tooManyRequests } from "@/lib/ht
 import { clientIpHash, boostCountInWindow, BOOST_LIMIT, BOOST_WINDOW_MS } from "@/lib/rate-limit";
 import { isAdmin } from "@/lib/auth";
 
-// POST /api/boost - public "Boost this Capsule" (the boost engine): a free support
+// POST /api/boost - public "Boost this Hearth" (the boost engine): a free support
 // signal, not a payment. Records a ledger backing of kind='boost', qty 1. Public
-// (not admin-gated). One boost per backer per Capsule (deduped). Dollar backing
+// (not admin-gated). One boost per backer per Hearth (deduped). Dollar backing
 // comes later with the fiat/BYOK payment rails.
 export async function POST(req: NextRequest) {
   try {
@@ -28,16 +28,16 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Capsule must exist.
-    const { data: capsule, error: capErr } = await supabase
+    // Hearth must exist.
+    const { data: hearth, error: capErr } = await supabase
       .from("capsules")
       .select("id")
       .eq("id", parsed.data.capsule_id)
       .maybeSingle();
     if (capErr) throw capErr;
-    if (!capsule) return badRequest("capsule not found");
+    if (!hearth) return badRequest("hearth not found");
 
-    // Dedupe: one boost per backer per Capsule.
+    // Dedupe: one boost per backer per Hearth.
     const { data: existing } = await supabase
       .from("capsule_backers")
       .select("id")

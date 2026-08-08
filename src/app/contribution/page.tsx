@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     "fc:miniapp": "true",
     "fc:frame": "vNext",
     "fc:frame:image": OG,
-    "fc:frame:button:1": "🔥 Start a Capsule",
+    "fc:frame:button:1": "🔥 Start a Hearth",
     "fc:frame:button:1:action": "link",
     "fc:frame:button:1:target": `${BASE}/start`,
     "fc:frame:button:2": "📊 See the split",
@@ -40,7 +40,7 @@ const CONTRIBUTION_TYPES = [
   {
     icon: "⚡",
     name: "Boost",
-    what: "Like or amplify a Capsule cast on Farcaster.",
+    what: "Like or amplify a Hearth cast on Farcaster.",
     weight: "High",
     tracked: "Boostr points (zabalLikesCount), Meme Engine engagement score",
     example: "Like a ZABAL cast via Boostr → earns points on the leaderboard",
@@ -48,7 +48,7 @@ const CONTRIBUTION_TYPES = [
   {
     icon: "💸",
     name: "Back",
-    what: "Support the Capsule with a fiat tier (Spark / Booster / Patron) or on-chain boost.",
+    what: "Support the Hearth with a fiat tier (Spark / Booster / Patron) or on-chain boost.",
     weight: "High",
     tracked: "Patronage tier, one-time or recurring",
     example: "A $25 Booster backing earns leaderboard weight proportional to tier",
@@ -58,13 +58,13 @@ const CONTRIBUTION_TYPES = [
     name: "Meme receipt",
     what: "Remix or quote-cast a Meme Engine post within the 24h community swarm window.",
     weight: "Medium",
-    tracked: "Remix score via track-remix CLI; attribution logged to Capsule",
+    tracked: "Remix score via track-remix CLI; attribution logged to Hearth",
     example: "Quote a ZOL post within 24h → 20% remix reward share",
   },
   {
     icon: "🗣️",
     name: "Farcaster participation",
-    what: "Reply, react, and engage with Capsule posts in Warpcast.",
+    what: "Reply, react, and engage with Hearth posts in Warpcast.",
     weight: "Low",
     tracked: "Followers count, engagement signals (v1 advisory only)",
     example: "Higher follower count raises Boostr score multiplier",
@@ -79,7 +79,7 @@ const HOLDING_VS_CONTRIBUTION = [
     why: "Holding is passive. The community pool rewards what you give, not what you own.",
   },
   {
-    action: "Contribute to the Capsule",
+    action: "Contribute to the Hearth",
     earns: "Proportional fee share from the community pool",
     doesNotEarn: "Automatic payouts - pull model",
     why: "Points accumulate from contribution actions, not token balance.",
@@ -88,7 +88,7 @@ const HOLDING_VS_CONTRIBUTION = [
 
 const HOW_POINTS_WORK = [
   { n: "1", title: "You act", body: "You boost, back, remix, or participate. Each action is tracked by the relevant integration (Boostr, Meme Engine, patronage)." },
-  { n: "2", title: "Points accumulate", body: "Each action earns points on the Capsule leaderboard. Points are cumulative - they don't reset unless the creator explicitly resets the leaderboard." },
+  { n: "2", title: "Points accumulate", body: "Each action earns points on the Hearth leaderboard. Points are cumulative - they don't reset unless the creator explicitly resets the leaderboard." },
   { n: "3", title: "Weekly snapshot", body: "ZOL takes a weekly snapshot of total points across all contributors. Your proportional share = your points ÷ total points." },
   { n: "4", title: "0xSplits weights updated", body: "Proportional shares convert to integer weights (sum 1,000,000). The 0xSplits contract is updated with the new weights." },
   { n: "5", title: "Claim at splits.org", body: "Pull model - your accumulated fee share is claimable at splits.org. No deadline. No auto-payout. Claim when you want." },
@@ -126,7 +126,7 @@ export default function ContributionPage() {
         <h1 className="text-4xl font-bold mb-4">Contribution</h1>
         <p className="text-muted text-lg leading-relaxed">
           Sparkz is contribution-weighted, not holding-weighted. Owning a token
-          gives you optionality - you can trade it. Contributing to the Capsule
+          gives you optionality - you can trade it. Contributing to the Hearth
           gives you fee share. Here&rsquo;s exactly how Sparkz measures what you give.
         </p>
       </section>
@@ -257,7 +257,7 @@ export default function ContributionPage() {
           href="/start"
           className="btn-spark px-5 py-2.5 text-sm font-semibold rounded-lg"
         >
-          🔥 Start a Capsule
+          🔥 Start a Hearth
         </Link>
         <Link
           href="/community-pool"

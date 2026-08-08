@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Flame from "./Flame";
 
 // The "moment of value" - shown once, right after a spark is created, when the create
-// flow redirects to the new Capsule with ?lit=1. Onboarding research: surface the core
+// flow redirects to the new Hearth with ?lit=1. Onboarding research: surface the core
 // value action fast and make it feel like it landed. Self-dismisses and cleans the URL
 // so a refresh or share link never shows it.
 export default function SparkLit() {

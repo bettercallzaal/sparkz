@@ -61,7 +61,7 @@ export default function DemoPage() {
         <div className="card-solid p-5">
           <p className="text-sm leading-relaxed">
             <span className="font-semibold">CoCConcertZ</span> throws live concerts in
-            the metaverse. On Sparkz it&apos;s a <span className="spark-text font-semibold">Capsule</span> -
+            the metaverse. On Sparkz it&apos;s a <span className="spark-text font-semibold">Hearth</span> -
             not a coin. It has an identity, a Farcaster home (
             <span className="font-mono text-accent">/zao</span>), supporters who back
             the work, and a growing trail of receipts. When a show packs the venue,
@@ -73,7 +73,7 @@ export default function DemoPage() {
             href="/c/cocconcertz"
             className="mt-4 inline-block btn-spark rounded-md px-4 py-2 text-sm"
           >
-            See the live Capsule
+            See the live Hearth
           </Link>
         </div>
       </section>
@@ -84,7 +84,7 @@ export default function DemoPage() {
           The loop
         </h2>
         <div className="grid gap-3 sm:grid-cols-2">
-          <Step n="1" title="Open a Capsule">
+          <Step n="1" title="Open a Hearth">
             Identity, backing, receipts, economic config. No coin, no wallet required
             to start.
           </Step>
@@ -93,11 +93,11 @@ export default function DemoPage() {
             the community that shows up.
           </Step>
           <Step n="3" title="The Meme Engine">
-            Flag a cultural moment - Sparkz drafts 3 Capsule-grounded responses (cheap
+            Flag a cultural moment - Sparkz drafts 3 Hearth-grounded responses (cheap
             AI tier) - you approve one - it publishes.
           </Step>
           <Step n="4" title="Distributed on Farcaster">
-            The approved response casts to the Capsule&apos;s Farcaster channel. The
+            The approved response casts to the Hearth&apos;s Farcaster channel. The
             game is internet traffic; Farcaster eats first.
           </Step>
           <Step n="5" title="Receipts accumulate">
@@ -118,9 +118,9 @@ export default function DemoPage() {
         </h2>
         <p className="text-sm leading-relaxed text-muted">
           The moat isn&apos;t the token contract, and it isn&apos;t image generation.
-          It&apos;s the accumulating system - Capsules + backing + cultural memory +
+          It&apos;s the accumulating system - Hearths + backing + cultural memory +
           meme lineage + receipts + attribution. The more Sparkz runs, the smarter
-          every Capsule gets. A price pump with a dead community isn&apos;t healthy; a
+          every Hearth gets. A price pump with a dead community isn&apos;t healthy; a
           small project with growing contributors and repeat backers is - even
           pre-token.
         </p>

@@ -46,12 +46,12 @@ export const metadata: Metadata = {
     template: "%s - Sparkz",
   },
   description:
-    "Every Sparkz project is a Capsule, not a coin. Back the album, not buy a coin.",
+    "Every Sparkz project is a Hearth, not a coin. Back the album, not buy a coin.",
   applicationName: "Sparkz",
   openGraph: {
     title: "Sparkz - start with a spark, not a token",
     description:
-      "Every Sparkz project is a Capsule, not a coin. Back the album, not buy a coin.",
+      "Every Sparkz project is a Hearth, not a coin. Back the album, not buy a coin.",
     siteName: "Sparkz",
     type: "website",
     images: [{ url: "/api/og", width: 1200, height: 800 }],

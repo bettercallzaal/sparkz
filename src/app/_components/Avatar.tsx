@@ -1,5 +1,5 @@
-// Capsule avatar - a real logo when the Capsule has one (metadata.image), otherwise
-// a deterministic gradient tile with the first initial. Gives every Capsule and
+// Hearth avatar - a real logo when the Hearth has one (metadata.image), otherwise
+// a deterministic gradient tile with the first initial. Gives every Hearth and
 // every /explore row a visual identity instead of text alone.
 
 const GRADIENTS = [

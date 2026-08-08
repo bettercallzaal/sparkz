@@ -1,8 +1,8 @@
 import { getServiceClient } from "@/lib/supabase/server";
 import { ok, serverError } from "@/lib/http";
 import { PUBLIC_REVIEW_FILTER } from "@/lib/sanitize";
-import type { Capsule, CapsuleBacker, MemeReceipt } from "@/lib/supabase/types";
-import { capsuleConnections } from "@/lib/capsule-connections";
+import type { Hearth, HearthBacker, MemeReceipt } from "@/lib/supabase/types";
+import { hearthConnections } from "@/lib/hearth-connections";
 
 export const dynamic = "force-dynamic";
 
@@ -28,12 +28,12 @@ export interface DirectoryItem {
   created_at: string;
 }
 
-// GET /api/directory - every Capsule with its live parameters (counts + integration
+// GET /api/directory - every Hearth with its live parameters (counts + integration
 // flags) in one call, so the explorer can filter/sort client-side. Public read.
 export async function GET() {
   try {
     const supabase = getServiceClient();
-    const [{ data: capsules }, { data: backers }, { data: receipts }] =
+    const [{ data: hearths }, { data: backers }, { data: receipts }] =
       await Promise.all([
         supabase
           .from("capsules")
@@ -45,11 +45,11 @@ export async function GET() {
       ]);
 
     const b =
-      (backers as Pick<CapsuleBacker, "capsule_id" | "kind" | "backer_id" | "created_at">[]) ?? [];
+      (backers as Pick<HearthBacker, "capsule_id" | "kind" | "backer_id" | "created_at">[]) ?? [];
     const r = (receipts as Pick<MemeReceipt, "capsule_id" | "created_at">[]) ?? [];
     const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
-    const items: DirectoryItem[] = ((capsules as Capsule[]) ?? []).map((c) => {
+    const items: DirectoryItem[] = ((hearths as Hearth[]) ?? []).map((c) => {
       const mine = b.filter((x) => x.capsule_id === c.id);
       const econ = (c.economic_config ?? {}) as Record<string, unknown>;
       const meta = (c.metadata ?? {}) as Record<string, unknown>;
@@ -74,7 +74,7 @@ export async function GET() {
         empire: Boolean(econ.empire_address || econ.empire_id || econ.empire),
         token: Boolean(econ.token_address),
         agent: Boolean(econ.agent),
-        connections: capsuleConnections(c),
+        connections: hearthConnections(c),
         farcaster: fc
           ? fc.channel
             ? `/${fc.channel}`

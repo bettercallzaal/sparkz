@@ -11,7 +11,7 @@ const TYPES = [
   { v: "meme", label: "Meme" },
 ];
 
-// Create a Capsule tied to the signed-in Farcaster identity. The fid/username come
+// Create a Hearth tied to the signed-in Farcaster identity. The fid/username come
 // from the SIWF session and are attached so the new spark shows the creator's
 // Farcaster identity and lists under their account.
 export default function CreateSparkAsFarcaster({
@@ -43,7 +43,7 @@ export default function CreateSparkAsFarcaster({
           type,
           owner_fid: fid,
           fc_username: username,
-          fc_channel: username, // default the Capsule's channel to the creator's handle
+          fc_channel: username, // default the Hearth's channel to the creator's handle
         }),
       });
       const json = await res.json();
@@ -66,7 +66,7 @@ export default function CreateSparkAsFarcaster({
     <div className="mt-5 border-t border-border pt-5">
       <h2 className="mb-1 text-sm font-semibold">Light a spark as {username ? `@${username}` : "you"}</h2>
       <p className="mb-3 text-xs text-muted">
-        Opens a Capsule tied to your Farcaster identity. No wallet, no coin.
+        Opens a Hearth tied to your Farcaster identity. No wallet, no coin.
       </p>
       <div className="space-y-3">
         <input

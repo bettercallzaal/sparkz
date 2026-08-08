@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { loadPublicCapsules } from "@/lib/public-capsules";
+import { loadPublicHearths } from "@/lib/public-hearths";
 import Ecosystem from "./_components/Ecosystem";
 import JoinForm from "./_components/JoinForm";
 import ActivityStrip from "./_components/ActivityStrip";
-import HeroCapsulePreview from "./_components/HeroCapsulePreview";
+import HeroHearthPreview from "./_components/HeroHearthPreview";
 
 export const dynamic = "force-dynamic";
 
@@ -11,7 +11,7 @@ const STEPS = [
   {
     n: "1",
     h: "Start with a spark",
-    p: "Open a Capsule - identity, backing, receipts. No token, no wallet required.",
+    p: "Open a Hearth - identity, backing, receipts. No token, no wallet required.",
   },
   {
     n: "2",
@@ -26,7 +26,7 @@ const STEPS = [
 ];
 
 export default async function Home() {
-  const capsules = await loadPublicCapsules();
+  const hearths = await loadPublicHearths();
 
   return (
     <main className="w-full min-w-0 flex-1 overflow-x-hidden">
@@ -101,7 +101,7 @@ export default async function Home() {
 
           {/* Right - see the product */}
           <div className="flex justify-center lg:justify-end">
-            <HeroCapsulePreview />
+            <HeroHearthPreview />
           </div>
         </div>
       </section>
@@ -146,7 +146,7 @@ export default async function Home() {
               Explore all -&gt;
             </Link>
           </div>
-          <Ecosystem capsules={capsules} />
+          <Ecosystem hearths={hearths} />
         </div>
       </section>
     </main>

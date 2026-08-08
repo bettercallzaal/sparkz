@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 
 // Reusable Empire leaderboard + reward-flow block. Fetches GET /api/empire/{id} and
 // renders the treasury stats, the reward flow, and the ranked leaderboard. Used on the
-// standalone /empire/{id} panel AND inline on a Capsule page (/c/{slug}) when the Spark
+// standalone /empire/{id} panel AND inline on a Hearth page (/c/{slug}) when the Spark
 // is wired to an empire - so ZABAL / ZABAL GAMEZ show their live leaderboard on their
 // own Spark page.
 

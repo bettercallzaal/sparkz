@@ -35,7 +35,7 @@ export default function ProfilePage() {
         <section className="glass p-5">
           <p className="mb-4 text-sm text-muted">
             Connect your Farcaster account. Free, protocol-native - no wallet gas,
-            no email. This is the identity your Capsules and casts hang off of.
+            no email. This is the identity your Hearths and casts hang off of.
           </p>
           <SignInButton />
         </section>

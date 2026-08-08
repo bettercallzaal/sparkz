@@ -48,7 +48,7 @@ export default function Footer() {
               Learn
             </span>
             <Link href="/manifesto" className="hover:text-foreground">Manifesto</Link>
-            <Link href="/capsule" className="hover:text-foreground">The Capsule</Link>
+            <Link href="/hearth" className="hover:text-foreground">The Hearth</Link>
             <Link href="/meme-engine" className="hover:text-foreground">Meme Engine</Link>
             <Link href="/economics" className="hover:text-foreground">Economics</Link>
             <Link href="/token-timing" className="hover:text-foreground">Token timing</Link>

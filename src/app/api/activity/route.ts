@@ -1,14 +1,14 @@
 import { getServiceClient } from "@/lib/supabase/server";
 import { ok, serverError } from "@/lib/http";
 import { PUBLIC_REVIEW_FILTER } from "@/lib/sanitize";
-import type { Capsule, CapsuleBacker, MemeReceipt } from "@/lib/supabase/types";
+import type { Hearth, HearthBacker, MemeReceipt } from "@/lib/supabase/types";
 
 export const dynamic = "force-dynamic";
 
 export interface ActivityEvent {
   kind: "spark" | "boost" | "receipt";
   slug: string;
-  capsule: string;
+  hearth: string;
   label: string;
   at: string;
 }
@@ -25,21 +25,21 @@ function backerLabel(id: string): string {
 }
 
 // GET /api/activity - a proof-of-life feed: recent sparks, boosts, and receipts
-// across public Capsules, plus headline counts. Value, not price - no numbers a
-// speculator would trade on. Only approved/unreviewed Capsules are included, and
+// across public Hearths, plus headline counts. Value, not price - no numbers a
+// speculator would trade on. Only approved/unreviewed Hearths are included, and
 // backer identities are sanitized.
 export async function GET() {
   try {
     const supabase = getServiceClient();
 
-    const { data: capsuleRows } = await supabase
+    const { data: hearthRows } = await supabase
       .from("capsules")
       .select("id, name, slug, created_at")
       .or(PUBLIC_REVIEW_FILTER)
       .order("created_at", { ascending: false });
-    const capsules = (capsuleRows as Pick<Capsule, "id" | "name" | "slug" | "created_at">[]) ?? [];
-    const byId = new Map(capsules.map((c) => [c.id, c]));
-    const publicIds = new Set(capsules.map((c) => c.id));
+    const hearths = (hearthRows as Pick<Hearth, "id" | "name" | "slug" | "created_at">[]) ?? [];
+    const byId = new Map(hearths.map((c) => [c.id, c]));
+    const publicIds = new Set(hearths.map((c) => c.id));
 
     const [{ data: backerRows }, { data: receiptRows }] = await Promise.all([
       supabase
@@ -56,13 +56,13 @@ export async function GET() {
 
     const events: ActivityEvent[] = [];
 
-    for (const b of (backerRows as CapsuleBacker[]) ?? []) {
+    for (const b of (backerRows as HearthBacker[]) ?? []) {
       const c = byId.get(b.capsule_id);
       if (!c) continue; // not public
       events.push({
         kind: "boost",
         slug: c.slug,
-        capsule: c.name,
+        hearth: c.name,
         label: `${backerLabel(b.backer_id)} backed ${c.name}`,
         at: b.created_at,
       });
@@ -75,17 +75,17 @@ export async function GET() {
       events.push({
         kind: "receipt",
         slug: c.slug,
-        capsule: c.name,
+        hearth: c.name,
         label: `${c.name} published a Meme Receipt${reach}`,
         at: r.published_at ?? r.created_at,
       });
     }
 
-    for (const c of capsules.slice(0, 6)) {
+    for (const c of hearths.slice(0, 6)) {
       events.push({
         kind: "spark",
         slug: c.slug,
-        capsule: c.name,
+        hearth: c.name,
         label: `${c.name} sparked`,
         at: c.created_at,
       });
@@ -95,7 +95,7 @@ export async function GET() {
 
     // Distinct public backers for the headline count.
     const backerIds = new Set(
-      ((backerRows as CapsuleBacker[]) ?? [])
+      ((backerRows as HearthBacker[]) ?? [])
         .filter((b) => publicIds.has(b.capsule_id))
         .map((b) => b.backer_id),
     );
@@ -106,7 +106,7 @@ export async function GET() {
 
     const res: ActivityResponse = {
       stats: {
-        sparks: capsules.length,
+        sparks: hearths.length,
         backers: backerIds.size,
         receipts: receiptCount ?? 0,
       },

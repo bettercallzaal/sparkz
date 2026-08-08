@@ -3,11 +3,11 @@ import { getServiceClient } from "@/lib/supabase/server";
 import { auditGateSchema } from "@/lib/validation/schemas";
 import { ok, badRequest, serverError, zodError } from "@/lib/http";
 import { requireAdmin } from "@/lib/auth";
-import type { Capsule } from "@/lib/supabase/types";
-import { emptyAudit, type OssCapsuleMetadata } from "@/lib/brand-audit/types";
+import type { Hearth } from "@/lib/supabase/types";
+import { emptyAudit, type OssHearthMetadata } from "@/lib/brand-audit/types";
 
 // POST /api/audit - set the Spark-readiness gate verdicts / security-reviewed /
-// notes on an `oss` Capsule. Merges into metadata.audit_result; stamps audited_at.
+// notes on an `oss` Hearth. Merges into metadata.audit_result; stamps audited_at.
 export async function POST(req: NextRequest) {
   try {
     const denied = requireAdmin(req);
@@ -19,18 +19,18 @@ export async function POST(req: NextRequest) {
     const input = parsed.data;
 
     const supabase = getServiceClient();
-    const { data: capsule, error: capErr } = await supabase
+    const { data: hearth, error: capErr } = await supabase
       .from("capsules")
       .select("*")
       .eq("id", input.capsule_id)
       .maybeSingle();
     if (capErr) throw capErr;
-    if (!capsule) return badRequest("capsule not found");
-    if ((capsule as Capsule).type !== "oss") {
-      return badRequest("audit applies to oss Capsules only");
+    if (!hearth) return badRequest("hearth not found");
+    if ((hearth as Hearth).type !== "oss") {
+      return badRequest("audit applies to oss Hearths only");
     }
 
-    const meta = (capsule as Capsule).metadata as OssCapsuleMetadata;
+    const meta = (hearth as Hearth).metadata as OssHearthMetadata;
     const prior = meta.audit_result ?? emptyAudit();
     const audit_result = {
       ...prior,
@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
       .select("*")
       .single();
     if (error) throw error;
-    return ok(data as Capsule);
+    return ok(data as Hearth);
   } catch (err) {
     return serverError(err, "audit.POST");
   }

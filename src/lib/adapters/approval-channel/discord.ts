@@ -22,7 +22,7 @@ export class DiscordChannel implements ApprovalChannel {
       .join("\n\n");
 
     const content = [
-      `**Signal flagged for ${req.capsuleName}**`,
+      `**Signal flagged for ${req.hearthName}**`,
       `> ${req.signalText}`,
       "",
       draftLines,

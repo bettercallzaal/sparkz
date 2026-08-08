@@ -1,5 +1,5 @@
 // Built-in plugins - the v1 defaults, one per current adapter so each can be toggled
-// per-Capsule independently later. Bundling the existing singleton instances (no new
+// per-Hearth independently later. Bundling the existing singleton instances (no new
 // behavior); registering these reproduces exactly what bootstrap.ts used to do via
 // side-effect imports.
 
@@ -9,9 +9,9 @@ import { ledgerProvider } from "@/lib/adapters/backing-provider/ledger";
 import { inAppChannel } from "@/lib/adapters/approval-channel/in-app";
 import { discordChannel } from "@/lib/adapters/approval-channel/discord";
 import { telegramChannel } from "@/lib/adapters/approval-channel/telegram";
-import type { CapsulePlugin } from "./types";
+import type { HearthPlugin } from "./types";
 
-export const signalHumanPlugin: CapsulePlugin = {
+export const signalHumanPlugin: HearthPlugin = {
   id: "signal-human",
   version: "1.0.0",
   name: "Human Signal Source",
@@ -19,12 +19,12 @@ export const signalHumanPlugin: CapsulePlugin = {
   signalSources: [humanSignalSource],
 };
 
-export const signalFarcasterPlugin: CapsulePlugin = {
+export const signalFarcasterPlugin: HearthPlugin = {
   id: "signal-farcaster",
   version: "1.0.0",
   name: "Farcaster Signal Source",
   description:
-    "Surfaces candidate cultural moments from Farcaster (casts about the Capsule) so the operator curates instead of authoring. Dark until configured.",
+    "Surfaces candidate cultural moments from Farcaster (casts about the Hearth) so the operator curates instead of authoring. Dark until configured.",
   signalSources: [farcasterSignalSource],
   configSchema: {
     NEYNAR_API_KEY: {
@@ -35,7 +35,7 @@ export const signalFarcasterPlugin: CapsulePlugin = {
   },
 };
 
-export const backingLedgerPlugin: CapsulePlugin = {
+export const backingLedgerPlugin: HearthPlugin = {
   id: "backing-ledger",
   version: "1.0.0",
   name: "Ledger Backing",
@@ -43,7 +43,7 @@ export const backingLedgerPlugin: CapsulePlugin = {
   backingProviders: [ledgerProvider],
 };
 
-export const approvalInAppPlugin: CapsulePlugin = {
+export const approvalInAppPlugin: HearthPlugin = {
   id: "approval-in-app",
   version: "1.0.0",
   name: "In-App Approval",
@@ -51,7 +51,7 @@ export const approvalInAppPlugin: CapsulePlugin = {
   approvalChannels: [inAppChannel],
 };
 
-export const approvalDiscordPlugin: CapsulePlugin = {
+export const approvalDiscordPlugin: HearthPlugin = {
   id: "approval-discord",
   version: "1.0.0",
   name: "Discord Approval",
@@ -66,7 +66,7 @@ export const approvalDiscordPlugin: CapsulePlugin = {
   },
 };
 
-export const approvalTelegramPlugin: CapsulePlugin = {
+export const approvalTelegramPlugin: HearthPlugin = {
   id: "approval-telegram",
   version: "1.0.0",
   name: "Telegram Approval",
@@ -88,7 +88,7 @@ export const approvalTelegramPlugin: CapsulePlugin = {
 };
 
 // The default set registered at boot.
-export const BUILT_IN_PLUGINS: CapsulePlugin[] = [
+export const BUILT_IN_PLUGINS: HearthPlugin[] = [
   signalHumanPlugin,
   signalFarcasterPlugin,
   backingLedgerPlugin,

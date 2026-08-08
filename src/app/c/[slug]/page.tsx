@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getServiceClient } from "@/lib/supabase/server";
-import type { Capsule, CapsuleBacker, MemeReceipt } from "@/lib/supabase/types";
-import type { OssCapsuleMetadata } from "@/lib/brand-audit/types";
+import type { Hearth, HearthBacker, MemeReceipt } from "@/lib/supabase/types";
+import type { OssHearthMetadata } from "@/lib/brand-audit/types";
 import BoostForm from "@/app/_components/BoostForm";
 import Avatar from "@/app/_components/Avatar";
 import CopyButton from "@/app/_components/CopyButton";
@@ -32,8 +32,8 @@ export async function generateMetadata({
       .eq("slug", slug)
       .maybeSingle();
     if (data) {
-      const c = data as Pick<Capsule, "name" | "bio">;
-      const desc = c.bio ?? "A Sparkz Capsule - back the work, not a coin.";
+      const c = data as Pick<Hearth, "name" | "bio">;
+      const desc = c.bio ?? "A Sparkz Hearth - back the work, not a coin.";
       const origin = canonicalOrigin();
       const image = `${origin}/api/og?slug=${encodeURIComponent(slug)}`;
       const embed = JSON.stringify({
@@ -66,26 +66,26 @@ export async function generateMetadata({
   } catch {
     // fall through to default
   }
-  return { title: "Capsule" };
+  return { title: "Hearth" };
 }
 
-interface CapsuleView {
-  capsule: Capsule;
+interface HearthView {
+  hearth: Hearth;
   receipts: MemeReceipt[];
-  backers: CapsuleBacker[];
+  backers: HearthBacker[];
   boostCount: number;
 }
 
-async function load(slug: string): Promise<CapsuleView | null> {
+async function load(slug: string): Promise<HearthView | null> {
   const supabase = getServiceClient();
-  const { data: capsule } = await supabase
+  const { data: hearth } = await supabase
     .from("capsules")
     .select("*")
     .eq("slug", slug)
     .maybeSingle();
-  if (!capsule) return null;
+  if (!hearth) return null;
 
-  const c = capsule as Capsule;
+  const c = hearth as Hearth;
   const [{ data: receipts }, { data: backers }] = await Promise.all([
     supabase
       .from("meme_receipts")
@@ -99,9 +99,9 @@ async function load(slug: string): Promise<CapsuleView | null> {
       .order("created_at", { ascending: false }),
   ]);
 
-  const backersList = (backers as CapsuleBacker[]) ?? [];
+  const backersList = (backers as HearthBacker[]) ?? [];
   return {
-    capsule: c,
+    hearth: c,
     receipts: (receipts as MemeReceipt[]) ?? [],
     backers: backersList,
     boostCount: backersList.filter((b) => b.kind === "boost").length,
@@ -155,7 +155,7 @@ function Stat({ label, value }: { label: string; value: string | number }) {
   );
 }
 
-export default async function CapsulePage({
+export default async function HearthPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
@@ -164,10 +164,10 @@ export default async function CapsulePage({
   const view = await load(slug);
   if (!view) notFound();
 
-  const { capsule, receipts, backers, boostCount } = view;
-  const oss = capsule.type === "oss" ? (capsule.metadata as OssCapsuleMetadata) : null;
-  const fc = (capsule.metadata as { farcaster?: { fid?: number | null; username?: string | null; channel?: string | null } }).farcaster;
-  const econ = (capsule.economic_config ?? {}) as {
+  const { hearth, receipts, backers, boostCount } = view;
+  const oss = hearth.type === "oss" ? (hearth.metadata as OssHearthMetadata) : null;
+  const fc = (hearth.metadata as { farcaster?: { fid?: number | null; username?: string | null; channel?: string | null } }).farcaster;
+  const econ = (hearth.economic_config ?? {}) as {
     empire_address?: string | null;
     empire_id?: string | null;
     token_address?: string | null;
@@ -177,7 +177,7 @@ export default async function CapsulePage({
     backers.filter((b) => b.backer_id.includes("@")).map((b) => b.backer_id),
   ).size;
   const short = (a: string) => `${a.slice(0, 6)}...${a.slice(-4)}`;
-  const meta = capsule.metadata as {
+  const meta = hearth.metadata as {
     image?: string;
     review?: string;
     about?: string;
@@ -223,33 +223,33 @@ export default async function CapsulePage({
 
       <header className="mb-6 mt-4">
         <div className="flex items-start gap-4">
-          <Avatar name={capsule.name} image={image} className="h-16 w-16 text-2xl" />
+          <Avatar name={hearth.name} image={image} className="h-16 w-16 text-2xl" />
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-2xl font-bold tracking-tight">{capsule.name}</h1>
+              <h1 className="text-2xl font-bold tracking-tight">{hearth.name}</h1>
               <span className="rounded-md bg-black/40 px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted">
-                {capsule.type}
+                {hearth.type}
               </span>
               <span className="rounded-md bg-accent/20 px-2 py-0.5 text-[10px] uppercase tracking-wide text-accent">
-                {capsule.status}
+                {hearth.status}
               </span>
-              <OwnerBadge ownerFid={capsule.owner_fid} />
+              <OwnerBadge ownerFid={hearth.owner_fid} />
             </div>
           </div>
           <div className="flex shrink-0 items-center gap-2">
             <CopyButton
-              value={`${canonicalOrigin()}/c/${capsule.slug}`}
-              label="Capsule link copied"
+              value={`${canonicalOrigin()}/c/${hearth.slug}`}
+              label="Hearth link copied"
               className="h-8 w-8"
             />
             <ShareButton
-              path={`/c/${capsule.slug}`}
-              text={`Backing ${capsule.name} on Sparkz - a spark, not a coin.`}
+              path={`/c/${hearth.slug}`}
+              text={`Backing ${hearth.name} on Sparkz - a spark, not a coin.`}
               channel={fc?.channel ?? undefined}
             />
           </div>
         </div>
-        {capsule.bio && <p className="mt-3 text-sm text-muted">{capsule.bio}</p>}
+        {hearth.bio && <p className="mt-3 text-sm text-muted">{hearth.bio}</p>}
         {tags.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-1.5">
             {tags.map((t) => (
@@ -399,14 +399,14 @@ export default async function CapsulePage({
 
       {/* Boost engine: free public support signal (not a payment). */}
       <section className="glass mb-8 p-4">
-        <h2 className="mb-1 text-sm font-medium">Boost {capsule.name}</h2>
+        <h2 className="mb-1 text-sm font-medium">Boost {hearth.name}</h2>
         <p className="mb-3 text-xs text-muted">
           Back the work with a free boost. Dollar backing opens with fiat/BYOK soon.
         </p>
-        <BoostForm capsuleId={capsule.id} />
+        <BoostForm hearthId={hearth.id} />
       </section>
 
-      {capsule.status === "spark" && <GraduationPanel />}
+      {hearth.status === "spark" && <GraduationPanel />}
 
       <section className="mb-8">
         <h2 className="mb-3 text-sm font-medium">Meme Receipts</h2>

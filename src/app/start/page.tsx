@@ -5,11 +5,11 @@ export const dynamic = "force-static";
 
 export const metadata = {
   title: "Light your spark",
-  description: "Open a Capsule in under a minute. No wallet, no coin - just your project's home.",
+  description: "Open a Hearth in under a minute. No wallet, no coin - just your project's home.",
   openGraph: {
     title: "Light your spark",
-    description: "Open a Capsule in under a minute. No wallet, no coin.",
-    images: [{ url: "/api/og?title=Light%20your%20spark&subtitle=Open%20a%20Capsule%20in%20under%20a%20minute.", width: 1200, height: 800 }],
+    description: "Open a Hearth in under a minute. No wallet, no coin.",
+    images: [{ url: "/api/og?title=Light%20your%20spark&subtitle=Open%20a%20Hearth%20in%20under%20a%20minute.", width: 1200, height: 800 }],
   },
 };
 
@@ -29,7 +29,7 @@ export default function StartPage() {
       </div>
 
       <p className="mt-4 text-center text-xs text-muted">
-        This creates a real Capsule you can share right away. A token stays optional -
+        This creates a real Hearth you can share right away. A token stays optional -
         later, if ever.
       </p>
     </main>

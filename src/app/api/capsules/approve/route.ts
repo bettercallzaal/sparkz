@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 import { getServiceClient } from "@/lib/supabase/server";
 import { ok, badRequest, serverError } from "@/lib/http";
 import { requireAdmin } from "@/lib/auth";
-import type { Capsule } from "@/lib/supabase/types";
+import type { Hearth } from "@/lib/supabase/types";
 
 // POST /api/capsules/approve - operator approves (or rejects) a pending self-serve
 // spark, moving it into (or out of) the public listings. Admin only.
@@ -26,9 +26,9 @@ export async function POST(req: NextRequest) {
       .eq("id", id)
       .maybeSingle();
     if (getErr) throw getErr;
-    if (!row) return badRequest("capsule not found");
+    if (!row) return badRequest("hearth not found");
 
-    const meta = ((row as Capsule).metadata ?? {}) as Record<string, unknown>;
+    const meta = ((row as Hearth).metadata ?? {}) as Record<string, unknown>;
     const { error: updErr } = await supabase
       .from("capsules")
       .update({ metadata: { ...meta, review: decision } })
@@ -37,6 +37,6 @@ export async function POST(req: NextRequest) {
 
     return ok({ id, review: decision });
   } catch (err) {
-    return serverError(err, "capsules.approve.POST");
+    return serverError(err, "hearths.approve.POST");
   }
 }

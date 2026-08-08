@@ -4,7 +4,7 @@ import { deployEmpireSchema } from "@/lib/validation/schemas";
 import { ok, badRequest, serverError, zodError } from "@/lib/http";
 import { requireAdmin } from "@/lib/auth";
 import { deployTokenlessCustom, resolveEmpire } from "@/lib/empire/client";
-import type { Capsule } from "@/lib/supabase/types";
+import type { Hearth } from "@/lib/supabase/types";
 
 export async function POST(req: NextRequest) {
   try {
@@ -16,10 +16,10 @@ export async function POST(req: NextRequest) {
     if (!parsed.success) return zodError(parsed.error);
 
     const supabase = getServiceClient();
-    const { data: capsule, error: capErr } = await supabase
+    const { data: hearth, error: capErr } = await supabase
       .from("capsules").select("*").eq("id", parsed.data.capsule_id).maybeSingle();
     if (capErr) throw capErr;
-    if (!capsule) return badRequest("capsule not found");
+    if (!hearth) return badRequest("hearth not found");
 
     // Empire is an external upstream; surface its real error to the operator
     // (this is a gated operator tool, not a public endpoint).
@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
     }
     const resolved = baseToken ? await resolveEmpire(baseToken) : null;
 
-    const econ = (capsule as Capsule).economic_config ?? {};
+    const econ = (hearth as Hearth).economic_config ?? {};
     const { data, error } = await supabase.from("capsules").update({
       economic_config: {
         ...econ, empire: true, tokenization_rail: "empire",
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
     }).eq("id", parsed.data.capsule_id).select("*").single();
     if (error) throw error;
 
-    return ok({ empire_id: baseToken, empire_address: resolved?.empireAddress ?? null, capsule: data }, 201);
+    return ok({ empire_id: baseToken, empire_address: resolved?.empireAddress ?? null, hearth: data }, 201);
   } catch (err) {
     return serverError(err, "empire.deploy.POST");
   }

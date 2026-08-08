@@ -27,7 +27,7 @@ const WHAT_YOU_GET = [
   {
     icon: "🏅",
     title: '"Vetted by ZAO" badge',
-    body: "Shows on your Capsule page, your token, and your Farcaster profile. Signals: ZAO reviewed this, backed it, and stands behind the quality.",
+    body: "Shows on your Hearth page, your token, and your Farcaster profile. Signals: ZAO reviewed this, backed it, and stands behind the quality.",
   },
   {
     icon: "🔒",
@@ -173,7 +173,7 @@ export default function VettedPage() {
             <div className="text-xs text-muted">Start without waiting for vetting</div>
           </Link>
           <Link href="/explore" className="glass glass-hover p-3">
-            <div className="font-medium text-sm">Explore capsules</div>
+            <div className="font-medium text-sm">Explore hearths</div>
             <div className="text-xs text-muted">See the full ecosystem</div>
           </Link>
         </div>

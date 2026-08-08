@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     "fc:miniapp": "true",
     "fc:frame": "vNext",
     "fc:frame:image": OG,
-    "fc:frame:button:1": "🔥 Start a Capsule",
+    "fc:frame:button:1": "🔥 Start a Hearth",
     "fc:frame:button:1:action": "link",
     "fc:frame:button:1:target": `${BASE}/start`,
     "fc:frame:button:2": "📖 Read the manifesto",
@@ -40,22 +40,22 @@ const PRINCIPLES = [
   {
     n: "I",
     headline: "Start with a spark, not a token.",
-    body: "Every community starts as culture. A creator, a groove, a thing people want more of. The token is the economic layer the community earns access to - not the reason to exist. A Capsule opens before a token exists. Sometimes it stays that way forever. That is a success.",
+    body: "Every community starts as culture. A creator, a groove, a thing people want more of. The token is the economic layer the community earns access to - not the reason to exist. A Hearth opens before a token exists. Sometimes it stays that way forever. That is a success.",
   },
   {
     n: "II",
     headline: "Back the album, not buy a coin.",
-    body: "When someone supports a Sparkz Capsule, they are backing the work - the catalog, the culture, the creativity. They are not buying exposure to a ticker. The moment that distinction collapses, the community breaks. Sparkz is designed to keep them separate.",
+    body: "When someone supports a Sparkz Hearth, they are backing the work - the catalog, the culture, the creativity. They are not buying exposure to a ticker. The moment that distinction collapses, the community breaks. Sparkz is designed to keep them separate.",
   },
   {
     n: "III",
     headline: "Contribution earns. Holding waits.",
-    body: "Owning the token gives you optionality - you can trade it when you want. Contributing to the Capsule earns you fee share from the community pool. A whale who holds but never participates earns nothing from the people's cut. This is the only model that does not corrupt the culture.",
+    body: "Owning the token gives you optionality - you can trade it when you want. Contributing to the Hearth earns you fee share from the community pool. A whale who holds but never participates earns nothing from the people's cut. This is the only model that does not corrupt the culture.",
   },
   {
     n: "IV",
     headline: "Culture before price.",
-    body: "Community identity comes first. Token mechanics serve the culture - not the other way around. The moment a Capsule is designed around its price chart, the culture is already gone. ZAO guardrail: any Capsule that exists to pump a token does not pass the vetting threshold.",
+    body: "Community identity comes first. Token mechanics serve the culture - not the other way around. The moment a Hearth is designed around its price chart, the culture is already gone. ZAO guardrail: any Hearth that exists to pump a token does not pass the vetting threshold.",
   },
   {
     n: "V",
@@ -75,7 +75,7 @@ const PRINCIPLES = [
   {
     n: "VIII",
     headline: "Founder authority decays.",
-    body: "Creator control decreases as the community matures. The creator launches, the community grows, and eventually the Capsule belongs more to the community than the creator. This is the goal. A Capsule that a creator controls forever has not achieved what Sparkz is for.",
+    body: "Creator control decreases as the community matures. The creator launches, the community grows, and eventually the Hearth belongs more to the community than the creator. This is the goal. A Hearth that a creator controls forever has not achieved what Sparkz is for.",
   },
 ];
 
@@ -183,10 +183,10 @@ export default function ManifestoPage() {
       {/* Live example */}
       <section className="card-solid border border-border rounded-2xl p-6">
         <div className="text-xs font-semibold text-muted uppercase tracking-wider mb-3">
-          The first live Capsule
+          The first live Hearth
         </div>
         <p className="text-sm text-foreground/80 leading-relaxed mb-3">
-          Zoostr (ZABAL × Boostr) is the first Capsule to graduate. 50+ people showed up
+          Zoostr (ZABAL × Boostr) is the first Hearth to graduate. 50+ people showed up
           for the culture before a token existed. The community pulled. The token came
           second. 50% of every $ZOOSTR trade goes to the community pool - claimed at
           splits.org, pull model, no deadline.
@@ -207,13 +207,13 @@ export default function ManifestoPage() {
           href="/start"
           className="btn-spark px-5 py-2.5 text-sm font-semibold rounded-lg"
         >
-          🔥 Start a Capsule
+          🔥 Start a Hearth
         </Link>
         <Link
-          href="/capsule"
+          href="/hearth"
           className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
         >
-          📦 What is a Capsule?
+          📦 What is a Hearth?
         </Link>
         <Link
           href="/community-pool"

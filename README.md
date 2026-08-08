@@ -41,11 +41,11 @@
 
 ## New here? Start with this
 
-> **TL;DR** Sparkz is for creators, no code needed. Open a Capsule, build real backing first, tokenize later if ever.
+> **TL;DR** Sparkz is for creators, no code needed. Open a Hearth, build real backing first, tokenize later if ever.
 
 **Sparkz is for creators - artists, musicians, writers, builders - and the people around them. You do not need to code to use it, or to help.**
 
-Here is the whole idea in plain words: instead of launching a coin on day one and hoping people trade it, you open a **Capsule** - a home for your project that holds your identity, the people backing you, and a record of everything you have made. You build real support first. A token is optional, and only later, if it ever makes sense.
+Here is the whole idea in plain words: instead of launching a coin on day one and hoping people trade it, you open a **Hearth** - a home for your project that holds your identity, the people backing you, and a record of everything you have made. You build real support first. A token is optional, and only later, if it ever makes sense.
 
 <p align="center">
   <a href="https://trysparkz.com"><img src="https://img.shields.io/badge/Try%20Sparkz%20%E2%86%92-fbbf24?style=for-the-badge" alt="Try Sparkz" /></a>
@@ -58,7 +58,7 @@ Here is the whole idea in plain words: instead of launching a coin on day one an
 - **Build** - turn a relevant moment into a publish-ready post and a permanent record.
 
 <!-- DEMO GIF SLOT: record a 20-30s screen capture of the loop on trysparkz.com
-     (open a Capsule -> boost -> Meme Engine drafts -> approve -> receipt -> share), save it as
+     (open a Hearth -> boost -> Meme Engine drafts -> approve -> receipt -> share), save it as
      docs/assets/demo.gif, and replace this comment with:
      <p align="center"><img src="docs/assets/demo.gif" alt="Sparkz in 30 seconds" width="100%" /></p> -->
 
@@ -74,7 +74,7 @@ Not sure what a word means? Every coined term is defined in plain English in the
 - [Why it's different](#why-its-different)
 - [No lock-in, by design](#no-lock-in-by-design)
 - [How Sparkz compares](#how-sparkz-compares)
-- [The Capsule](#the-capsule)
+- [The Hearth](#the-hearth)
 - [Architecture](#architecture)
 - [The Meme Engine loop](#the-meme-engine-loop)
 - [Data model / the moat](#data-model--the-moat)
@@ -103,7 +103,8 @@ Plain-language definitions. If a coined word shows up anywhere and you are not s
 | Term | In plain words |
 | --- | --- |
 | **Spark** | A project before it is a coin. You start here. |
-| **Capsule** | Your project's home base on Sparkz - its identity, its backers, and a record of what it has made. Not a coin. |
+| **Hearth** | Your project's home base on Sparkz - its identity, its backers, and a record of what it has made. The hub of the wheel; not a coin. |
+| **Spoke** | A tool you connect to your Hearth (a Discord, a token rail, an Audius catalog). The Hearth is the hub; each integration is a spoke. Vendors can add their own. |
 | **Back / Boost** | To support a creator you believe in. Free - no wallet, no coin required. |
 | **Meme Engine** | The part of Sparkz that turns a cultural moment into a post and a permanent record. |
 | **Meme Receipt** | The record - which moment, which response, why it matched, and the outcomes it can generate. |
@@ -138,7 +139,7 @@ Most "creator coin" launchers are built around creating a coin on day one. Spark
 Sparkz is built so a creator is never trapped - not in a token, not in a vendor, not even in our own stack. The whole point is to give creators the least-friction way to build, while keeping every exit open.
 
 - **No forced token.** Start with a spark. A coin is optional, later, if ever - and the graduation plan uses external rails rather than a Sparkz-only token contract.
-- **Your data is yours.** A Capsule is an open record - identity, backers, receipts - built on an open schema in an open-source codebase. The moat is the record that accumulates around your work, not a proprietary Sparkz token contract.
+- **Your data is yours.** A Hearth is an open record - identity, backers, receipts - built on an open schema in an open-source codebase. The moat is the record that accumulates around your work, not a proprietary Sparkz token contract.
 - **Swap any piece.** Every external system sits behind an adapter - [SignalSource, BackingProvider, ApprovalChannel](#adapter-seams). Today that means human signals, ledger backing, and in-app approval with optional Discord notification; new rails and channels can slot in without a UI rewrite.
 - **Bring the tools you already use.** Farcaster identity and sharing, GitHub imports, and Empire are wired today; POIDH, Clanker, and additional rails can join through the same open approach. Sparkz is connective tissue, not a walled garden that replaces them.
 - **Decentralized where it counts.** A Farcaster identity you own, Base for settlement, and external treasury rails you control when configured. Nothing goes on-chain until you choose it.
@@ -160,7 +161,7 @@ For example, [Empire's published breakdown](https://paragraph.com/@empire_builde
 
 |  | Typical token-first launch flow | Sparkz |
 | --- | --- | --- |
-| **Starting point** | Token contract and launch configuration | Capsule: identity, backing, and receipts |
+| **Starting point** | Token contract and launch configuration | Hearth: identity, backing, and receipts |
 | **First community action** | Buy, sell, or hold | Back or boost without a wallet or token |
 | **Token decision** | Part of the initial launch flow | Optional graduation, later if useful |
 | **Rail choice** | The launcher's supported stack | Compare compatible providers and terms |
@@ -168,25 +169,25 @@ For example, [Empire's published breakdown](https://paragraph.com/@empire_builde
 | **Portability** | Depends on the provider | Open-source core with swappable adapter seams |
 | **Existing tools** | Usually centered on the launcher | Designed to connect Farcaster, GitHub, Empire, and more |
 
-## The Capsule
+## The Hearth
 
-> **TL;DR** Every project is a Capsule (identity + backing + receipts), not a coin. One schema, four entry points.
+> **TL;DR** Every project is a Hearth (identity + backing + receipts), not a coin. One schema, four entry points.
 
-Every Sparkz project is a **Capsule, not a coin.** The Capsule is the unit that accumulates: identity, contributors, history, content, receipts, reputation, backing, economic config, and Meme Engine memory. The coin is an *optional output*. The moat is the accumulating data - not the token contract, not image generation.
+Every Sparkz project is a **Hearth, not a coin.** The Hearth is the unit that accumulates: identity, contributors, history, content, receipts, reputation, backing, economic config, and Meme Engine memory. The coin is an *optional output*. The moat is the accumulating data - not the token contract, not image generation.
 
 One schema, four entry points (so v1.5 is additive, not a rewrite):
 
 ```mermaid
 flowchart LR
-  Creator["Creator<br/>(Zoostr - v1 proof)"] --> Capsule
-  Culture["Culture<br/>(a scene / movement)"] --> Capsule
-  OSS["Open-Source repo<br/>(repo + contributors + audit)"] --> Capsule
-  Meme["Meme Engine<br/>(lineage-native)"] --> Capsule
-  Capsule(("Capsule")) --> Coin["Token<br/>(optional, later)"]
-  Capsule --> Stay["Stay tokenless<br/>(perfectly fine)"]
+  Creator["Creator<br/>(Zoostr - v1 proof)"] --> Hearth
+  Culture["Culture<br/>(a scene / movement)"] --> Hearth
+  OSS["Open-Source repo<br/>(repo + contributors + audit)"] --> Hearth
+  Meme["Meme Engine<br/>(lineage-native)"] --> Hearth
+  Hearth(("Hearth")) --> Coin["Token<br/>(optional, later)"]
+  Hearth --> Stay["Stay tokenless<br/>(perfectly fine)"]
 ```
 
-The Capsule type lives in `capsules.type` (`creator | culture | oss | meme`); type-specific fields live in `metadata` jsonb, so a new entry point is a value, not a migration. v1 proves ONE loop with Zoostr (a Creator Capsule).
+The Hearth type lives in `hearths.type` (`creator | culture | oss | meme`); type-specific fields live in `metadata` jsonb, so a new entry point is a value, not a migration. v1 proves ONE loop with Zoostr (a Creator Hearth).
 
 ## Architecture
 
@@ -209,7 +210,7 @@ flowchart TB
   end
 
   subgraph Data["Supabase (RLS on every table)"]
-    DB[("Postgres<br/>capsules - backers - signals<br/>drafts - receipts")]
+    DB[("Postgres<br/>hearths - backers - signals<br/>drafts - receipts")]
     Store[("Storage<br/>logos / assets")]
   end
 
@@ -244,7 +245,7 @@ flowchart TB
 
 > **TL;DR** Flag a moment -> draft 3 responses -> choose one -> write a receipt -> share it, or let a configured agent cast it.
 
-The web app turns a cultural moment into a publish-ready response and a permanent record. A human flags a moment; Sparkz drafts three Capsule-grounded responses on a cheap model tier; the operator chooses one; Sparkz writes a **Meme Receipt**. The operator can share it through the Farcaster composer, while the separate agent can cast it through Neynar when a signer is configured.
+The web app turns a cultural moment into a publish-ready response and a permanent record. A human flags a moment; Sparkz drafts three Hearth-grounded responses on a cheap model tier; the operator chooses one; Sparkz writes a **Meme Receipt**. The operator can share it through the Farcaster composer, while the separate agent can cast it through Neynar when a signer is configured.
 
 ```mermaid
 flowchart LR
@@ -262,20 +263,20 @@ Both unchosen drafts and their rejection reason are stored on purpose - what the
 
 ## Data model / the moat
 
-> **TL;DR** Five core Capsule tables plus a waitlist, with RLS on all six. Backing settles into one provider-agnostic table; the receipts are the moat.
+> **TL;DR** Five core Hearth tables plus a waitlist, with RLS on all six. Backing settles into one provider-agnostic table; the receipts are the moat.
 
-Sparkz has five core Capsule tables plus `waitlist`. RLS is ON everywhere with no anon policies - every read and write goes through the server on the service-role key, which bypasses RLS. Types are CHECK constraints, not Postgres enums, so a new type/status/provider is a plain migration.
+Sparkz has five core Hearth tables plus `waitlist`. RLS is ON everywhere with no anon policies - every read and write goes through the server on the service-role key, which bypasses RLS. Types are CHECK constraints, not Postgres enums, so a new type/status/provider is a plain migration.
 
 ```mermaid
 erDiagram
-  capsules ||--o{ capsule_backers : "backed by"
-  capsules ||--o{ signals : "flags"
+  hearths ||--o{ hearth_backers : "backed by"
+  hearths ||--o{ signals : "flags"
   signals  ||--o{ signal_drafts : "drafts (3)"
   signals  ||--o| meme_receipts : "becomes"
   signal_drafts ||--o| meme_receipts : "chosen"
   meme_receipts ||--o{ meme_receipts : "lineage (parent)"
 
-  capsules {
+  hearths {
     uuid id PK
     text slug UK
     text type "creator|culture|oss|meme"
@@ -283,7 +284,7 @@ erDiagram
     jsonb economic_config "coin knobs, 0xSplits, empire ref"
     jsonb metadata "type-specific + farcaster + stars"
   }
-  capsule_backers {
+  hearth_backers {
     text kind "collectable|backing|boost"
     text provider "ledger|clanker|empire|..."
     numeric amount_or_qty
@@ -309,11 +310,11 @@ erDiagram
 
 **Why this is the moat:** ledger backing is live now; the provider-agnostic model is designed so future on-chain value can settle into the *same* table, keeping the record unified. `meme_receipts` is the campaign record - one per approved response - and `parent_meme_id` gives meme lineage. The more Sparkz runs, the more useful and defensible the record becomes.
 
-### Capsule lifecycle
+### Hearth lifecycle
 
 ```mermaid
 stateDiagram-v2
-  [*] --> spark: open a Capsule (no coin)
+  [*] --> spark: open a Hearth (no coin)
   spark --> spark: back, boost, receipts accumulate
   spark --> tokenized: graduate (Empire / Clanker) - only if momentum is real
   spark --> dormant: goes quiet
@@ -321,39 +322,43 @@ stateDiagram-v2
   tokenized --> [*]
 ```
 
-## Adapter seams
+## Adapter seams (the spokes)
 
-> **TL;DR** Three swappable registries (signal source, backing, approval). A new backend is one file plus one import - no rewrite.
+> **TL;DR** Four swappable registries (signal source, backing, approval, connector). A new backend - or a whole vendor tool - is one file plus one import. No rewrite.
 
-Three registry-backed seams keep the loop swappable end to end. Each is a `Map`-backed registry; implementations self-register via a side-effect import in `src/lib/adapters/bootstrap.ts`. Adding a backend is a new file plus one import - no UI change.
+Four registry-backed seams keep the loop swappable end to end. Each is a `Map`-backed registry; implementations self-register via `src/lib/adapters/bootstrap.ts`. The first three are specific; the fourth, **Connector**, is the generic **spoke** any vendor can add for their own tool. Adding a backend is a new file plus one import - no UI change.
 
 ```mermaid
 flowchart LR
   R1{{"SignalSource<br/>registry"}} --- H["human (v1)"] & FCa["farcaster"] & AR["alpha_radar"]
   R2{{"BackingProvider<br/>registry"}} --- L["ledger (v1)"] & CL["clanker"] & EMp["empire"]
   R3{{"ApprovalChannel<br/>registry"}} --- IA["in-app (v1)"] & DI["Discord notice"] & TG["direct channels later"]
+  R4{{"Connector<br/>registry (spokes)"}} --- AU["audius (example)"] & VN["any vendor tool"]
 ```
 
 | Seam | Interface | v1 impl | Grows to |
 | --- | --- | --- | --- |
-| **SignalSource** | `detectSignals(capsuleId)` | `human` | farcaster activity, alpha radar, predictive |
+| **SignalSource** | `detectSignals(hearthId)` | `human` | farcaster activity, alpha radar, predictive |
 | **BackingProvider** | credit / settle backing | `ledger` (off-chain) | clanker, bankr, privy, empire |
 | **ApprovalChannel** | route an approval request | `in_app` + optional Discord notice | direct Discord / Telegram approval |
+| **Connector** (spoke) | `status(hearthId)` for the integrations grid | `audius-catalog` (example) | any vendor tool - added via a community PR |
 
-## Integrations
+Seams are bundled into **spokes** by the plugin system (`src/lib/plugins`, modeled on elizaOS). A `HearthPlugin` bundles components behind one id + a declared config schema; `registerPlugin()` fans them into the seams above. Each Hearth toggles its spokes on/off (and sets their config) via the `hearth_spokes` table - so every Spark connects to its own communities and tools. **Vendors add their tool as a spoke** in three files + one PR: see [`src/lib/plugins/community/README.md`](src/lib/plugins/community/README.md).
 
-> **TL;DR** A Spark is a hub: Farcaster, email, Empire, and the agent are usable now; other rails remain explicitly planned.
+## Integrations (spokes on the wheel)
 
-Surfaced on each Capsule page (`/c/[slug]`) as an integrations panel - a Spark is a hub, not a single feature.
+> **TL;DR** The Hearth is the hub; each integration is a spoke. Farcaster, email, Empire, and the agent are usable now; other rails remain explicitly planned. Any vendor can add a new spoke via a community PR.
+
+Surfaced on each Hearth page (`/c/[slug]`) as an integrations panel - **the Hearth is the hub of a wheel; each tool you connect is a spoke.** The ones below ship in-repo; a vendor adds their own the same way (a `Connector` spoke - see [Adapter seams](#adapter-seams-the-spokes)).
 
 | Integration | What it does | Status |
 | --- | --- | --- |
 | **Empire (treasury)** | Deploy or link a tokenless Empire on Base | Live at `/admin/empire` when the API key and owner signature are configured |
-| **Clanker (token)** | A candidate token rail for Capsule graduation | Planned; economic config only |
+| **Clanker (token)** | A candidate token rail for Hearth graduation | Planned; economic config only |
 | **0xSplits** | A candidate for adjustable revenue distribution | Modeled in economic config; not directly deployed by Sparkz yet |
 | **Farcaster** | Sign in with Farcaster (SIWF), Mini App manifest, share-to-cast | Live |
 | **Email list** | Off-chain backing / waitlist capture | Live |
-| **POIDH bounties** | Connect Capsule work to bounties | Planned; UI placeholder only |
+| **POIDH bounties** | Connect Hearth work to bounties | Planned; UI placeholder only |
 | **Agent** | Score drafts, apply an autonomy gate, and cast through Neynar | Runnable separate runtime; off until configured |
 
 ## Pages
@@ -364,17 +369,17 @@ Surfaced on each Capsule page (`/c/[slug]`) as an integrations panel - a Spark i
 | --- | --- |
 | `/` | Landing - the pitch, join form, the ecosystem |
 | `/start` | Self-serve: light your own spark in under a minute |
-| `/c/[slug]` | A Capsule: identity, stats, integrations, boost, receipts, backers |
+| `/c/[slug]` | A Hearth: identity, stats, integrations, boost, receipts, backers |
 | `/explore` | Filterable directory of every Spark (type, status, integrations, sort) - each shows its connected-integration badges |
 | `/empire/[id]` | Live Empire panel - any empire's treasury, reward flow, and boost leaderboard (also embedded on a Spark's `/c/[slug]` page) |
 | `/blog` | Short pieces on the thesis and the stack |
 | `/demo` | The idea in one page - live-stream explainer |
 | `/architecture` | The interactive architecture explorer |
 | `/admin` | The Meme Engine console (operator-gated) |
-| `/admin/new` | Create a Capsule manually (operator-gated) |
+| `/admin/new` | Create a Hearth manually (operator-gated) |
 | `/admin/pending` | Review queue for self-serve sparks (operator-gated) |
 | `/admin/empire` | Tokenless empire launcher (wallet-connected) |
-| `/audit` | Brand audit - import an existing repo as an OSS Capsule |
+| `/audit` | Brand audit - import an existing repo as an OSS Hearth |
 | `/profile` | Sign in with Farcaster |
 | `/try`, `/lol` | Host-specific landing pages for trysparkz.com and sparkz.lol |
 
@@ -386,24 +391,24 @@ Routes validate request data with Zod `safeParse`, wrap handlers in try/catch, l
 
 | Method | Route | Purpose |
 | --- | --- | --- |
-| `GET`  | `/api/directory` | Every Capsule with live counts + integration flags |
-| `GET/POST` | `/api/capsules` | List / create Capsules (GET hides pending self-serve sparks) |
+| `GET`  | `/api/directory` | Every Hearth with live counts + integration flags |
+| `GET/POST` | `/api/capsules` | List / create Hearths (GET hides pending self-serve sparks) |
 | `POST` | `/api/capsules/create-spark` | Public self-serve spark creation (rate-limited, held for review) |
 | `POST` | `/api/capsules/approve` | Operator: approve / reject a pending spark |
-| `POST` | `/api/capsules/import-repo` | Import a GitHub repo as an OSS Capsule |
+| `POST` | `/api/capsules/import-repo` | Import a GitHub repo as an OSS Hearth |
 | `POST` | `/api/capsules/import-empire` | Import an existing Empire Builder empire AS a Spark |
-| `POST` | `/api/capsules/link-empire` | Attach an Empire treasury to a Capsule |
+| `POST` | `/api/capsules/link-empire` | Attach an Empire treasury to a Hearth |
 | `POST` | `/api/capsules/link-farcaster` | Attach a Farcaster identity |
-| `GET/POST` | `/api/capsules/plugins` | Read / toggle a Capsule's plugins + per-Capsule config |
+| `GET/POST` | `/api/capsules/plugins` | Read / toggle a Hearth's plugins + per-Hearth config |
 | `GET/POST` | `/api/signals` | List operator-visible signals / flag a moment + generate 3 drafts |
 | `POST` | `/api/signals/detect` | Surface candidate moments from a signal source (e.g. Farcaster) for the operator to flag |
 | `POST` | `/api/signals/approve` | Approve a draft -> write a Meme Receipt |
 | `GET/POST`  | `/api/backers` | List backers / record operator-gated ledger backing |
-| `POST` | `/api/boost` | Back / boost a Capsule (email, no wallet) |
+| `POST` | `/api/boost` | Back / boost a Hearth (email, no wallet) |
 | `GET`  | `/api/receipts` | Meme Receipts timeline |
 | `GET`  | `/api/empire/{id}` | Full public Empire read bundle (resolve + leaderboards + entries + rewards + boosters) |
 | `POST` | `/api/empire/deploy` | Deploy a tokenless empire |
-| `POST` | `/api/audit` | Update the readiness audit for an OSS Capsule |
+| `POST` | `/api/audit` | Update the readiness audit for an OSS Hearth |
 | `POST` | `/api/waitlist` | Join the list |
 | `POST` | `/api/upload` | Upload a logo/asset to Storage |
 | `POST` | `/api/admin/login` | Exchange the operator token for an httpOnly cookie |
@@ -430,7 +435,7 @@ See [docs/STACK.md](docs/STACK.md) for the full file-by-file map.
 src/
   app/
     page.tsx            landing
-    c/[slug]/           Capsule page
+    c/[slug]/           Hearth page
     explore/            filterable directory
     start/              self-serve spark creation
     blog/               articles
@@ -440,14 +445,15 @@ src/
     _components/        Flame, Avatar, Header, Footer, ShareButton, BoostForm, ...
   lib/
     supabase/           server client (service role) + DB types
-    adapters/           the 3 seams + bootstrap registry
+    adapters/           the 4 seams (signal/backing/approval/connector) + bootstrap
+    plugins/            the spoke system (registry, built-ins) + community/ (vendor spokes)
     meme-engine/        3-draft generation (OpenRouter)
     empire/             tokenless-empire client (create2 message)
-    brand-audit/        GitHub repo -> OSS Capsule import
+    brand-audit/        GitHub repo -> OSS Hearth import
     rate-limit.ts, auth.ts, http.ts, validation/
 agent/                  the runnable Meme Engine agent (separate runtime)
 content/articles/       the blog source
-supabase/migrations/    0001 capsule foundation, 0002 waitlist
+supabase/migrations/    0001 foundation, 0002 waitlist, 0003 receipt-unique, 0004 spokes, 0005 Hearth rename
 docs/                   deep docs + assets
 ```
 
@@ -489,18 +495,18 @@ Every feature passes all four or it stays in the lab:
 
 1. Does it help someone earn, participate, or distribute?
 2. Can we measure whether it worked?
-3. Does it strengthen the Capsule's accumulating data?
+3. Does it strengthen the Hearth's accumulating data?
 4. Can it be tested with a real project within 30 days?
 
 ## Roadmap
 
-> **TL;DR** Ship a floor, keep innovating - the Capsule foundation and lean agent exist; Swarm, production agent ops, and dollar backing are next.
+> **TL;DR** Ship a floor, keep innovating - the Hearth foundation and lean agent exist; Swarm, production agent ops, and dollar backing are next.
 
 Two tracks: ship a floor, keep innovating.
 
-- **Milestone 1 (now)** - the Capsule foundation: schema, adapter seams, Meme Engine loop, Zoostr seed, the filterable directory.
+- **Milestone 1 (now)** - the Hearth foundation: schema, adapter seams, Meme Engine loop, Zoostr seed, the filterable directory.
 - **Next** - Community Swarm (supporters remix + get attributed), production deployment for the runnable agent, the ElizaOS upgrade path, and dollar backing.
-- **The convergence** - each audited ZAO project is a Capsule candidate; CoCConcertZ is slated to become a Spark.
+- **The convergence** - each audited ZAO project is a Hearth candidate; CoCConcertZ is slated to become a Spark.
 
 Full vision: [ARCHITECTURE.md](docs/ARCHITECTURE.md) and [V1-SCOPE.md](docs/V1-SCOPE.md).
 
@@ -527,7 +533,7 @@ Bring a take with a concrete path (see [Contributing](CONTRIBUTING.md)) and it g
 | --- | --- |
 | [ARCHITECTURE.md](docs/ARCHITECTURE.md) | The full two-track vision (the 9 upgrades, gates, moat) |
 | [V1-SCOPE.md](docs/V1-SCOPE.md) | The shippable floor + product gates |
-| [BUILD-MILESTONE-1.md](docs/BUILD-MILESTONE-1.md) | Milestone 1 scope (the Capsule foundation) |
+| [BUILD-MILESTONE-1.md](docs/BUILD-MILESTONE-1.md) | Milestone 1 scope (the Hearth foundation) |
 | [BRAND.md](docs/BRAND.md) | Brand + messaging (the spine, voice, visual direction) |
 | [MVP.md](docs/MVP.md) | Readiness + brand-test playbook |
 | [DEMO.md](docs/DEMO.md) | Live-stream demo script |
@@ -537,7 +543,7 @@ Bring a take with a concrete path (see [Contributing](CONTRIBUTING.md)) and it g
 | [STACK.md](docs/STACK.md) | File-by-file stack map |
 | [strategy/positioning.md](docs/strategy/positioning.md) | Why Sparkz is an OSS protocol + data network, not SaaS |
 | [strategy/graduation-timing.md](docs/strategy/graduation-timing.md) | When a Spark should become a coin - the token-timing readiness framework |
-| [research/sparkz-improvements-and-plugin-system.md](docs/research/sparkz-improvements-and-plugin-system.md) | The Capsule plugin system (elizaOS-modeled) + easy Farcaster/integration wins |
+| [research/sparkz-improvements-and-plugin-system.md](docs/research/sparkz-improvements-and-plugin-system.md) | The Hearth plugin system (elizaOS-modeled) + easy Farcaster/integration wins |
 | [research/empire-builder-api-integration.md](docs/research/empire-builder-api-integration.md) | Empire Builder endpoint audit + the Sparkz integration |
 
 ## Principles

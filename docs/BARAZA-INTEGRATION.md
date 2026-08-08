@@ -1,7 +1,7 @@
 # Baraza TV media-kit integration
 
 The partnership contract between **Sparkz** and **Baraza TV** (Aziz). Sparkz turns a
-Capsule's spark/recap into an AI-anchor video segment by calling Baraza TV's render
+Hearth's spark/recap into an AI-anchor video segment by calling Baraza TV's render
 API. This doc is the wire spec both sides build against.
 
 Status: **Sparkz side built, stub-first.** With no `BARAZA_API_URL` set, Sparkz runs
@@ -41,7 +41,7 @@ Request:
   "anchor": "amina",
   "brand": "Sparkz",
   "format": "vertical",
-  "sourceRef": "capsule:zoostr"
+  "sourceRef": "hearth:zoostr"
 }
 ```
 
@@ -74,10 +74,10 @@ curl -sX POST http://localhost:3000/api/capsules/media-kit \
   -d '{"script":"Zoostr just lit a spark on Sparkz.","anchor":"jabari","brand":"Zoostr"}'
 # -> { ok:true, data:{ mode:"stub", job:{ status:"ready", videoUrl:"https://stub.baraza.local/...", ... } } }
 
-# 2. render from a Capsule (derives the anchor read from name + bio)
+# 2. render from a Hearth (derives the anchor read from name + bio)
 curl -sX POST http://localhost:3000/api/capsules/media-kit \
   -H "x-sparkz-admin-token: $SPARKZ_ADMIN_TOKEN" \
-  -d '{"capsuleId":"<uuid>","anchor":"amina"}'
+  -d '{"hearthId":"<uuid>","anchor":"amina"}'
 
 # 3. poll a job
 curl -s "http://localhost:3000/api/capsules/media-kit?jobId=<jobId>" \
@@ -103,5 +103,5 @@ two `fetch` calls + field mapping in `baraza.ts`; the `SegmentJob` contract stay
 
 The pitch's other three tools drop in behind this same adapter when needed:
 `distribute(segment, platforms)`, `startLiveShow(config)` (OBS bridge),
-`transcribe(media)`. v1 wires only `renderSegment` - the one a Capsule needs to turn
+`transcribe(media)`. v1 wires only `renderSegment` - the one a Hearth needs to turn
 on its "stream" toggle.

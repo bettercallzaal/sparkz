@@ -6,8 +6,8 @@ tags: [clanker, tokens, base, graduation]
 author: Sparkz
 ---
 
-Sparkz is tokenless by default. A Capsule accumulates backing, receipts, and momentum
-long before anyone asks whether it should have a coin. But when a Capsule does earn
+Sparkz is tokenless by default. A Hearth accumulates backing, receipts, and momentum
+long before anyone asks whether it should have a coin. But when a Hearth does earn
 that moment - real community, real funds, real status - the graduation has to be
 clean: no migration, no fragmented liquidity, no starting over. That is exactly what
 Clanker is built for, which is why it is the token rail Sparkz graduates onto.
@@ -35,9 +35,9 @@ the full config in one shot: fee tiers, vault/lock, reward recipients, metadata.
 listing process, no manual liquidity dance.
 
 **Fees route into a split you already have.** Clanker lets you set reward recipients
-with fixed splits. A graduating Capsule already has an Empire treasury - a 0xSplits
+with fixed splits. A graduating Hearth already has an Empire treasury - a 0xSplits
 contract on Base - so the token's trading fees can flow straight into the same split
-that the tokenless Capsule was already using. Contributors, reserve, and creator keep
+that the tokenless Hearth was already using. Contributors, reserve, and creator keep
 their shares whether or not a token exists. That is what makes "the coin is optional"
 true in the plumbing, not just the pitch.
 
@@ -52,19 +52,19 @@ Clanker's default reward split favors the deployer, and with an interface partne
 the mix the split becomes creator / partner / protocol. That lines up with the Sparkz
 creator-first stance (our 1/1/98 default) rather than fighting it. Every trade then
 does double duty: it pays the creator and their contributors, and it writes more data
-into the Capsule - who bought, when, at what price. The token becomes another stream
+into the Hearth - who bought, when, at what price. The token becomes another stream
 into the moat, not a replacement for it.
 
 ## What this means for Sparkz today
 
 - The Empire (tokenless create2 + 0xSplits treasury) is the pre-token home. It exists
   from day one and nothing is on-chain until the first interaction.
-- The Clanker config seam is already in the Capsule's `economic_config`, ready for the
+- The Clanker config seam is already in the Hearth's `economic_config`, ready for the
   graduation call.
 - Ship on v4 now; adopt v5 (B20 default) when it clears audit.
 
 A token should be the thing a spark earns the right to launch - and when it does, it
-should be a single call that preserves everything the Capsule already built. Clanker
+should be a single call that preserves everything the Hearth already built. Clanker
 is the rail that makes that true.
 
 ---

@@ -2,7 +2,7 @@
 title: Start with a spark, not a token
 subtitle: Why the coin is the last thing you should build, not the first
 date: 2026-07-22
-tags: [thesis, capsules, creator-economy]
+tags: [thesis, hearths, creator-economy]
 author: Sparkz
 ---
 
@@ -19,9 +19,9 @@ day-one liquidity. If the energy is real, you can graduate to a token later. Som
 it immediately, some wait a month, some never - and that is fine. The token is an
 option, not the entry fee.
 
-## The Capsule, not the coin
+## The Hearth, not the coin
 
-The unit in Sparkz is a **Capsule**, not a coin. A Capsule accumulates the things
+The unit in Sparkz is a **Hearth**, not a coin. A Hearth accumulates the things
 that actually compound: identity, contributors, history, content, receipts,
 reputation, backing, and Meme Engine memory. The coin, if it ever comes, is an
 optional output of all that - never the thing you lead with.
@@ -29,7 +29,7 @@ optional output of all that - never the thing you lead with.
 This matters because it changes what the moat is. The moat is not the token contract
 (anyone can deploy one in sixty seconds). It is not image generation (a commodity).
 The moat is the **accumulating data**: who backed what and when, which cultural
-moments landed, what the community remixed, what earned. The longer a Capsule runs,
+moments landed, what the community remixed, what earned. The longer a Hearth runs,
 the smarter it gets and the harder it is to copy. A price pump with a dead community
 is not health. A small project with growing contributors and repeat backers is -
 even with no token at all.
@@ -38,7 +38,7 @@ even with no token at all.
 
 Sparkz runs one core loop, the Meme Engine:
 
-1. Flag a cultural moment that fits the Capsule.
+1. Flag a cultural moment that fits the Hearth.
 2. Draft three grounded responses on a cheap model tier.
 3. A human approves one.
 4. It publishes - cast to Farcaster first.
@@ -52,16 +52,16 @@ what creates value for your specific audience.
 
 ## Four entry points, one schema
 
-A Capsule is not just for a solo creator. The same schema supports four entry points
+A Hearth is not just for a solo creator. The same schema supports four entry points
 from day one, so growth is additive, not a rewrite:
 
 - **Creator** - an artist, musician, or builder (the first proof: Zoostr).
 - **Culture** - a scene or movement that backs its own.
 - **Open-source repo** - a repo plus its contributors, audit, and receipts.
-- **Meme Engine** - a lineage-native Capsule where the memes are the point.
+- **Meme Engine** - a lineage-native Hearth where the memes are the point.
 
 The type is a value in the row, not a fork in the codebase. That is deliberate: every
-audited project in an ecosystem becomes a Capsule candidate, and wrapping one is a
+audited project in an ecosystem becomes a Hearth candidate, and wrapping one is a
 migration of data, not a new product.
 
 ## The frame

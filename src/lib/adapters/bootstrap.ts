@@ -9,13 +9,14 @@
 // the seams' own id-dedupe make repeat calls a no-op.
 import { registerPlugin } from "@/lib/plugins/registry";
 import { BUILT_IN_PLUGINS } from "@/lib/plugins/built-in";
+import { COMMUNITY_SPOKES } from "@/lib/plugins/community";
 
 // No module-level guard on purpose: under the bundler's per-route module graphs the
 // registry can be a different instance than a shared boolean flag would assume, so a
 // guard could skip registering into THIS route's registry. registerPlugin is idempotent
 // (plugins keyed by id; seams dedupe by component id), so re-running is a cheap no-op.
 export function ensureBuiltinPlugins(): void {
-  for (const plugin of BUILT_IN_PLUGINS) {
+  for (const plugin of [...BUILT_IN_PLUGINS, ...COMMUNITY_SPOKES]) {
     registerPlugin(plugin);
   }
 }

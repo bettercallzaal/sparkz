@@ -9,14 +9,16 @@
 
 import { getServiceClient } from "@/lib/supabase/server";
 import { BUILT_IN_PLUGINS } from "./built-in";
+import { COMMUNITY_SPOKES } from "./community";
 import type { PluginMeta } from "./types";
 
-// Listing available plugins derives from BUILT_IN_PLUGINS directly - the authoritative
-// source - NOT the runtime registry Map. The Map is for component resolution
-// (getSignalSource etc) and can be a different instance per route bundle under the dev
-// bundler; the built-in list is a static import that is always populated.
+// Listing available plugins derives from the static plugin lists directly - the
+// authoritative source - NOT the runtime registry Map. The Map is for component
+// resolution (getSignalSource etc) and can be a different instance per route bundle
+// under the dev bundler; the static lists are always populated. Community spokes are
+// included so vendor-added integrations are toggleable per Hearth like any built-in.
 function builtinMeta(): PluginMeta[] {
-  return BUILT_IN_PLUGINS.map((p) => ({
+  return [...BUILT_IN_PLUGINS, ...COMMUNITY_SPOKES].map((p) => ({
     id: p.id,
     version: p.version,
     name: p.name,
@@ -25,6 +27,7 @@ function builtinMeta(): PluginMeta[] {
       signalSources: (p.signalSources ?? []).map((s) => s.id),
       backingProviders: (p.backingProviders ?? []).map((b) => b.id),
       approvalChannels: (p.approvalChannels ?? []).map((c) => c.id),
+      connectors: (p.connectors ?? []).map((c) => c.id),
     },
     configSchema: p.configSchema ?? {},
   }));

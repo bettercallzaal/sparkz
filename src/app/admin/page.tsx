@@ -83,8 +83,8 @@ function AdminInner() {
     if (!id) return;
     try {
       const [s, r] = await Promise.all([
-        apiGet<SignalWithDrafts[]>(`/api/signals?capsule_id=${id}`),
-        apiGet<MemeReceipt[]>(`/api/receipts?capsule_id=${id}`),
+        apiGet<SignalWithDrafts[]>(`/api/signals?hearth_id=${id}`),
+        apiGet<MemeReceipt[]>(`/api/receipts?hearth_id=${id}`),
       ]);
       setSignals(s);
       setReceipts(r);
@@ -128,7 +128,7 @@ function AdminInner() {
     setErr(null);
     try {
       await apiPost("/api/signals", {
-        capsule_id: hearthId,
+        hearth_id: hearthId,
         text: text.trim(),
         why_it_matched: why.trim() || undefined,
         flagged_by: flaggedBy.trim() || undefined,

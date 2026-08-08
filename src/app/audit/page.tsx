@@ -110,7 +110,7 @@ export default function AuditPage() {
     const cur = meta.audit_result?.gates?.[key] ?? "unknown";
     try {
       await api("/api/audit", {
-        capsule_id: c.id,
+        hearth_id: c.id,
         gates: { [key]: NEXT[cur] },
       });
       await load();

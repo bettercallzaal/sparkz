@@ -9,21 +9,21 @@ import { requireAdmin } from "@/lib/auth";
 import { canonicalOrigin } from "@/lib/origin";
 import type { Hearth, Signal, SignalDraft } from "@/lib/supabase/types";
 
-// GET /api/signals?capsule_id=... - signals for a hearth (with their drafts).
+// GET /api/signals?hearth_id=... - signals for a hearth (with their drafts).
 // Gated: drafts are internal (pre-publish) operator data.
 export async function GET(req: NextRequest) {
   try {
     const denied = requireAdmin(req);
     if (denied) return denied;
 
-    const hearthId = req.nextUrl.searchParams.get("capsule_id");
-    if (!hearthId) return badRequest("capsule_id is required");
+    const hearthId = req.nextUrl.searchParams.get("hearth_id");
+    if (!hearthId) return badRequest("hearth_id is required");
 
     const supabase = getServiceClient();
     const { data: signals, error } = await supabase
       .from("signals")
       .select("*")
-      .eq("capsule_id", hearthId)
+      .eq("hearth_id", hearthId)
       .order("created_at", { ascending: false });
     if (error) throw error;
 
@@ -64,9 +64,9 @@ export async function POST(req: NextRequest) {
     const supabase = getServiceClient();
 
     const { data: hearth, error: capErr } = await supabase
-      .from("capsules")
+      .from("hearths")
       .select("*")
-      .eq("id", input.capsule_id)
+      .eq("id", input.hearth_id)
       .maybeSingle();
     if (capErr) throw capErr;
     if (!hearth) return badRequest("hearth not found");
@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
     const { data: signalRow, error: sigErr } = await supabase
       .from("signals")
       .insert({
-        capsule_id: input.capsule_id,
+        hearth_id: input.hearth_id,
         source: input.source ?? "human",
         source_meta: input.source_meta ?? {},
         text: input.text,
@@ -95,7 +95,7 @@ export async function POST(req: NextRequest) {
       .insert(
         generated.map((g) => ({
           signal_id: signal.id,
-          capsule_id: signal.capsule_id,
+          hearth_id: signal.hearth_id,
           model: g.model,
           prompt_version: g.promptVersion,
           draft_text: g.text,
@@ -118,11 +118,11 @@ export async function POST(req: NextRequest) {
     const origin = canonicalOrigin();
     const routing = await routeApproval({
       signalId: signal.id,
-      hearthId: signal.capsule_id,
+      hearthId: signal.hearth_id,
       hearthName: (hearth as Hearth).name,
       signalText: signal.text,
       drafts: drafts.map((d) => ({ id: d.id, rank: d.rank, text: d.draft_text })),
-      approveUrl: `${origin}/admin?hearth=${signal.capsule_id}&signal=${signal.id}`,
+      approveUrl: `${origin}/admin?hearth=${signal.hearth_id}&signal=${signal.id}`,
     });
 
     return ok(

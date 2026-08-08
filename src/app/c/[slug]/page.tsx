@@ -27,7 +27,7 @@ export async function generateMetadata({
   try {
     const supabase = getServiceClient();
     const { data } = await supabase
-      .from("capsules")
+      .from("hearths")
       .select("name, bio")
       .eq("slug", slug)
       .maybeSingle();
@@ -79,7 +79,7 @@ interface HearthView {
 async function load(slug: string): Promise<HearthView | null> {
   const supabase = getServiceClient();
   const { data: hearth } = await supabase
-    .from("capsules")
+    .from("hearths")
     .select("*")
     .eq("slug", slug)
     .maybeSingle();
@@ -90,12 +90,12 @@ async function load(slug: string): Promise<HearthView | null> {
     supabase
       .from("meme_receipts")
       .select("*")
-      .eq("capsule_id", c.id)
+      .eq("hearth_id", c.id)
       .order("created_at", { ascending: false }),
     supabase
-      .from("capsule_backers")
+      .from("hearth_backers")
       .select("*")
-      .eq("capsule_id", c.id)
+      .eq("hearth_id", c.id)
       .order("created_at", { ascending: false }),
   ]);
 

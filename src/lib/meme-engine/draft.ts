@@ -19,7 +19,7 @@ export async function fetchDraftMemory(hearthId: string): Promise<DraftMemory> {
       supabase
         .from("signal_drafts")
         .select("draft_text")
-        .eq("capsule_id", hearthId)
+        .eq("hearth_id", hearthId)
         .eq("chosen", true)
         .neq("model", "fallback")
         .order("created_at", { ascending: false })
@@ -27,7 +27,7 @@ export async function fetchDraftMemory(hearthId: string): Promise<DraftMemory> {
       supabase
         .from("signal_drafts")
         .select("draft_text, reject_reason")
-        .eq("capsule_id", hearthId)
+        .eq("hearth_id", hearthId)
         .eq("chosen", false)
         .neq("model", "fallback")
         .not("reject_reason", "is", null)

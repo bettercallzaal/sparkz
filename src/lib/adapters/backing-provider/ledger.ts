@@ -13,7 +13,7 @@ import {
 function toRecord(row: HearthBacker): BackingRecord {
   return {
     id: row.id,
-    hearthId: row.capsule_id,
+    hearthId: row.hearth_id,
     provider: row.provider,
     providerRef: row.provider_ref,
     chain: row.chain,
@@ -29,9 +29,9 @@ export class LedgerProvider implements BackingProvider {
   async createBacking(input: CreateBackingInput): Promise<BackingRecord> {
     const supabase = getServiceClient();
     const { data, error } = await supabase
-      .from("capsule_backers")
+      .from("hearth_backers")
       .insert({
-        capsule_id: input.hearthId,
+        hearth_id: input.hearthId,
         backer_kind: input.backerKind,
         backer_id: input.backerId,
         kind: input.kind,
@@ -49,7 +49,7 @@ export class LedgerProvider implements BackingProvider {
     const row = data as HearthBacker;
     // provider_ref for the ledger IS the row id - backfill it so getBacking works.
     await supabase
-      .from("capsule_backers")
+      .from("hearth_backers")
       .update({ provider_ref: row.id })
       .eq("id", row.id);
 
@@ -59,7 +59,7 @@ export class LedgerProvider implements BackingProvider {
   async getBacking(ref: string): Promise<BackingRecord | null> {
     const supabase = getServiceClient();
     const { data, error } = await supabase
-      .from("capsule_backers")
+      .from("hearth_backers")
       .select("*")
       .eq("provider", this.id)
       .eq("provider_ref", ref)
@@ -71,9 +71,9 @@ export class LedgerProvider implements BackingProvider {
   async listBackings(hearthId: string): Promise<BackingRecord[]> {
     const supabase = getServiceClient();
     const { data, error } = await supabase
-      .from("capsule_backers")
+      .from("hearth_backers")
       .select("*")
-      .eq("capsule_id", hearthId)
+      .eq("hearth_id", hearthId)
       .eq("provider", this.id)
       .order("created_at", { ascending: false });
     if (error) throw error;

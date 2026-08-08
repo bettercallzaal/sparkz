@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
 
     const supabase = getServiceClient();
     const { data: hearth, error: capErr } = await supabase
-      .from("capsules").select("*").eq("id", parsed.data.capsule_id).maybeSingle();
+      .from("hearths").select("*").eq("id", parsed.data.hearth_id).maybeSingle();
     if (capErr) throw capErr;
     if (!hearth) return badRequest("hearth not found");
 
@@ -44,14 +44,14 @@ export async function POST(req: NextRequest) {
     const resolved = baseToken ? await resolveEmpire(baseToken) : null;
 
     const econ = (hearth as Hearth).economic_config ?? {};
-    const { data, error } = await supabase.from("capsules").update({
+    const { data, error } = await supabase.from("hearths").update({
       economic_config: {
         ...econ, empire: true, tokenization_rail: "empire",
         empire_id: baseToken,
         empire_address: resolved?.empireAddress ?? null,
         empire_mode: "custom", empire_owner: parsed.data.owner,
       },
-    }).eq("id", parsed.data.capsule_id).select("*").single();
+    }).eq("id", parsed.data.hearth_id).select("*").single();
     if (error) throw error;
 
     return ok({ empire_id: baseToken, empire_address: resolved?.empireAddress ?? null, hearth: data }, 201);

@@ -64,9 +64,9 @@ function isMissingTable(error: { code?: string; message?: string }): boolean {
 async function fetchOverrides(hearthId: string): Promise<HearthPluginRow[]> {
   const supabase = getServiceClient();
   const { data, error } = await supabase
-    .from("capsule_plugins")
+    .from("hearth_spokes")
     .select("plugin_id, enabled, config")
-    .eq("capsule_id", hearthId);
+    .eq("hearth_id", hearthId);
   if (error) {
     if (isMissingTable(error)) {
       console.warn(
@@ -110,15 +110,15 @@ export async function setHearthPlugin(
   patch: { enabled?: boolean; config?: Record<string, unknown> },
 ): Promise<void> {
   const supabase = getServiceClient();
-  const { error } = await supabase.from("capsule_plugins").upsert(
+  const { error } = await supabase.from("hearth_spokes").upsert(
     {
-      capsule_id: hearthId,
+      hearth_id: hearthId,
       plugin_id: pluginId,
       ...(patch.enabled !== undefined ? { enabled: patch.enabled } : {}),
       ...(patch.config !== undefined ? { config: patch.config } : {}),
       updated_at: new Date().toISOString(),
     },
-    { onConflict: "capsule_id,plugin_id" },
+    { onConflict: "hearth_id,plugin_id" },
   );
   if (error) throw error;
 }

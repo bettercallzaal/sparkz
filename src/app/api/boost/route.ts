@@ -30,25 +30,25 @@ export async function POST(req: NextRequest) {
 
     // Hearth must exist.
     const { data: hearth, error: capErr } = await supabase
-      .from("capsules")
+      .from("hearths")
       .select("id")
-      .eq("id", parsed.data.capsule_id)
+      .eq("id", parsed.data.hearth_id)
       .maybeSingle();
     if (capErr) throw capErr;
     if (!hearth) return badRequest("hearth not found");
 
     // Dedupe: one boost per backer per Hearth.
     const { data: existing } = await supabase
-      .from("capsule_backers")
+      .from("hearth_backers")
       .select("id")
-      .eq("capsule_id", parsed.data.capsule_id)
+      .eq("hearth_id", parsed.data.hearth_id)
       .eq("backer_id", backerId)
       .eq("kind", "boost")
       .maybeSingle();
     if (existing) return ok({ boosted: true, deduped: true }, 200);
 
-    const { error } = await supabase.from("capsule_backers").insert({
-      capsule_id: parsed.data.capsule_id,
+    const { error } = await supabase.from("hearth_backers").insert({
+      hearth_id: parsed.data.hearth_id,
       backer_kind: "user",
       backer_id: backerId,
       kind: "boost",

@@ -25,7 +25,7 @@ export async function importRepoAsHearth(
   const slug = slugify(info.name);
 
   const { data: existing } = await supabase
-    .from("capsules")
+    .from("hearths")
     .select("metadata")
     .eq("slug", slug)
     .maybeSingle();
@@ -45,7 +45,7 @@ export async function importRepoAsHearth(
   };
 
   const { data, error } = await supabase
-    .from("capsules")
+    .from("hearths")
     .upsert(
       {
         slug,

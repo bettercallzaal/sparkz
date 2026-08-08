@@ -120,7 +120,7 @@ export default function EmpirePage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          capsule_id: hearthId,
+          hearth_id: hearthId,
           name,
           owner,
           signature,

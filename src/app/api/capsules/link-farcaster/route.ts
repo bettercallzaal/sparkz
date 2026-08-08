@@ -19,9 +19,9 @@ export async function POST(req: NextRequest) {
 
     const supabase = getServiceClient();
     const { data: hearth, error: capErr } = await supabase
-      .from("capsules")
+      .from("hearths")
       .select("*")
-      .eq("id", parsed.data.capsule_id)
+      .eq("id", parsed.data.hearth_id)
       .maybeSingle();
     if (capErr) throw capErr;
     if (!hearth) return badRequest("hearth not found");
@@ -34,9 +34,9 @@ export async function POST(req: NextRequest) {
     };
 
     const { data, error } = await supabase
-      .from("capsules")
+      .from("hearths")
       .update({ metadata: { ...meta, farcaster } })
-      .eq("id", parsed.data.capsule_id)
+      .eq("id", parsed.data.hearth_id)
       .select("*")
       .single();
     if (error) throw error;

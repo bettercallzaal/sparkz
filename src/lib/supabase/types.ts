@@ -30,7 +30,7 @@ export interface Hearth {
 
 export interface HearthBacker {
   id: string;
-  capsule_id: string;
+  hearth_id: string;
   backer_kind: BackerKind;
   backer_id: string;
   kind: BackingKind;
@@ -46,7 +46,7 @@ export interface HearthBacker {
 
 export interface Signal {
   id: string;
-  capsule_id: string;
+  hearth_id: string;
   source: string;
   source_meta: Record<string, unknown>;
   text: string;
@@ -63,7 +63,7 @@ export interface Signal {
 export interface SignalDraft {
   id: string;
   signal_id: string;
-  capsule_id: string;
+  hearth_id: string;
   model: string | null;
   prompt_version: string | null;
   draft_text: string;
@@ -76,7 +76,7 @@ export interface SignalDraft {
 
 export interface MemeReceipt {
   id: string;
-  capsule_id: string;
+  hearth_id: string;
   signal_id: string | null;
   chosen_draft_id: string | null;
   why_it_matched: string | null;

@@ -8,7 +8,7 @@ export async function loadPublicHearths(): Promise<Hearth[]> {
   try {
     const supabase = getServiceClient();
     const { data, error } = await supabase
-      .from("capsules")
+      .from("hearths")
       .select("*")
       // Only unreviewed (operator-made) + approved sparks; strip PII defensively.
       .or(PUBLIC_REVIEW_FILTER)

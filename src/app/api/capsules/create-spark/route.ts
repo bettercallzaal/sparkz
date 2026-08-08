@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
         : undefined;
 
     const { data: hearth, error } = await supabase
-      .from("capsules")
+      .from("hearths")
       .insert({
         slug,
         type: input.type,
@@ -116,7 +116,7 @@ async function uniqueSlug(
   for (let n = 0; n < 50; n++) {
     const candidate = n === 0 ? base : `${base}-${n + 1}`;
     const { data } = await supabase
-      .from("capsules")
+      .from("hearths")
       .select("id")
       .eq("slug", candidate)
       .maybeSingle();

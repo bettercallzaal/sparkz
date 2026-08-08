@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
 
     const supabase = getServiceClient();
     const { data, error } = await supabase
-      .from("capsules")
+      .from("hearths")
       .select("id, slug, name, type, status, bio, metadata, owner_fid, created_at")
       .eq("owner_fid", fid)
       .order("created_at", { ascending: false });

@@ -13,6 +13,7 @@
 import type { SignalSource } from "@/lib/adapters/signal-source";
 import type { BackingProvider } from "@/lib/adapters/backing-provider";
 import type { ApprovalChannel } from "@/lib/adapters/approval-channel";
+import type { Connector } from "@/lib/adapters/connector";
 
 // One declared config key for a plugin (mirrors elizaOS pluginParameters). `secret`
 // marks server-only values (API keys) that must never reach the browser.
@@ -22,20 +23,33 @@ export interface PluginConfigField {
   description: string;
 }
 
+// A HearthPlugin (a "spoke") bundles one or more adapter components behind a single id.
+// A vendor adds their tool as a Connector spoke - no bespoke seam needed. Modeled on
+// elizaOS's Plugin (id + bundled components + optional lifecycle + declared config).
 export interface HearthPlugin {
-  /** Stable unique id, e.g. "signal-human", "backing-ledger", "approval-discord". */
+  /** Stable unique id, e.g. "signal-human", "backing-ledger", "connector-audius". */
   readonly id: string;
   readonly version: string;
   readonly name: string;
   readonly description?: string;
 
-  /** Component arrays - a plugin provides any subset of the existing seams. */
+  /** Component arrays - a plugin provides any subset of the four seams. */
   readonly signalSources?: SignalSource[];
   readonly backingProviders?: BackingProvider[];
   readonly approvalChannels?: ApprovalChannel[];
+  /** The generic spoke: any vendor tool wired to the Hearth. */
+  readonly connectors?: Connector[];
 
-  /** Config keys this plugin reads (declared, not the values). */
+  /** Config keys this plugin reads (declared, not the values). Secrets stay server-only. */
   readonly configSchema?: Record<string, PluginConfigField>;
+
+  /**
+   * Optional lifecycle (elizaOS Plugin.init/dispose). `init` runs once when the spoke is
+   * enabled for a Hearth - validate config, test the external API. `dispose` cleans up on
+   * disable. Both optional; a spoke that just declares components needs neither.
+   */
+  init?(config: Record<string, unknown>, hearthId: string): Promise<void> | void;
+  dispose?(hearthId: string): Promise<void> | void;
 }
 
 // Public metadata for listing available plugins (no component internals). This is what
@@ -49,6 +63,7 @@ export interface PluginMeta {
     signalSources: string[];
     backingProviders: string[];
     approvalChannels: string[];
+    connectors: string[];
   };
   configSchema: Record<string, PluginConfigField>;
 }

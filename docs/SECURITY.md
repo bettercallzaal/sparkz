@@ -14,11 +14,11 @@ the DB + data-access checklist every change is held to. Status is for Milestone 
 | 7 | `.env.local` gitignored; public repo ships only `.env.example` stubs; secret scan before PR | DONE | `.gitignore` covers `.env*`; `.env.local` untracked; secret scan over tracked files is clean. Service_role set via a hidden terminal prompt, never through chat. |
 | 8 | Run Supabase Advisors after migration; fix findings | DONE | `get_advisors(security)` re-run post-changes: only the intended INFO notices, no ERROR/WARN. `updated_at` function `search_path` pinned. |
 | 9 | No secrets / PII in `jsonb` (`metadata`, `economic_config`) - they're queryable | DONE | Seed + code store only non-sensitive config (economics model, rail, flags). Enforced by convention + review. |
-| 10 | One route = one specific validated operation; no generic "run any query" endpoint | DONE | Each route is a single typed op (create capsule, flag signal, approve, back, read receipts). No passthrough SQL endpoint. |
+| 10 | One route = one specific validated operation; no generic "run any query" endpoint | DONE | Each route is a single typed op (create hearth, flag signal, approve, back, read receipts). No passthrough SQL endpoint. |
 
 ## Follow-ups (before multi-tenant / public write access)
 
 - Real user auth (Farcaster SIWF / wallet) so writes are owner-scoped per creator
   (item 4), replacing the single operator token.
-- Narrow public-read RLS SELECT policies when a public client reads capsules /
+- Narrow public-read RLS SELECT policies when a public client reads hearths /
   receipts directly (today public reads go through server routes, not a client).

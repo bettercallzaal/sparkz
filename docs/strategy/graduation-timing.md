@@ -19,7 +19,7 @@ tier: DEEP
 Both failure modes are real: **a coin dropped with no foundation dumps to zero; a coin
 dropped too late moons and crashes to a microcap.** The right time is not a date - it is
 a *readiness state*, and Sparkz is what measures it. This is not a token launcher bolted
-onto a creator tool. **Sparkz's accumulating Capsule data (identity -> receipts -> backers
+onto a creator tool. **Sparkz's accumulating Hearth data (identity -> receipts -> backers
 -> momentum) IS the graduation signal, and its Meme Engine + leaderboard ARE the
 post-launch support engine** that Clanker, Kickstarter, and a bare token launch cannot give you.
 
@@ -55,24 +55,24 @@ Three creator blockers, three Sparkz answers:
 
 The lesson: **a token launch is a phase transition, not an event.** Too-early has no economy to attach to; too-late lets the attention go cold before the launch can convert it.
 
-## The readiness framework - 6 gates, mapped to what a Capsule already accumulates
+## The readiness framework - 6 gates, mapped to what a Hearth already accumulates
 
 These are the research's six pre-launch gates, and the second column is the Sparkz insight:
-**each gate is something a Capsule measurably accumulates, so Sparkz can score graduation
+**each gate is something a Hearth measurably accumulates, so Sparkz can score graduation
 readiness from real data instead of vibes.**
 
 | Gate | The bar (research) | What Sparkz already tracks = the signal |
 |------|--------------------|------------------------------------------|
-| 1. Product/traction | working MVP; 100-500 DAU (creator) | Capsule identity + `meme_receipts` (proof moments landed) |
-| 2. Community | 500-1K community, 20%+ weekly active; 10-20 advocates | `capsule_backers` + boosts + the Empire leaderboard (advocates, ranked) |
+| 1. Product/traction | working MVP; 100-500 DAU (creator) | Hearth identity + `meme_receipts` (proof moments landed) |
+| 2. Community | 500-1K community, 20%+ weekly active; 10-20 advocates | `hearth_backers` + boosts + the Empire leaderboard (advocates, ranked) |
 | 3. Tokenomics clarity | published allocation + vesting | `economic_config` + 0xSplits/Empire treasury already modeled |
 | 4. Runway | 6+ mo runway; token is NOT the funding round | backing ledger (off-chain support before any coin) |
-| 5. Narrative/brand | clear positioning; a single narrative hub | the Meme Engine's draft history = the Capsule's proven voice |
+| 5. Narrative/brand | clear positioning; a single narrative hub | the Meme Engine's draft history = the Hearth's proven voice |
 | 6. Liquidity/launch mechanics | DEX + fair-launch, no steep private rounds | the Clanker/Empire graduation rail |
 
-**The product move:** a "graduation readiness meter" on a Capsule - green when the data
+**The product move:** a "graduation readiness meter" on a Hearth - green when the data
 clears the gates, amber/red when it doesn't. Sparkz tells a creator *you're ready* (or
-*not yet, here's the gap*) from their own accumulated Capsule, which nobody else can do.
+*not yet, here's the gap*) from their own accumulated Hearth, which nobody else can do.
 
 ## The "support immediately" playbook - and why it's native to Sparkz
 
@@ -94,7 +94,7 @@ converts a live crowd - and the same engine carries the first 90 days.
 ## Creator token vs project token (zaal's distinction is correct)
 
 - **Creator token:** output IS the product. Lighter bar - ~12 months of consistent output +
-  1-3K engaged audience. Support is mostly founder energy. This is Sparkz's lane; a Capsule
+  1-3K engaged audience. Support is mostly founder energy. This is Sparkz's lane; a Hearth
   is the output + audience machine that gets a creator there.
 - **Project/protocol token:** heavier bar - PMF, 1K+ DAU, 3-5 yr build. Support is
   capital-intensive. **Sparkz itself is a project token candidate - and the answer is NOT YET**
@@ -119,9 +119,9 @@ Do NOT copy: local-first desktop, cold-email emphasis, investor/equity language.
 
 ## The recommendation
 
-1. **Sparkz's own protocol token: NOT YET.** Prove the loop on real Capsules (Zoostr, then
-   COC Concertz) first. Token is infrastructure, not the story - the *Capsule* is the story.
-2. **Build the graduation readiness meter** on a Capsule (score the 6 gates from live data).
+1. **Sparkz's own protocol token: NOT YET.** Prove the loop on real Hearths (Zoostr, then
+   COC Concertz) first. Token is infrastructure, not the story - the *Hearth* is the story.
+2. **Build the graduation readiness meter** on a Hearth (score the 6 gates from live data).
 3. **Build the backer-outreach pipeline** (outreachr-pattern, opt-in, human-approved) so a
    creator can recruit the initial backers who promote.
 4. **Position the Meme Engine + leaderboard explicitly as the post-launch support engine** -
@@ -131,10 +131,10 @@ Do NOT copy: local-first desktop, cold-email emphasis, investor/equity language.
 
 | Action | Owner | Type | By When |
 |--------|-------|------|---------|
-| Ship a "graduation readiness" score on the Capsule page (6 gates from live data), PR merged | @Zaal | PR | 2026-08-24 |
+| Ship a "graduation readiness" score on the Hearth page (6 gates from live data), PR merged | @Zaal | PR | 2026-08-24 |
 | Add provenance fields (source + observed_at) to backer/receipt records, PR merged | @Zaal | PR | 2026-08-31 |
 | Spec the backer-outreach pipeline (opt-in, human-approved, anti-spam) as a doc | @Zaal | Doc | 2026-08-17 |
-| Hold Sparkz's own protocol-token launch until 3+ Capsules show real value | @Zaal | Decision | wontfix (revisit 2027) |
+| Hold Sparkz's own protocol-token launch until 3+ Hearths show real value | @Zaal | Decision | wontfix (revisit 2027) |
 
 ## Sources
 - Farcaster thread (accountless.eth / ruburi / zaal), 2026-08-02 [FULL - primary source, screenshots]

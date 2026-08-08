@@ -1,8 +1,8 @@
-# Sparkz - local setup (Milestone 1: the Capsule foundation)
+# Sparkz - local setup (Milestone 1: the Hearth foundation)
 
 Next.js (App Router) + Supabase + Tailwind + TypeScript. The moat is the data:
-Capsules + Meme Receipts. This milestone ships the Capsule schema, the three
-adapter seams, the flag -> 3-drafts -> approve loop, and the Zoostr Capsule.
+Hearths + Meme Receipts. This milestone ships the Hearth schema, the three
+adapter seams, the flag -> 3-drafts -> approve loop, and the Zoostr Hearth.
 
 ## 1. Install
 
@@ -53,14 +53,14 @@ npm run seed:zoostr
 npm run dev
 ```
 
-- `/` - Capsule list.
-- `/admin` - the Meme Engine loop: flag a moment -> 3 Capsule-grounded drafts ->
-  approve one -> a Meme Receipt is written. Deep-linkable: `/admin?capsule=<id>`.
+- `/` - Hearth list.
+- `/admin` - the Meme Engine loop: flag a moment -> 3 Hearth-grounded drafts ->
+  approve one -> a Meme Receipt is written. Deep-linkable: `/admin?hearth=<id>`.
 
 ## The three adapter seams (why this doesn't need a rebuild later)
 
 - **SignalSource** (`src/lib/adapters/signal-source`) - trend source. m1: `human`.
-  Later: farcaster, alpha_radar - same `detectSignals(capsuleId)` contract.
+  Later: farcaster, alpha_radar - same `detectSignals(hearthId)` contract.
 - **BackingProvider** (`src/lib/adapters/backing-provider`) - where value settles.
   m1: `ledger` (off-chain). Later: eliza, bankr (on-chain), clanker / empire
   (tokenization) - same table, unified moat.

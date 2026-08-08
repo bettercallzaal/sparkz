@@ -39,7 +39,7 @@ Once DNS propagates, middleware serves the right page per host automatically.
 
 ## Note on the production branch
 
-The app lives on `ws/capsule-foundation` (PR #127). `npx vercel --prod` deploys the
+The app lives on `ws/hearth-foundation` (PR #127). `npx vercel --prod` deploys the
 current working tree to production regardless of git branch, so we can go live now
 and merge the PR after. Once merged to `main`, Vercel's Git integration will
 auto-deploy `main` on every push.

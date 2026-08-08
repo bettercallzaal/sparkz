@@ -5,11 +5,11 @@ three design docs before writing code.
 
 ## What Sparkz is
 
-Every Sparkz project is a **Capsule**, not a coin. The Capsule accumulates identity,
+Every Sparkz project is a **Hearth**, not a coin. The Hearth accumulates identity,
 contributors, history, content, receipts, reputation, backing, economic config, and
 Meme Engine memory. The coin is an *optional output*. The moat is the accumulating
 data - NOT the token contract, NOT image generation. V1 proves ONE loop with Zoostr
-(a Creator Capsule); the schema supports all four entry points (Creator / Culture /
+(a Creator Hearth); the schema supports all four entry points (Creator / Culture /
 Open-Source repo / Meme Engine) so v1.5 is additive.
 
 ## Positioning (non-negotiable framing)
@@ -26,13 +26,13 @@ public repo.)
 
 ## Read these before coding (in order)
 
-1. `docs/BUILD-MILESTONE-1.md` - the current scope (the Capsule foundation).
+1. `docs/BUILD-MILESTONE-1.md` - the current scope (the Hearth foundation).
 2. `docs/V1-SCOPE.md` - the shippable floor + product gates.
 3. `docs/ARCHITECTURE.md` - the full vision (the 9 upgrades).
 
 ## Operating mode (right now)
 
-Milestone 1. **Brainstorm the Capsule + Meme Receipts schema with Zaal first** (one
+Milestone 1. **Brainstorm the Hearth + Meme Receipts schema with Zaal first** (one
 round of questions, then confirm) BEFORE writing code. Plan, then build.
 
 ## Stack + conventions
@@ -58,13 +58,13 @@ round of questions, then confirm) BEFORE writing code. Plan, then build.
 
 1. Does it help someone earn, participate, or distribute?
 2. Can we measure whether it worked?
-3. Does it strengthen the Capsule's proprietary data?
+3. Does it strengthen the Hearth's proprietary data?
 4. Can it be tested with a real project within 30 days?
 
 ## The convergence
 
-Each audited ZAO project is a **Capsule candidate** - the audit is the
-Spark-readiness pass. The OSS-repo Capsule type should be able to wrap an existing
+Each audited ZAO project is a **Hearth candidate** - the audit is the
+Spark-readiness pass. The OSS-repo Hearth type should be able to wrap an existing
 repo (repo + contributors + audit result + receipts). CoCConcertZ is slated to
 become a Spark. Build the schema with that in mind.
 

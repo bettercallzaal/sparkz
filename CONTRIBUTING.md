@@ -8,9 +8,9 @@ want to contribute here, welcome.
 You do not need to write code to make Sparkz better. Some of the most useful help has
 nothing to do with the codebase:
 
-- **Creators and artists** - open a Capsule, use it, and tell us what is missing or
+- **Creators and artists** - open a Hearth, use it, and tell us what is missing or
   confusing. File a [feedback issue](https://github.com/bettercallzaal/sparkz/issues/new?template=feedback.yml).
-  Design a flame sticker, a Capsule icon, or a Meme Receipt look.
+  Design a flame sticker, a Hearth icon, or a Meme Receipt look.
 - **Community** - welcome new people and answer questions in
   [Discussions](https://github.com/bettercallzaal/sparkz/discussions). Suggest a
   real project that should become a Spark.
@@ -37,7 +37,7 @@ exempt):
 
 1. Does it help someone earn, participate, or distribute?
 2. Can we measure whether it worked?
-3. Does it strengthen the Capsule's proprietary data?
+3. Does it strengthen the Hearth's proprietary data?
 4. Can it be tested with a real project within 30 days?
 
 ## Working here
@@ -52,6 +52,22 @@ exempt):
   Service role is server-only. Never commit `.env`.
 - **LLM work:** any drafting/generation uses a cheap tier (OpenRouter), never a
   metered path.
+
+## Add a spoke (connect your tool)
+
+Sparkz is a wheel-and-spokes system: each project's **Hearth** is the hub, and every tool
+you connect is a **spoke**. You can add your tool as a spoke without any bespoke Sparkz
+change - a small folder plus one PR.
+
+1. Create `src/lib/plugins/community/<your-tool>/` with a `spoke.json` manifest and an
+   `index.ts` that exports a `HearthPlugin` whose component is a `Connector`.
+2. Add one line to `src/lib/plugins/community/index.ts`.
+3. Open a PR. CI runs `tsc` + `eslint` + `build`; a maintainer spot-checks the safety
+   rules; merge. Any community then toggles your spoke on per-Hearth.
+
+Copy the working `audius-catalog` example. Full guide + the safety rules (secrets stay
+server-only, no DB access, fail soft, declare permissions, pin `minSparkzVersion`):
+[`src/lib/plugins/community/README.md`](src/lib/plugins/community/README.md).
 
 ## Before you open a PR
 

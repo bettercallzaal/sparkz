@@ -7,14 +7,14 @@ The living map of what Sparkz is made of and how the pieces fit. Keep current.
 | Layer | What | Where |
 |-------|------|-------|
 | App / deploy | Next.js 16 (App Router), TypeScript, Tailwind. Vercel, host-routed. | `trysparkz.com` -> `/try`, `sparkz.lol` -> `/lol`, else `/`. `src/middleware.ts` |
-| Data | Supabase: Postgres + RLS (every table) + Storage | tables: `capsules`, `capsule_backers`, `signals`, `signal_drafts`, `meme_receipts`, `waitlist`; bucket `empire-logos`. `src/lib/supabase/` |
+| Data | Supabase: Postgres + RLS (every table) + Storage | tables: `hearths`, `hearth_backers`, `signals`, `signal_drafts`, `meme_receipts`, `waitlist`; bucket `empire-logos`. `src/lib/supabase/` |
 | Auth (now) | Shared operator token (`SPARKZ_ADMIN_TOKEN`), fails closed | `src/lib/auth.ts`. Replaced later by Farcaster SIWF + Privy (see spec) |
 | Wallet | Reown AppKit + wagmi + viem - mobile connect + signing | scoped to `/admin/empire` via `src/app/admin/empire/{layout,providers}.tsx`, `src/lib/wallet/config.ts` |
 | On-chain rails | Empire Builder (tokenless empire = create2 + 0xSplits treasury on Base); Clanker (token graduation later) | `src/lib/empire/client.ts`, `src/app/api/empire/deploy` |
 | Value / backing | LedgerProvider (off-chain, live) + Boost engine (free support signal) | `src/lib/adapters/backing-provider/`, `src/app/api/boost` |
 | Meme Engine | flag signal -> 3 drafts (OpenRouter cheap tier) -> approve -> Meme Receipt | `src/lib/meme-engine/`, `src/app/api/signals` |
 | Distribution | Share-to-Farcaster (Warpcast compose) + X + copy; Neynar key present (FEF) | `src/app/_components/ShareButton.tsx` |
-| Brand audit | Import a ZAO repo as an `oss` Capsule (repo + contributors + gates) | `src/lib/brand-audit/`, `/audit` |
+| Brand audit | Import a ZAO repo as an `oss` Hearth (repo + contributors + gates) | `src/lib/brand-audit/`, `/audit` |
 
 ## The three adapter seams (swappable, no migration to add one)
 
@@ -24,7 +24,7 @@ The living map of what Sparkz is made of and how the pieces fit. Keep current.
 
 ## The core flow
 
-Capsule (Supabase) -> optionally deploy a **tokenless empire** (Empire Builder, signed with a wallet **through Reown**) -> **back / boost** it (ledger now, on-chain later) -> **Meme Engine** drafts + **receipts** (the data moat) -> **share to Farcaster** -> traffic.
+Hearth (Supabase) -> optionally deploy a **tokenless empire** (Empire Builder, signed with a wallet **through Reown**) -> **back / boost** it (ledger now, on-chain later) -> **Meme Engine** drafts + **receipts** (the data moat) -> **share to Farcaster** -> traffic.
 
 ## Why Reown (wallet connect)
 

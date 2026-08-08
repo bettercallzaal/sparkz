@@ -1,7 +1,7 @@
 import { getServiceClient } from "@/lib/supabase/server";
 import { fetchRepo } from "./github";
-import { emptyAudit, type AuditResult, type OssCapsuleMetadata } from "./types";
-import type { Capsule } from "@/lib/supabase/types";
+import { emptyAudit, type AuditResult, type OssHearthMetadata } from "./types";
+import type { Hearth } from "@/lib/supabase/types";
 
 function slugify(name: string): string {
   return (
@@ -13,13 +13,13 @@ function slugify(name: string): string {
   );
 }
 
-// Import (or re-scan) a GitHub repo as an `oss` Capsule candidate. Refreshes repo
+// Import (or re-scan) a GitHub repo as an `oss` Hearth candidate. Refreshes repo
 // facts + contributors; PRESERVES any existing audit verdicts so a re-scan never
 // wipes human gate decisions.
-export async function importRepoAsCapsule(
+export async function importRepoAsHearth(
   owner: string,
   repo: string,
-): Promise<Capsule> {
+): Promise<Hearth> {
   const info = await fetchRepo(owner, repo);
   const supabase = getServiceClient();
   const slug = slugify(info.name);
@@ -30,10 +30,10 @@ export async function importRepoAsCapsule(
     .eq("slug", slug)
     .maybeSingle();
 
-  const priorAudit = (existing?.metadata as OssCapsuleMetadata | undefined)
+  const priorAudit = (existing?.metadata as OssHearthMetadata | undefined)
     ?.audit_result as AuditResult | undefined;
 
-  const metadata: OssCapsuleMetadata = {
+  const metadata: OssHearthMetadata = {
     entry_point: "oss",
     repo_url: info.url,
     repo_owner: info.owner,
@@ -60,5 +60,5 @@ export async function importRepoAsCapsule(
     .select("*")
     .single();
   if (error) throw error;
-  return data as Capsule;
+  return data as Hearth;
 }

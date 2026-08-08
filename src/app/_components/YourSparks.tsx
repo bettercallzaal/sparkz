@@ -12,7 +12,7 @@ interface Row {
   review: string | null;
 }
 
-// Lists the Capsules a signed-in Farcaster user has created (by fid). Shown in the
+// Lists the Hearths a signed-in Farcaster user has created (by fid). Shown in the
 // creator hub on /profile so they can jump back to anything they've sparked.
 export default function YourSparks({ fid }: { fid: number }) {
   const [rows, setRows] = useState<Row[] | null>(null);
@@ -50,7 +50,7 @@ export default function YourSparks({ fid }: { fid: number }) {
           <span className="min-w-0 flex-1">
             <span className="block truncate text-sm font-medium">Zoostr</span>
             <span className="block truncate text-[11px] text-muted">
-              an example Creator Capsule
+              an example Creator Hearth
             </span>
           </span>
           <span className="shrink-0 text-[10px] uppercase tracking-wide text-muted">

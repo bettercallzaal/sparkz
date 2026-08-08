@@ -9,7 +9,7 @@ import {
   SELF_SERVE_WINDOW_MS,
 } from "@/lib/rate-limit";
 import { isAdmin } from "@/lib/auth";
-import type { Capsule } from "@/lib/supabase/types";
+import type { Hearth } from "@/lib/supabase/types";
 
 // POST /api/capsules/create-spark - PUBLIC, self-serve spark creation for /start.
 // Deliberately narrow and constrained: a visitor may only set name/bio/type/email.
@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
           }
         : undefined;
 
-    const { data: capsule, error } = await supabase
+    const { data: hearth, error } = await supabase
       .from("capsules")
       .insert({
         slug,
@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
         status: "spark",
         owner_fid: input.owner_fid ?? null,
         // Operator-made sparks are approved on the spot; public self-serve sparks are
-        // held for review (see loadPublicCapsules, /api/directory, /api/capsules GET).
+        // held for review (see loadPublicHearths, /api/directory, /api/capsules GET).
         metadata: {
           self_serve: !admin,
           owner_email: input.email ?? null,
@@ -87,11 +87,11 @@ export async function POST(req: NextRequest) {
       .select("id, slug")
       .single();
     if (error) throw error;
-    const created = capsule as Pick<Capsule, "id" | "slug">;
+    const created = hearth as Pick<Hearth, "id" | "slug">;
 
     // A fresh spark starts with real, honest counts: 0 backers, 0 boosts, 0 receipts.
     // We do NOT seed a self-boost from the owner - that reads as "a supporter backed
-    // this" on the Capsule and in the activity feed when nobody actually has. The
+    // this" on the Hearth and in the activity feed when nobody actually has. The
     // empty state ("No backers yet. Be the first") carries the moment instead.
 
     return ok({ slug: created.slug }, 201);

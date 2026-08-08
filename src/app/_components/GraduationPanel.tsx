@@ -1,4 +1,4 @@
-// Graduation transparency panel - shown on a spark (no-token) Capsule. Implements the
+// Graduation transparency panel - shown on a spark (no-token) Hearth. Implements the
 // #1 note from the Nounish Prof brainstorm: be radically transparent about what a
 // creator pays and what they get, up front, so they decide. No hype, no pressure -
 // "only if it fits", with the real numbers and the DWR test in plain sight.

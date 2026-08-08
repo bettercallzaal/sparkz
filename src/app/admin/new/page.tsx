@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import type { Capsule, CapsuleType } from "@/lib/supabase/types";
+import type { Hearth, HearthType } from "@/lib/supabase/types";
 
 class ApiError extends Error {
   status: number;
@@ -30,25 +30,25 @@ function slugify(s: string): string {
     .slice(0, 64);
 }
 
-const TYPES: { value: CapsuleType; label: string }[] = [
+const TYPES: { value: HearthType; label: string }[] = [
   { value: "creator", label: "Creator" },
   { value: "culture", label: "Culture" },
   { value: "oss", label: "Open source" },
   { value: "meme", label: "Meme" },
 ];
 
-export default function NewCapsule() {
+export default function NewHearth() {
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
   const [slugTouched, setSlugTouched] = useState(false);
-  const [type, setType] = useState<CapsuleType>("creator");
+  const [type, setType] = useState<HearthType>("creator");
   const [bio, setBio] = useState("");
   const [empire, setEmpire] = useState(true);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [needsAuth, setNeedsAuth] = useState(false);
   const [token, setToken] = useState("");
-  const [created, setCreated] = useState<Capsule | null>(null);
+  const [created, setCreated] = useState<Hearth | null>(null);
 
   const effectiveSlug = slugTouched ? slug : slugify(name);
 
@@ -71,7 +71,7 @@ export default function NewCapsule() {
     setBusy(true);
     setErr(null);
     try {
-      const capsule = await apiPost<Capsule>("/api/capsules", {
+      const hearth = await apiPost<Hearth>("/api/capsules", {
         slug: effectiveSlug,
         type,
         name: name.trim(),
@@ -84,7 +84,7 @@ export default function NewCapsule() {
           tokenization_rail: empire ? "empire" : null,
         },
       });
-      setCreated(capsule);
+      setCreated(hearth);
       setName("");
       setSlug("");
       setSlugTouched(false);
@@ -106,7 +106,7 @@ export default function NewCapsule() {
         <Link href="/admin" className="text-sm text-muted hover:text-foreground">
           &larr; Meme Engine
         </Link>
-        <span className="text-sm font-medium">New Capsule</span>
+        <span className="text-sm font-medium">New Hearth</span>
       </div>
 
       {err && (
@@ -147,7 +147,7 @@ export default function NewCapsule() {
               href={`/c/${created.slug}`}
               className="rounded-md bg-accent px-3 py-1.5 font-medium text-white"
             >
-              View Capsule
+              View Hearth
             </Link>
             <button
               onClick={() => setCreated(null)}
@@ -192,7 +192,7 @@ export default function NewCapsule() {
             </label>
             <select
               value={type}
-              onChange={(e) => setType(e.target.value as CapsuleType)}
+              onChange={(e) => setType(e.target.value as HearthType)}
               className="w-full rounded-md border border-border bg-card px-3 py-2 text-sm"
             >
               {TYPES.map((t) => (
@@ -211,7 +211,7 @@ export default function NewCapsule() {
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               rows={2}
-              placeholder="One line on what this Capsule is."
+              placeholder="One line on what this Hearth is."
               className="w-full rounded-md border border-border bg-card px-3 py-2 text-sm"
             />
           </div>
@@ -231,7 +231,7 @@ export default function NewCapsule() {
             disabled={busy || !name.trim() || !effectiveSlug}
             className="w-full rounded-md bg-accent px-3 py-2.5 text-sm font-semibold text-white disabled:opacity-40"
           >
-            {busy ? "Creating..." : "Create Capsule"}
+            {busy ? "Creating..." : "Create Hearth"}
           </button>
         </section>
       )}

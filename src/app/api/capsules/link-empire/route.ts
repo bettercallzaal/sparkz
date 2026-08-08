@@ -4,10 +4,10 @@ import { linkEmpireSchema } from "@/lib/validation/schemas";
 import { ok, badRequest, serverError, zodError } from "@/lib/http";
 import { requireAdmin } from "@/lib/auth";
 import { resolveEmpire } from "@/lib/empire/client";
-import type { Capsule } from "@/lib/supabase/types";
+import type { Hearth } from "@/lib/supabase/types";
 
 // POST /api/capsules/link-empire - attach an existing Empire Builder tokenless
-// empire to a Capsule. Resolves the Empire ID to its SmartVault treasury and
+// empire to a Hearth. Resolves the Empire ID to its SmartVault treasury and
 // records it in economic_config. Admin-gated.
 export async function POST(req: NextRequest) {
   try {
@@ -22,15 +22,15 @@ export async function POST(req: NextRequest) {
     if (!resolved) return badRequest("empire not found on Empire Builder");
 
     const supabase = getServiceClient();
-    const { data: capsule, error: capErr } = await supabase
+    const { data: hearth, error: capErr } = await supabase
       .from("capsules")
       .select("*")
       .eq("id", parsed.data.capsule_id)
       .maybeSingle();
     if (capErr) throw capErr;
-    if (!capsule) return badRequest("capsule not found");
+    if (!hearth) return badRequest("hearth not found");
 
-    const econ = (capsule as Capsule).economic_config ?? {};
+    const econ = (hearth as Hearth).economic_config ?? {};
     const { data, error } = await supabase
       .from("capsules")
       .update({
@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
     if (error) throw error;
 
     return ok({
-      capsule: data as Capsule,
+      hearth: data as Hearth,
       empire: {
         empire_id: resolved.empireId,
         empire_address: resolved.empireAddress,
@@ -57,6 +57,6 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (err) {
-    return serverError(err, "capsules.linkEmpire.POST");
+    return serverError(err, "hearths.linkEmpire.POST");
   }
 }

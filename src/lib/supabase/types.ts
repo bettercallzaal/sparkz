@@ -1,9 +1,9 @@
-// Hand-written DB types mirroring supabase/migrations/0001_capsule_foundation.sql.
+// Hand-written DB types mirroring supabase/migrations/0001_hearth_foundation.sql.
 // Regenerate from Supabase (`generate_typescript_types`) once the project exists;
 // until then this keeps the app type-safe against the known schema.
 
-export type CapsuleType = "creator" | "culture" | "oss" | "meme";
-export type CapsuleStatus = "spark" | "tokenized" | "dormant";
+export type HearthType = "creator" | "culture" | "oss" | "meme";
+export type HearthStatus = "spark" | "tokenized" | "dormant";
 export type BackerKind = "wallet" | "fid" | "user";
 export type BackingKind = "collectable" | "backing" | "boost";
 export type SignalStatus =
@@ -13,22 +13,22 @@ export type SignalStatus =
   | "published"
   | "rejected";
 
-export interface Capsule {
+export interface Hearth {
   id: string;
   slug: string;
-  type: CapsuleType;
+  type: HearthType;
   name: string;
   bio: string | null;
   owner_wallet: string | null;
   owner_fid: number | null;
-  status: CapsuleStatus;
+  status: HearthStatus;
   economic_config: Record<string, unknown>;
   metadata: Record<string, unknown>;
   created_at: string;
   updated_at: string;
 }
 
-export interface CapsuleBacker {
+export interface HearthBacker {
   id: string;
   capsule_id: string;
   backer_kind: BackerKind;

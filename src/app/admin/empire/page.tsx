@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import type { Capsule } from "@/lib/supabase/types";
+import type { Hearth } from "@/lib/supabase/types";
 import { tokenlessCustomMessage } from "@/lib/empire/client";
 import { useAppKit } from "@reown/appkit/react";
 import { useAccount, useSignMessage } from "wagmi";
@@ -28,8 +28,8 @@ function Flame({ className = "" }: { className?: string }) {
 }
 
 export default function EmpirePage() {
-  const [capsules, setCapsules] = useState<Capsule[]>([]);
-  const [capsuleId, setCapsuleId] = useState("");
+  const [hearths, setHearths] = useState<Hearth[]>([]);
+  const [hearthId, setHearthId] = useState("");
   const [name, setName] = useState("");
   const { address } = useAccount();
   const { open } = useAppKit();
@@ -52,8 +52,8 @@ export default function EmpirePage() {
       .then((r) => r.json())
       .then((j) => {
         if (j.ok) {
-          setCapsules(j.data);
-          setCapsuleId(j.data[0]?.id ?? "");
+          setHearths(j.data);
+          setHearthId(j.data[0]?.id ?? "");
           setName(j.data[0]?.name ?? "");
         }
       });
@@ -120,7 +120,7 @@ export default function EmpirePage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          capsule_id: capsuleId,
+          capsule_id: hearthId,
           name,
           owner,
           signature,
@@ -164,7 +164,7 @@ export default function EmpirePage() {
       <header className="mb-6">
         <h1 className="text-2xl font-semibold tracking-tight">Launch a tokenless empire</h1>
         <p className="mt-1 text-sm text-muted">
-          Give a Capsule a create2 treasury on Base. No coin, nothing on-chain until
+          Give a Hearth a create2 treasury on Base. No coin, nothing on-chain until
           the first interaction - the durable home momentum accrues to.
         </p>
       </header>
@@ -217,10 +217,10 @@ export default function EmpirePage() {
               View on Empire
             </a>
             <Link
-              href={`/c/${capsules.find((c) => c.id === capsuleId)?.slug ?? ""}`}
+              href={`/c/${hearths.find((c) => c.id === hearthId)?.slug ?? ""}`}
               className="rounded-md border border-border px-3 py-1.5 text-sm hover:border-accent"
             >
-              View Capsule
+              View Hearth
             </Link>
           </div>
         </div>
@@ -240,7 +240,7 @@ export default function EmpirePage() {
                 </div>
               )}
               <div className="min-w-0">
-                <div className="truncate font-semibold">{name || "Your Capsule"}</div>
+                <div className="truncate font-semibold">{name || "Your Hearth"}</div>
                 <div className="text-xs text-muted">Tokenless empire - Base</div>
               </div>
               <span className="ml-auto rounded-full border border-accent/40 bg-accent/10 px-2 py-0.5 text-[10px] uppercase tracking-wide text-accent">
@@ -257,17 +257,17 @@ export default function EmpirePage() {
           <div className="space-y-4">
             <div>
               <label className="mb-1 block text-xs uppercase tracking-wide text-muted">
-                Capsule
+                Hearth
               </label>
               <select
-                value={capsuleId}
+                value={hearthId}
                 onChange={(e) => {
-                  setCapsuleId(e.target.value);
-                  setName(capsules.find((c) => c.id === e.target.value)?.name ?? "");
+                  setHearthId(e.target.value);
+                  setName(hearths.find((c) => c.id === e.target.value)?.name ?? "");
                 }}
                 className="w-full rounded-md border border-border bg-card px-3 py-2.5 text-sm"
               >
-                {capsules.map((c) => (
+                {hearths.map((c) => (
                   <option key={c.id} value={c.id}>
                     {c.name} ({c.type})
                   </option>
@@ -396,7 +396,7 @@ export default function EmpirePage() {
 
             <button
               onClick={deploy}
-              disabled={busy || !owner || !name || !capsuleId}
+              disabled={busy || !owner || !name || !hearthId}
               className="btn-spark w-full rounded-lg px-3 py-3 text-sm disabled:opacity-40"
             >
               {busy ? "Deploying..." : "Sign + launch empire"}

@@ -1,15 +1,15 @@
 import { createHash } from "node:crypto";
 import type { BarazaAnchor, SegmentJob } from "./types";
 
-// A Capsule's media kit lives in `capsule.metadata.mediaKit` - it rides the existing
+// A Hearth's media kit lives in `hearth.metadata.mediaKit` - it rides the existing
 // jsonb column, so no migration. Rendered segments are cached by a key over
 // (anchor, script) so the same read is never paid for twice (HeyGen bills per
 // render). Two wins in one:
 //   1. Cheaper: a completed segment is returned free on a repeat request; an
 //      in-flight ("queued") segment is reused so a retry during a ~30s render does
 //      not kick off (and pay for) a second job.
-//   2. The Capsule accumulates its own media - which is the point, the Sparkz moat
-//      is accumulating Capsule data (CLAUDE.md).
+//   2. The Hearth accumulates its own media - which is the point, the Sparkz moat
+//      is accumulating Hearth data (CLAUDE.md).
 // Pure functions over a metadata object; the route owns persistence.
 
 /** How long an in-flight (queued) render is reused before we re-render. */
@@ -91,7 +91,7 @@ export function writeCachedSegment(
   return { ...(metadata ?? {}), mediaKit: store };
 }
 
-/** Read a Capsule's whole media kit (for a GET / profile surface). */
+/** Read a Hearth's whole media kit (for a GET / profile surface). */
 export function listSegments(metadata: Record<string, unknown> | null | undefined): StoredSegment[] {
   return Object.values(getStore(metadata).segments).sort((a, b) =>
     b.renderedAt.localeCompare(a.renderedAt),

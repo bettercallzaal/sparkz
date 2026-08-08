@@ -3,10 +3,10 @@ import { importRepoSchema } from "@/lib/validation/schemas";
 import { ok, badRequest, serverError, zodError } from "@/lib/http";
 import { requireAdmin } from "@/lib/auth";
 import { parseRepoRef } from "@/lib/brand-audit/github";
-import { importRepoAsCapsule } from "@/lib/brand-audit/import";
+import { importRepoAsHearth } from "@/lib/brand-audit/import";
 
 // POST /api/capsules/import-repo - import (or re-scan) a GitHub repo as an `oss`
-// Capsule candidate. The brand-audit entry point: repo + contributors land in
+// Hearth candidate. The brand-audit entry point: repo + contributors land in
 // metadata; the audit verdicts are set separately via /api/audit.
 export async function POST(req: NextRequest) {
   try {
@@ -24,14 +24,14 @@ export async function POST(req: NextRequest) {
     // (rate limit, 404, empty repo) instead of a generic 500 - this is a gated
     // operator tool. Set GITHUB_TOKEN to raise the unauthenticated rate limit.
     try {
-      const capsule = await importRepoAsCapsule(ref.owner, ref.repo);
-      return ok(capsule, 201);
+      const hearth = await importRepoAsHearth(ref.owner, ref.repo);
+      return ok(hearth, 201);
     } catch (ghErr) {
       const msg = ghErr instanceof Error ? ghErr.message : "import failed";
       console.error("[sparkz:import-repo] upstream:", msg);
       return badRequest(msg);
     }
   } catch (err) {
-    return serverError(err, "capsules.importRepo.POST");
+    return serverError(err, "hearths.importRepo.POST");
   }
 }

@@ -2,10 +2,10 @@
 // source is a replaceable adapter so it can grow from human submission ->
 // Farcaster activity -> Alpha Radar -> predictive, with NO rebuild. The canonical
 // signature from the spec:
-//   interface SignalSource { detectSignals(capsuleId): Promise<CulturalSignal[]> }
+//   interface SignalSource { detectSignals(hearthId): Promise<CulturalSignal[]> }
 
 export interface CulturalSignal {
-  capsuleId: string;
+  hearthId: string;
   text: string;
   whyItMatched?: string;
   source: string;
@@ -15,7 +15,7 @@ export interface CulturalSignal {
 
 export interface SignalSource {
   readonly id: string;
-  detectSignals(capsuleId: string): Promise<CulturalSignal[]>;
+  detectSignals(hearthId: string): Promise<CulturalSignal[]>;
 }
 
 const registry = new Map<string, SignalSource>();

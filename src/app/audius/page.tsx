@@ -153,7 +153,7 @@ export default function AudiusPage() {
           </Link>
           <Link href="/start" className="glass glass-hover p-3">
             <div className="font-medium text-sm">Light a spark</div>
-            <div className="text-xs text-muted">Open your Capsule now - no token needed</div>
+            <div className="text-xs text-muted">Open your Hearth now - no token needed</div>
           </Link>
           <Link href="/examples" className="glass glass-hover p-3">
             <div className="font-medium text-sm">Spark examples</div>

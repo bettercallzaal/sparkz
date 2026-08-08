@@ -1,4 +1,4 @@
-export default function CapsuleLoading() {
+export default function HearthLoading() {
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-10">
       <div className="flex items-center gap-4">

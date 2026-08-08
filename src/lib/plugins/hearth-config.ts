@@ -1,10 +1,10 @@
-// Per-Capsule plugin state - the control-plane data layer over the capsule_plugins
+// Per-Hearth plugin state - the control-plane data layer over the hearth_plugins
 // table. Merges the built-in plugin list (the defaults - everything enabled) with any
-// per-Capsule overrides. A Capsule with no rows uses all defaults, so this is safe to
+// per-Hearth overrides. A Hearth with no rows uses all defaults, so this is safe to
 // call before the migration is applied: if the table is missing, we return defaults.
 //
-// This is the CONTROL plane (store + read which plugins a Capsule has on + its config).
-// Having the loop CONSUME per-Capsule config (route approvals only to a Capsule's own
+// This is the CONTROL plane (store + read which plugins a Hearth has on + its config).
+// Having the loop CONSUME per-Hearth config (route approvals only to a Hearth's own
 // enabled channels, with its own webhook) is the next increment.
 
 import { getServiceClient } from "@/lib/supabase/server";
@@ -30,23 +30,23 @@ function builtinMeta(): PluginMeta[] {
   }));
 }
 
-export interface CapsulePluginState {
+export interface HearthPluginState {
   pluginId: string;
   name: string;
   description?: string;
   enabled: boolean;
   config: Record<string, unknown>;
-  overridden: boolean; // true when a capsule_plugins row exists (not just defaults)
+  overridden: boolean; // true when a hearth_plugins row exists (not just defaults)
   configSchema: Record<string, { required?: boolean; secret?: boolean; description: string }>;
 }
 
-interface CapsulePluginRow {
+interface HearthPluginRow {
   plugin_id: string;
   enabled: boolean;
   config: Record<string, unknown>;
 }
 
-// The capsule_plugins table doesn't exist yet (migration 0004 not applied). Postgres
+// The hearth_plugins table doesn't exist yet (migration 0004 not applied). Postgres
 // raises 42P01; PostgREST (Supabase) surfaces it as PGRST205 with a "Could not find the
 // table ... in the schema cache" message. Match either so this degrades to defaults
 // cleanly before the migration is applied.
@@ -58,31 +58,31 @@ function isMissingTable(error: { code?: string; message?: string }): boolean {
   );
 }
 
-async function fetchOverrides(capsuleId: string): Promise<CapsulePluginRow[]> {
+async function fetchOverrides(hearthId: string): Promise<HearthPluginRow[]> {
   const supabase = getServiceClient();
   const { data, error } = await supabase
     .from("capsule_plugins")
     .select("plugin_id, enabled, config")
-    .eq("capsule_id", capsuleId);
+    .eq("capsule_id", hearthId);
   if (error) {
     if (isMissingTable(error)) {
       console.warn(
-        "[plugins] capsule_plugins table missing - apply migration 0004. Using defaults.",
+        "[plugins] hearth_plugins table missing - apply migration 0004. Using defaults.",
       );
       return [];
     }
     throw error;
   }
-  return (data ?? []) as CapsulePluginRow[];
+  return (data ?? []) as HearthPluginRow[];
 }
 
-/** The full plugin state for a Capsule: every built-in, with its per-Capsule override applied. */
-export async function getCapsulePluginState(
-  capsuleId: string,
-): Promise<CapsulePluginState[]> {
+/** The full plugin state for a Hearth: every built-in, with its per-Hearth override applied. */
+export async function getHearthPluginState(
+  hearthId: string,
+): Promise<HearthPluginState[]> {
   const [meta, overrides] = await Promise.all([
     Promise.resolve(builtinMeta()),
-    fetchOverrides(capsuleId),
+    fetchOverrides(hearthId),
   ]);
   const byId = new Map(overrides.map((o) => [o.plugin_id, o]));
 
@@ -100,16 +100,16 @@ export async function getCapsulePluginState(
   });
 }
 
-/** Turn a plugin on/off (and/or set its per-Capsule config) - upserts one row. */
-export async function setCapsulePlugin(
-  capsuleId: string,
+/** Turn a plugin on/off (and/or set its per-Hearth config) - upserts one row. */
+export async function setHearthPlugin(
+  hearthId: string,
   pluginId: string,
   patch: { enabled?: boolean; config?: Record<string, unknown> },
 ): Promise<void> {
   const supabase = getServiceClient();
   const { error } = await supabase.from("capsule_plugins").upsert(
     {
-      capsule_id: capsuleId,
+      capsule_id: hearthId,
       plugin_id: pluginId,
       ...(patch.enabled !== undefined ? { enabled: patch.enabled } : {}),
       ...(patch.config !== undefined ? { config: patch.config } : {}),

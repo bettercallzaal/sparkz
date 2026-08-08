@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Flame from "./Flame";
 import { useToast } from "./toast";
 
-export default function BoostForm({ capsuleId }: { capsuleId: string }) {
+export default function BoostForm({ hearthId }: { hearthId: string }) {
   const router = useRouter();
   const toast = useToast();
   const [backer, setBacker] = useState("");
@@ -18,7 +18,7 @@ export default function BoostForm({ capsuleId }: { capsuleId: string }) {
       const res = await fetch("/api/boost", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ capsule_id: capsuleId, backer: backer.trim() }),
+        body: JSON.stringify({ capsule_id: hearthId, backer: backer.trim() }),
       });
       const json = await res.json();
       if (json.ok) {

@@ -1,10 +1,10 @@
 import { ImageResponse } from "next/og";
 import { getServiceClient } from "@/lib/supabase/server";
-import type { Capsule } from "@/lib/supabase/types";
+import type { Hearth } from "@/lib/supabase/types";
 
 // Branded 3:2 card - the Farcaster Mini App embed image + default OG/share image.
 // Two modes:
-//   ?slug=<capsule>       -> a live Capsule card (name, type, status, stats, fc)
+//   ?slug=<hearth>       -> a live Hearth card (name, type, status, stats, fc)
 //   ?title=..&subtitle=.. -> a generic card (landing, /explore, etc.)
 export const dynamic = "force-dynamic";
 
@@ -123,7 +123,7 @@ export async function GET(req: Request) {
         .maybeSingle();
 
       if (data) {
-        const c = data as Pick<Capsule, "id" | "name" | "type" | "status" | "bio" | "metadata">;
+        const c = data as Pick<Hearth, "id" | "name" | "type" | "status" | "bio" | "metadata">;
         const [{ count: backers }, { data: boostRows }, { count: receipts }] = await Promise.all([
           supabase.from("capsule_backers").select("id", { count: "exact", head: true }).eq("capsule_id", c.id),
           supabase.from("capsule_backers").select("id").eq("capsule_id", c.id).eq("kind", "boost"),
@@ -136,7 +136,7 @@ export async function GET(req: Request) {
         return new ImageResponse(
           (
             <Card
-              eyebrow="Sparkz Capsule"
+              eyebrow="Sparkz Hearth"
               title={c.name}
               subtitle={c.bio ?? "Back the work, not a coin."}
               chips={[

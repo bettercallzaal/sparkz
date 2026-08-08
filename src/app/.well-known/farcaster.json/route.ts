@@ -31,9 +31,9 @@ export function GET() {
       splashBackgroundColor: "#0a0a0a",
       subtitle: "Start with a spark, not a token",
       description:
-        "Every Sparkz project is a Capsule, not a coin. Build community and backing first; tokenize later only if it fits.",
+        "Every Sparkz project is a Hearth, not a coin. Build community and backing first; tokenize later only if it fits.",
       primaryCategory: "social",
-      tags: ["creators", "base", "farcaster", "backing", "capsule"],
+      tags: ["creators", "base", "farcaster", "backing", "hearth"],
       heroImageUrl: `${ORIGIN}/api/og`,
       tagline: "Back the work, not a coin.",
       ogTitle: "Sparkz",

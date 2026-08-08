@@ -1,5 +1,5 @@
 import { getServiceClient } from "@/lib/supabase/server";
-import type { CapsuleBacker } from "@/lib/supabase/types";
+import type { HearthBacker } from "@/lib/supabase/types";
 import {
   type BackingProvider,
   type BackingRecord,
@@ -10,10 +10,10 @@ import {
 // no wallet required (V1-SCOPE fiat-or-BYOK onboarding). chain is null; provider_ref
 // is the row id. On-chain rails implement the same interface later.
 
-function toRecord(row: CapsuleBacker): BackingRecord {
+function toRecord(row: HearthBacker): BackingRecord {
   return {
     id: row.id,
-    capsuleId: row.capsule_id,
+    hearthId: row.capsule_id,
     provider: row.provider,
     providerRef: row.provider_ref,
     chain: row.chain,
@@ -31,7 +31,7 @@ export class LedgerProvider implements BackingProvider {
     const { data, error } = await supabase
       .from("capsule_backers")
       .insert({
-        capsule_id: input.capsuleId,
+        capsule_id: input.hearthId,
         backer_kind: input.backerKind,
         backer_id: input.backerId,
         kind: input.kind,
@@ -46,7 +46,7 @@ export class LedgerProvider implements BackingProvider {
       .single();
     if (error) throw error;
 
-    const row = data as CapsuleBacker;
+    const row = data as HearthBacker;
     // provider_ref for the ledger IS the row id - backfill it so getBacking works.
     await supabase
       .from("capsule_backers")
@@ -65,19 +65,19 @@ export class LedgerProvider implements BackingProvider {
       .eq("provider_ref", ref)
       .maybeSingle();
     if (error) throw error;
-    return data ? toRecord(data as CapsuleBacker) : null;
+    return data ? toRecord(data as HearthBacker) : null;
   }
 
-  async listBackings(capsuleId: string): Promise<BackingRecord[]> {
+  async listBackings(hearthId: string): Promise<BackingRecord[]> {
     const supabase = getServiceClient();
     const { data, error } = await supabase
       .from("capsule_backers")
       .select("*")
-      .eq("capsule_id", capsuleId)
+      .eq("capsule_id", hearthId)
       .eq("provider", this.id)
       .order("created_at", { ascending: false });
     if (error) throw error;
-    return (data as CapsuleBacker[]).map(toRecord);
+    return (data as HearthBacker[]).map(toRecord);
   }
 }
 

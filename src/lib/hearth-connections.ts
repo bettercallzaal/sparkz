@@ -1,6 +1,6 @@
-import type { Capsule } from "@/lib/supabase/types";
+import type { Hearth } from "@/lib/supabase/types";
 
-// A Capsule's connected integrations, derived from what it already stores in
+// A Hearth's connected integrations, derived from what it already stores in
 // economic_config + metadata. This is how you distinguish Sparks at a glance - which
 // rails each one is wired to (Empire, a token, Farcaster, GitHub, a media kit). Pure
 // function, safe to use server- or client-side.
@@ -12,11 +12,11 @@ export interface Connection {
 
 type Json = Record<string, unknown>;
 
-export function capsuleConnections(
-  capsule: Pick<Capsule, "type" | "economic_config" | "metadata">,
+export function hearthConnections(
+  hearth: Pick<Hearth, "type" | "economic_config" | "metadata">,
 ): Connection[] {
-  const econ = (capsule.economic_config ?? {}) as Json;
-  const meta = (capsule.metadata ?? {}) as Json;
+  const econ = (hearth.economic_config ?? {}) as Json;
+  const meta = (hearth.metadata ?? {}) as Json;
   const out: Connection[] = [];
 
   if (econ.empire === true) out.push({ id: "empire", label: "Empire" });
@@ -33,7 +33,7 @@ export function capsuleConnections(
     out.push({ id: "farcaster", label: "Farcaster" });
   }
 
-  if (capsule.type === "oss" || meta.github || meta.repo) {
+  if (hearth.type === "oss" || meta.github || meta.repo) {
     out.push({ id: "github", label: "GitHub" });
   }
 

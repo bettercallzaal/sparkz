@@ -4,7 +4,7 @@ import { Suspense, useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import type {
-  Capsule,
+  Hearth,
   MemeReceipt,
   Signal,
   SignalDraft,
@@ -40,10 +40,10 @@ async function apiPost<T>(url: string, body: unknown): Promise<T> {
 
 function AdminInner() {
   const params = useSearchParams();
-  const capsuleParam = params.get("capsule");
+  const hearthParam = params.get("hearth");
 
-  const [capsules, setCapsules] = useState<Capsule[]>([]);
-  const [capsuleId, setCapsuleId] = useState<string>("");
+  const [hearths, setHearths] = useState<Hearth[]>([]);
+  const [hearthId, setHearthId] = useState<string>("");
   const [signals, setSignals] = useState<SignalWithDrafts[]>([]);
   const [receipts, setReceipts] = useState<MemeReceipt[]>([]);
   const [busy, setBusy] = useState(false);
@@ -71,13 +71,13 @@ function AdminInner() {
   }, []);
 
   useEffect(() => {
-    apiGet<Capsule[]>("/api/capsules")
+    apiGet<Hearth[]>("/api/capsules")
       .then((c) => {
-        setCapsules(c);
-        setCapsuleId(capsuleParam ?? c[0]?.id ?? "");
+        setHearths(c);
+        setHearthId(hearthParam ?? c[0]?.id ?? "");
       })
       .catch((e) => setErr(e.message));
-  }, [capsuleParam]);
+  }, [hearthParam]);
 
   const refresh = useCallback(async (id: string) => {
     if (!id) return;
@@ -105,7 +105,7 @@ function AdminInner() {
       await apiPost("/api/admin/login", { token });
       setToken("");
       setNeedsAuth(false);
-      await refresh(capsuleId);
+      await refresh(hearthId);
     } catch (e) {
       setErr(e instanceof Error ? e.message : "login failed");
     } finally {
@@ -114,28 +114,28 @@ function AdminInner() {
   };
 
   useEffect(() => {
-    // Intentional: re-fetch signals + receipts when the selected capsule changes.
+    // Intentional: re-fetch signals + receipts when the selected hearth changes.
     // refresh() owns its own state updates (the canonical data-fetch-in-effect case).
     // Wait for the dev-login attempt so the first fetch is already authed in dev.
     if (!devAuthTried) return;
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    void refresh(capsuleId);
-  }, [capsuleId, refresh, devAuthTried]);
+    void refresh(hearthId);
+  }, [hearthId, refresh, devAuthTried]);
 
   const flag = async () => {
-    if (!text.trim() || !capsuleId) return;
+    if (!text.trim() || !hearthId) return;
     setBusy(true);
     setErr(null);
     try {
       await apiPost("/api/signals", {
-        capsule_id: capsuleId,
+        capsule_id: hearthId,
         text: text.trim(),
         why_it_matched: why.trim() || undefined,
         flagged_by: flaggedBy.trim() || undefined,
       });
       setText("");
       setWhy("");
-      await refresh(capsuleId);
+      await refresh(hearthId);
     } catch (e) {
       if (e instanceof ApiError && (e.status === 401 || e.status === 503)) {
         setNeedsAuth(true);
@@ -157,7 +157,7 @@ function AdminInner() {
         approved_via: "in_app",
         approver: flaggedBy.trim() || "admin",
       });
-      await refresh(capsuleId);
+      await refresh(hearthId);
     } catch (e) {
       if (e instanceof ApiError && (e.status === 401 || e.status === 503)) {
         setNeedsAuth(true);
@@ -169,13 +169,13 @@ function AdminInner() {
     }
   };
 
-  const activeCapsule = capsules.find((c) => c.id === capsuleId);
+  const activeHearth = hearths.find((c) => c.id === hearthId);
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-8">
       <div className="mb-6 flex items-center justify-between">
         <Link href="/" className="text-sm text-muted hover:text-foreground">
-          &larr; Capsules
+          &larr; Hearths
         </Link>
         <div className="flex items-center gap-3">
           <Link
@@ -188,7 +188,7 @@ function AdminInner() {
             href="/admin/new"
             className="text-sm text-accent hover:text-foreground"
           >
-            + New Capsule
+            + New Hearth
           </Link>
           <Link
             href="/admin/empire"
@@ -255,15 +255,15 @@ function AdminInner() {
       </ol>
 
       <label className="mb-1 block text-xs uppercase tracking-wide text-muted">
-        Capsule
+        Hearth
       </label>
       <select
-        value={capsuleId}
-        onChange={(e) => setCapsuleId(e.target.value)}
+        value={hearthId}
+        onChange={(e) => setHearthId(e.target.value)}
         className="mb-6 w-full rounded-md border border-border bg-card px-3 py-2 text-sm"
       >
-        {capsules.length === 0 && <option value="">no capsules - seed Zoostr</option>}
-        {capsules.map((c) => (
+        {hearths.length === 0 && <option value="">no hearths - seed Zoostr</option>}
+        {hearths.map((c) => (
           <option key={c.id} value={c.id}>
             {c.name} ({c.type})
           </option>
@@ -283,7 +283,7 @@ function AdminInner() {
         <input
           value={why}
           onChange={(e) => setWhy(e.target.value)}
-          placeholder="Why it matches this Capsule (optional)"
+          placeholder="Why it matches this Hearth (optional)"
           className="mb-2 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
         />
         <input
@@ -294,14 +294,14 @@ function AdminInner() {
         />
         <button
           onClick={flag}
-          disabled={busy || !text.trim() || !capsuleId}
+          disabled={busy || !text.trim() || !hearthId}
           className="w-full rounded-md bg-accent px-3 py-2 text-sm font-medium text-white disabled:opacity-40"
         >
           {busy ? "Working..." : "Flag + draft 3 responses"}
         </button>
-        {activeCapsule && (
+        {activeHearth && (
           <p className="mt-2 text-xs text-muted">
-            Drafts are grounded in {activeCapsule.name}. Approve one to write a Meme
+            Drafts are grounded in {activeHearth.name}. Approve one to write a Meme
             Receipt.
           </p>
         )}

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import type { Capsule } from "@/lib/supabase/types";
+import type { Hearth } from "@/lib/supabase/types";
 
 class ApiError extends Error {
   status: number;
@@ -23,15 +23,15 @@ async function apiPost<T>(url: string, body: unknown): Promise<T> {
 }
 
 // Add a project by its GitHub repo. Step 1 of building out a Spark: paste the repo,
-// we pull the real repo data and open the Capsule. Step 2 (the other info +
-// integrations) is layered on from the Capsule afterward.
+// we pull the real repo data and open the Hearth. Step 2 (the other info +
+// integrations) is layered on from the Hearth afterward.
 export default function AddRepo() {
   const [url, setUrl] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [needsAuth, setNeedsAuth] = useState(false);
   const [token, setToken] = useState("");
-  const [result, setResult] = useState<(Capsule & { already?: boolean }) | null>(null);
+  const [result, setResult] = useState<(Hearth & { already?: boolean }) | null>(null);
 
   const login = async () => {
     setBusy(true);
@@ -52,11 +52,11 @@ export default function AddRepo() {
     setBusy(true);
     setErr(null);
     try {
-      const capsule = await apiPost<Capsule & { already?: boolean }>(
+      const hearth = await apiPost<Hearth & { already?: boolean }>(
         "/api/capsules/add-repo",
         { repo_url: url.trim() },
       );
-      setResult(capsule);
+      setResult(hearth);
       setUrl("");
     } catch (e) {
       if (e instanceof ApiError && (e.status === 401 || e.status === 503)) {
@@ -110,14 +110,14 @@ export default function AddRepo() {
           <p className="text-sm">
             {result.already ? "Already added: " : "Added "}
             <span className="font-medium">{result.name}</span> from GitHub. Now layer on the
-            rest - about, links, and integrations - on the Capsule.
+            rest - about, links, and integrations - on the Hearth.
           </p>
           <div className="mt-3 flex gap-2 text-sm">
             <Link
               href={`/c/${result.slug}`}
               className="rounded-md bg-accent px-3 py-1.5 font-medium text-white"
             >
-              View Capsule
+              View Hearth
             </Link>
             <button
               onClick={() => setResult(null)}
@@ -131,7 +131,7 @@ export default function AddRepo() {
         <section className="space-y-3">
           <p className="text-sm text-muted">
             Paste a GitHub repo. We pull the real description, homepage, stars, language, and
-            topics and open an OSS Capsule with them. Nothing is invented.
+            topics and open an OSS Hearth with them. Nothing is invented.
           </p>
           <div>
             <label className="mb-1 block text-xs uppercase tracking-wide text-muted">

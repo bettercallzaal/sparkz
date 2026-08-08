@@ -15,8 +15,8 @@ export interface ApprovalDraft {
 
 export interface ApprovalRequest {
   signalId: string;
-  capsuleId: string;
-  capsuleName: string;
+  hearthId: string;
+  hearthName: string;
   signalText: string;
   drafts: ApprovalDraft[];
   approveUrl: string;

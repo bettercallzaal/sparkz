@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useProfile } from "@farcaster/auth-kit";
 
 // Shows a subtle "you own this" chip when the signed-in Farcaster user is the
-// Capsule's owner (owner_fid match). Progressive: invisible to everyone else.
+// Hearth's owner (owner_fid match). Progressive: invisible to everyone else.
 export default function OwnerBadge({ ownerFid }: { ownerFid: number | null }) {
   const { isAuthenticated, profile } = useProfile();
   if (!ownerFid || !isAuthenticated || profile?.fid !== ownerFid) return null;

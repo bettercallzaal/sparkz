@@ -1,10 +1,10 @@
 import type { NextRequest } from "next/server";
 import { getServiceClient } from "@/lib/supabase/server";
-import { createCapsuleSchema } from "@/lib/validation/schemas";
+import { createHearthSchema } from "@/lib/validation/schemas";
 import { ok, serverError, zodError } from "@/lib/http";
 import { requireAdmin } from "@/lib/auth";
-import { publicCapsule, PUBLIC_REVIEW_FILTER } from "@/lib/sanitize";
-import type { Capsule } from "@/lib/supabase/types";
+import { publicHearth, PUBLIC_REVIEW_FILTER } from "@/lib/sanitize";
+import type { Hearth } from "@/lib/supabase/types";
 
 export async function GET(req: NextRequest) {
   try {
@@ -30,9 +30,9 @@ export async function GET(req: NextRequest) {
     query = query.or(PUBLIC_REVIEW_FILTER);
     const { data, error } = await query;
     if (error) throw error;
-    return ok(((data as Capsule[]) ?? []).map(publicCapsule));
+    return ok(((data as Hearth[]) ?? []).map(publicHearth));
   } catch (err) {
-    return serverError(err, "capsules.GET");
+    return serverError(err, "hearths.GET");
   }
 }
 
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
     if (denied) return denied;
 
     const body = await req.json().catch(() => null);
-    const parsed = createCapsuleSchema.safeParse(body);
+    const parsed = createHearthSchema.safeParse(body);
     if (!parsed.success) return zodError(parsed.error);
 
     const supabase = getServiceClient();
@@ -54,6 +54,6 @@ export async function POST(req: NextRequest) {
     if (error) throw error;
     return ok(data, 201);
   } catch (err) {
-    return serverError(err, "capsules.POST");
+    return serverError(err, "hearths.POST");
   }
 }

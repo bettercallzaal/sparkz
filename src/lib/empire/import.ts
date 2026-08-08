@@ -1,14 +1,14 @@
 import { getServiceClient } from "@/lib/supabase/server";
-import type { Capsule } from "@/lib/supabase/types";
+import type { Hearth } from "@/lib/supabase/types";
 import { resolveEmpire } from "./client";
 
 // Import an existing Empire Builder empire AS a Spark - the "bring already-created
 // things into the fold" path. Pulls the empire's identity (name, logo, token type,
-// treasury address) from Empire Builder and creates a Capsule wired to it, so a
-// ZABAL or ZABAL GAMEZ empire that already exists becomes a first-class Capsule with
+// treasury address) from Empire Builder and creates a Hearth wired to it, so a
+// ZABAL or ZABAL GAMEZ empire that already exists becomes a first-class Hearth with
 // its leaderboard + rewards readable through /api/empire/{id}.
 //
-// Idempotent: if a Capsule already links this empire, it's returned instead of
+// Idempotent: if a Hearth already links this empire, it's returned instead of
 // creating a duplicate.
 
 interface RawEmpire {
@@ -46,7 +46,7 @@ async function uniqueSlug(base: string): Promise<string> {
   return `${root}-${root.length}${base.length}`;
 }
 
-export async function importEmpireAsCapsule(empireId: string): Promise<Capsule> {
+export async function importEmpireAsHearth(empireId: string): Promise<Hearth> {
   const resolved = await resolveEmpire(empireId);
   if (!resolved) throw new Error(`empire not found on Empire Builder: ${empireId}`);
 
@@ -55,14 +55,14 @@ export async function importEmpireAsCapsule(empireId: string): Promise<Capsule> 
 
   const supabase = getServiceClient();
 
-  // Dedup: has any Capsule already imported/linked this empire?
+  // Dedup: has any Hearth already imported/linked this empire?
   const { data: existing, error: exErr } = await supabase
     .from("capsules")
     .select("*")
     .eq("economic_config->>empire_id", resolved.empireId)
     .maybeSingle();
   if (exErr) throw exErr;
-  if (existing) return existing as Capsule;
+  if (existing) return existing as Hearth;
 
   const name = e.name?.trim() || empireId;
   const slug = await uniqueSlug(slugify(name));
@@ -94,5 +94,5 @@ export async function importEmpireAsCapsule(empireId: string): Promise<Capsule> 
     .select("*")
     .single();
   if (error) throw error;
-  return data as Capsule;
+  return data as Hearth;
 }

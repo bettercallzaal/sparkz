@@ -1,7 +1,7 @@
 // BackingProvider seam. Pre-token "spark" backing is provider-agnostic: value can
 // settle off-chain (LedgerProvider, the m1 default) OR on-chain via permissionless
 // rails (ElizaOS, Bankr) and tokenization rails (Clanker, Empire Builder) - all
-// writing the SAME capsule_backers table so the moat stays unified no matter where
+// writing the SAME hearth_backers table so the moat stays unified no matter where
 // value lands. Adding a provider = a new file + register(), no migration.
 //
 // Rail notes (m1 = ledger only; the rest are seam-only):
@@ -16,7 +16,7 @@
 import type { BackingKind, BackerKind } from "@/lib/supabase/types";
 
 export interface CreateBackingInput {
-  capsuleId: string;
+  hearthId: string;
   backerKind: BackerKind;
   backerId: string;
   kind: BackingKind;
@@ -27,7 +27,7 @@ export interface CreateBackingInput {
 
 export interface BackingRecord {
   id: string;
-  capsuleId: string;
+  hearthId: string;
   provider: string;
   providerRef: string | null;
   chain: string | null;
@@ -40,7 +40,7 @@ export interface BackingProvider {
   readonly id: string;
   createBacking(input: CreateBackingInput): Promise<BackingRecord>;
   getBacking(ref: string): Promise<BackingRecord | null>;
-  listBackings(capsuleId: string): Promise<BackingRecord[]>;
+  listBackings(hearthId: string): Promise<BackingRecord[]>;
 }
 
 const registry = new Map<string, BackingProvider>();

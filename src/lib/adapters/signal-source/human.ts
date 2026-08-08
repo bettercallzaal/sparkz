@@ -10,18 +10,18 @@ import { type CulturalSignal, type SignalSource } from "./index";
 export class HumanSignalSource implements SignalSource {
   readonly id = "human";
 
-  async detectSignals(capsuleId: string): Promise<CulturalSignal[]> {
+  async detectSignals(hearthId: string): Promise<CulturalSignal[]> {
     const supabase = getServiceClient();
     const { data, error } = await supabase
       .from("signals")
       .select("*")
-      .eq("capsule_id", capsuleId)
+      .eq("capsule_id", hearthId)
       .eq("source", this.id)
       .eq("status", "flagged");
     if (error) throw error;
 
     return (data as Signal[]).map((s) => ({
-      capsuleId: s.capsule_id,
+      hearthId: s.capsule_id,
       text: s.text,
       whyItMatched: s.why_it_matched ?? undefined,
       source: s.source,

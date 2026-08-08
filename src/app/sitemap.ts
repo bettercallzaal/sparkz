@@ -1,24 +1,24 @@
 import type { MetadataRoute } from "next";
-import { loadPublicCapsules } from "@/lib/public-capsules";
+import { loadPublicHearths } from "@/lib/public-hearths";
 import { canonicalOrigin } from "@/lib/origin";
 
 const BASE = canonicalOrigin();
 
-// Dynamic sitemap: the static marketing/product routes + every public Capsule.
+// Dynamic sitemap: the static marketing/product routes + every public Hearth.
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes = [
     "", "/explore", "/start", "/demo", "/blog", "/architecture",
     // Content pages (consolidated from the ZOL page set).
-    "/manifesto", "/capsule", "/meme-engine", "/economics", "/token-timing", "/graduation",
+    "/manifesto", "/hearth", "/meme-engine", "/economics", "/token-timing", "/graduation",
     "/examples", "/patronage", "/contribution", "/split-wizard", "/advisor", "/community-pool",
     "/zao", "/farcaster", "/audius", "/vetted",
   ].map(
     (p) => ({ url: `${BASE}${p}`, changeFrequency: "weekly" as const, priority: p === "" ? 1 : 0.7 }),
   );
 
-  let capsules: MetadataRoute.Sitemap = [];
+  let hearths: MetadataRoute.Sitemap = [];
   try {
-    capsules = (await loadPublicCapsules()).map((c) => ({
+    hearths = (await loadPublicHearths()).map((c) => ({
       url: `${BASE}/c/${c.slug}`,
       lastModified: c.updated_at,
       changeFrequency: "daily" as const,
@@ -28,5 +28,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // sitemap should never break the build
   }
 
-  return [...staticRoutes, ...capsules];
+  return [...staticRoutes, ...hearths];
 }

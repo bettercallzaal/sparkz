@@ -40,7 +40,7 @@ const ROLES = [
   {
     icon: "⬡",
     title: "Curator",
-    body: "ZAO reviews every self-serve Capsule submission. 50 vetted sparks per quarter. Quality over volume - no permissionless minting farm.",
+    body: "ZAO reviews every self-serve Hearth submission. 50 vetted sparks per quarter. Quality over volume - no permissionless minting farm.",
     color: "text-accent",
     border: "border-accent/20",
   },

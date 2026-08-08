@@ -1,22 +1,22 @@
 import Link from "next/link";
 import Avatar from "./Avatar";
-import type { Capsule, CapsuleType } from "@/lib/supabase/types";
+import type { Hearth, HearthType } from "@/lib/supabase/types";
 
-const TYPE_LABEL: Record<CapsuleType, string> = {
+const TYPE_LABEL: Record<HearthType, string> = {
   creator: "Creators",
   culture: "Culture",
   oss: "Open source",
   meme: "Meme",
 };
-const TYPE_ORDER: CapsuleType[] = ["creator", "culture", "oss", "meme"];
+const TYPE_ORDER: HearthType[] = ["creator", "culture", "oss", "meme"];
 
-export default function Ecosystem({ capsules }: { capsules: Capsule[] }) {
-  if (capsules.length === 0) {
+export default function Ecosystem({ hearths }: { hearths: Hearth[] }) {
+  if (hearths.length === 0) {
     return (
-      <p className="text-sm text-muted">Capsules are spinning up. Check back soon.</p>
+      <p className="text-sm text-muted">Hearths are spinning up. Check back soon.</p>
     );
   }
-  const byType = (t: CapsuleType) => capsules.filter((c) => c.type === t);
+  const byType = (t: HearthType) => hearths.filter((c) => c.type === t);
 
   return (
     <div className="space-y-6">

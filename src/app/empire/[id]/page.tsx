@@ -5,7 +5,7 @@ import EmpireLeaderboard from "@/app/_components/EmpireLeaderboard";
 
 // Standalone Empire panel - a thin wrapper over the shared EmpireLeaderboard block with
 // an input to jump to any empire id (base_token 0x..., fid<n>, or slug). The same block
-// renders inline on a Capsule page. Point it at ZABAL / ZABAL GAMEZ / Zoostr once deployed.
+// renders inline on a Hearth page. Point it at ZABAL / ZABAL GAMEZ / Zoostr once deployed.
 
 export default function EmpirePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);

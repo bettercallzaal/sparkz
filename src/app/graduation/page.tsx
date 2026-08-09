@@ -263,7 +263,7 @@ export default function GraduationPage() {
           🪄 Split wizard
         </Link>
         <Link
-          href="/token-timing"
+          href="/graduation"
           className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
         >
           ⏱ Token timing

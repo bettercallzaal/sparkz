@@ -9,9 +9,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes = [
     "", "/explore", "/start", "/demo", "/blog", "/architecture",
     // Content pages (consolidated from the ZOL page set).
-    "/manifesto", "/hearth", "/meme-engine", "/economics", "/token-timing", "/graduation",
-    "/examples", "/patronage", "/contribution", "/split-wizard", "/advisor", "/community-pool",
-    "/zao", "/farcaster", "/audius", "/vetted",
+    "/manifesto", "/hearth", "/meme-engine", "/graduation",
+    "/examples", "/contribution", "/split-wizard", "/community-pool",
+    "/zao", "/farcaster", "/audius",
   ].map(
     (p) => ({ url: `${BASE}${p}`, changeFrequency: "weekly" as const, priority: p === "" ? 1 : 0.7 }),
   );

@@ -83,11 +83,11 @@ const TEMPLATES = [
     name: "Group Crowdfund",
     subtitle: "Fund a project without speculation",
     description:
-      "A community funds a real-world project (conference, album, event). Backers get patronage tiers ($5/$25/$100). When the project ships, backers claim fee share from any future token. No coin required to fund.",
+      "A community rallies around a real-world project (conference, album, event). Backers boost it for free and are recorded as early supporters. When the project ships, the receipts show who showed up. No coin, no paywall.",
     realExample: null,
     realLink: null,
     tokenless:
-      "Patronage tiers (card, no wallet) + Farcaster backing window + milestone receipts",
+      "Free boosts (no wallet, no card) + Farcaster backing window + milestone receipts",
     split: { community: 80, creator: 10, treasury: 10 },
     tokenTiming: "never" as Timing,
     tokenNote:
@@ -98,16 +98,16 @@ const TEMPLATES = [
     tagColor: "bg-foreground/5 text-muted border border-border",
   },
   {
-    id: "solo-patronage",
+    id: "solo-backing",
     emoji: "🎤",
-    name: "Solo Creator Patronage",
+    name: "Solo Creator Backing",
     subtitle: "Fans back the work, not the coin",
     description:
-      "A solo artist or writer launches a Sparkz Hearth. Fans can back with a card (no wallet, no gas) at $5/$25/$100. The creator earns directly; no token required. Ideal for non-crypto audiences.",
+      "A solo artist or writer launches a Sparkz Hearth. Fans back the work for free - no wallet, no card. The creator builds a real backer base and a track record of what they've made. Ideal for non-crypto audiences.",
     realExample: null,
     realLink: null,
     tokenless:
-      "Stripe patronage tiers (card) + monthly Meme Engine update post + 0xSplits for collaborators",
+      "Free boosts (no wallet) + a Meme Engine update post + 0xSplits for collaborators",
     split: { community: 1, creator: 97, treasury: 2 },
     tokenTiming: "later" as Timing,
     tokenNote:
@@ -328,7 +328,7 @@ export default function ExamplesPage() {
             🔥 Open a Hearth
           </Link>
           <Link
-            href="/advisor"
+            href="/split-wizard"
             className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
           >
             🎯 Ask the advisor
@@ -340,7 +340,7 @@ export default function ExamplesPage() {
             🪄 Split wizard
           </Link>
           <Link
-            href="/token-timing"
+            href="/graduation"
             className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
           >
             ⏱ Token timing

@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     "fc:frame:button:1:target": `${BASE}/start`,
     "fc:frame:button:2": "📊 See the split",
     "fc:frame:button:2:action": "link",
-    "fc:frame:button:2:target": `${BASE}/economics`,
+    "fc:frame:button:2:target": `${BASE}/split-wizard`,
   },
 };
 
@@ -95,7 +95,7 @@ const GUARDRAILS = [
   {
     rule: "Points reset = fairness reset",
     detail:
-      "If a creator resets the leaderboard, the historical point accumulation clears. Old splits are already locked; only future snapshots use new points.",
+      "If a creator resets the leaderboard, the historical point accumulation clears. Past splits stay as recorded; only future snapshots use new points.",
   },
 ];
 
@@ -109,10 +109,15 @@ export default function CommunityPoolPage() {
         </p>
         <h1 className="text-4xl font-bold mb-4">Community Pool</h1>
         <p className="text-muted text-lg leading-relaxed">
-          Every Sparkz Hearth reserves a share of its trading fees for the people who
-          actually built the culture. That share lives in a 0xSplits contract. Contributors
-          claim their proportional cut at splits.org - no auto-payout, no deadline, no
-          minimum.
+          The idea: every Sparkz Hearth reserves a share of its trading fees for the
+          people who actually built the culture - held in a 0xSplits contract, claimed at
+          splits.org. No auto-payout, no deadline, no minimum.
+        </p>
+        <p className="mt-4 rounded-lg border border-accent/30 bg-accent/5 px-4 py-3 text-sm text-muted">
+          <span className="font-semibold text-accent">How to read this:</span> this is the
+          economic model Sparkz is built around - it applies once a Hearth graduates to a
+          token (trading fees, 0xSplits). It is the intended mechanism, not something
+          enforced on-chain today. A spark has no coin and no fees yet.
         </p>
       </section>
 
@@ -251,7 +256,7 @@ export default function CommunityPoolPage() {
           🔥 Start a Hearth
         </Link>
         <Link
-          href="/economics"
+          href="/community-pool"
           className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
         >
           📐 Full economics
@@ -263,7 +268,7 @@ export default function CommunityPoolPage() {
           🪄 Split wizard
         </Link>
         <Link
-          href="/advisor"
+          href="/split-wizard"
           className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
         >
           💬 Ask the advisor

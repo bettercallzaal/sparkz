@@ -175,7 +175,7 @@ export default function MemeEnginePage() {
             <div className="font-medium text-sm">See spark templates</div>
             <div className="text-xs text-muted">How the Meme Engine fits different creator types</div>
           </Link>
-          <Link href="/economics" className="glass glass-hover p-3">
+          <Link href="/community-pool" className="glass glass-hover p-3">
             <div className="font-medium text-sm">Economics</div>
             <div className="text-xs text-muted">1% treasury upkeep funds ZOL compute for all creators</div>
           </Link>

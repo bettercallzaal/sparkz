@@ -8,9 +8,9 @@
 // degrades to off and can never take the hub down.
 
 import type { HearthPlugin } from "@/lib/plugins/types";
-import { audiusCatalogSpoke } from "./audius-catalog";
+import { audiusSpoke } from "./audius";
 
 export const COMMUNITY_SPOKES: HearthPlugin[] = [
-  audiusCatalogSpoke,
+  audiusSpoke, // the first LIVE API spoke - reads real catalogs from the Audius public API
   // Add your spoke here: `import { yourSpoke } from "./your-tool";` then list it.
 ];

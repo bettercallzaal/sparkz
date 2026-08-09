@@ -48,10 +48,10 @@ const CONTRIBUTION_TYPES = [
   {
     icon: "💸",
     name: "Back",
-    what: "Support the Hearth with a fiat tier (Spark / Booster / Patron) or on-chain boost.",
+    what: "Support the Hearth with a free boost - no wallet, no card, no coin.",
     weight: "High",
-    tracked: "Patronage tier, one-time or recurring",
-    example: "A $25 Booster backing earns leaderboard weight proportional to tier",
+    tracked: "Boost (free) - who showed up and when",
+    example: "A boost earns leaderboard weight and puts you in the receipts",
   },
   {
     icon: "🎭",
@@ -108,10 +108,10 @@ const INTEGRATIONS = [
     status: "Beta - runs on each ZOL post",
   },
   {
-    name: "Patronage tiers",
-    url: "/patronage",
-    what: "Fiat backing layer: Spark ($5) / Booster ($25) / Patron ($100) tiers earns leaderboard weight.",
-    status: "V1 - one-time tiers (recurring is v2)",
+    name: "Free backing",
+    url: "/start",
+    what: "Anyone can boost a Hearth for free - no wallet, no card. Boosts earn leaderboard weight and land in the receipts.",
+    status: "Live",
   },
 ];
 
@@ -266,13 +266,13 @@ export default function ContributionPage() {
           💰 Community pool
         </Link>
         <Link
-          href="/economics"
+          href="/community-pool"
           className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
         >
           📐 Economics
         </Link>
         <Link
-          href="/token-timing"
+          href="/graduation"
           className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
         >
           ⏱ Token timing

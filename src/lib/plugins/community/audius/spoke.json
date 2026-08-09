@@ -1,0 +1,14 @@
+{
+  "id": "connector-audius",
+  "name": "Audius Catalog",
+  "version": "1.0.0",
+  "author": "sparkz",
+  "description": "Link an artist's Audius catalog to their Hearth - live reads from the Audius public API.",
+  "type": "connector",
+  "provides": { "connectors": ["connector-audius"] },
+  "permissions": ["read:hearth"],
+  "configSchema": {
+    "AUDIUS_HANDLE": { "required": false, "secret": false, "description": "The Hearth's Audius handle (live catalog reads)" }
+  },
+  "minSparkzVersion": "1.0.0"
+}

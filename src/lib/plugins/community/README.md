@@ -28,7 +28,7 @@ Sparkz change is needed - you contribute a small folder and open one PR.
    ```
 
 3. **`index.ts`** - export a `HearthPlugin` whose component is a `Connector`. Copy
-   `audius-catalog/index.ts` as your template. A `Connector` is deliberately small:
+   `audius/index.ts` as your template. A `Connector` is deliberately small:
 
    ```ts
    const yourConnector: Connector = {
@@ -70,4 +70,4 @@ below. Merge. Then any community toggles your spoke on per-Hearth in the admin c
 - **Pin `minSparkzVersion`.** So an incompatible Sparkz version disables your spoke
   instead of breaking.
 
-See `audius-catalog/` for a complete working example.
+See `audius/` for a complete working example.

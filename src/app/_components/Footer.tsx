@@ -50,8 +50,6 @@ export default function Footer() {
             <Link href="/manifesto" className="hover:text-foreground">Manifesto</Link>
             <Link href="/hearth" className="hover:text-foreground">The Hearth</Link>
             <Link href="/meme-engine" className="hover:text-foreground">Meme Engine</Link>
-            <Link href="/economics" className="hover:text-foreground">Economics</Link>
-            <Link href="/token-timing" className="hover:text-foreground">Token timing</Link>
             <Link href="/graduation" className="hover:text-foreground">Graduation</Link>
           </div>
           <div className="flex flex-col gap-2">
@@ -59,10 +57,8 @@ export default function Footer() {
               Participate
             </span>
             <Link href="/examples" className="hover:text-foreground">Spark templates</Link>
-            <Link href="/patronage" className="hover:text-foreground">Backing tiers</Link>
             <Link href="/contribution" className="hover:text-foreground">Contribution</Link>
             <Link href="/split-wizard" className="hover:text-foreground">Split wizard</Link>
-            <Link href="/advisor" className="hover:text-foreground">Split advisor</Link>
             <Link href="/community-pool" className="hover:text-foreground">Community pool</Link>
           </div>
           <div className="flex flex-col gap-2">
@@ -72,7 +68,6 @@ export default function Footer() {
             <Link href="/zao" className="hover:text-foreground">The ZAO</Link>
             <Link href="/farcaster" className="hover:text-foreground">Farcaster</Link>
             <Link href="/audius" className="hover:text-foreground">Audius</Link>
-            <Link href="/vetted" className="hover:text-foreground">Vetted by ZAO</Link>
           </div>
         </nav>
         <p className="mt-8 text-xs">

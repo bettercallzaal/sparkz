@@ -190,7 +190,7 @@ export default function HearthPage() {
         <p className="text-xs text-muted mt-3">
           Use the{" "}
           <Link href="/split-wizard" className="text-accent hover:underline">
-            AI advisor
+            split wizard
           </Link>{" "}
           to tune your split for your specific situation.
         </p>
@@ -220,7 +220,7 @@ export default function HearthPage() {
           href="/split-wizard"
           className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
         >
-          🎯 AI advisor
+          Split wizard
         </Link>
       </section>
     </main>

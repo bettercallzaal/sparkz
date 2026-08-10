@@ -256,22 +256,10 @@ export default function CommunityPoolPage() {
           🔥 Start a Hearth
         </Link>
         <Link
-          href="/community-pool"
-          className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
-        >
-          📐 Full economics
-        </Link>
-        <Link
           href="/split-wizard"
           className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
         >
           🪄 Split wizard
-        </Link>
-        <Link
-          href="/split-wizard"
-          className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
-        >
-          💬 Ask the advisor
         </Link>
       </section>
     </main>

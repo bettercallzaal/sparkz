@@ -328,9 +328,9 @@ export default function SplitWizardPage() {
       {/* Cross-links */}
       <section className="border-t border-border py-6">
         <div className="grid gap-2 sm:grid-cols-2">
-          <Link href="/split-wizard" className="glass glass-hover p-3">
-            <div className="font-medium text-sm">Not sure on percentages?</div>
-            <div className="text-xs text-muted">Split advisor → 3 questions → recommendation</div>
+          <Link href="/community-pool" className="glass glass-hover p-3">
+            <div className="font-medium text-sm">How splits work</div>
+            <div className="text-xs text-muted">The community pool + fee-share model</div>
           </Link>
           <Link href="/examples" className="glass glass-hover p-3">
             <div className="font-medium text-sm">See example splits</div>

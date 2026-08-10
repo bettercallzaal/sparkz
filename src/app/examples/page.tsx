@@ -199,6 +199,12 @@ export default function ExamplesPage() {
           Every template starts tokenless. A token is optional, later - or never. The
           culture and the community come first.
         </p>
+        <p className="mt-4 rounded-lg border border-accent/30 bg-accent/5 px-4 py-3 text-sm text-muted">
+          <span className="font-semibold text-accent">These are blueprints to experiment
+          with</span>, not fixed products. The split and fee mechanics (0xSplits) apply
+          only if a Spark graduates to a token. Sparkz charges nothing - try an approach,
+          and the ones that work become shared templates over time.
+        </p>
       </section>
 
       {/* Template grid */}
@@ -343,7 +349,7 @@ export default function ExamplesPage() {
             href="/graduation"
             className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
           >
-            ⏱ Token timing
+            Graduation
           </Link>
         </div>
       </section>

@@ -129,6 +129,13 @@ export default function ContributionPage() {
           gives you optionality - you can trade it. Contributing to the Hearth
           gives you fee share. Here&rsquo;s exactly how Sparkz measures what you give.
         </p>
+        <p className="mt-4 rounded-lg border border-accent/30 bg-accent/5 px-4 py-3 text-sm text-muted">
+          <span className="font-semibold text-accent">How to read this:</span> these are
+          options a creator can experiment with, not a system that runs on every Hearth
+          today. The fee-share mechanics (0xSplits, weekly snapshots) only apply once a
+          Hearth graduates to a token. Nothing here charges anyone. Sparkz is free -
+          proven patterns become templates over time.
+        </p>
       </section>
 
       {/* Core principle */}
@@ -275,7 +282,7 @@ export default function ContributionPage() {
           href="/graduation"
           className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
         >
-          ⏱ Token timing
+          Graduation
         </Link>
       </section>
     </main>

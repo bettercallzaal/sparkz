@@ -15,6 +15,7 @@ import Flame from "@/app/_components/Flame";
 import SparkLit from "@/app/_components/SparkLit";
 import EmpireLeaderboard from "@/app/_components/EmpireLeaderboard";
 import { canonicalOrigin } from "@/lib/origin";
+import { hearthIntegrations, hiddenIntegrations } from "@/lib/hearth-integrations";
 
 export const dynamic = "force-dynamic";
 
@@ -176,7 +177,6 @@ export default async function HearthPage({
   const emailCount = new Set(
     backers.filter((b) => b.backer_id.includes("@")).map((b) => b.backer_id),
   ).size;
-  const short = (a: string) => `${a.slice(0, 6)}...${a.slice(-4)}`;
   const meta = hearth.metadata as {
     image?: string;
     review?: string;
@@ -346,51 +346,35 @@ export default async function HearthPage({
 
       {/* Integrations - the Spark as a hub. Connected first, available ones dimmed. */}
       {(() => {
-        const integrations = [
-          {
-            label: "Farcaster",
-            sub: "Distribution",
-            connected: Boolean(fc?.channel || fc?.username || fc?.fid),
-            value: fc?.channel ? `/${fc.channel}` : fc?.username ? `@${fc.username}` : fc?.fid ? `fid ${fc.fid}` : "not linked",
-            href: fc?.channel ? `https://farcaster.xyz/~/channel/${fc.channel}` : fc?.username ? `https://farcaster.xyz/${fc.username}` : undefined,
-          },
-          {
-            label: "Treasury",
-            sub: "Empire Builder",
-            connected: Boolean(econ.empire_address || econ.empire_id),
-            value: econ.empire_address ? short(econ.empire_address) : econ.empire_id ? "linked" : "not deployed",
-            href: econ.empire_id ? `https://www.empirebuilder.world/empire/${econ.empire_id}` : undefined,
-          },
-          {
-            label: "Email list",
-            sub: "Community",
-            connected: emailCount > 0,
-            value: `${emailCount} on list`,
-          },
-          {
-            label: "Token",
-            sub: "Clanker",
-            connected: Boolean(econ.token_address),
-            value: econ.token_address ? short(econ.token_address) : "spark (no coin)",
-          },
-          {
-            label: "Agent",
-            sub: "ElizaOS",
-            connected: Boolean(econ.agent),
-            value: econ.agent ? "configured" : "scaffold",
-          },
-          { label: "Bounties", sub: "POIDH", connected: false, value: "soon" },
-        ].sort((a, b) => Number(b.connected) - Number(a.connected));
+        const hidden = hiddenIntegrations(hearth);
+        const integrations = hearthIntegrations(hearth, emailCount)
+          .filter((i) => !hidden.includes(i.id))
+          .sort((a, b) => Number(b.connected) - Number(a.connected));
         const liveCount = integrations.filter((i) => i.connected).length;
         return (
           <section className="mb-8">
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-sm font-medium">Integrations</h2>
-              <span className="text-xs text-muted">{liveCount} live</span>
+              <div className="flex items-center gap-3">
+                <span className="text-xs text-muted">{liveCount} live</span>
+                <Link
+                  href={`/c/${hearth.slug}/settings`}
+                  className="text-xs text-muted hover:text-accent"
+                >
+                  Manage
+                </Link>
+              </div>
             </div>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
               {integrations.map((i) => (
-                <IntegrationCard key={i.label} {...i} />
+                <IntegrationCard
+                  key={i.id}
+                  label={i.label}
+                  sub={i.sub}
+                  value={i.value}
+                  connected={i.connected}
+                  href={i.href}
+                />
               ))}
             </div>
           </section>

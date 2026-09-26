@@ -343,7 +343,7 @@ flowchart LR
 | **ApprovalChannel** | route an approval request | `in_app` + optional Discord notice | direct Discord / Telegram approval |
 | **Connector** (spoke) | `status(hearthId)` for the integrations grid | `audius-catalog` (example) | any vendor tool - added via a community PR |
 
-Seams are bundled into **spokes** by the plugin system (`src/lib/plugins`, modeled on elizaOS). A `HearthPlugin` bundles components behind one id + a declared config schema; `registerPlugin()` fans them into the seams above. Each Hearth toggles its spokes on/off (and sets their config) via the `hearth_spokes` table - so every Spark connects to its own communities and tools. **Vendors add their tool as a spoke** in three files + one PR: see [`src/lib/plugins/community/README.md`](src/lib/plugins/community/README.md).
+Seams are bundled into **spokes** by the plugin system (`src/lib/plugins`, modeled on elizaOS). A `HearthPlugin` bundles components behind one id + a declared config schema; `registerPlugin()` fans them into the seams above. Each Hearth toggles its spokes on/off (and sets their config) via the `hearth_spokes` table - so every Spark connects to its own communities and tools. *(Honest status: the toggle table is the control plane; the runtime loop does not consume per-Hearth state yet - see the roadmap.)* **Vendors add their tool as a spoke** in three files + one PR: see [`src/lib/plugins/community/README.md`](src/lib/plugins/community/README.md).
 
 ## Integrations (spokes on the wheel)
 
@@ -498,15 +498,28 @@ Every feature passes all four or it stays in the lab:
 3. Does it strengthen the Hearth's accumulating data?
 4. Can it be tested with a real project within 30 days?
 
-## Roadmap
+## State of the project + roadmap
 
-> **TL;DR** Ship a floor, keep innovating - the Hearth foundation and lean agent exist; Swarm, production agent ops, and dollar backing are next.
+> **TL;DR** Audited 2026-08-17. The core loop works end to end. The honest gaps: auth is operator-only (owner-by-FID is designed and next), spoke toggles are control-plane only, and receipts have no measurement engine yet.
 
-Two tracks: ship a floor, keep innovating.
+**Working end to end (verified):**
 
-- **Milestone 1 (now)** - the Hearth foundation: schema, adapter seams, Meme Engine loop, Zoostr seed, the filterable directory.
-- **Next** - Community Swarm (supporters remix + get attributed), production deployment for the runnable agent, the ElizaOS upgrade path, and dollar backing.
-- **The convergence** - each audited ZAO project is a Hearth candidate; CoCConcertZ is slated to become a Spark.
+- Hearth creation - self-serve `/start` (rate-limited, held for review) and operator console.
+- The Meme Engine loop - signal -> 3 drafts (OpenRouter, memory-grounded) -> human approve -> Meme Receipt. Idempotent, first-approve-wins.
+- Empire Builder - live reads (leaderboards, boosters) and a working tokenless deploy at `/admin/empire` (wallet-signed, operator-gated).
+- The Audius spoke - real catalog reads from the Audius public API, live demo on `/audius`.
+- Owner visibility settings - `/c/[slug]/settings` toggles which integrations show on the public page (operator-gated today).
+- Free boost backing - no wallet, no card, one boost per backer per Hearth.
+
+**The honest gaps (and the plan):**
+
+1. **Auth is operator-token only.** Farcaster sign-in exists client-side, but the server never verifies a FID. The fix is designed and locked: *two doors, one session* - Quick Auth JWT verification for mini-app entry, `auth-kit` + server-side `verifySignInMessage` for web, both minting one HMAC session cookie (`SameSite=None; Secure` so it survives the Farcaster iframe), then a `requireHearthOwner` gate so a creator manages their own Hearth by FID. This also fixes `create-spark` trusting an unverified FID. **This is the next build.**
+2. **Spoke toggles are control-plane only.** The `hearth_spokes` table stores per-Hearth toggles + config, but the runtime loop does not read it yet - approval routing and signal detection use global registries, and `Connector.status()` is never called. Wiring the loop to consume per-Hearth state is the second build.
+3. **Receipts have no measurement engine.** `reach` / `referrals` / `backing_generated` are written as 0, and approved drafts are not yet published to Farcaster. The plan: publish-on-approve via Neynar managed signers, then measure with cast lookups. (Note: Sign In With Neynar was deprecated 2026-08-14 - new work uses Neynar managed/sponsored signers, not SIWN.)
+
+**Build order:** owner-by-FID auth -> owner-gated settings + Empire deploy/link -> runtime spoke gating -> the receipts engine (publish + measure) -> per-Hearth contributor leaderboards.
+
+**The convergence** - each audited ZAO project is a Hearth candidate; CoCConcertZ is slated to become a Spark.
 
 Full vision: [ARCHITECTURE.md](docs/ARCHITECTURE.md) and [V1-SCOPE.md](docs/V1-SCOPE.md).
 
@@ -519,7 +532,7 @@ Sparkz is early and public on purpose. The things below are **not locked in**. I
 - **Backing rails** - `ledger` (off-chain) is live; Clanker, Bankr, Privy, and Empire are candidates behind the same adapter. Which do creators actually want first?
 - **Fees + splits** - the creator-first default is 1/1/98. Is that the right floor? Should Sparkz ever take a slice, or only an aligned, locked stake - never a fee?
 - **The graduation moment** - when and how a spark becomes a token, and which compatible rail fits. What should "graduate" feel like - a button, a vote, a threshold?
-- **Self-serve + moderation** - anyone can light a spark, held for review. How open should this be: fully self-serve, invite-only, or Sign-in-with-Farcaster gated?
+- **Self-serve + moderation** - anyone can light a spark, held for review. The auth direction is decided (verified Sign-in-with-Farcaster, owner-by-FID); still open is how open creation should be: fully self-serve, invite-only, or FID-gated from day one?
 - **Agent autonomy** - the Meme Engine agent is human-in-the-loop by default. How much autonomy should a creator be able to hand it?
 - **Entry points** - Creator and OSS-repo flows are wired; Culture and Meme remain early. Which should we build out next?
 
@@ -540,6 +553,7 @@ Bring a take with a concrete path (see [Contributing](CONTRIBUTING.md)) and it g
 | [SETUP.md](docs/SETUP.md) | Local setup, step by step |
 | [DEPLOY.md](docs/DEPLOY.md) | Vercel + domains |
 | [SECURITY.md](docs/SECURITY.md) | Security posture |
+| [AUTH-PLAN.md](docs/AUTH-PLAN.md) | The locked owner-by-FID auth plan (two doors, one session) - the next build |
 | [STACK.md](docs/STACK.md) | File-by-file stack map |
 | [strategy/positioning.md](docs/strategy/positioning.md) | Why Sparkz is an OSS protocol + data network, not SaaS |
 | [strategy/graduation-timing.md](docs/strategy/graduation-timing.md) | When a Spark should become a coin - the token-timing readiness framework |

@@ -37,41 +37,25 @@ export const metadata: Metadata = {
   },
 };
 
-const RETURNS = [
-  {
-    title: "Profit margin",
-    body: "More of what a creator's work earns stays with the creator.",
-  },
-  {
-    title: "Data",
-    body: "Creators keep the record of who backed them and what they made.",
-  },
-  {
-    title: "IP rights",
-    body: "The work stays the creator's. Technology is the means, not the headline.",
-  },
-];
+const RETURNS = ["Profit margin", "Data", "IP rights"];
 
+// Sparkz's principles, taken from the README's Principles list.
 const PRINCIPLES = [
   {
-    title: "Culture before price",
-    body: "Community identity comes first. Token mechanics serve the culture - not the other way around.",
+    title: "No auto-mint",
+    body: "Tokenization is an explicit creator choice, later - never a throwaway coin on day one.",
   },
   {
-    title: "Attribution before extraction",
-    body: "Every fee flow should credit the contributor. Anonymous extraction is not a Sparkz model.",
+    title: "Monetization tool, not a security",
+    body: "Splits are revenue share (utility), not \"shares in the creator.\" No moon talk, no promises.",
   },
   {
-    title: "Holding is not contribution",
-    body: "Owning earns optionality. Contributing earns recognition. Holding a token alone does not entitle anyone to a share.",
+    title: "Retention before token",
+    body: "Real engagement first - collabs, backing, community - not holder count.",
   },
   {
-    title: "Capability is not authority",
-    body: "The Meme Engine can draft and suggest. Humans decide, sign, and post.",
-  },
-  {
-    title: "Founder-authority decay",
-    body: "Creator control decreases as the community matures. The ZAO's role is to help that transition, not to capture it.",
+    title: "Generative, not extractive",
+    body: "Symbiotic, not parasitic.",
   },
 ];
 
@@ -137,19 +121,22 @@ export default function ZaoPage() {
         <h2 className="text-xl font-bold mb-5">What it returns to artists</h2>
         <div className="grid sm:grid-cols-3 gap-4">
           {RETURNS.map((r) => (
-            <div key={r.title} className="card-solid border border-border rounded-xl p-5">
-              <div className="font-bold text-sm mb-2 text-accent">{r.title}</div>
-              <div className="text-muted text-xs leading-relaxed">{r.body}</div>
+            <div key={r} className="card-solid border border-border rounded-xl p-5">
+              <div className="font-bold text-sm text-accent">{r}</div>
             </div>
           ))}
         </div>
+        <p className="text-muted text-sm mt-4 leading-relaxed">
+          Technology is the means, not the headline.
+        </p>
       </section>
 
       {/* Principles */}
       <section>
         <h2 className="text-xl font-bold mb-2">Principles</h2>
         <p className="text-muted text-sm mb-5 leading-relaxed">
-          The ideas Sparkz is built around.
+          Learned from watching creator coins fail: speculation as the product, forced
+          tokenization, zero-utility tokens, extraction dressed as &ldquo;for creators&rdquo;.
         </p>
         <div className="space-y-3">
           {PRINCIPLES.map((g, i) => (

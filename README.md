@@ -381,7 +381,17 @@ Surfaced on each Hearth page (`/c/[slug]`) as an integrations panel - **the Hear
 | `/admin/empire` | Tokenless empire launcher (wallet-connected) |
 | `/audit` | Brand audit - import an existing repo as an OSS Hearth |
 | `/profile` | Sign in with Farcaster |
-| `/try`, `/lol` | Host-specific landing pages for trysparkz.com and sparkz.lol |
+| `/c/[slug]/settings` | Owner settings - choose which integrations show on the public Hearth page (operator-gated today) |
+| `/admin/add-repo` | Add a project from its GitHub repo - opens an OSS Hearth pre-filled with real repo data (operator-gated) |
+| `/blog/[slug]` | A single blog post |
+| `/hearth` | What a Hearth is - identity, backers, and receipts before any token |
+| `/meme-engine` | How the Meme Engine loop works - drafts, human approval, receipts |
+| `/graduation` | When and how a Spark might graduate to a token (optional, always) |
+| `/split-wizard` | Set a split sheet before launch - roles, shares, 0xSplits JSON export |
+| `/community-pool`, `/contribution`, `/examples` | Options creators can experiment with - contribution points, pool shares, Spark templates |
+| `/farcaster` | Why Sparkz is Farcaster-native |
+| `/manifesto` | The principles - generative, not extractive |
+| `/zao` | Sparkz as part of The ZAO |
 
 ## API reference
 
@@ -399,6 +409,10 @@ Routes validate request data with Zod `safeParse`, wrap handlers in try/catch, l
 | `POST` | `/api/capsules/import-empire` | Import an existing Empire Builder empire AS a Spark |
 | `POST` | `/api/capsules/link-empire` | Attach an Empire treasury to a Hearth |
 | `POST` | `/api/capsules/link-farcaster` | Attach a Farcaster identity |
+| `POST` | `/api/capsules/add-repo` | Operator: add a project from a GitHub repo URL as an OSS Hearth |
+| `GET`  | `/api/capsules/by-fid` | Hearths owned by a Farcaster FID, for the creator hub (PII stripped) |
+| `GET/POST` | `/api/capsules/visibility` | Operator: read / set which integrations a Hearth hides from its public page |
+| `GET/POST` | `/api/capsules/media-kit` | Operator: render a Hearth into an AI-anchor video segment (offline stub unless the Baraza env is set) |
 | `GET/POST` | `/api/capsules/plugins` | Read / toggle a Hearth's plugins + per-Hearth config |
 | `GET/POST` | `/api/signals` | List operator-visible signals / flag a moment + generate 3 drafts |
 | `POST` | `/api/signals/detect` | Surface candidate moments from a signal source (e.g. Farcaster) for the operator to flag |
@@ -406,12 +420,15 @@ Routes validate request data with Zod `safeParse`, wrap handlers in try/catch, l
 | `GET/POST`  | `/api/backers` | List backers / record operator-gated ledger backing |
 | `POST` | `/api/boost` | Back / boost a Hearth (email, no wallet) |
 | `GET`  | `/api/receipts` | Meme Receipts timeline |
+| `GET`  | `/api/activity` | Proof-of-life feed - recent sparks, boosts, and receipts across public Hearths (backers sanitized) |
+| `GET`  | `/api/audius` | An artist's public Audius catalog, by handle (fail-soft) |
 | `GET`  | `/api/empire/{id}` | Full public Empire read bundle (resolve + leaderboards + entries + rewards + boosters) |
 | `POST` | `/api/empire/deploy` | Deploy a tokenless empire |
 | `POST` | `/api/audit` | Update the readiness audit for an OSS Hearth |
 | `POST` | `/api/waitlist` | Join the list |
 | `POST` | `/api/upload` | Upload a logo/asset to Storage |
 | `POST` | `/api/admin/login` | Exchange the operator token for an httpOnly cookie |
+| `POST` | `/api/admin/dev-login` | Local development only - sets the operator cookie from the env token; returns 404 outside `NODE_ENV=development` |
 | `GET`  | `/api/og`, `/api/icon` | Dynamic OG image + icon |
 
 ## Tech stack

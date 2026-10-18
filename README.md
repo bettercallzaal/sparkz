@@ -534,7 +534,7 @@ Every feature passes all four or it stays in the lab:
 2. **Spoke toggles now gate the loop.** Each Hearth's `hearth_spokes` toggles decide which signal sources may flag or detect for it and which approval channels hear about its drafts, and its connector spokes report live status (`Connector.status()`, with the Hearth's own config) on `/c/[slug]`. Still open: per-Hearth approval destinations (each Hearth's own webhook) - channels still post to the server-wide destination.
 3. **Receipts have no measurement engine.** `reach` / `referrals` / `backing_generated` are written as 0, and approved drafts are not yet published to Farcaster. The plan: publish-on-approve via Neynar managed signers, then measure with cast lookups. (Note: Sign In With Neynar was deprecated 2026-08-14 - new work uses Neynar managed/sponsored signers, not SIWN.)
 
-**Build order:** owner-by-FID auth -> owner-gated settings + Empire deploy/link -> runtime spoke gating (built) -> the receipts engine (publish + measure) -> per-Hearth contributor leaderboards.
+**Build order:** owner-by-FID auth -> owner-gated settings + Empire deploy/link -> runtime spoke gating -> the receipts engine (publish + measure) -> per-Hearth contributor leaderboards.
 
 **The convergence** - each audited ZAO project is a Hearth candidate; CoCConcertZ is slated to become a Spark.
 

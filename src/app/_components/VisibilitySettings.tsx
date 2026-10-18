@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { inMiniApp, miniAppSignIn } from "@/lib/auth-session-client";
 
 type Integration = { id: string; label: string; sub: string; connected: boolean; value: string };
 
-// Owner controls which integrations show on the public Hearth page. Admin-gated for now
-// (the API checks the operator session); per-creator FID auth via SIWF is the follow-up.
+// Owner controls which integrations show on the public Hearth page. The API allows
+// the Hearth's owner (verified Farcaster session) or the operator.
 export default function VisibilitySettings({
   hearthId,
   slug,
@@ -21,13 +22,19 @@ export default function VisibilitySettings({
   const [hidden, setHidden] = useState<Set<string>>(new Set());
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [denial, setDenial] = useState<401 | 403>(401);
+  const [miniApp, setMiniApp] = useState(false);
 
   useEffect(() => {
     let alive = true;
     fetch(`/api/capsules/visibility?hearth_id=${hearthId}`)
       .then(async (r) => {
         if (r.status === 401 || r.status === 403) {
-          if (alive) setState("denied");
+          if (alive) {
+            setDenial(r.status);
+            setState("denied");
+            setMiniApp(await inMiniApp());
+          }
           return;
         }
         const j = await r.json();
@@ -78,11 +85,29 @@ export default function VisibilitySettings({
   if (state === "denied") {
     return (
       <div className="rounded-lg border border-border bg-card p-5 text-sm text-muted">
-        Operator access required to manage this Hearth&apos;s visibility.{" "}
-        <Link href="/admin" className="text-accent hover:underline">
-          Unlock the operator console
-        </Link>
-        , then come back. (Per-creator sign-in with your own Farcaster is coming next.)
+        {denial === 403 ? (
+          <>Only {name}&apos;s owner can manage its visibility.</>
+        ) : miniApp ? (
+          <>
+            Sign in with the Farcaster account that owns {name}.{" "}
+            <button
+              type="button"
+              onClick={async () => {
+                if (await miniAppSignIn().catch(() => null)) window.location.reload();
+              }}
+              className="text-accent hover:underline"
+            >
+              Sign in with Farcaster
+            </button>
+          </>
+        ) : (
+          <>
+            <Link href="/profile" className="text-accent hover:underline">
+              Sign in with Farcaster
+            </Link>{" "}
+            as {name}&apos;s owner, then come back.
+          </>
+        )}
       </div>
     );
   }

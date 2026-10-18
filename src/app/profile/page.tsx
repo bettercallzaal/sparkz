@@ -1,16 +1,50 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { SignInButton, useProfile } from "@farcaster/auth-kit";
 import Flame from "@/app/_components/Flame";
 import CreateSparkAsFarcaster from "@/app/_components/CreateSparkAsFarcaster";
 import YourSparks from "@/app/_components/YourSparks";
+import {
+  currentFid,
+  exchangeSiwf,
+  fetchNonce,
+  inMiniApp,
+  miniAppSignIn,
+  signOut,
+} from "@/lib/auth-session-client";
 
 export default function ProfilePage() {
   const {
     isAuthenticated,
     profile: { fid, username, displayName, bio, pfpUrl, custody, verifications },
   } = useProfile();
+
+  // The verified server session (lib/session.ts). auth-kit's state above is
+  // browser-only; owner actions on the server need this.
+  const [serverFid, setServerFid] = useState<number | null>(null);
+  const [miniApp, setMiniApp] = useState(false);
+  const [signInError, setSignInError] = useState<string | null>(null);
+
+  useEffect(() => {
+    currentFid().then(setServerFid).catch(() => setServerFid(null));
+    inMiniApp().then(setMiniApp);
+  }, []);
+
+  async function onMiniAppSignIn() {
+    setSignInError(null);
+    try {
+      const verified = await miniAppSignIn();
+      if (verified) setServerFid(verified);
+      else setSignInError("Sign-in could not be verified. Try again.");
+    } catch {
+      setSignInError("Sign-in was cancelled.");
+    }
+  }
+
+  // Signed in through the mini-app door: no auth-kit profile, but a verified FID.
+  const miniAppSession = !isAuthenticated && serverFid !== null;
 
   return (
     <main className="mx-auto w-full max-w-md flex-1 px-4 py-10">
@@ -31,13 +65,41 @@ export default function ProfilePage() {
         </div>
       </header>
 
-      {!isAuthenticated ? (
+      {miniAppSession ? (
+        <section className="glass p-5">
+          <div className="text-lg font-semibold">Signed in</div>
+          <div className="text-xs text-muted">fid {serverFid}</div>
+          <YourSparks fid={serverFid} />
+          <CreateSparkAsFarcaster fid={serverFid} />
+          <SignOutLink onDone={() => setServerFid(null)} />
+        </section>
+      ) : !isAuthenticated ? (
         <section className="glass p-5">
           <p className="mb-4 text-sm text-muted">
             Connect your Farcaster account. Free, protocol-native - no wallet gas,
             no email. This is the identity your Hearths and casts hang off of.
           </p>
-          <SignInButton />
+          {miniApp ? (
+            <button
+              type="button"
+              onClick={onMiniAppSignIn}
+              className="btn-spark rounded-lg px-5 py-2.5 text-sm font-semibold"
+            >
+              Sign in with Farcaster
+            </button>
+          ) : (
+            <SignInButton
+              nonce={fetchNonce}
+              onSuccess={async (res) => {
+                setSignInError(null);
+                if (!res.message || !res.signature) return;
+                const verified = await exchangeSiwf(res.message, res.signature);
+                setServerFid(verified);
+                if (!verified) setSignInError("Sign-in could not be verified. Try again.");
+              }}
+            />
+          )}
+          {signInError && <p className="mt-3 text-sm text-red-400">{signInError}</p>}
         </section>
       ) : (
         <section className="glass p-5">
@@ -81,8 +143,32 @@ export default function ProfilePage() {
 
           {fid && <YourSparks fid={fid} />}
           {fid && <CreateSparkAsFarcaster fid={fid} username={username ?? undefined} />}
+          {serverFid === null && (
+            <p className="mt-4 text-xs text-muted">
+              {signInError ?? "Verifying your sign-in with the server..."}
+            </p>
+          )}
+          <SignOutLink onDone={() => setServerFid(null)} />
         </section>
       )}
     </main>
+  );
+}
+
+// Ends the server session. auth-kit keeps its own browser state, so reload to
+// clear both.
+function SignOutLink({ onDone }: { onDone: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={async () => {
+        await signOut();
+        onDone();
+        window.location.reload();
+      }}
+      className="mt-6 text-xs text-muted underline hover:text-foreground"
+    >
+      Sign out
+    </button>
   );
 }

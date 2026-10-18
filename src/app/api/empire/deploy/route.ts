@@ -2,18 +2,20 @@ import type { NextRequest } from "next/server";
 import { getServiceClient } from "@/lib/supabase/server";
 import { deployEmpireSchema } from "@/lib/validation/schemas";
 import { ok, badRequest, serverError, zodError } from "@/lib/http";
-import { requireAdmin } from "@/lib/auth";
+import { requireHearthOwner } from "@/lib/auth";
 import { deployTokenlessCustom, resolveEmpire } from "@/lib/empire/client";
 import type { Hearth } from "@/lib/supabase/types";
 
 export async function POST(req: NextRequest) {
   try {
-    const denied = requireAdmin(req);
-    if (denied) return denied;
-
     const body = await req.json().catch(() => null);
     const parsed = deployEmpireSchema.safeParse(body);
     if (!parsed.success) return zodError(parsed.error);
+
+    // Owner-or-operator: the Hearth's owner (verified session FID) may deploy its own
+    // empire; the deploy itself is still signed by the owner wallet (EIP-191).
+    const denied = await requireHearthOwner(req, parsed.data.hearth_id);
+    if (denied) return denied;
 
     const supabase = getServiceClient();
     const { data: hearth, error: capErr } = await supabase
@@ -22,7 +24,7 @@ export async function POST(req: NextRequest) {
     if (!hearth) return badRequest("hearth not found");
 
     // Empire is an external upstream; surface its real error to the operator
-    // (this is a gated operator tool, not a public endpoint).
+    // (this is an owner/operator-gated tool, not a public endpoint).
     let baseToken: string;
     try {
       ({ baseToken } = await deployTokenlessCustom({

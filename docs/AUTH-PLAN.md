@@ -40,6 +40,9 @@ fail closed.
 
 ## Implementation checklist
 
+Status 2026-10-18: steps 1-5 built on branch `ws/owner-fid-auth`. Step 6 needs
+`SPARKZ_SESSION_SECRET` set in production and FID 19640 recorded as an owner.
+
 1. `src/lib/farcaster-auth.ts` - the lifted JWKS verifier + `verifySiwf()` wrapper.
 2. `POST /api/auth/quick` (verify Quick Auth JWT -> set session) and
    `POST /api/auth/siwf` (verify SIWF message -> set session); `POST /api/auth/logout`.

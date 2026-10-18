@@ -1,13 +1,13 @@
 import type { NextRequest } from "next/server";
 import { z } from "zod";
 import { getServiceClient } from "@/lib/supabase/server";
-import { requireAdmin } from "@/lib/auth";
+import { requireHearthOwner } from "@/lib/auth";
 import { ok, badRequest, serverError, zodError } from "@/lib/http";
 import { hearthIntegrations, hiddenIntegrations } from "@/lib/hearth-integrations";
 import type { Hearth } from "@/lib/supabase/types";
 
 // GET  /api/capsules/visibility?hearth_id=... - the Hearth's integrations + which are
-//      hidden from the public page. Admin-gated (owner-scoped FID auth is the follow-up).
+//      hidden from the public page. Owner-or-operator (requireHearthOwner).
 // POST /api/capsules/visibility - set the hidden list. Body { hearth_id, hidden_integrations }.
 //
 // Visibility is stored in the Hearth's metadata.hidden_integrations (an array of ids).
@@ -15,11 +15,13 @@ import type { Hearth } from "@/lib/supabase/types";
 
 export async function GET(req: NextRequest) {
   try {
-    const denied = requireAdmin(req);
-    if (denied) return denied;
-
     const hearthId = req.nextUrl.searchParams.get("hearth_id");
-    if (!hearthId) return badRequest("hearth_id is required");
+    if (!hearthId || !z.string().uuid().safeParse(hearthId).success) {
+      return badRequest("hearth_id is required");
+    }
+
+    const denied = await requireHearthOwner(req, hearthId);
+    if (denied) return denied;
 
     const supabase = getServiceClient();
     const { data, error } = await supabase
@@ -56,12 +58,12 @@ const schema = z.object({
 
 export async function POST(req: NextRequest) {
   try {
-    const denied = requireAdmin(req);
-    if (denied) return denied;
-
     const body = await req.json().catch(() => null);
     const parsed = schema.safeParse(body);
     if (!parsed.success) return zodError(parsed.error);
+
+    const denied = await requireHearthOwner(req, parsed.data.hearth_id);
+    if (denied) return denied;
 
     const supabase = getServiceClient();
     const { data: existing, error: readErr } = await supabase

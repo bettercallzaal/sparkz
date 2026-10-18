@@ -206,7 +206,7 @@ flowchart TB
   subgraph Next["Next.js (App Router, server-first)"]
     Pages["Server components<br/>(read via service role)"]
     API["API routes<br/>(Zod safeParse -> try/catch -> JSON)"]
-    Auth["requireAdmin<br/>(operator token, httpOnly cookie)"]
+    Auth["requireAdmin<br/>(admin sign-in session, or agent token header)"]
   end
 
   subgraph Data["Supabase (RLS on every table)"]
@@ -395,9 +395,9 @@ Surfaced on each Hearth page (`/c/[slug]`) as an integrations panel - **the Hear
 
 ## API reference
 
-> **TL;DR** Every endpoint is validated and error-handled; administrative writes and Meme Engine routes need the operator token.
+> **TL;DR** Every endpoint is validated and error-handled; administrative writes and Meme Engine routes need an admin.
 
-Routes validate request data with Zod `safeParse`, wrap handlers in try/catch, log server-side, and return sanitized errors. Public creation, boosting, and waitlist routes are intentionally narrow; administrative writes and the Meme Engine require the operator token.
+Routes validate request data with Zod `safeParse`, wrap handlers in try/catch, log server-side, and return sanitized errors. Public creation, boosting, and waitlist routes are intentionally narrow; administrative writes and the Meme Engine require an admin: a human signed in with Farcaster or Sign-In with Ethereum as an allowlisted identity (`src/lib/admin-identities.ts`), or the background agent sending `SPARKZ_ADMIN_TOKEN` as the `x-sparkz-admin-token` header.
 
 | Method | Route | Purpose |
 | --- | --- | --- |
@@ -432,8 +432,7 @@ Routes validate request data with Zod `safeParse`, wrap handlers in try/catch, l
 | `POST` | `/api/auth/quick` | Mini-app door: verify a Farcaster Quick Auth JWT, start the creator session |
 | `GET`  | `/api/auth/me` | The FID of the current verified session, or null |
 | `POST` | `/api/auth/logout` | End the creator session |
-| `POST` | `/api/admin/login` | Exchange the operator token for an httpOnly cookie |
-| `POST` | `/api/admin/dev-login` | Local development only - sets the operator cookie from the env token; returns 404 outside `NODE_ENV=development` |
+| `POST` | `/api/auth/siwe` | Admin door: verify a Sign-In with Ethereum message from an admin wallet, start the session |
 | `GET`  | `/api/og`, `/api/icon` | Dynamic OG image + icon |
 
 ## Tech stack
@@ -485,7 +484,7 @@ docs/                   deep docs + assets
 
 ```bash
 npm install
-cp .env.example .env.local   # fill in Supabase + operator token
+cp .env.example .env.local   # fill in Supabase + the session secret (+ agent token if you run the agent)
 npm run dev                  # http://localhost:3000
 npm run seed:zoostr          # optional: the first spark
 ```
@@ -500,12 +499,12 @@ Vercel + the two domains (trysparkz.com / sparkz.lol). PR-only to `main`; the Gi
 
 ## Security
 
-> **TL;DR** The service role never touches the browser; RLS on everything; the operator token fails closed.
+> **TL;DR** The service role never touches the browser; RLS on everything; admin access fails closed.
 
 - Never expose `SUPABASE_SERVICE_ROLE_KEY` or any secret to the browser - service role is server-only.
 - Never commit secrets or `.env`; stub keys on disk, real keys at runtime.
 - RLS on every table, deny-anon by default.
-- Operator token: `timingSafeEqual`, httpOnly cookie, fails closed.
+- Admin access: humans sign in (Farcaster or SIWE) as an allowlisted identity; the agent token is header-only, compared with `timingSafeEqual`; both fail closed.
 
 Full posture: [SECURITY.md](docs/SECURITY.md).
 

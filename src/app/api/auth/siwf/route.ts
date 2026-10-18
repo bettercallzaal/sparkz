@@ -4,6 +4,7 @@ import { z } from "zod";
 import { ok, serverError, zodError, forbidCrossSite } from "@/lib/http";
 import { verifySiwf } from "@/lib/farcaster-auth";
 import {
+  consumeNonce,
   crossSiteCookie,
   mintSession,
   NONCE_COOKIE,
@@ -45,6 +46,11 @@ export async function POST(req: NextRequest) {
       });
     } catch (verifyErr) {
       console.warn("[sparkz:auth.siwf] rejected:", (verifyErr as Error).message);
+      return denied;
+    }
+    // Single use: spend the nonce only after a valid signature.
+    if (!consumeNonce(nonce)) {
+      console.warn("[sparkz:auth.siwf] rejected: nonce already used");
       return denied;
     }
 

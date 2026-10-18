@@ -3,6 +3,7 @@
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import AdminSignIn from "@/app/_components/AdminSignIn";
 import type {
   Hearth,
   MemeReceipt,
@@ -49,26 +50,11 @@ function AdminInner() {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [needsAuth, setNeedsAuth] = useState(false);
-  const [token, setToken] = useState("");
-  // Dev-only: self-unlock so we don't paste the operator token every session. Gates
-  // the first data fetch until the dev-login attempt resolves (no 401 flicker). In
-  // production this flips true immediately and the normal token gate is untouched.
-  const [devAuthTried, setDevAuthTried] = useState(
-    process.env.NODE_ENV !== "development",
-  );
 
   // flag form
   const [text, setText] = useState("");
   const [why, setWhy] = useState("");
   const [flaggedBy, setFlaggedBy] = useState("");
-
-  useEffect(() => {
-    if (process.env.NODE_ENV !== "development") return;
-    // Fire-and-forget: 404s in any non-dev build, so it's inert outside local dev.
-    fetch("/api/admin/dev-login", { method: "POST" })
-      .catch(() => {})
-      .finally(() => setDevAuthTried(true));
-  }, []);
 
   useEffect(() => {
     apiGet<Hearth[]>("/api/capsules")
@@ -98,29 +84,12 @@ function AdminInner() {
     }
   }, []);
 
-  const login = async () => {
-    setBusy(true);
-    setErr(null);
-    try {
-      await apiPost("/api/admin/login", { token });
-      setToken("");
-      setNeedsAuth(false);
-      await refresh(hearthId);
-    } catch (e) {
-      setErr(e instanceof Error ? e.message : "login failed");
-    } finally {
-      setBusy(false);
-    }
-  };
-
   useEffect(() => {
     // Intentional: re-fetch signals + receipts when the selected hearth changes.
     // refresh() owns its own state updates (the canonical data-fetch-in-effect case).
-    // Wait for the dev-login attempt so the first fetch is already authed in dev.
-    if (!devAuthTried) return;
     // eslint-disable-next-line react-hooks/set-state-in-effect
     void refresh(hearthId);
-  }, [hearthId, refresh, devAuthTried]);
+  }, [hearthId, refresh]);
 
   const flag = async () => {
     if (!text.trim() || !hearthId) return;
@@ -207,26 +176,8 @@ function AdminInner() {
       )}
 
       {needsAuth && (
-        <section className="mb-8 rounded-lg border border-border bg-card p-4">
-          <h2 className="mb-1 text-sm font-medium">Operator unlock</h2>
-          <p className="mb-3 text-xs text-muted">
-            Writes are gated. Enter the operator token (SPARKZ_ADMIN_TOKEN).
-          </p>
-          <input
-            type="password"
-            value={token}
-            onChange={(e) => setToken(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && token && login()}
-            placeholder="operator token"
-            className="mb-3 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
-          />
-          <button
-            onClick={login}
-            disabled={busy || !token}
-            className="w-full rounded-md bg-accent px-3 py-2 text-sm font-medium text-white disabled:opacity-40"
-          >
-            {busy ? "Unlocking..." : "Unlock"}
-          </button>
+        <section className="mb-8">
+          <AdminSignIn onSignedIn={() => void refresh(hearthId)} />
         </section>
       )}
 

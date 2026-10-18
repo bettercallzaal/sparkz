@@ -2,7 +2,11 @@
 // auth-kit's own "signed in" state lives only in the browser and proves nothing to
 // the server; these turn a Farcaster proof into the httpOnly server session.
 
-type Json = { ok: boolean; data?: { fid?: number | null; nonce?: string }; error?: string };
+type Json = {
+  ok: boolean;
+  data?: { fid?: number | null; nonce?: string; address?: string | null; admin?: boolean };
+  error?: string;
+};
 
 async function call(path: string, init?: RequestInit): Promise<Json> {
   const r = await fetch(path, { credentials: "include", ...init });
@@ -13,6 +17,23 @@ async function call(path: string, init?: RequestInit): Promise<Json> {
 export async function currentFid(): Promise<number | null> {
   const j = await call("/api/auth/me");
   return j.ok ? (j.data?.fid ?? null) : null;
+}
+
+// The verified session's admin status (Farcaster FID or SIWE address on the allowlist).
+export async function currentAdmin(): Promise<boolean> {
+  const j = await call("/api/auth/me");
+  return Boolean(j.ok && j.data?.admin);
+}
+
+// Admin door: exchange a signed Sign-In with Ethereum message for the server session.
+// Returns null on success, or the server's error message.
+export async function exchangeSiwe(message: string, signature: string): Promise<string | null> {
+  const j = await call("/api/auth/siwe", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ message, signature }),
+  });
+  return j.ok ? null : (j.error ?? "Sign-in failed");
 }
 
 // Server-issued nonce for auth-kit's SignInButton (`nonce` prop).

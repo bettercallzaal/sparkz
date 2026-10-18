@@ -1,5 +1,6 @@
 import type { NextRequest, NextResponse } from "next/server";
 import { createHmac, timingSafeEqual } from "node:crypto";
+import { isCrossSite } from "@/lib/http";
 
 // The creator session: one server-minted, HMAC-signed `{fid, exp}` cookie, set by
 // either door (Quick Auth JWT in the mini app, SIWF on the web - see
@@ -33,17 +34,32 @@ function sign(payload: string, key: string): string {
   return createHmac("sha256", key).update(payload).digest("base64url");
 }
 
-// Mint the cookie value for a verified FID. Returns null when unconfigured.
-export function mintSession(fid: number): string | null {
+export interface SessionClaims {
+  fid: number | null;
+  /** Lowercased address, for a Sign-In with Ethereum session. */
+  address: string | null;
+}
+
+function mint(claims: { fid?: number; addr?: string }): string | null {
   const key = secret();
   if (!key) return null;
   const exp = Math.floor(Date.now() / 1000) + SESSION_MAX_AGE;
-  const payload = Buffer.from(JSON.stringify({ fid, exp })).toString("base64url");
+  const payload = Buffer.from(JSON.stringify({ ...claims, exp })).toString("base64url");
   return `${payload}.${sign(payload, key)}`;
 }
 
-// Read the verified FID from a cookie value, or null on any failure.
-export function readSession(value: string | undefined): number | null {
+// Mint the cookie value for a verified FID. Returns null when unconfigured.
+export function mintSession(fid: number): string | null {
+  return mint({ fid });
+}
+
+// Mint the cookie value for a verified Ethereum address (SIWE). Null when unconfigured.
+export function mintAddressSession(address: string): string | null {
+  return mint({ addr: address.toLowerCase() });
+}
+
+// Read the verified claims from a cookie value, or null on any failure.
+export function readSessionClaims(value: string | undefined): SessionClaims | null {
   const key = secret();
   if (!key || !value) return null;
   const [payload, mac] = value.split(".");
@@ -52,17 +68,35 @@ export function readSession(value: string | undefined): number | null {
   const given = Buffer.from(mac);
   if (expected.length !== given.length || !timingSafeEqual(expected, given)) return null;
   try {
-    const { fid, exp } = JSON.parse(Buffer.from(payload, "base64url").toString());
-    if (typeof fid !== "number" || !Number.isInteger(fid) || fid <= 0) return null;
+    const { fid, addr, exp } = JSON.parse(Buffer.from(payload, "base64url").toString());
     if (typeof exp !== "number" || exp < Math.floor(Date.now() / 1000)) return null;
-    return fid;
+    const validFid = typeof fid === "number" && Number.isInteger(fid) && fid > 0 ? fid : null;
+    const validAddr = typeof addr === "string" && /^0x[0-9a-f]{40}$/.test(addr) ? addr : null;
+    if (validFid === null && validAddr === null) return null;
+    return { fid: validFid, address: validAddr };
   } catch {
     return null;
   }
 }
 
+// Read the verified FID from a cookie value, or null on any failure.
+export function readSession(value: string | undefined): number | null {
+  return readSessionClaims(value)?.fid ?? null;
+}
+
+// The session as seen by a route. The cookie is SameSite=None (the Farcaster iframe
+// needs that), so the browser attaches it to requests started by other sites too. A
+// cross-site request is treated as having NO session: this one check protects every
+// owner and admin route at once, including GETs and routes without their own
+// forbidCrossSite. Requests from our own pages (including the mini app, which runs on
+// our origin inside the Farcaster frame) are same-origin and unaffected.
+export function sessionClaims(req: NextRequest): SessionClaims | null {
+  if (isCrossSite(req)) return null;
+  return readSessionClaims(req.cookies.get(SESSION_COOKIE)?.value);
+}
+
 export function sessionFid(req: NextRequest): number | null {
-  return readSession(req.cookies.get(SESSION_COOKIE)?.value);
+  return sessionClaims(req)?.fid ?? null;
 }
 
 // Cross-site cookie options. Secure is mandatory with SameSite=None, so in local
@@ -110,4 +144,18 @@ export function readNonceCookie(value: string | undefined): string | null {
   const age = Math.floor(Date.now() / 1000) - Number(iat);
   if (!Number.isFinite(age) || age < 0 || age > NONCE_MAX_AGE) return null;
   return nonce;
+}
+
+// Single-use: a nonce is accepted once. The signed cookie alone bounds replay to
+// NONCE_MAX_AGE; this closes the window inside one server instance. Entries expire
+// with the nonce, so the set stays small. (Across separate serverless instances a
+// replay inside the 10 minutes is still possible; a shared store would close that.)
+const usedNonces = new Map<string, number>();
+
+export function consumeNonce(nonce: string): boolean {
+  const now = Date.now();
+  for (const [n, until] of usedNonces) if (until < now) usedNonces.delete(n);
+  if (usedNonces.has(nonce)) return false;
+  usedNonces.set(nonce, now + NONCE_MAX_AGE * 1000);
+  return true;
 }

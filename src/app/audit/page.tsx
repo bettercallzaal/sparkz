@@ -9,6 +9,7 @@ import {
   type GateVerdict,
   type OssHearthMetadata,
 } from "@/lib/brand-audit/types";
+import AdminSignIn from "@/app/_components/AdminSignIn";
 
 class ApiError extends Error {
   status: number;
@@ -51,7 +52,6 @@ export default function AuditPage() {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [needsAuth, setNeedsAuth] = useState(false);
-  const [token, setToken] = useState("");
 
   const load = useCallback(async () => {
     try {
@@ -74,20 +74,6 @@ export default function AuditPage() {
       return true;
     }
     return false;
-  };
-
-  const login = async () => {
-    setBusy(true);
-    setErr(null);
-    try {
-      await api("/api/admin/login", { token });
-      setToken("");
-      setNeedsAuth(false);
-    } catch (e) {
-      setErr(e instanceof Error ? e.message : "login failed");
-    } finally {
-      setBusy(false);
-    }
   };
 
   const importRepo = async () => {
@@ -135,24 +121,8 @@ export default function AuditPage() {
       )}
 
       {needsAuth && (
-        <section className="mb-6 rounded-lg border border-border bg-card p-4">
-          <h2 className="mb-1 text-sm font-medium">Operator unlock</h2>
-          <p className="mb-3 text-xs text-muted">Importing + auditing are gated.</p>
-          <input
-            type="password"
-            value={token}
-            onChange={(e) => setToken(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && token && login()}
-            placeholder="operator token"
-            className="mb-3 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
-          />
-          <button
-            onClick={login}
-            disabled={busy || !token}
-            className="w-full rounded-md bg-accent px-3 py-2 text-sm font-medium text-white disabled:opacity-40"
-          >
-            {busy ? "Unlocking..." : "Unlock"}
-          </button>
+        <section className="mb-6">
+          <AdminSignIn onSignedIn={() => setNeedsAuth(false)} />
         </section>
       )}
 

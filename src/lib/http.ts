@@ -46,12 +46,21 @@ const APP_ORIGINS = new Set([CANONICAL_URL, "https://sparkz.lol", "https://www.s
 // browser always sends Origin on such a POST; reject any Origin that is not ours.
 // A request with no Origin is not from a browser page, so it carries no victim
 // cookie (operator scripts use the token header).
-export function forbidCrossSite(req: NextRequest): NextResponse | null {
+// True when the browser says this request came from another site: an Origin that is
+// not ours, or Sec-Fetch-Site: cross-site (sent by modern browsers on every request,
+// including no-cors GETs that carry no Origin). Non-browser clients send neither.
+export function isCrossSite(req: NextRequest): boolean {
+  if (req.headers.get("sec-fetch-site") === "cross-site") return true;
   const origin = req.headers.get("origin");
-  if (!origin) return null;
-  if (APP_ORIGINS.has(origin) || origin === canonicalOrigin()) return null;
+  if (!origin) return false;
+  if (APP_ORIGINS.has(origin) || origin === canonicalOrigin()) return false;
   if (process.env.NODE_ENV !== "production" && /^http:\/\/localhost(:\d+)?$/.test(origin)) {
-    return null;
+    return false;
   }
+  return true;
+}
+
+export function forbidCrossSite(req: NextRequest): NextResponse | null {
+  if (!isCrossSite(req)) return null;
   return NextResponse.json({ ok: false, error: "Cross-site request refused" }, { status: 403 });
 }

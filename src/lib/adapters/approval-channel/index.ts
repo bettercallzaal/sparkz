@@ -44,11 +44,15 @@ export function listApprovalChannels(): ApprovalChannel[] {
 }
 
 // Fan out to every enabled channel. A single channel failure must not sink the
-// others (redundancy), so failures are collected, not thrown.
+// others (redundancy), so failures are collected, not thrown. `allow` narrows the
+// fan-out to the channels a Hearth has switched on (HearthRuntime); channels it has
+// switched off are reported as skipped.
 export async function routeApproval(
   req: ApprovalRequest,
-): Promise<{ notified: string[]; failed: { id: string; error: string }[] }> {
-  const enabled = channels.filter((c) => c.enabled);
+  allow?: Set<string>,
+): Promise<{ notified: string[]; failed: { id: string; error: string }[]; skipped: string[] }> {
+  const skipped = allow ? channels.filter((c) => !allow.has(c.id)).map((c) => c.id) : [];
+  const enabled = channels.filter((c) => c.enabled && (!allow || allow.has(c.id)));
   const notified: string[] = [];
   const failed: { id: string; error: string }[] = [];
 
@@ -66,5 +70,5 @@ export async function routeApproval(
     }),
   );
 
-  return { notified, failed };
+  return { notified, failed, skipped };
 }

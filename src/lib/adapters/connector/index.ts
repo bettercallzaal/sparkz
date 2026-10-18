@@ -34,8 +34,9 @@ export interface Connector {
    * Optional: report this spoke's status for a Hearth. Pure read - talks to the
    * connector's own external API using its declared config; no DB, no shared state.
    * Must fail soft (a throwing/broken spoke must never break the hub - callers guard).
+   * `config` is the spoke's per-Hearth config from hearth_spokes (non-secret keys).
    */
-  status?(hearthId: string): Promise<ConnectorStatus>;
+  status?(hearthId: string, config?: Record<string, unknown>): Promise<ConnectorStatus>;
 }
 
 const registry = new Map<string, Connector>();

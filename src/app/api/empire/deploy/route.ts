@@ -37,6 +37,15 @@ export async function POST(req: NextRequest) {
         { status: 403 },
       );
     }
+    // One deploy per Hearth for owners: a re-deploy would spend the operator key
+    // again and overwrite the linked empire. The operator can still re-deploy.
+    const existingEmpire = ((hearth as Hearth).economic_config ?? {}) as { empire_id?: unknown };
+    if (!isAdmin(req) && existingEmpire.empire_id) {
+      return NextResponse.json(
+        { ok: false, error: "This Hearth already has an empire" },
+        { status: 409 },
+      );
+    }
 
     // Empire is an external upstream; surface its real error to the operator
     // (this is an owner/operator-gated tool, not a public endpoint).

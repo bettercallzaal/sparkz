@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { getServiceClient } from "@/lib/supabase/server";
 import { createSparkSchema } from "@/lib/validation/schemas";
-import { ok, badRequest, serverError, zodError, tooManyRequests } from "@/lib/http";
+import { ok, badRequest, serverError, zodError, tooManyRequests, forbidCrossSite } from "@/lib/http";
 import {
   clientIpHash,
   selfServeCountInWindow,
@@ -25,6 +25,9 @@ import type { Hearth } from "@/lib/supabase/types";
 // human-review gate on self-serve sparks is the next layer.
 export async function POST(req: NextRequest) {
   try {
+    const crossSite = forbidCrossSite(req);
+    if (crossSite) return crossSite;
+
     const body = await req.json().catch(() => null);
     const parsed = createSparkSchema.safeParse(body);
     if (!parsed.success) return zodError(parsed.error);

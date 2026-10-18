@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { ok, serverError, zodError } from "@/lib/http";
+import { ok, serverError, zodError, forbidCrossSite } from "@/lib/http";
 import { verifyQuickAuth } from "@/lib/farcaster-auth";
 import { mintSession, setSessionCookie } from "@/lib/session";
 
@@ -12,6 +12,9 @@ const schema = z.object({ token: z.string().min(20).max(4000) });
 // exchanged for the Sparkz session. The ~1h JWT itself is never stored.
 export async function POST(req: NextRequest) {
   try {
+    const crossSite = forbidCrossSite(req);
+    if (crossSite) return crossSite;
+
     const body = await req.json().catch(() => null);
     const parsed = schema.safeParse(body);
     if (!parsed.success) return zodError(parsed.error);

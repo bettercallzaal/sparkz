@@ -1,13 +1,17 @@
 import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { getServiceClient } from "@/lib/supabase/server";
 import { deployEmpireSchema } from "@/lib/validation/schemas";
-import { ok, badRequest, serverError, zodError } from "@/lib/http";
-import { requireHearthOwner } from "@/lib/auth";
+import { ok, badRequest, serverError, zodError, forbidCrossSite } from "@/lib/http";
+import { isAdmin, requireHearthOwner } from "@/lib/auth";
 import { deployTokenlessCustom, resolveEmpire } from "@/lib/empire/client";
 import type { Hearth } from "@/lib/supabase/types";
 
 export async function POST(req: NextRequest) {
   try {
+    const crossSite = forbidCrossSite(req);
+    if (crossSite) return crossSite;
+
     const body = await req.json().catch(() => null);
     const parsed = deployEmpireSchema.safeParse(body);
     if (!parsed.success) return zodError(parsed.error);
@@ -22,6 +26,17 @@ export async function POST(req: NextRequest) {
       .from("hearths").select("*").eq("id", parsed.data.hearth_id).maybeSingle();
     if (capErr) throw capErr;
     if (!hearth) return badRequest("hearth not found");
+
+    // A deploy is a live Base mainnet action on the operator's Empire API key. An
+    // owner may only deploy for a Hearth that has passed review; a self-serve spark
+    // still pending review cannot spend it.
+    const meta = ((hearth as Hearth).metadata ?? {}) as Record<string, unknown>;
+    if (!isAdmin(req) && meta.self_serve === true && meta.review !== "approved") {
+      return NextResponse.json(
+        { ok: false, error: "This Hearth is still in review" },
+        { status: 403 },
+      );
+    }
 
     // Empire is an external upstream; surface its real error to the operator
     // (this is an owner/operator-gated tool, not a public endpoint).

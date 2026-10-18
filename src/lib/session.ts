@@ -85,3 +85,29 @@ export function setSessionCookie(res: NextResponse, value: string): void {
 export function clearSessionCookie(res: NextResponse): void {
   res.cookies.set(SESSION_COOKIE, "", crossSiteCookie(0));
 }
+
+// SIWF nonce cookie: `${nonce}.${issuedAt}.${mac}`. Signed with the session secret
+// so a client cannot set its own nonce cookie to match a leaked signed message;
+// the issue time bounds replay to NONCE_MAX_AGE.
+export const NONCE_MAX_AGE = 60 * 10; // 10 minutes to finish signing in
+
+export function mintNonceCookie(nonce: string): string | null {
+  const key = secret();
+  if (!key) return null;
+  const body = `${nonce}.${Math.floor(Date.now() / 1000)}`;
+  return `${body}.${sign(body, key)}`;
+}
+
+// The nonce from a valid, unexpired nonce cookie, or null.
+export function readNonceCookie(value: string | undefined): string | null {
+  const key = secret();
+  if (!key || !value) return null;
+  const [nonce, iat, mac] = value.split(".");
+  if (!nonce || !iat || !mac) return null;
+  const expected = Buffer.from(sign(`${nonce}.${iat}`, key));
+  const given = Buffer.from(mac);
+  if (expected.length !== given.length || !timingSafeEqual(expected, given)) return null;
+  const age = Math.floor(Date.now() / 1000) - Number(iat);
+  if (!Number.isFinite(age) || age < 0 || age > NONCE_MAX_AGE) return null;
+  return nonce;
+}

@@ -1,9 +1,15 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { ok, serverError, zodError } from "@/lib/http";
+import { ok, serverError, zodError, forbidCrossSite } from "@/lib/http";
 import { verifySiwf } from "@/lib/farcaster-auth";
-import { crossSiteCookie, mintSession, NONCE_COOKIE, setSessionCookie } from "@/lib/session";
+import {
+  crossSiteCookie,
+  mintSession,
+  NONCE_COOKIE,
+  readNonceCookie,
+  setSessionCookie,
+} from "@/lib/session";
 
 const schema = z.object({
   message: z.string().min(1).max(4000),
@@ -12,14 +18,18 @@ const schema = z.object({
 
 // POST /api/auth/siwf - the web door. Body { message, signature } from auth-kit's
 // SignInButton. Verified server-side for this domain and the nonce this server
-// issued (/api/auth/nonce), then exchanged for the Sparkz session.
+// issued (/api/auth/nonce, signed and under 10 minutes old), then exchanged for the
+// Sparkz session.
 export async function POST(req: NextRequest) {
   try {
+    const crossSite = forbidCrossSite(req);
+    if (crossSite) return crossSite;
+
     const body = await req.json().catch(() => null);
     const parsed = schema.safeParse(body);
     if (!parsed.success) return zodError(parsed.error);
 
-    const nonce = req.cookies.get(NONCE_COOKIE)?.value;
+    const nonce = readNonceCookie(req.cookies.get(NONCE_COOKIE)?.value);
     const denied = NextResponse.json(
       { ok: false, error: "Sign-in could not be verified" },
       { status: 401 },

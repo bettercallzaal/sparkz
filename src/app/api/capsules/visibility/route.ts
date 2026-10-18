@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 import { z } from "zod";
 import { getServiceClient } from "@/lib/supabase/server";
 import { requireHearthOwner } from "@/lib/auth";
-import { ok, badRequest, serverError, zodError } from "@/lib/http";
+import { ok, badRequest, serverError, zodError, forbidCrossSite } from "@/lib/http";
 import { hearthIntegrations, hiddenIntegrations } from "@/lib/hearth-integrations";
 import type { Hearth } from "@/lib/supabase/types";
 
@@ -58,6 +58,9 @@ const schema = z.object({
 
 export async function POST(req: NextRequest) {
   try {
+    const crossSite = forbidCrossSite(req);
+    if (crossSite) return crossSite;
+
     const body = await req.json().catch(() => null);
     const parsed = schema.safeParse(body);
     if (!parsed.success) return zodError(parsed.error);

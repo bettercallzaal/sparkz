@@ -29,10 +29,13 @@ function b64urlToJson(b64url: string): Record<string, unknown> {
   return JSON.parse(new TextDecoder().decode(b64urlToBytes(b64url)));
 }
 
-// JWKS cached in the process for an hour.
+// JWKS cached in the process for an hour. `fresh` forces a refetch (used once on an
+// unknown kid, so a key rotation does not lock sign-in out for the cache hour), but
+// never more than once a minute.
 let jwksCache: { keys: Jwk[] | null; ts: number } = { keys: null, ts: 0 };
-async function getJwks(): Promise<Jwk[]> {
-  if (jwksCache.keys && Date.now() - jwksCache.ts < 3_600_000) return jwksCache.keys;
+async function getJwks(fresh = false): Promise<Jwk[]> {
+  const age = Date.now() - jwksCache.ts;
+  if (jwksCache.keys && age < 3_600_000 && !(fresh && age > 60_000)) return jwksCache.keys;
   const r = await fetch(JWKS_URL, { signal: AbortSignal.timeout(4000) });
   if (!r.ok) throw new Error(`jwks ${r.status}`);
   const j = (await r.json()) as { keys?: Jwk[] };
@@ -61,8 +64,8 @@ export async function verifyQuickAuth(token: string, domain = CANONICAL_HOST): P
   const payload = b64urlToJson(p);
   const params = algParams(header.alg);
   if (!params) throw new Error(`unsupported alg ${String(header.alg)}`);
-  const keys = await getJwks();
-  const jwk = keys.find((k) => k.kid === header.kid);
+  let jwk = (await getJwks()).find((k) => k.kid === header.kid);
+  if (!jwk) jwk = (await getJwks(true)).find((k) => k.kid === header.kid);
   if (!jwk) throw new Error("unknown kid");
   if (jwk.alg && jwk.alg !== header.alg) throw new Error("alg mismatch");
   const key = await crypto.subtle.importKey("jwk", jwk, params.imp, false, ["verify"]);

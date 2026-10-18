@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import type { z } from "zod";
+import type { NextRequest } from "next/server";
+import { CANONICAL_URL, canonicalOrigin } from "@/lib/origin";
 
 // Consistent JSON responses. Never leak internals: log the real error server-side,
 // return a sanitized message to the client.
@@ -32,4 +34,24 @@ export function zodError(result: z.ZodError) {
     "Invalid input",
     result.issues.map((i) => ({ path: i.path.join("."), message: i.message })),
   );
+}
+
+// Hosts that serve this app. The mini app runs on trysparkz.com inside the
+// Farcaster iframe, so its requests carry that Origin too.
+const APP_ORIGINS = new Set([CANONICAL_URL, "https://sparkz.lol", "https://www.sparkz.lol"]);
+
+// CSRF guard for state-changing routes that act on the session cookie. The cookie is
+// SameSite=None (it must survive the Farcaster iframe), so the browser attaches it
+// to cross-site POSTs, including no-cors text/plain ones that skip preflight. A
+// browser always sends Origin on such a POST; reject any Origin that is not ours.
+// A request with no Origin is not from a browser page, so it carries no victim
+// cookie (operator scripts use the token header).
+export function forbidCrossSite(req: NextRequest): NextResponse | null {
+  const origin = req.headers.get("origin");
+  if (!origin) return null;
+  if (APP_ORIGINS.has(origin) || origin === canonicalOrigin()) return null;
+  if (process.env.NODE_ENV !== "production" && /^http:\/\/localhost(:\d+)?$/.test(origin)) {
+    return null;
+  }
+  return NextResponse.json({ ok: false, error: "Cross-site request refused" }, { status: 403 });
 }

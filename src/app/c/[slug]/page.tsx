@@ -16,6 +16,7 @@ import SparkLit from "@/app/_components/SparkLit";
 import EmpireLeaderboard from "@/app/_components/EmpireLeaderboard";
 import { canonicalOrigin } from "@/lib/origin";
 import { hearthIntegrations, hiddenIntegrations } from "@/lib/hearth-integrations";
+import { connectorIntegrations } from "@/lib/hearth-connectors";
 
 export const dynamic = "force-dynamic";
 
@@ -177,6 +178,8 @@ export default async function HearthPage({
   const emailCount = new Set(
     backers.filter((b) => b.backer_id.includes("@")).map((b) => b.backer_id),
   ).size;
+  // Live connector spokes this Hearth has switched on (fail-soft; [] on any error).
+  const connectorCards = await connectorIntegrations(hearth.id);
   const meta = hearth.metadata as {
     image?: string;
     review?: string;
@@ -347,7 +350,7 @@ export default async function HearthPage({
       {/* Integrations - the Spark as a hub. Connected first, available ones dimmed. */}
       {(() => {
         const hidden = hiddenIntegrations(hearth);
-        const integrations = hearthIntegrations(hearth, emailCount)
+        const integrations = [...hearthIntegrations(hearth, emailCount), ...connectorCards]
           .filter((i) => !hidden.includes(i.id))
           .sort((a, b) => Number(b.connected) - Number(a.connected));
         const liveCount = integrations.filter((i) => i.connected).length;

@@ -4,6 +4,7 @@ import { getServiceClient } from "@/lib/supabase/server";
 import { requireHearthOwner } from "@/lib/auth";
 import { ok, badRequest, serverError, zodError, forbidCrossSite } from "@/lib/http";
 import { hearthIntegrations, hiddenIntegrations } from "@/lib/hearth-integrations";
+import { connectorIntegrations } from "@/lib/hearth-connectors";
 import type { Hearth } from "@/lib/supabase/types";
 
 // GET  /api/capsules/visibility?hearth_id=... - the Hearth's integrations + which are
@@ -43,7 +44,10 @@ export async function GET(req: NextRequest) {
       hearth_id: hearth.id,
       slug: hearth.slug,
       name: hearth.name,
-      integrations: hearthIntegrations(hearth, count ?? 0),
+      integrations: [
+        ...hearthIntegrations(hearth, count ?? 0),
+        ...(await connectorIntegrations(hearth.id)),
+      ],
       hidden: hiddenIntegrations(hearth),
     });
   } catch (err) {

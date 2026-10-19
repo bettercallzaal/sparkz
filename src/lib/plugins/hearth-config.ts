@@ -4,13 +4,14 @@
 // call before the migration is applied: if the table is missing, we return defaults.
 //
 // This is the CONTROL plane (store + read which plugins a Hearth has on + its config).
-// Having the loop CONSUME per-Hearth config (route approvals only to a Hearth's own
-// enabled channels, with its own webhook) is the next increment.
+// getHearthRuntime below is how the loop CONSUMES it: signal detection, approval
+// routing and the Hearth page's connector grid only use a Hearth's enabled spokes.
 
 import { getServiceClient } from "@/lib/supabase/server";
 import { BUILT_IN_PLUGINS } from "./built-in";
 import { COMMUNITY_SPOKES } from "./community";
 import type { PluginMeta } from "./types";
+import { buildRuntime, type HearthRuntime } from "./runtime";
 
 // Listing available plugins derives from the static plugin lists directly - the
 // authoritative source - NOT the runtime registry Map. The Map is for component
@@ -121,4 +122,10 @@ export async function setHearthPlugin(
     { onConflict: "hearth_id,plugin_id" },
   );
   if (error) throw error;
+}
+
+/** The per-Hearth runtime view: which components the loop may use for this Hearth. */
+export async function getHearthRuntime(hearthId: string): Promise<HearthRuntime> {
+  const state = await getHearthPluginState(hearthId);
+  return buildRuntime([...BUILT_IN_PLUGINS, ...COMMUNITY_SPOKES], state);
 }

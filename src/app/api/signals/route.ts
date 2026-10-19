@@ -5,6 +5,7 @@ import { flagSignalSchema } from "@/lib/validation/schemas";
 import { ok, badRequest, serverError, zodError } from "@/lib/http";
 import { generateDrafts } from "@/lib/meme-engine/draft";
 import { routeApproval } from "@/lib/adapters/approval-channel";
+import { getHearthRuntime } from "@/lib/plugins/hearth-config";
 import { requireAdmin } from "@/lib/auth";
 import { canonicalOrigin } from "@/lib/origin";
 import type { Hearth, Signal, SignalDraft } from "@/lib/supabase/types";
@@ -71,12 +72,20 @@ export async function POST(req: NextRequest) {
     if (capErr) throw capErr;
     if (!hearth) return badRequest("hearth not found");
 
+    // The Hearth's own spoke toggles decide which source may flag and which
+    // approval channels hear about it.
+    const runtime = await getHearthRuntime(input.hearth_id);
+    const sourceId = input.source ?? "human";
+    if (!runtime.signalSourceEnabled(sourceId)) {
+      return badRequest(`signal source "${sourceId}" is switched off for this Hearth`);
+    }
+
     // 1. Persist the flagged signal (the human "detection event").
     const { data: signalRow, error: sigErr } = await supabase
       .from("signals")
       .insert({
         hearth_id: input.hearth_id,
-        source: input.source ?? "human",
+        source: sourceId,
         source_meta: input.source_meta ?? {},
         text: input.text,
         why_it_matched: input.why_it_matched ?? null,
@@ -123,7 +132,7 @@ export async function POST(req: NextRequest) {
       signalText: signal.text,
       drafts: drafts.map((d) => ({ id: d.id, rank: d.rank, text: d.draft_text })),
       approveUrl: `${origin}/admin?hearth=${signal.hearth_id}&signal=${signal.id}`,
-    });
+    }, runtime.enabledApprovalChannels);
 
     return ok(
       { signal: { ...signal, status: "drafted" }, drafts, routing },

@@ -31,10 +31,18 @@ export default function ActivityStrip() {
         })
         .catch(() => {});
     load();
-    const t = setInterval(load, 20000);
+    // Poll only while the tab is visible, once a minute: each /api/activity
+    // call is server CPU on the Vercel Hobby cap. Coming back to the tab
+    // refreshes at once, so the strip is never stale when someone looks.
+    const tick = () => {
+      if (!document.hidden) load();
+    };
+    const t = setInterval(tick, 60000);
+    document.addEventListener("visibilitychange", tick);
     return () => {
       alive = false;
       clearInterval(t);
+      document.removeEventListener("visibilitychange", tick);
     };
   }, []);
 

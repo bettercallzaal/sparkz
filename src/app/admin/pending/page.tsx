@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import Avatar from "@/app/_components/Avatar";
+import AdminSignIn from "@/app/_components/AdminSignIn";
 import type { Hearth } from "@/lib/supabase/types";
 
 export const dynamic = "force-dynamic";
@@ -19,7 +20,6 @@ async function api<T>(url: string, body?: unknown): Promise<{ ok: boolean; statu
 
 export default function PendingReview() {
   const [authed, setAuthed] = useState<boolean | null>(null);
-  const [token, setToken] = useState("");
   const [list, setList] = useState<Hearth[]>([]);
   const [busy, setBusy] = useState<string | null>(null);
 
@@ -38,14 +38,6 @@ export default function PendingReview() {
     load();
   }, [load]);
 
-  const login = async () => {
-    const r = await api("/api/admin/login", { token: token.trim() });
-    if (r.ok) {
-      setToken("");
-      load();
-    }
-  };
-
   const decide = async (id: string, decision: "approve" | "reject") => {
     setBusy(id);
     await api("/api/capsules/approve", { id, decision });
@@ -55,19 +47,9 @@ export default function PendingReview() {
 
   if (authed === false) {
     return (
-      <main className="mx-auto w-full max-w-sm flex-1 px-4 py-16">
-        <h1 className="mb-4 text-xl font-bold">Operator - review queue</h1>
-        <input
-          type="password"
-          value={token}
-          onChange={(e) => setToken(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && login()}
-          placeholder="operator token"
-          className="w-full rounded-lg border border-border bg-card px-3 py-2.5 text-sm outline-none focus:border-accent"
-        />
-        <button onClick={login} className="btn-spark mt-3 w-full rounded-lg px-4 py-2.5 text-sm">
-          Unlock
-        </button>
+      <main className="mx-auto w-full max-w-md flex-1 px-4 py-16">
+        <h1 className="mb-4 text-xl font-bold">Review queue</h1>
+        <AdminSignIn onSignedIn={load} />
       </main>
     );
   }

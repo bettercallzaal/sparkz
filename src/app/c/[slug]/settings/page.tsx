@@ -6,7 +6,7 @@ import VisibilitySettings from "@/app/_components/VisibilitySettings";
 export const dynamic = "force-dynamic";
 
 // Owner settings for a Hearth: control which integrations show on the public page.
-// Admin-gated at the API layer (the operator session); per-creator FID auth is next.
+// Gated at the API layer: the Hearth's owner (verified Farcaster session) or the operator.
 export default async function HearthSettingsPage({
   params,
 }: {

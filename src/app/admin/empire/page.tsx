@@ -6,6 +6,7 @@ import type { Hearth } from "@/lib/supabase/types";
 import { tokenlessCustomMessage } from "@/lib/empire/client";
 import { useAppKit } from "@reown/appkit/react";
 import { useAccount, useSignMessage } from "wagmi";
+import AdminSignIn from "@/app/_components/AdminSignIn";
 
 function Flame({ className = "" }: { className?: string }) {
   return (
@@ -38,7 +39,6 @@ export default function EmpirePage() {
   const [result, setResult] = useState<{ id: string; treasury: string | null } | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [token, setToken] = useState("");
   const [needsAuth, setNeedsAuth] = useState(false);
   const [logoUri, setLogoUri] = useState("");
   const [bio, setBio] = useState("");
@@ -58,19 +58,6 @@ export default function EmpirePage() {
         }
       });
   }, []);
-
-  const login = async () => {
-    const r = await fetch("/api/admin/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token }),
-    });
-    if ((await r.json()).ok) {
-      setNeedsAuth(false);
-      setToken("");
-      setErr(null);
-    } else setErr("Invalid operator token");
-  };
 
   const walletConfigured = Boolean(process.env.NEXT_PUBLIC_REOWN_PROJECT_ID);
 
@@ -176,23 +163,9 @@ export default function EmpirePage() {
       )}
 
       {needsAuth && (
-        <div className="mb-4 rounded-lg border border-border bg-card p-4">
-          <p className="mb-2 text-sm font-medium">Operator unlock</p>
-          <input
-            type="password"
-            value={token}
-            onChange={(e) => setToken(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && token && login()}
-            placeholder="operator token"
-            className="mb-2 w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
-          />
-          <button
-            onClick={login}
-            className="w-full rounded-md bg-accent px-3 py-2 text-sm font-medium text-white"
-          >
-            Unlock
-          </button>
-        </div>
+        <section className="mb-6">
+          <AdminSignIn onSignedIn={() => setNeedsAuth(false)} />
+        </section>
       )}
 
       {result ? (

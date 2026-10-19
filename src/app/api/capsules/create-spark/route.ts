@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { getServiceClient } from "@/lib/supabase/server";
 import { createSparkSchema } from "@/lib/validation/schemas";
-import { ok, badRequest, serverError, zodError, tooManyRequests } from "@/lib/http";
+import { ok, badRequest, serverError, zodError, tooManyRequests, forbidCrossSite } from "@/lib/http";
 import {
   clientIpHash,
   selfServeCountInWindow,
@@ -9,6 +9,8 @@ import {
   SELF_SERVE_WINDOW_MS,
 } from "@/lib/rate-limit";
 import { isAdmin } from "@/lib/auth";
+import { sessionFid } from "@/lib/session";
+import { NextResponse } from "next/server";
 import type { Hearth } from "@/lib/supabase/types";
 
 // POST /api/capsules/create-spark - PUBLIC, self-serve spark creation for /start.
@@ -23,6 +25,9 @@ import type { Hearth } from "@/lib/supabase/types";
 // human-review gate on self-serve sparks is the next layer.
 export async function POST(req: NextRequest) {
   try {
+    const crossSite = forbidCrossSite(req);
+    if (crossSite) return crossSite;
+
     const body = await req.json().catch(() => null);
     const parsed = createSparkSchema.safeParse(body);
     if (!parsed.success) return zodError(parsed.error);
@@ -32,6 +37,18 @@ export async function POST(req: NextRequest) {
     if (input.website && input.website.trim().length > 0) {
       return ok({ slug: null, ignored: true }, 200);
     }
+
+    // Ownership comes ONLY from the verified session (lib/session.ts). A body
+    // owner_fid is a hint from the client: it must match the session, or the request
+    // is refused, so nobody can create a Hearth "owned" by someone else's FID.
+    const verifiedFid = sessionFid(req);
+    if (input.owner_fid && input.owner_fid !== verifiedFid) {
+      return NextResponse.json(
+        { ok: false, error: "Sign in with Farcaster again to create a spark as this account" },
+        { status: 401 },
+      );
+    }
+    const ownerFid = verifiedFid ?? null;
 
     // The operator is exempt from the rate limit, and their sparks skip review.
     const admin = isAdmin(req);
@@ -53,13 +70,13 @@ export async function POST(req: NextRequest) {
     if (!base) return badRequest("Please use a name with some letters or numbers.");
     const slug = await uniqueSlug(supabase, base);
 
-    // Optional Farcaster identity from the signed-in creator. Client-asserted, so it
-    // is stored for display/ownership but does NOT by itself grant approval - only
-    // the operator (admin) skips the review gate.
+
+    // Farcaster identity of the signed-in creator. Ownership does NOT by itself grant
+    // approval - only the operator (admin) skips the review gate.
     const fc =
-      input.owner_fid || input.fc_username || input.fc_channel
+      ownerFid || input.fc_username || input.fc_channel
         ? {
-            fid: input.owner_fid ?? null,
+            fid: ownerFid,
             username: input.fc_username ?? null,
             channel: input.fc_channel ?? null,
           }
@@ -73,7 +90,7 @@ export async function POST(req: NextRequest) {
         name: input.name.trim(),
         bio: input.bio?.trim() || null,
         status: "spark",
-        owner_fid: input.owner_fid ?? null,
+        owner_fid: ownerFid,
         // Operator-made sparks are approved on the spot; public self-serve sparks are
         // held for review (see loadPublicHearths, /api/directory, /api/capsules GET).
         metadata: {

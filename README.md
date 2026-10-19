@@ -206,7 +206,7 @@ flowchart TB
   subgraph Next["Next.js (App Router, server-first)"]
     Pages["Server components<br/>(read via service role)"]
     API["API routes<br/>(Zod safeParse -> try/catch -> JSON)"]
-    Auth["requireAdmin<br/>(operator token, httpOnly cookie)"]
+    Auth["requireAdmin<br/>(admin sign-in session, or agent token header)"]
   end
 
   subgraph Data["Supabase (RLS on every table)"]
@@ -381,7 +381,7 @@ Surfaced on each Hearth page (`/c/[slug]`) as an integrations panel - **the Hear
 | `/admin/empire` | Tokenless empire launcher (wallet-connected) |
 | `/audit` | Brand audit - import an existing repo as an OSS Hearth |
 | `/profile` | Sign in with Farcaster |
-| `/c/[slug]/settings` | Owner settings - choose which integrations show on the public Hearth page (operator-gated today) |
+| `/c/[slug]/settings` | Owner settings - choose which integrations show on the public Hearth page (the Hearth's owner, signed in with Farcaster, or the operator) |
 | `/admin/add-repo` | Add a project from its GitHub repo - opens an OSS Hearth pre-filled with real repo data (operator-gated) |
 | `/blog/[slug]` | A single blog post |
 | `/hearth` | What a Hearth is - identity, backers, and receipts before any token |
@@ -395,9 +395,9 @@ Surfaced on each Hearth page (`/c/[slug]`) as an integrations panel - **the Hear
 
 ## API reference
 
-> **TL;DR** Every endpoint is validated and error-handled; administrative writes and Meme Engine routes need the operator token.
+> **TL;DR** Every endpoint is validated and error-handled; administrative writes and Meme Engine routes need an admin.
 
-Routes validate request data with Zod `safeParse`, wrap handlers in try/catch, log server-side, and return sanitized errors. Public creation, boosting, and waitlist routes are intentionally narrow; administrative writes and the Meme Engine require the operator token.
+Routes validate request data with Zod `safeParse`, wrap handlers in try/catch, log server-side, and return sanitized errors. Public creation, boosting, and waitlist routes are intentionally narrow; administrative writes and the Meme Engine require an admin: a human signed in with Farcaster or Sign-In with Ethereum as an allowlisted identity (`src/lib/admin-identities.ts`), or the background agent sending `SPARKZ_ADMIN_TOKEN` as the `x-sparkz-admin-token` header.
 
 | Method | Route | Purpose |
 | --- | --- | --- |
@@ -411,7 +411,7 @@ Routes validate request data with Zod `safeParse`, wrap handlers in try/catch, l
 | `POST` | `/api/capsules/link-farcaster` | Attach a Farcaster identity |
 | `POST` | `/api/capsules/add-repo` | Operator: add a project from a GitHub repo URL as an OSS Hearth |
 | `GET`  | `/api/capsules/by-fid` | Hearths owned by a Farcaster FID, for the creator hub (PII stripped) |
-| `GET/POST` | `/api/capsules/visibility` | Operator: read / set which integrations a Hearth hides from its public page |
+| `GET/POST` | `/api/capsules/visibility` | Owner or operator: read / set which integrations a Hearth hides from its public page |
 | `GET/POST` | `/api/capsules/media-kit` | Operator: render a Hearth into an AI-anchor video segment (offline stub unless the Baraza env is set) |
 | `GET/POST` | `/api/capsules/plugins` | Read / toggle a Hearth's plugins + per-Hearth config |
 | `GET/POST` | `/api/signals` | List operator-visible signals / flag a moment + generate 3 drafts |
@@ -427,8 +427,12 @@ Routes validate request data with Zod `safeParse`, wrap handlers in try/catch, l
 | `POST` | `/api/audit` | Update the readiness audit for an OSS Hearth |
 | `POST` | `/api/waitlist` | Join the list |
 | `POST` | `/api/upload` | Upload a logo/asset to Storage |
-| `POST` | `/api/admin/login` | Exchange the operator token for an httpOnly cookie |
-| `POST` | `/api/admin/dev-login` | Local development only - sets the operator cookie from the env token; returns 404 outside `NODE_ENV=development` |
+| `GET`  | `/api/auth/nonce` | Server-issued nonce for web Sign In With Farcaster |
+| `POST` | `/api/auth/siwf` | Web door: verify a signed SIWF message, start the creator session |
+| `POST` | `/api/auth/quick` | Mini-app door: verify a Farcaster Quick Auth JWT, start the creator session |
+| `GET`  | `/api/auth/me` | The FID of the current verified session, or null |
+| `POST` | `/api/auth/logout` | End the creator session |
+| `POST` | `/api/auth/siwe` | Admin door: verify a Sign-In with Ethereum message from an admin wallet, start the session |
 | `GET`  | `/api/og`, `/api/icon` | Dynamic OG image + icon |
 
 ## Tech stack
@@ -480,7 +484,7 @@ docs/                   deep docs + assets
 
 ```bash
 npm install
-cp .env.example .env.local   # fill in Supabase + operator token
+cp .env.example .env.local   # fill in Supabase + the session secret (+ agent token if you run the agent)
 npm run dev                  # http://localhost:3000
 npm run seed:zoostr          # optional: the first spark
 ```
@@ -495,12 +499,12 @@ Vercel + the two domains (trysparkz.com / sparkz.lol). PR-only to `main`; the Gi
 
 ## Security
 
-> **TL;DR** The service role never touches the browser; RLS on everything; the operator token fails closed.
+> **TL;DR** The service role never touches the browser; RLS on everything; admin access fails closed.
 
 - Never expose `SUPABASE_SERVICE_ROLE_KEY` or any secret to the browser - service role is server-only.
 - Never commit secrets or `.env`; stub keys on disk, real keys at runtime.
 - RLS on every table, deny-anon by default.
-- Operator token: `timingSafeEqual`, httpOnly cookie, fails closed.
+- Admin access: humans sign in (Farcaster or SIWE) as an allowlisted identity; the agent token is header-only, compared with `timingSafeEqual`; both fail closed.
 
 Full posture: [SECURITY.md](docs/SECURITY.md).
 
@@ -525,16 +529,16 @@ Every feature passes all four or it stays in the lab:
 - The Meme Engine loop - signal -> 3 drafts (OpenRouter, memory-grounded) -> human approve -> Meme Receipt. Idempotent, first-approve-wins.
 - Empire Builder - live reads (leaderboards, boosters) and a working tokenless deploy at `/admin/empire` (wallet-signed, operator-gated).
 - The Audius spoke - real catalog reads from the Audius public API, live demo on `/audius`.
-- Owner visibility settings - `/c/[slug]/settings` toggles which integrations show on the public page (operator-gated today).
+- Owner visibility settings - `/c/[slug]/settings` toggles which integrations show on the public page (the owner, signed in with Farcaster, or the operator).
 - Free boost backing - no wallet, no card, one boost per backer per Hearth.
 
 **The honest gaps (and the plan):**
 
-1. **Auth is operator-token only.** Farcaster sign-in exists client-side, but the server never verifies a FID. The fix is designed and locked: *two doors, one session* - Quick Auth JWT verification for mini-app entry, `auth-kit` + server-side `verifySignInMessage` for web, both minting one HMAC session cookie (`SameSite=None; Secure` so it survives the Farcaster iframe), then a `requireHearthOwner` gate so a creator manages their own Hearth by FID. This also fixes `create-spark` trusting an unverified FID. **This is the next build.**
+1. **Owner-by-FID auth is built; it switches on with `SPARKZ_SESSION_SECRET`.** *Two doors, one session*: Quick Auth JWT verification for mini-app entry, `auth-kit` + server-side `verifySignInMessage` for web, both minting one HMAC session cookie (`SameSite=None; Secure` so it survives the Farcaster iframe). A `requireHearthOwner` gate lets a creator manage their own Hearth's visibility and Empire deploy by FID, and `create-spark` takes the owner FID from the verified session only. The live sign-in test (step 6 of [AUTH-PLAN.md](docs/AUTH-PLAN.md)) runs once the secret is set in production.
 2. **Spoke toggles now gate the loop.** Each Hearth's `hearth_spokes` toggles decide which signal sources may flag or detect for it and which approval channels hear about its drafts, and its connector spokes report live status (`Connector.status()`, with the Hearth's own config) on `/c/[slug]`. Still open: per-Hearth approval destinations (each Hearth's own webhook) - channels still post to the server-wide destination.
 3. **Receipts have no measurement engine.** `reach` / `referrals` / `backing_generated` are written as 0, and approved drafts are not yet published to Farcaster. The plan: publish-on-approve via Neynar managed signers, then measure with cast lookups. (Note: Sign In With Neynar was deprecated 2026-08-14 - new work uses Neynar managed/sponsored signers, not SIWN.)
 
-**Build order:** owner-by-FID auth -> owner-gated settings + Empire deploy/link -> runtime spoke gating -> the receipts engine (publish + measure) -> per-Hearth contributor leaderboards.
+**Build order:** owner-by-FID auth (built) -> owner-gated settings + Empire deploy/link -> runtime spoke gating -> the receipts engine (publish + measure) -> per-Hearth contributor leaderboards.
 
 **The convergence** - each audited ZAO project is a Hearth candidate; CoCConcertZ is slated to become a Spark.
 

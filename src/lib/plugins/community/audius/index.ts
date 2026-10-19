@@ -10,10 +10,11 @@ const audiusConnector: Connector = {
   id: "connector-audius",
   kind: "catalog",
   label: "Audius Catalog",
-  async status(): Promise<ConnectorStatus> {
-    // A Hearth's Audius handle is configured server-side (AUDIUS_HANDLE) until per-Hearth
-    // config is wired. Dark (not linked) until set - then it reports the REAL track count.
-    const handle = process.env.AUDIUS_HANDLE?.trim();
+  async status(_hearthId, config): Promise<ConnectorStatus> {
+    // The Hearth's own Audius handle (hearth_spokes config). No server-wide fallback:
+    // that would show one artist's catalog on every Hearth. Dark (not linked) until
+    // set - then it reports the REAL track count.
+    const handle = typeof config?.AUDIUS_HANDLE === "string" ? config.AUDIUS_HANDLE.trim() : "";
     if (!handle) return { connected: false, label: "not linked" };
     const cat = await getAudiusCatalog(handle);
     if (!cat.found) return { connected: false, label: "handle not found" };

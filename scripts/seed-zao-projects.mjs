@@ -52,7 +52,7 @@ const projects = [
 
 for (const p of projects) {
   const { data: existing, error: readError } = await supabase
-    .from("capsules")
+    .from("hearths")
     .select("id, slug")
     .eq("slug", p.slug)
     .maybeSingle();
@@ -65,7 +65,7 @@ for (const p of projects) {
     console.log(`Kept ${p.slug}: already exists (${existing.id})`);
     continue;
   }
-  const { data, error } = await supabase.from("capsules").insert(p).select("id, slug").single();
+  const { data, error } = await supabase.from("hearths").insert(p).select("id, slug").single();
   if (error) {
     console.error(`Seed failed for ${p.slug}:`, error.message);
     process.exitCode = 1;

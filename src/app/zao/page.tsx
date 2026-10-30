@@ -39,6 +39,13 @@ export const metadata: Metadata = {
 
 const RETURNS = ["Profit margin", "Data", "IP rights"];
 
+// The ZAO's first three Sparks (scripts/seed-zao-projects.mjs creates them).
+const PROJECTS = [
+  { slug: "zao-devz", name: "ZAO DEVZ", body: "The builders. Open-source tools for artists." },
+  { slug: "iman-afrikah", name: "IMan Afrikah", body: "Zambian artist and DJ. Back the music first, the coin comes later." },
+  { slug: "zabal", name: "ZABAL", body: "The culture coin community. Boost, climb, share the pool." },
+];
+
 // Sparkz's principles, taken from the README's Principles list.
 const PRINCIPLES = [
   {
@@ -149,6 +156,26 @@ export default function ZaoPage() {
                 <div className="text-muted text-xs leading-relaxed">{g.body}</div>
               </div>
             </div>
+          ))}
+        </div>
+      </section>
+
+      {/* The ZAO's own Sparks */}
+      <section>
+        <h2 className="text-xl font-bold mb-2">ZAO projects on Sparkz</h2>
+        <p className="text-muted text-sm mb-5 leading-relaxed">
+          The ZAO starts with three Sparks of its own. Back them now; a token comes only when the backing is real.
+        </p>
+        <div className="grid sm:grid-cols-3 gap-4">
+          {PROJECTS.map(({ slug, name, body }) => (
+            <Link
+              key={slug}
+              href={`/c/${slug}`}
+              className="card-solid border border-border rounded-xl p-5 hover:border-accent transition-colors"
+            >
+              <div className="font-bold text-sm text-accent mb-1">{name}</div>
+              <div className="text-muted text-xs leading-relaxed">{body}</div>
+            </Link>
           ))}
         </div>
       </section>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { canonicalOrigin } from "@/lib/origin";
+import JoinTeamForm from "@/app/_components/JoinTeamForm";
 
 const BASE = canonicalOrigin();
 const OG = `${BASE}/api/og?title=${encodeURIComponent("The ZAO")}&subtitle=${encodeURIComponent("Music first · Community second · Technology third")}`;
@@ -178,6 +179,16 @@ export default function ZaoPage() {
             </Link>
           ))}
         </div>
+      </section>
+
+      {/* Join the team: name + wallet on one of the three Sparks */}
+      <section id="join">
+        <h2 className="text-xl font-bold mb-2">Join the team</h2>
+        <p className="text-muted text-sm mb-5 leading-relaxed">
+          Put your name and wallet on a ZAO Spark. No wallet connect, no coin to buy. This is the
+          team list: the people who were here before any token existed.
+        </p>
+        <JoinTeamForm sparks={PROJECTS.map(({ slug, name }) => ({ slug, name }))} />
       </section>
 
       {/* CTAs */}

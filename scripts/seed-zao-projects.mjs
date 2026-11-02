@@ -1,4 +1,5 @@
-// Seed The ZAO's first three Sparks: ZAO DEVZ, IMan Afrikah and ZABAL (Zaal, 30 Oct 2026).
+// Seed The ZAO's Sparks: ZAO DEVZ, IMan Afrikah and ZABAL (Zaal, 30 Oct 2026),
+// plus CoC ConcertZ, ZAO Fractals and ZAO Festivals (Zaal, 3 Nov 2026).
 // Run: npm run seed:zao  (loads .env.local via node --env-file)
 // Safe to re-run: a slug that already exists is left untouched, never overwritten.
 
@@ -18,7 +19,7 @@ const supabase = createClient(url, key, {
   auth: { persistSession: false, autoRefreshToken: false },
 });
 
-// All three start as sparks: no token until the backing is real. The Empire rail is the
+// All of them start as sparks: no token until the backing is real. The Empire rail is the
 // graduation path (Clanker via Empire Builder), held in config, nothing on-chain yet.
 const projects = [
   {
@@ -46,6 +47,33 @@ const projects = [
     bio: "The ZAO's culture coin community. Boost ZABAL casts, climb the leaderboard, share the community pool.",
     status: "spark",
     economic_config: { tokenization_rail: "clanker", graduated: false },
+    metadata: { entry_point: "culture", zao: true },
+  },
+  {
+    slug: "coc-concertz",
+    type: "culture",
+    name: "CoC ConcertZ",
+    bio: "The ZAO's concert series. Live shows and surprise sets. Back the next show before the lineup drops.",
+    status: "spark",
+    economic_config: { tokenization_rail: "clanker", launch_via: "empire-builder", graduated: false },
+    metadata: { entry_point: "culture", zao: true },
+  },
+  {
+    slug: "zao-fractals",
+    type: "culture",
+    name: "ZAO Fractals",
+    bio: "The ZAO's weekly governance meetings. Show up, rank each other's work, earn Respect. The people who run the collective.",
+    status: "spark",
+    economic_config: { tokenization_rail: "clanker", graduated: false },
+    metadata: { entry_point: "culture", zao: true },
+  },
+  {
+    slug: "zao-festivals",
+    type: "culture",
+    name: "ZAO Festivals",
+    bio: "ZAOstock and every festival The ZAO throws, on site and online. Back the festival, not a coin.",
+    status: "spark",
+    economic_config: { tokenization_rail: "clanker", launch_via: "empire-builder", graduated: false },
     metadata: { entry_point: "culture", zao: true },
   },
 ];

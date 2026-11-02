@@ -40,11 +40,14 @@ export const metadata: Metadata = {
 
 const RETURNS = ["Profit margin", "Data", "IP rights"];
 
-// The ZAO's first three Sparks (scripts/seed-zao-projects.mjs creates them).
+// The ZAO's Sparks (scripts/seed-zao-projects.mjs creates them).
 const PROJECTS = [
   { slug: "zao-devz", name: "ZAO DEVZ", body: "The builders. Open-source tools for artists." },
   { slug: "iman-afrikah", name: "IMan Afrikah", body: "Zambian artist and DJ. Back the music first, the coin comes later." },
   { slug: "zabal", name: "ZABAL", body: "The culture coin community. Boost, climb, share the pool." },
+  { slug: "coc-concertz", name: "CoC ConcertZ", body: "The concert series. Back the next show before the lineup drops." },
+  { slug: "zao-fractals", name: "ZAO Fractals", body: "Weekly governance. Show up, rank the work, earn Respect." },
+  { slug: "zao-festivals", name: "ZAO Festivals", body: "ZAOstock and every festival The ZAO throws. Back the festival, not a coin." },
 ];
 
 // Sparkz's principles, taken from the README's Principles list.
@@ -165,7 +168,7 @@ export default function ZaoPage() {
       <section>
         <h2 className="text-xl font-bold mb-2">ZAO projects on Sparkz</h2>
         <p className="text-muted text-sm mb-5 leading-relaxed">
-          The ZAO starts with three Sparks of its own. Back them now; a token comes only when the backing is real.
+          The ZAO&apos;s own projects, each one a Spark. Back them now; a token comes only when the backing is real.
         </p>
         <div className="grid sm:grid-cols-3 gap-4">
           {PROJECTS.map(({ slug, name, body }) => (
@@ -181,7 +184,7 @@ export default function ZaoPage() {
         </div>
       </section>
 
-      {/* Join the team: name + wallet on one of the three Sparks */}
+      {/* Join the team: name + wallet on one of the ZAO Sparks */}
       <section id="join">
         <h2 className="text-xl font-bold mb-2">Join the team</h2>
         <p className="text-muted text-sm mb-5 leading-relaxed">

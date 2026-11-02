@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { canonicalOrigin } from "@/lib/origin";
+import JoinTeamForm from "@/app/_components/JoinTeamForm";
 
 const BASE = canonicalOrigin();
 const OG = `${BASE}/api/og?title=${encodeURIComponent("The ZAO")}&subtitle=${encodeURIComponent("Music first · Community second · Technology third")}`;
@@ -38,6 +39,16 @@ export const metadata: Metadata = {
 };
 
 const RETURNS = ["Profit margin", "Data", "IP rights"];
+
+// The ZAO's Sparks (scripts/seed-zao-projects.mjs creates them).
+const PROJECTS = [
+  { slug: "zao-devz", name: "ZAO DEVZ", body: "The builders. Open-source tools for artists." },
+  { slug: "iman-afrikah", name: "IMan Afrikah", body: "Zambian artist and DJ. Back the music first, the coin comes later." },
+  { slug: "zabal", name: "ZABAL", body: "The culture coin community. Boost, climb, share the pool." },
+  { slug: "coc-concertz", name: "CoC ConcertZ", body: "The concert series. Back the next show before the lineup drops." },
+  { slug: "zao-fractals", name: "ZAO Fractals", body: "Weekly governance. Show up, rank the work, earn Respect." },
+  { slug: "zao-festivals", name: "ZAO Festivals", body: "ZAOstock and every festival The ZAO throws. Back the festival, not a coin." },
+];
 
 // Sparkz's principles, taken from the README's Principles list.
 const PRINCIPLES = [
@@ -151,6 +162,36 @@ export default function ZaoPage() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* The ZAO's own Sparks */}
+      <section>
+        <h2 className="text-xl font-bold mb-2">ZAO projects on Sparkz</h2>
+        <p className="text-muted text-sm mb-5 leading-relaxed">
+          The ZAO&apos;s own projects, each one a Spark. Back them now; a token comes only when the backing is real.
+        </p>
+        <div className="grid sm:grid-cols-3 gap-4">
+          {PROJECTS.map(({ slug, name, body }) => (
+            <Link
+              key={slug}
+              href={`/c/${slug}`}
+              className="card-solid border border-border rounded-xl p-5 hover:border-accent transition-colors"
+            >
+              <div className="font-bold text-sm text-accent mb-1">{name}</div>
+              <div className="text-muted text-xs leading-relaxed">{body}</div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Join the team: name + wallet on one of the ZAO Sparks */}
+      <section id="join">
+        <h2 className="text-xl font-bold mb-2">Join the team</h2>
+        <p className="text-muted text-sm mb-5 leading-relaxed">
+          Put your name and wallet on a ZAO Spark. No wallet connect, no coin to buy. This is the
+          team list: the people who were here before any token existed.
+        </p>
+        <JoinTeamForm sparks={PROJECTS.map(({ slug, name }) => ({ slug, name }))} />
       </section>
 
       {/* CTAs */}

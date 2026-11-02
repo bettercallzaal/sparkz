@@ -128,3 +128,11 @@ export const deployEmpireSchema = z.object({
   twitter_url: z.string().url().max(300).optional(),
   telegram_url: z.string().url().max(300).optional(),
 });
+
+// "Join the team" on a Spark: name required, wallet on Base (0x + 40 hex), handle optional.
+export const joinTeamSchema = z.object({
+  slug: z.string().regex(/^[a-z0-9][a-z0-9-]{0,63}$/),
+  name: z.string().trim().min(1).max(60),
+  wallet: z.string().trim().regex(/^0x[0-9a-fA-F]{40}$/, "wallet must be a 0x address"),
+  handle: z.string().trim().max(60).optional(),
+});

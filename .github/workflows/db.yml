@@ -2,7 +2,8 @@ name: Database
 
 # Migrations and the ZAO seed run themselves when a PR that touches them merges to main
 # (or by hand from the Actions tab). Zaal, 3 Nov 2026: "we need to find the best way for
-# you to run sqls". Three repo secrets, set once:
+# you to run sqls". Three secrets, set once in the Production environment (never at repo
+# level; Zaal is its required reviewer and it deploys from main only):
 #   SUPABASE_DB_URL             Postgres connection string (Project settings > Database, session pooler)
 #   NEXT_PUBLIC_SUPABASE_URL    the project URL (same value Vercel has)
 #   SUPABASE_SERVICE_ROLE_KEY   the service-role key (same value Vercel has)
@@ -29,6 +30,9 @@ concurrency:
 jobs:
   migrate-and-seed:
     runs-on: ubuntu-latest
+    # The secrets below live only in this environment, so no job runs with them until Zaal
+    # approves it, and a branch copy of this file cannot reach them.
+    environment: Production
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

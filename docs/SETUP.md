@@ -37,9 +37,13 @@ Optional:
 Migrations live in `supabase/migrations/` (numbered, applied in order). Since 3 Nov 2026
 they run themselves: the **Database** workflow (`.github/workflows/db.yml`) applies every
 migration not yet recorded in `public._sparkz_migrations`, then runs the ZAO seed, on every
-merge to main that touches them (or from the Actions tab, Run workflow). It needs three repo
-secrets, set once: `SUPABASE_DB_URL` (Project settings > Database > connection string,
-session pooler), `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`. Migrations
+merge to main that touches them (or from the Actions tab, Run workflow). It needs three
+secrets, set once in the **Production** environment (Settings > Environments > Production),
+never as repository secrets: `SUPABASE_DB_URL` (Project settings > Database > connection
+string, session pooler), `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`. The
+environment must have Zaal as its only required reviewer and deployment branches limited to
+`main`, and the `Main` branch ruleset must be turned on, so no job (and no branch copy of the
+workflow) reaches the database without his approval. Migrations
 0001-0005 were pasted by hand before the runner existed and are recorded as a baseline on
 the first run (`scripts/db-migrate.sh`). Pasting a file into the SQL editor still works for a
 one-off; then raise `SPARKZ_DB_BASELINE` so the runner does not apply it twice.

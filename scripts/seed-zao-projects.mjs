@@ -1,5 +1,5 @@
 // Seed The ZAO's Sparks: ZAO DEVZ, IMan Afrikah and ZABAL (Zaal, 30 Oct 2026),
-// plus CoC ConcertZ, ZAO Fractals and ZAO Festivals (Zaal, 3 Nov 2026).
+// plus CoC ConcertZ and ZAO Festivals (Zaal, 3 Nov 2026; the fractal stays off Sparkz for now, his call the same night).
 // Run: npm run seed:zao  (loads .env.local via node --env-file)
 // Safe to re-run: a slug that already exists is left untouched, never overwritten.
 
@@ -56,15 +56,6 @@ const projects = [
     bio: "The ZAO's concert series. Live shows and surprise sets. Back the next show before the lineup drops.",
     status: "spark",
     economic_config: { tokenization_rail: "clanker", launch_via: "empire-builder", graduated: false },
-    metadata: { entry_point: "culture", zao: true },
-  },
-  {
-    slug: "zao-fractals",
-    type: "culture",
-    name: "ZAO Fractals",
-    bio: "The ZAO's weekly governance meetings. Show up, rank each other's work, earn Respect. The people who run the collective.",
-    status: "spark",
-    economic_config: { tokenization_rail: "clanker", graduated: false },
     metadata: { entry_point: "culture", zao: true },
   },
   {

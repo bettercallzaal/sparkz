@@ -46,7 +46,6 @@ const PROJECTS = [
   { slug: "iman-afrikah", name: "IMan Afrikah", body: "Zambian artist and DJ. Back the music first, the coin comes later." },
   { slug: "zabal", name: "ZABAL", body: "The culture coin community. Boost, climb, share the pool." },
   { slug: "coc-concertz", name: "CoC ConcertZ", body: "The concert series. Back the next show before the lineup drops." },
-  { slug: "zao-fractals", name: "ZAO Fractals", body: "Weekly governance. Show up, rank the work, earn Respect." },
   { slug: "zao-festivals", name: "ZAO Festivals", body: "ZAOstock and every festival The ZAO throws. Back the festival, not a coin." },
 ];
 

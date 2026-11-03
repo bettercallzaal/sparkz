@@ -1,0 +1,55 @@
+name: Database
+
+# Migrations and the ZAO seed run themselves when a PR that touches them merges to main
+# (or by hand from the Actions tab). Zaal, 3 Nov 2026: "we need to find the best way for
+# you to run sqls". Three repo secrets, set once:
+#   SUPABASE_DB_URL             Postgres connection string (Project settings > Database, session pooler)
+#   NEXT_PUBLIC_SUPABASE_URL    the project URL (same value Vercel has)
+#   SUPABASE_SERVICE_ROLE_KEY   the service-role key (same value Vercel has)
+# Without SUPABASE_DB_URL the job prints what it would do and exits green.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "supabase/migrations/**"
+      - "scripts/seed-*.mjs"
+      - "scripts/db-migrate.sh"
+      - ".github/workflows/db.yml"
+  workflow_dispatch:
+    inputs:
+      seed:
+        description: "Run the ZAO seed (scripts/seed-zao-projects.mjs) after migrating"
+        type: boolean
+        default: true
+
+concurrency:
+  group: database
+  cancel-in-progress: false
+
+jobs:
+  migrate-and-seed:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Migrate
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          if [ -z "$SUPABASE_DB_URL" ]; then
+            echo "SUPABASE_DB_URL secret not set: nothing applied. Pending files:"; ls supabase/migrations; exit 0
+          fi
+          bash scripts/db-migrate.sh
+      - name: Install (seed needs @supabase/supabase-js)
+        if: ${{ github.event_name == 'push' || inputs.seed }}
+        run: npm install --legacy-peer-deps --no-audit --no-fund
+      - name: Seed the ZAO Sparks (safe to re-run, existing slugs are kept)
+        if: ${{ github.event_name == 'push' || inputs.seed }}
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          if [ -z "$SUPABASE_SERVICE_ROLE_KEY" ]; then echo "SUPABASE_SERVICE_ROLE_KEY secret not set: seed skipped"; exit 0; fi
+          node scripts/seed-zao-projects.mjs

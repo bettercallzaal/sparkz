@@ -19,11 +19,12 @@ const schema = z.object({
   signature: z.string().regex(/^0x[0-9a-fA-F]+$/).max(2000),
 });
 
-// POST /api/auth/siwe - admin sign-in with an Ethereum wallet (EIP-4361). Body
+// POST /api/auth/siwe - sign-in with an Ethereum wallet (EIP-4361). Body
 // { message, signature }. The message must carry the nonce this server issued
 // (/api/auth/nonce; signed, 10 minutes, single use), this domain, an allowed chain
-// and an explicit expiry (lib/siwe.ts). Only an allowlisted admin address
-// (lib/admin-identities.ts) gets a session - this door exists for admins only.
+// and an explicit expiry (lib/siwe.ts). Every verified wallet gets a member session
+// (needed for the first free hat); `admin` in the reply says whether the address is on
+// the admin allowlist (lib/admin-identities.ts), and admin routes re-check that themselves.
 export async function POST(req: NextRequest) {
   try {
     const crossSite = forbidCrossSite(req);
@@ -58,9 +59,10 @@ export async function POST(req: NextRequest) {
       console.warn("[sparkz:auth.siwe] rejected: nonce already used");
       return denied;
     }
-    if (!isAdminAddress(address)) {
-      return NextResponse.json({ ok: false, error: "This wallet is not a Sparkz admin" }, { status: 403 });
-    }
+    // Any verified wallet gets a session (the first free hat needs one, /api/hats/claim).
+    // Admin powers never come from the session alone: every admin route re-checks the
+    // allowlist through isAdminSession(), so a member session opens nothing admin.
+    const admin = isAdminAddress(address);
 
     const session = mintAddressSession(address);
     if (!session) {
@@ -69,7 +71,7 @@ export async function POST(req: NextRequest) {
         { status: 503 },
       );
     }
-    const res = ok({ address, admin: true });
+    const res = ok({ address, admin });
     setSessionCookie(res, session);
     res.cookies.set(NONCE_COOKIE, "", crossSiteCookie(0));
     return res;

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { canonicalOrigin } from "@/lib/origin";
 import JoinTeamForm from "@/app/_components/JoinTeamForm";
+import FirstHat from "@/app/_components/FirstHat";
 
 const BASE = canonicalOrigin();
 const OG = `${BASE}/api/og?title=${encodeURIComponent("The ZAO")}&subtitle=${encodeURIComponent("Music first · Community second · Technology third")}`;
@@ -181,6 +182,16 @@ export default function ZaoPage() {
             </Link>
           ))}
         </div>
+      </section>
+
+      {/* The first free hat: connect, sign once, the relayer mints the ZAO Member hat */}
+      <section id="hat">
+        <h2 className="text-xl font-bold mb-2">Get your first hat</h2>
+        <p className="text-muted text-sm mb-5 leading-relaxed">
+          Membership in The ZAO is a hat on Hats Protocol, not a coin. Connect a wallet, sign one
+          message, and the ZAO Member hat is minted to you. Free, soulbound, gas on us.
+        </p>
+        <FirstHat />
       </section>
 
       {/* Join the team: name + wallet on one of the ZAO Sparks */}

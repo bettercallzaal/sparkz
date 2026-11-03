@@ -32,11 +32,17 @@ Optional:
   loop is still testable end-to-end.
 - `DISCORD_WEBHOOK_URL` - turns the Discord approval channel on (dark until set).
 
-## 3. Apply the migration
+## 3. Apply the migrations
 
-The schema lives in `supabase/migrations/0001_capsule_foundation.sql`. Apply it
-to the Sparkz project via the Supabase SQL editor (paste the file) or the
-Supabase CLI (`supabase db push` once the project is linked).
+Migrations live in `supabase/migrations/` (numbered, applied in order). Since 3 Nov 2026
+they run themselves: the **Database** workflow (`.github/workflows/db.yml`) applies every
+migration not yet recorded in `public._sparkz_migrations`, then runs the ZAO seed, on every
+merge to main that touches them (or from the Actions tab, Run workflow). It needs three repo
+secrets, set once: `SUPABASE_DB_URL` (Project settings > Database > connection string,
+session pooler), `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`. Migrations
+0001-0005 were pasted by hand before the runner existed and are recorded as a baseline on
+the first run (`scripts/db-migrate.sh`). Pasting a file into the SQL editor still works for a
+one-off; then raise `SPARKZ_DB_BASELINE` so the runner does not apply it twice.
 
 RLS is ON for every table with NO anon policies: all access is server-side via
 the service-role key. Add granular public-read policies per surface as needed.

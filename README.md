@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="public/brand/sparkz-logo.gif" alt="Sparkz - start with a spark, not a token" width="300" />
+  <img src="public/brand/sparkz-logo.gif" alt="Sparkz - start with a Hearth, grow with Sparks" width="300" />
 </p>
 
 <h1 align="center">Sparkz</h1>
-<p align="center"><em>Start with a spark, not a token.</em><br/>Part of The ZAO.</p>
+<p align="center"><em>Start with a Hearth. Grow it with Sparks.</em><br/>Part of The ZAO.</p>
 
 <p align="center">
   <a href="https://trysparkz.com">trysparkz.com</a>
@@ -35,17 +35,17 @@
 
 ---
 
-**Sparkz lets a creator start with a spark, not a token.** Build community and momentum first - visible support, receipts, and a record that compounds - and launch a token only if and when it makes sense. No token required to get started. Back the album, not buy a coin.
+**Sparkz is where a project starts as a Hearth and grows through Sparks.** A Hearth is the project's home: its identity, the people backing it, and a record of everything it ships. A Spark is any event that grows the Hearth: a show, a drop, a release, a collab, a launch. A project can have many. Community grows through onchain actions people take together, not through buying in. Back the album.
 
 > **TL;DR** Every section below opens with a one-line TL;DR, so you can skim the whole thing top to bottom in a minute. Read the bold lines; dive into any section that catches you.
 
 ## New here? Start with this
 
-> **TL;DR** Sparkz is for creators, no code needed. Open a Hearth, build real backing first, tokenize later if ever.
+> **TL;DR** Sparkz is for creators, no code needed. Open a Hearth, grow it with Sparks, and let the record of what you do together speak.
 
 **Sparkz is for creators - artists, musicians, writers, builders - and the people around them. You do not need to code to use it, or to help.**
 
-Here is the whole idea in plain words: instead of launching a coin on day one and hoping people trade it, you open a **Hearth** - a home for your project that holds your identity, the people backing you, and a record of everything you have made. You build real support first. A token is optional, and only later, if it ever makes sense.
+Here is the whole idea in plain words: you open a **Hearth** - a home for your project that holds your identity, the people backing you, and a record of everything you have made. Then you grow it with **Sparks**: events that bring people in, like a show, a drop, a release or a collab. Every action people take around your work adds to the record, and the record is what grows.
 
 <p align="center">
   <a href="https://trysparkz.com"><img src="https://img.shields.io/badge/Try%20Sparkz%20%E2%86%92-fbbf24?style=for-the-badge" alt="Try Sparkz" /></a>
@@ -53,7 +53,7 @@ Here is the whole idea in plain words: instead of launching a coin on day one an
   <a href="https://trysparkz.com/demo"><img src="https://img.shields.io/badge/See%20how%20it%20works-c084fc?style=for-the-badge" alt="See how it works" /></a>
 </p>
 
-- **Support** - people can boost your work without buying a token or connecting a wallet.
+- **Support** - people can boost your work for free, no wallet needed to start.
 - **Connect** - your project gets a Farcaster home and a community that shows up.
 - **Build** - turn a relevant moment into a publish-ready post and a permanent record.
 
@@ -102,47 +102,45 @@ Plain-language definitions. If a coined word shows up anywhere and you are not s
 
 | Term | In plain words |
 | --- | --- |
-| **Spark** | A project before it is a coin. You start here. |
-| **Hearth** | Your project's home base on Sparkz - its identity, its backers, and a record of what it has made. The hub of the wheel; not a coin. |
-| **Spoke** | A tool you connect to your Hearth (a Discord, a token rail, an Audius catalog). The Hearth is the hub; each integration is a spoke. Vendors can add their own. |
-| **Back / Boost** | To support a creator you believe in. Free - no wallet, no coin required. |
+| **Spark** | An event that grows a Hearth: a show, a drop, a release, a collab, a launch. A Hearth can have many. |
+| **Hearth** | Your project's home base on Sparkz - its identity, its backers, and a record of what it has made. The hub of the wheel. Every project starts here. |
+| **Spoke** | A tool you connect to your Hearth (a Discord, a treasury, an Audius catalog). The Hearth is the hub; each integration is a spoke. Vendors can add their own. |
+| **Back / Boost** | To support a creator you believe in. Free - no wallet required to start. |
 | **Meme Engine** | The part of Sparkz that turns a cultural moment into a post and a permanent record. |
 | **Meme Receipt** | The record - which moment, which response, why it matched, and the outcomes it can generate. |
-| **Graduate** | To launch a token later, only if the momentum is real. Optional, always. |
 | **Farcaster** | An open social network (like Twitter, but you own your identity). Sparkz shares there first. |
-| **Base** | The low-cost blockchain (built by Coinbase) Sparkz uses if a project ever graduates to a token. |
-| **Empire** | A treasury a project can set up before any token exists - a shared account for its money. |
+| **Onchain action** | Something a person does around a project that is recorded onchain: wearing a hat, backing, attending, contributing. Sparkz is chain agnostic, Ethereum first. |
+| **Empire** | A shared treasury a project can set up - a shared account for its money. |
 | **The ZAO** | The creator collective Sparkz is part of. |
 
 ## The idea
 
-> **TL;DR** Token-first launchers optimize the coin; Sparkz lets you build support first and tokenize later, if ever.
+> **TL;DR** A project starts as a Hearth and grows through Sparks; community grows through what people do together, onchain.
 
-Most "creator coin" launchers are built around creating a coin on day one. Sparkz starts one step earlier: you open a **spark** - a tokenless way for a community to back the work and build a track record. If the energy is there, you can graduate to a token later. Some creators may do it quickly, some may wait, and some may never do it. The token is an option, not the entry fee.
+Every project on Sparkz starts as a **Hearth**: a home where a community backs the work and builds a track record. It grows through **Sparks** - events that bring people in and give them something to do: a show, a drop, a release, a collab, a launch. Each action people take is recorded, onchain where it counts, so the project's history and its community grow together.
 
 ## Why it's different
 
-> **TL;DR** No forced token, a visible boost signal, ZAO-backed quality - and the coin is plumbing, never the pitch.
+> **TL;DR** Start with a Hearth, grow with Sparks, a visible boost signal, ZAO-backed quality - and the work is always the pitch.
 
-- **No token to start.** Begin with a spark - identity, backing, receipts. A token is opt-in, later, if ever - so you build real momentum before anything is on-chain.
-- **An informed graduation path.** When token-launch integrations go live, Sparkz will compare the available rails, explain their fees and tradeoffs, and help tune the configuration. The creator still makes the call.
+- **Start with a Hearth.** Identity, backing, receipts - a real record from day one.
+- **Grow with Sparks.** Events are how a Hearth grows, and every one leaves a record of who showed up and what they did.
 - **A boost signal.** Supporters can show up without a wallet or payment. Leaderboards and reward layers can build on that signal later.
 - **Collectables on the roadmap.** Backing a creator's work will earn collectables - a v2 layer, not live today.
-- **Backed by ZAO.** Not a permissionless farm. ZAO stands behind who launches, so it stays quality over speculation, and takes an aligned locked stake - never a fee slice.
+- **Backed by ZAO.** Not a permissionless farm. ZAO stands behind who launches, so it stays quality over hype, and takes an aligned locked stake - never a fee slice.
 
-**The frame:** wherever there is a coin, there is speculation. So Sparkz leads with the work, not the coin: **back the album.** Perks are what backers enjoy today, not promises. If a token ever comes, it is plumbing - never the pitch.
+**The frame:** Sparkz leads with the work: **back the album.** Perks are what backers enjoy today, not promises. Community grows through onchain actions people take together.
 
 ## No lock-in, by design
 
-> **TL;DR** No forced token, your data is yours, swap any piece, bring your own tools, leave any time.
+> **TL;DR** Your data is yours, swap any piece, bring your own tools, any chain, leave any time.
 
-Sparkz is built so a creator is never trapped - not in a token, not in a vendor, not even in our own stack. The whole point is to give creators the least-friction way to build, while keeping every exit open.
+Sparkz is built so a creator is never trapped - not in a vendor, not in a chain, not even in our own stack. The whole point is to give creators the least-friction way to build, while keeping every exit open.
 
-- **No forced token.** Start with a spark. A coin is optional, later, if ever - and the graduation plan uses external rails rather than a Sparkz-only token contract.
-- **Your data is yours.** A Hearth is an open record - identity, backers, receipts - built on an open schema in an open-source codebase. The moat is the record that accumulates around your work, not a proprietary Sparkz token contract.
+- **Your data is yours.** A Hearth is an open record - identity, backers, receipts - built on an open schema in an open-source codebase. The moat is the record that accumulates around your work.
 - **Swap any piece.** Every external system sits behind an adapter - [SignalSource, BackingProvider, ApprovalChannel](#adapter-seams). Today that means human signals, ledger backing, and in-app approval with optional Discord notification; new rails and channels can slot in without a UI rewrite.
-- **Bring the tools you already use.** Farcaster identity and sharing, GitHub imports, and Empire are wired today; POIDH, Clanker, and additional rails can join through the same open approach. Sparkz is connective tissue, not a walled garden that replaces them.
-- **Decentralized where it counts.** A Farcaster identity you own, Base for settlement, and external treasury rails you control when configured. Nothing goes on-chain until you choose it.
+- **Bring the tools you already use.** Farcaster identity and sharing, GitHub imports, and Empire are wired today; POIDH, Hats, Lens, Bluesky and more can join through the same open approach. Sparkz is connective tissue, not a walled garden that replaces them.
+- **Decentralized where it counts.** An identity you own, onchain records on Ethereum and its networks, and treasury rails you control when configured. Technology agnostic: Ethereum and Farcaster first, never locked in. Nothing goes onchain until you choose it.
 
 The pitch in one line: **own your work, use any tool, leave any time.**
 
@@ -153,17 +151,17 @@ The pitch in one line: **own your work, use any tool, leave any time.**
 1. **No vendor lock-in.** A creator can understand the exit path and move their work or community without starting over.
 2. **Full fee transparency.** Before a creator commits, Sparkz shows what they pay, who receives it, and what they get in return.
 
-For example, [Empire's published breakdown](https://paragraph.com/@empire_builder/empire-builder) says tokens launched through its interface allocate 80% of creator fee revenue to the creator and 20% to platform development, alongside its Forged tooling and services. Sparkz should put that split and those benefits next to every other compatible option - not hide either one.
+Sparkz puts every partner's split and benefits next to every other compatible option - never hidden.
 
 ## How Sparkz compares
 
-> **TL;DR** Token-first launchers help you ship a coin; Sparkz helps you prove the project first, then compare compatible launch rails if you want one.
+> **TL;DR** Most launch tools start with something to buy; Sparkz starts with a Hearth and grows it through events and onchain actions.
 
-|  | Typical token-first launch flow | Sparkz |
+|  | Typical launch flow | Sparkz |
 | --- | --- | --- |
-| **Starting point** | Token contract and launch configuration | Hearth: identity, backing, and receipts |
-| **First community action** | Buy, sell, or hold | Back or boost without a wallet or token |
-| **Token decision** | Part of the initial launch flow | Optional graduation, later if useful |
+| **Starting point** | Something to buy on day one | Hearth: identity, backing, and receipts |
+| **First community action** | Buy, sell, or hold | Back, boost, wear a hat, show up |
+| **How it grows** | Price | Sparks: events, and the onchain actions around them |
 | **Rail choice** | The launcher's supported stack | Compare compatible providers and terms |
 | **Fees** | Depend on the provider | Amount, recipient, and benefits shown before committing |
 | **Portability** | Depends on the provider | Open-source core with swappable adapter seams |
@@ -171,9 +169,9 @@ For example, [Empire's published breakdown](https://paragraph.com/@empire_builde
 
 ## The Hearth
 
-> **TL;DR** Every project is a Hearth (identity + backing + receipts), not a coin. One schema, four entry points.
+> **TL;DR** Every project is a Hearth (identity + backing + receipts). One schema, four entry points.
 
-Every Sparkz project is a **Hearth, not a coin.** The Hearth is the unit that accumulates: identity, contributors, history, content, receipts, reputation, backing, economic config, and Meme Engine memory. The coin is an *optional output*. The moat is the accumulating data - not the token contract, not image generation.
+Every Sparkz project is a **Hearth.** The Hearth is the unit that accumulates: identity, contributors, history, content, receipts, reputation, backing, economic config, and Meme Engine memory. Sparks - events - are how it grows. The moat is the accumulating data, not image generation.
 
 One schema, four entry points (so v1.5 is additive, not a rewrite):
 
@@ -183,8 +181,8 @@ flowchart LR
   Culture["Culture<br/>(a scene / movement)"] --> Hearth
   OSS["Open-Source repo<br/>(repo + contributors + audit)"] --> Hearth
   Meme["Meme Engine<br/>(lineage-native)"] --> Hearth
-  Hearth(("Hearth")) --> Coin["Token<br/>(optional, later)"]
-  Hearth --> Stay["Stay tokenless<br/>(perfectly fine)"]
+  Hearth(("Hearth")) --> Sparks["Sparks<br/>(events: shows, drops, launches)"]
+  Sparks --> Record["Onchain record<br/>(who showed up, what they did)"]
 ```
 
 The Hearth type lives in `hearths.type` (`creator | culture | oss | meme`); type-specific fields live in `metadata` jsonb, so a new entry point is a value, not a migration. v1 proves ONE loop with Zoostr (a Creator Hearth).
@@ -281,7 +279,7 @@ erDiagram
     text slug UK
     text type "creator|culture|oss|meme"
     text status "spark|tokenized|dormant"
-    jsonb economic_config "coin knobs, 0xSplits, empire ref"
+    jsonb economic_config "0xSplits, empire ref"
     jsonb metadata "type-specific + farcaster + stars"
   }
   hearth_backers {
@@ -314,12 +312,10 @@ erDiagram
 
 ```mermaid
 stateDiagram-v2
-  [*] --> spark: open a Hearth (no coin)
-  spark --> spark: back, boost, receipts accumulate
-  spark --> tokenized: graduate (Empire / Clanker) - only if momentum is real
+  [*] --> spark: open a Hearth
+  spark --> spark: Sparks (events), backing, boosts, receipts accumulate
   spark --> dormant: goes quiet
-  dormant --> spark: revived
-  tokenized --> [*]
+  dormant --> spark: revived by a new Spark
 ```
 
 ## Adapter seams (the spokes)
@@ -331,7 +327,7 @@ Four registry-backed seams keep the loop swappable end to end. Each is a `Map`-b
 ```mermaid
 flowchart LR
   R1{{"SignalSource<br/>registry"}} --- H["human (v1)"] & FCa["farcaster"] & AR["alpha_radar"]
-  R2{{"BackingProvider<br/>registry"}} --- L["ledger (v1)"] & CL["clanker"] & EMp["empire"]
+  R2{{"BackingProvider<br/>registry"}} --- L["ledger (v1)"] & EMp["empire"] & OC["other onchain rails"]
   R3{{"ApprovalChannel<br/>registry"}} --- IA["in-app (v1)"] & DI["Discord notice"] & TG["direct channels later"]
   R4{{"Connector<br/>registry (spokes)"}} --- AU["audius (example)"] & VN["any vendor tool"]
 ```
@@ -339,7 +335,7 @@ flowchart LR
 | Seam | Interface | v1 impl | Grows to |
 | --- | --- | --- | --- |
 | **SignalSource** | `detectSignals(hearthId)` | `human` | farcaster activity, alpha radar, predictive |
-| **BackingProvider** | credit / settle backing | `ledger` (off-chain) | clanker, bankr, privy, empire |
+| **BackingProvider** | credit / settle backing | `ledger` (off-chain) | empire, privy, other onchain rails |
 | **ApprovalChannel** | route an approval request | `in_app` + optional Discord notice | direct Discord / Telegram approval |
 | **Connector** (spoke) | `status(hearthId)` for the integrations grid | `audius-catalog` (example) | any vendor tool - added via a community PR |
 
@@ -353,8 +349,7 @@ Surfaced on each Hearth page (`/c/[slug]`) as an integrations panel - **the Hear
 
 | Integration | What it does | Status |
 | --- | --- | --- |
-| **Empire (treasury)** | Deploy or link a tokenless Empire on Base | Live at `/admin/empire` when the API key and owner signature are configured |
-| **Clanker (token)** | A candidate token rail for Hearth graduation | Planned; economic config only |
+| **Empire (treasury)** | Deploy or link an Empire treasury | Live at `/admin/empire` when the API key and owner signature are configured |
 | **0xSplits** | A candidate for adjustable revenue distribution | Modeled in economic config; not directly deployed by Sparkz yet |
 | **Farcaster** | Sign in with Farcaster (SIWF), Mini App manifest, share-to-cast | Live |
 | **Email list** | Off-chain backing / waitlist capture | Live |
@@ -384,9 +379,9 @@ Surfaced on each Hearth page (`/c/[slug]`) as an integrations panel - **the Hear
 | `/c/[slug]/settings` | Owner settings - choose which integrations show on the public Hearth page (the Hearth's owner, signed in with Farcaster, or the operator) |
 | `/admin/add-repo` | Add a project from its GitHub repo - opens an OSS Hearth pre-filled with real repo data (operator-gated) |
 | `/blog/[slug]` | A single blog post |
-| `/hearth` | What a Hearth is - identity, backers, and receipts before any token |
+| `/hearth` | What a Hearth is - identity, backers, and receipts |
 | `/meme-engine` | How the Meme Engine loop works - drafts, human approval, receipts |
-| `/graduation` | When and how a Spark might graduate to a token (optional, always) |
+| `/graduation` | How Sparks (events) grow a Hearth |
 | `/split-wizard` | Set a split sheet before launch - roles, shares, 0xSplits JSON export |
 | `/community-pool`, `/contribution`, `/examples` | Options creators can experiment with - contribution points, pool shares, Spark templates |
 | `/farcaster` | Why Sparkz is Farcaster-native |
@@ -550,9 +545,9 @@ Full vision: [ARCHITECTURE.md](docs/ARCHITECTURE.md) and [V1-SCOPE.md](docs/V1-S
 
 Sparkz is early and public on purpose. The things below are **not locked in**. If you have a take, that is exactly the kind of feedback we want - open a [Discussion](https://github.com/bettercallzaal/sparkz/discussions) or an [idea](https://github.com/bettercallzaal/sparkz/issues/new?template=idea.yml).
 
-- **Backing rails** - `ledger` (off-chain) is live; Clanker, Bankr, Privy, and Empire are candidates behind the same adapter. Which do creators actually want first?
+- **Backing rails** - `ledger` (off-chain) is live; Privy, Empire and other onchain rails are candidates behind the same adapter. Which do creators actually want first?
 - **Fees + splits** - the creator-first default is 1/1/98. Is that the right floor? Should Sparkz ever take a slice, or only an aligned, locked stake - never a fee?
-- **The graduation moment** - when and how a spark becomes a token, and which compatible rail fits. What should "graduate" feel like - a button, a vote, a threshold?
+- **Sparks** - which events grow a Hearth best, and which onchain actions should every Spark record? A hat, an attendance proof, a contribution?
 - **Self-serve + moderation** - anyone can light a spark, held for review. The auth direction is decided (verified Sign-in-with-Farcaster, owner-by-FID); still open is how open creation should be: fully self-serve, invite-only, or FID-gated from day one?
 - **Agent autonomy** - the Meme Engine agent is human-in-the-loop by default. How much autonomy should a creator be able to hand it?
 - **Entry points** - Creator and OSS-repo flows are wired; Culture and Meme remain early. Which should we build out next?
@@ -577,19 +572,16 @@ Bring a take with a concrete path (see [Contributing](CONTRIBUTING.md)) and it g
 | [AUTH-PLAN.md](docs/AUTH-PLAN.md) | The locked owner-by-FID auth plan (two doors, one session) - the next build |
 | [STACK.md](docs/STACK.md) | File-by-file stack map |
 | [strategy/positioning.md](docs/strategy/positioning.md) | Why Sparkz is an OSS protocol + data network, not SaaS |
-| [strategy/graduation-timing.md](docs/strategy/graduation-timing.md) | When a Spark should become a coin - the token-timing readiness framework |
 | [research/sparkz-improvements-and-plugin-system.md](docs/research/sparkz-improvements-and-plugin-system.md) | The Hearth plugin system (elizaOS-modeled) + easy Farcaster/integration wins |
 | [research/empire-builder-api-integration.md](docs/research/empire-builder-api-integration.md) | Empire Builder endpoint audit + the Sparkz integration |
 
 ## Principles
 
-> **TL;DR** Lessons from watching creator coins fail, baked into hard rules.
+> **TL;DR** Community first, the work is the pitch, baked into hard rules.
 
-Learned from watching creator coins fail (speculation-as-the-product, forced tokenization, zero-utility tokens, extraction dressed as "for creators"):
-
-- **No auto-mint.** Tokenization is an explicit creator choice, later - never a throwaway coin on day one.
+- **Hearth first.** Every project starts as a home for its people and its work.
 - **Monetization tool, not a security.** Splits are revenue share (utility), not "shares in the creator." No moon talk, no promises.
-- **Retention before token.** Real engagement first - collabs, backing, community - not holder count.
+- **Retention first.** Real engagement - collabs, backing, showing up - grown through onchain actions, not holder count.
 - **Generative, not extractive. Symbiotic, not parasitic.**
 
 Built to work with the ecosystem: ZAO, Kismet, Podia, POIDH, Empire, and more.

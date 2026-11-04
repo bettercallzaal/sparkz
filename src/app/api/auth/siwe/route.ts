@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
       console.warn("[sparkz:auth.siwe] rejected: nonce already used");
       return denied;
     }
-    // Any verified wallet gets a session (the first free hat needs one, /api/hats/claim).
+    // Any verified wallet gets a session.
     // Admin powers never come from the session alone: every admin route re-checks the
     // allowlist through isAdminSession(), so a member session opens nothing admin.
     const admin = isAdminAddress(address);

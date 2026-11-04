@@ -2,19 +2,21 @@
 
 import { useEffect, useState } from "react";
 import { useAppKit } from "@reown/appkit/react";
-import { useAccount, useSignMessage } from "wagmi";
-import { createSiweMessage } from "viem/siwe";
+import { useAccount, useSwitchChain, useWriteContract, usePublicClient } from "wagmi";
+import type { Address } from "viem";
 import WalletProviders from "@/app/admin/empire/providers";
-import { CANONICAL_HOST, CANONICAL_URL } from "@/lib/origin";
-import { exchangeSiwe, fetchNonce } from "@/lib/auth-session-client";
+import { claimsHatterAbi, HATS_CHAIN_ID } from "@/lib/hats";
 
-// "Get your first hat": connect a wallet, sign one message, the relayer mints the ZAO
-// Member hat on Optimism (gas on The ZAO). Zaal, 3 Nov 2026: the free hat is how
-// commitment starts; the paid hats per Spark come after, a token last.
+// "Get your first hat": connect a wallet and claim the ZAO Member hat on Optimism straight
+// from the Hats claims module. The member's own wallet sends it, so there is no server key
+// (Zaal, 4 Nov 2026). Gas is a fraction of a cent on Optimism. Zaal, 3 Nov 2026: the free
+// hat is how commitment starts; the paid hats per Spark come after.
 type Status = {
   configured: boolean;
   canMint: boolean;
   hat: string | null;
+  hatId: string | null;
+  claimsHatter: Address | null;
   supply: { supply: number; max: number } | null;
   address: string | null;
   worn: boolean;
@@ -37,7 +39,9 @@ export default function FirstHat() {
 function FirstHatInner() {
   const { address, chainId } = useAccount();
   const { open } = useAppKit();
-  const { signMessageAsync } = useSignMessage();
+  const { switchChainAsync } = useSwitchChain();
+  const { writeContractAsync } = useWriteContract();
+  const reader = usePublicClient({ chainId: HATS_CHAIN_ID });
   const [state, setState] = useState<Status | null>(null);
   const [busy, setBusy] = useState<"sign" | "mint" | null>(null);
   const [tx, setTx] = useState<string | null>(null);
@@ -59,28 +63,19 @@ function FirstHatInner() {
       return;
     }
     try {
+      if (!state?.claimsHatter || !state.hatId) throw new Error("Free hats are not switched on yet.");
       setBusy("sign");
-      const issuedAt = new Date();
-      const message = createSiweMessage({
-        address,
-        chainId: chainId ?? 8453,
-        domain: CANONICAL_HOST,
-        uri: `${CANONICAL_URL}/zao`,
-        version: "1",
-        nonce: await fetchNonce(),
-        issuedAt,
-        expirationTime: new Date(issuedAt.getTime() + 5 * 60_000),
-        statement: "Claim your first ZAO hat. Free, soulbound, no coin.",
+      if (chainId !== HATS_CHAIN_ID) await switchChainAsync({ chainId: HATS_CHAIN_ID });
+      const hash = await writeContractAsync({
+        chainId: HATS_CHAIN_ID,
+        address: state.claimsHatter,
+        abi: claimsHatterAbi,
+        functionName: "claimHat",
+        args: [BigInt(state.hatId)],
       });
-      const signature = await signMessageAsync({ message });
-      const signInError = await exchangeSiwe(message, signature);
-      if (signInError) throw new Error(signInError);
-
       setBusy("mint");
-      const r = await fetch("/api/hats/claim", { method: "POST", credentials: "include" });
-      const j = (await r.json().catch(() => null)) as { ok: boolean; data?: { tx: string | null; already: boolean }; error?: string } | null;
-      if (!j?.ok) throw new Error(j?.error ?? "The hat could not be minted right now.");
-      setTx(j.data?.tx ?? null);
+      await reader?.waitForTransactionReceipt({ hash, timeout: 60_000 });
+      setTx(hash);
       setState(await status(address));
     } catch (e) {
       setError((e as Error).message || "Something went wrong. Try again.");
@@ -115,7 +110,7 @@ function FirstHatInner() {
       </div>
       {worn && (
         <p className="text-muted text-xs leading-relaxed">
-          Soulbound, no coin, no gas. This is your commitment to The ZAO. Project hats come next, per Spark.
+          Soulbound and free, you only cover a fraction of a cent of network fee. This is your commitment to The ZAO. Project hats come next, per Spark.
           {tx && (
             <>
               {" "}

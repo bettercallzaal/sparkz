@@ -6,7 +6,7 @@
 -- (/api/team); reads are operator-only. RLS on, no anon policies, same as waitlist.
 -- ip_hash is the salted hash from lib/rate-limit, never a raw address.
 
-create table team_signups (
+create table if not exists team_signups (
   id          uuid primary key default gen_random_uuid(),
   hearth_id   uuid not null references hearths(id) on delete cascade,
   name        text not null,
@@ -17,7 +17,7 @@ create table team_signups (
   created_at  timestamptz not null default now(),
   unique (hearth_id, wallet)
 );
-create index team_signups_hearth_idx on team_signups(hearth_id, created_at);
-create index team_signups_ip_idx on team_signups(ip_hash, created_at);
+create index if not exists team_signups_hearth_idx on team_signups(hearth_id, created_at);
+create index if not exists team_signups_ip_idx on team_signups(ip_hash, created_at);
 
 alter table team_signups enable row level security;

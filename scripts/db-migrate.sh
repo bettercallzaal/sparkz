@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Applies every supabase/migrations/*.sql that has not been applied yet, in name order,
-# each in its own transaction, and records it in public._sparkz_migrations. Runs in the
+# each in its own transaction together with its record in public._sparkz_migrations. Runs in the
 # db workflow (.github/workflows/db.yml) with psql; no Supabase CLI, no new npm dependency.
 #
 # Baseline: 0001-0005 were pasted into the SQL editor by hand before this runner existed,
@@ -36,7 +36,9 @@ for file in "$DIR"/*.sql; do
     continue
   fi
   echo "apply   $name"
-  psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -q --single-transaction -f "$file"
-  psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -q -c "insert into public._sparkz_migrations(name) values ('$name')"
+  # Apply and record in ONE transaction: a crash between the two can never leave a
+  # migration applied but unrecorded (which would re-apply it on the next run).
+  psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -q --single-transaction -f "$file" \
+    -c "insert into public._sparkz_migrations(name) values ('$name')"
 done
 echo "migrations: done"

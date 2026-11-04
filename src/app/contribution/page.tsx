@@ -48,7 +48,7 @@ const CONTRIBUTION_TYPES = [
   {
     icon: "💸",
     name: "Back",
-    what: "Support the Hearth with a free boost - no wallet, no card, no coin.",
+    what: "Support the Hearth with a free boost - no wallet, no card.",
     weight: "High",
     tracked: "Boost (free) - who showed up and when",
     example: "A boost earns leaderboard weight and puts you in the receipts",
@@ -277,12 +277,6 @@ export default function ContributionPage() {
           className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
         >
           📐 Economics
-        </Link>
-        <Link
-          href="/graduation"
-          className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
-        >
-          Graduation
         </Link>
       </section>
     </main>

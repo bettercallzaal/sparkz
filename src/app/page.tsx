@@ -10,18 +10,18 @@ export const dynamic = "force-dynamic";
 const STEPS = [
   {
     n: "1",
-    h: "Start with a spark",
-    p: "Open a Hearth - identity, backing, receipts. No token, no wallet required.",
+    h: "Light a Hearth",
+    p: "Open your project's Hearth: identity, backers, receipts. No wallet required.",
   },
   {
     n: "2",
-    h: "Build momentum",
-    p: "Supporters back the work and collect what you make. The Meme Engine amplifies the moments that land.",
+    h: "Spark it up",
+    p: "Every show, drop or launch is a Spark. Supporters show up, back the work and collect what you make.",
   },
   {
     n: "3",
-    h: "Graduate, only if it fits",
-    p: "If the energy is there, launch a token later on the Clanker rail. Some do, some never. That is fine.",
+    h: "Keep the record",
+    p: "Every Spark leaves receipts: who backed, who showed up, who helped. The Hearth grows on that record.",
   },
 ];
 
@@ -38,7 +38,7 @@ const OWNERSHIP = [
   },
   {
     h: "Transparent by default",
-    p: "Receipts on-chain, revenue in the open. Back the album, not buy a coin.",
+    p: "Receipts onchain, revenue in the open. Back the album, back the show.",
   },
 ];
 
@@ -79,9 +79,9 @@ export default async function Home() {
               <span className="eyebrow-pill">Sparkz - for you, the creator</span>
             </div>
             <h1 className="mt-6 text-[clamp(2.1rem,7vw,3.6rem)] font-bold leading-[0.98] tracking-tight">
-              Start with a{" "}
+              Light a{" "}
               <span className="squig spark-text">
-                spark
+                Hearth
                 <svg viewBox="0 0 200 16" preserveAspectRatio="none" aria-hidden>
                   <path
                     d="M2 11 Q 50 2 100 9 T 198 6"
@@ -93,17 +93,17 @@ export default async function Home() {
                 </svg>
               </span>
               ,<br />
-              not a token.
+              grow it with sparks.
             </h1>
             <p className="mt-6 max-w-md text-lg leading-relaxed text-muted">
               Open your project&apos;s home -{" "}
               <span className="font-semibold text-foreground">identity, backers, receipts</span>. No
-              wallet, no coin to start. The token comes later, if ever.
+              wallet to start. Every event after that is a Spark that grows it.
             </p>
             <div className="mt-6 flex flex-wrap gap-2.5">
               <span className="sticker sticker-v">no wallet needed</span>
               <span className="sticker sticker-p">back the album</span>
-              <span className="sticker sticker-a">Farcaster-native</span>
+              <span className="sticker sticker-a">open social</span>
             </div>
             <div className="mt-8 max-w-md">
               <JoinForm interest="sparkz" />
@@ -128,7 +128,7 @@ export default async function Home() {
           <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
             <span className="spark-text text-xl font-bold">You make the work.</span>
             <span className="text-sm text-muted">
-              Sparkz makes it back-able, postable, and provable - before any coin exists.
+              Sparkz makes it back-able, postable, and provable.
             </span>
           </div>
         </div>

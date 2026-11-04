@@ -8,7 +8,6 @@ import BoostForm from "@/app/_components/BoostForm";
 import Avatar from "@/app/_components/Avatar";
 import CopyButton from "@/app/_components/CopyButton";
 import OwnerBadge from "@/app/_components/OwnerBadge";
-import GraduationPanel from "@/app/_components/GraduationPanel";
 import { maskBacker } from "@/lib/sanitize";
 import ShareButton from "@/app/_components/ShareButton";
 import Flame from "@/app/_components/Flame";
@@ -35,7 +34,7 @@ export async function generateMetadata({
       .maybeSingle();
     if (data) {
       const c = data as Pick<Hearth, "name" | "bio">;
-      const desc = c.bio ?? "A Sparkz Hearth - back the work, not a coin.";
+      const desc = c.bio ?? "A Sparkz Hearth - back the work, show up.";
       const origin = canonicalOrigin();
       const image = `${origin}/api/og?slug=${encodeURIComponent(slug)}`;
       const embed = JSON.stringify({
@@ -247,7 +246,7 @@ export default async function HearthPage({
             />
             <ShareButton
               path={`/c/${hearth.slug}`}
-              text={`Backing ${hearth.name} on Sparkz - a spark, not a coin.`}
+              text={`Backing ${hearth.name} on Sparkz.`}
               channel={fc?.channel ?? undefined}
             />
           </div>
@@ -393,8 +392,6 @@ export default async function HearthPage({
         <BoostForm hearthId={hearth.id} />
       </section>
 
-      {hearth.status === "spark" && <GraduationPanel />}
-
       <section className="mb-8">
         <h2 className="mb-3 text-sm font-medium">Meme Receipts</h2>
         {receipts.length === 0 ? (
@@ -440,7 +437,7 @@ export default async function HearthPage({
         <h2 className="mb-3 text-sm font-medium">Backers</h2>
         {backers.length === 0 ? (
           <p className="rounded-lg border border-dashed border-border p-5 text-sm text-muted">
-            No backers yet. Be the first - boost above, no wallet or coin needed.
+            No backers yet. Be the first - boost above, no wallet needed.
           </p>
         ) : (
           <ul className="space-y-2">

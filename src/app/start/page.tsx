@@ -5,10 +5,10 @@ export const dynamic = "force-static";
 
 export const metadata = {
   title: "Light your spark",
-  description: "Open a Hearth in under a minute. No wallet, no coin - just your project's home.",
+  description: "Open a Hearth in under a minute. No wallet needed, just your project's home.",
   openGraph: {
     title: "Light your spark",
-    description: "Open a Hearth in under a minute. No wallet, no coin.",
+    description: "Open a Hearth in under a minute. No wallet needed.",
     images: [{ url: "/api/og?title=Light%20your%20spark&subtitle=Open%20a%20Hearth%20in%20under%20a%20minute.", width: 1200, height: 800 }],
   },
 };
@@ -20,7 +20,7 @@ export default function StartPage() {
         <Flame className="h-9 w-9 flame-live" />
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Light your spark</h1>
-          <p className="text-sm text-muted">A project home in under a minute. No wallet, no coin.</p>
+          <p className="text-sm text-muted">A project home in under a minute. No wallet needed.</p>
         </div>
       </div>
 
@@ -29,8 +29,8 @@ export default function StartPage() {
       </div>
 
       <p className="mt-4 text-center text-xs text-muted">
-        This creates a real Hearth you can share right away. A token stays optional -
-        later, if ever.
+        This creates a real Hearth you can share right away. Every show, drop or
+        launch after that is a Spark that grows it.
       </p>
     </main>
   );

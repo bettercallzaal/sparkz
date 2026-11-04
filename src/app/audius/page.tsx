@@ -10,7 +10,7 @@ const BASE = canonicalOrigin();
 export const metadata: Metadata = {
   title: "Audius integration - Sparkz",
   description:
-    "Link an artist's Audius catalog to their Hearth - read live from the Audius public API. No wallet, no coin.",
+    "Link an artist's Audius catalog to their Hearth - read live from the Audius public API. No wallet needed.",
   openGraph: {
     title: "Audius x Sparkz",
     description: "Your Audius catalog, live on your Hearth.",
@@ -39,7 +39,7 @@ const WHY = [
   },
   {
     title: "Open + free",
-    body: "No API key, no wallet, no coin. Just your public Audius catalog, linked to your Hearth.",
+    body: "No API key, no wallet. Just your public Audius catalog, linked to your Hearth.",
   },
 ];
 
@@ -57,7 +57,7 @@ export default function AudiusPage() {
         <p className="mt-4 text-lg text-muted">
           Audius is where music-native creators already have an audience. Link your Audius
           handle and your catalog shows up on your Hearth - read live from the Audius public
-          API. No wallet, no coin.
+          API. No wallet needed.
         </p>
       </section>
 

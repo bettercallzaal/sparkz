@@ -41,27 +41,27 @@ export const metadata: Metadata = {
 
 const RETURNS = ["Profit margin", "Data", "IP rights"];
 
-// The ZAO's Sparks (scripts/seed-zao-projects.mjs creates them).
+// The ZAO's Hearths (scripts/seed-zao-projects.mjs creates them).
 const PROJECTS = [
   { slug: "zao-devz", name: "ZAO DEVZ", body: "The builders. Open-source tools for artists." },
-  { slug: "iman-afrikah", name: "IMan Afrikah", body: "Zambian artist and DJ. Back the music first, the coin comes later." },
-  { slug: "zabal", name: "ZABAL", body: "The culture coin community. Boost, climb, share the pool." },
+  { slug: "iman-afrikah", name: "IMan Afrikah", body: "Zambian artist and DJ. Back the music, catch the next set." },
+  { slug: "zabal", name: "ZABAL", body: "The ZABAL community. Boost, climb, share the pool." },
   { slug: "coc-concertz", name: "CoC ConcertZ", body: "The concert series. Back the next show before the lineup drops." },
-  { slug: "zao-festivals", name: "ZAO Festivals", body: "ZAOstock and every festival The ZAO throws. Back the festival, not a coin." },
+  { slug: "zao-festivals", name: "ZAO Festivals", body: "ZAOstock and every festival The ZAO throws. Back the festival, be there." },
 ];
 
 // Sparkz's principles, taken from the README's Principles list.
 const PRINCIPLES = [
   {
-    title: "No auto-mint",
-    body: "Tokenization is an explicit creator choice, later - never a throwaway coin on day one.",
+    title: "Hearth first",
+    body: "Every project opens as a Hearth with real people around it. Sparks are the events that grow it.",
   },
   {
     title: "Monetization tool, not a security",
     body: "Splits are revenue share (utility), not \"shares in the creator.\" No moon talk, no promises.",
   },
   {
-    title: "Retention before token",
+    title: "Retention first",
     body: "Real engagement first - collabs, backing, community - not holder count.",
   },
   {
@@ -95,7 +95,7 @@ export default function ZaoPage() {
         </p>
         <p className="text-muted text-sm mt-3">
           Its priority stack is music first, community second, technology third. Sparkz
-          follows the same order: start with a spark and real backing, not a token.
+          follows the same order: light a Hearth, grow it with real backing, one Spark at a time.
         </p>
       </section>
 
@@ -146,8 +146,8 @@ export default function ZaoPage() {
       <section>
         <h2 className="text-xl font-bold mb-2">Principles</h2>
         <p className="text-muted text-sm mb-5 leading-relaxed">
-          Learned from watching creator coins fail: speculation as the product, forced
-          tokenization, zero-utility tokens, extraction dressed as &ldquo;for creators&rdquo;.
+          Learned from watching creator platforms fail: speculation as the product,
+          extraction dressed as &ldquo;for creators&rdquo;.
         </p>
         <div className="space-y-3">
           {PRINCIPLES.map((g, i) => (
@@ -168,7 +168,7 @@ export default function ZaoPage() {
       <section>
         <h2 className="text-xl font-bold mb-2">ZAO projects on Sparkz</h2>
         <p className="text-muted text-sm mb-5 leading-relaxed">
-          The ZAO&apos;s own projects, each one a Spark. Back them now; a token comes only when the backing is real.
+          The ZAO&apos;s own projects, each one a Hearth. Back them now and show up for their next Spark.
         </p>
         <div className="grid sm:grid-cols-3 gap-4">
           {PROJECTS.map(({ slug, name, body }) => (
@@ -188,18 +188,19 @@ export default function ZaoPage() {
       <section id="hat">
         <h2 className="text-xl font-bold mb-2">Get your first hat</h2>
         <p className="text-muted text-sm mb-5 leading-relaxed">
-          Membership in The ZAO is a hat on Hats Protocol, not a coin. Connect a wallet, sign one
-          message, and the ZAO Member hat is minted to you. Free, soulbound, gas on us.
+          Membership in The ZAO is a hat on Hats Protocol. Connect a wallet and claim the ZAO
+          Member hat straight from your own wallet. Free and soulbound, the network fee is a
+          fraction of a cent.
         </p>
         <FirstHat />
       </section>
 
-      {/* Join the team: name + wallet on one of the ZAO Sparks */}
+      {/* Join the team: name + wallet on one of the ZAO Hearths */}
       <section id="join">
         <h2 className="text-xl font-bold mb-2">Join the team</h2>
         <p className="text-muted text-sm mb-5 leading-relaxed">
-          Put your name and wallet on a ZAO Spark. No wallet connect, no coin to buy. This is the
-          team list: the people who were here before any token existed.
+          Put your name and wallet on a ZAO Hearth. No wallet connect, nothing to buy. This is the
+          team list: the people who were here from the start.
         </p>
         <JoinTeamForm sparks={PROJECTS.map(({ slug, name }) => ({ slug, name }))} />
       </section>

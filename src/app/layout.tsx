@@ -42,24 +42,24 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(ORIGIN),
   title: {
-    default: "Sparkz - start with a spark, not a token",
+    default: "Sparkz - light a Hearth, grow it with sparks",
     template: "%s - Sparkz",
   },
   description:
-    "Every Sparkz project is a Hearth, not a coin. Back the album, not buy a coin.",
+    "Every Sparkz project is a Hearth. Every show, drop and launch is a Spark that grows it. Back the album, back the show.",
   applicationName: "Sparkz",
   openGraph: {
-    title: "Sparkz - start with a spark, not a token",
+    title: "Sparkz - light a Hearth, grow it with sparks",
     description:
-      "Every Sparkz project is a Hearth, not a coin. Back the album, not buy a coin.",
+      "Every Sparkz project is a Hearth. Every show, drop and launch is a Spark that grows it. Back the album, back the show.",
     siteName: "Sparkz",
     type: "website",
     images: [{ url: "/api/og", width: 1200, height: 800 }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sparkz - start with a spark, not a token",
-    description: "Back the album, not buy a coin.",
+    title: "Sparkz - light a Hearth, grow it with sparks",
+    description: "Back the album, back the show.",
     images: ["/api/og"],
   },
   other: {

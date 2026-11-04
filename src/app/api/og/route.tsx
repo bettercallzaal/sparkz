@@ -138,7 +138,7 @@ export async function GET(req: Request) {
             <Card
               eyebrow="Sparkz Hearth"
               title={c.name}
-              subtitle={c.bio ?? "Back the work, not a coin."}
+              subtitle={c.bio ?? "Back the work. Show up."}
               chips={[
                 { label: c.type, color: V },
                 { label: c.status, color: A },
@@ -160,6 +160,6 @@ export async function GET(req: Request) {
   }
 
   const title = searchParams.get("title") ?? "Sparkz";
-  const subtitle = searchParams.get("subtitle") ?? "Start with a spark, not a token.";
+  const subtitle = searchParams.get("subtitle") ?? "Light a Hearth, grow it with sparks.";
   return new ImageResponse(<Card title={title} subtitle={subtitle} />, size);
 }

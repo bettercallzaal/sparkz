@@ -19,7 +19,7 @@ export default function HeroHearthPreview() {
             A Hearth holds
           </span>
           <span className="rounded-full border border-accent/40 bg-accent/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-accent">
-            not a coin
+            your project&apos;s home
           </span>
         </div>
 
@@ -40,7 +40,7 @@ export default function HeroHearthPreview() {
           </div>
         </div>
         <p className="mt-3 text-center text-[11px] text-muted">
-          No wallet. No coin. Just backing.
+          No wallet needed. Just backing.
         </p>
       </div>
     </div>

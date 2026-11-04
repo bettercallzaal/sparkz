@@ -48,11 +48,11 @@ export default function JoinTeamForm({ sparks }: { sparks: Spark[] }) {
   };
 
   if (state === "done") {
-    const spark = sparks.find((s) => s.slug === slug)?.name ?? "the Spark";
+    const spark = sparks.find((s) => s.slug === slug)?.name ?? "the Hearth";
     return (
       <div className="rounded-lg border border-accent/40 bg-accent/10 p-4 text-sm">
-        You are on the {spark} team list. The wallet you gave is the one that counts when
-        the Spark graduates.
+        You are on the {spark} team list. The wallet you gave is the one that counts for
+        this Hearth's onchain record.
       </div>
     );
   }

@@ -345,12 +345,6 @@ export default function ExamplesPage() {
           >
             🪄 Split wizard
           </Link>
-          <Link
-            href="/graduation"
-            className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
-          >
-            Graduation
-          </Link>
         </div>
       </section>
     </main>

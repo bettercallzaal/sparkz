@@ -8,11 +8,11 @@ const OG = `${BASE}/api/og?title=${encodeURIComponent("The Sparkz Manifesto")}&s
 export const metadata: Metadata = {
   title: "Manifesto - Sparkz",
   description:
-    "The Sparkz cultural manifesto: start with a spark, not a token. Generative, not extractive. Symbiotic, not parasitic. Culture before coin.",
+    "The Sparkz cultural manifesto: light a Hearth, grow it with sparks. Generative, not extractive. Symbiotic, not parasitic. Culture first.",
   openGraph: {
     title: "The Sparkz Manifesto",
     description:
-      "Back the album, not buy a coin. Holding is not contribution. Culture before coin. Generative, not extractive. This is what Sparkz is for.",
+      "Back the album, back the show. Watching is not contribution. Culture first. Generative, not extractive. This is what Sparkz is for.",
     url: `${BASE}/manifesto`,
     images: [{ url: OG, width: 1200, height: 630, alt: "The Sparkz Manifesto" }],
     type: "website",
@@ -39,23 +39,23 @@ export const metadata: Metadata = {
 const PRINCIPLES = [
   {
     n: "I",
-    headline: "Start with a spark, not a token.",
-    body: "Every community starts as culture. A creator, a groove, a thing people want more of. The token is the economic layer the community earns access to - not the reason to exist. A Hearth opens before a token exists. Sometimes it stays that way forever. That is a success.",
+    headline: "Light a Hearth, grow it with sparks.",
+    body: "Every community starts as culture. A creator, a groove, a thing people want more of. The Hearth is its home. Every show, drop and launch is a Spark that grows it. There is no finish line, only the next Spark.",
   },
   {
     n: "II",
-    headline: "Back the album, not buy a coin.",
-    body: "When someone supports a Sparkz Hearth, they are backing the work - the catalog, the culture, the creativity. They are not buying exposure to a ticker. The moment that distinction collapses, the community breaks. Sparkz is designed to keep them separate.",
+    headline: "Back the album, back the show.",
+    body: "When someone supports a Sparkz Hearth, they are backing the work - the catalog, the culture, the creativity. They are not buying exposure to anything. The moment that changes, the community breaks. Sparkz is designed to keep it that way.",
   },
   {
     n: "III",
-    headline: "Contribution earns. Holding waits.",
-    body: "Owning the token gives you optionality - you can trade it when you want. Contributing to the Hearth earns you fee share from the community pool. A whale who holds but never participates earns nothing from the people's cut. This is the only model that does not corrupt the culture.",
+    headline: "Contribution earns. Watching waits.",
+    body: "The people who show up, help and share earn standing in the Hearth, and the onchain record shows who did the work. Standing comes from doing, never from buying in. This is the only model that does not corrupt the culture.",
   },
   {
     n: "IV",
     headline: "Culture before price.",
-    body: "Community identity comes first. Token mechanics serve the culture - not the other way around. The moment a Hearth is designed around its price chart, the culture is already gone. ZAO guardrail: any Hearth that exists to pump a token does not pass the vetting threshold.",
+    body: "Community identity comes first. Every tool serves the culture - not the other way around. The moment a Hearth is designed around a price chart, the culture is already gone. ZAO guardrail: any Hearth that exists to pump something does not pass review.",
   },
   {
     n: "V",
@@ -80,7 +80,7 @@ const PRINCIPLES = [
 ];
 
 const WHAT_WE_ARE_NOT = [
-  "A token launchpad - token is optional, not the goal",
+  "A launchpad - the work is the point, not a launch",
   "A permissionless minting farm - ZAO-curated, self-serve goes through review",
   "An investment platform - a culture-backing tool, not a security",
   "A yield product - fee share, not passive income",
@@ -143,8 +143,8 @@ export default function ManifestoPage() {
             <div className="text-xs font-semibold text-accent mb-3">Say this</div>
             <ul className="space-y-1.5 text-xs">
               {[
-                "Start with a spark, not a token",
-                "Back the album, not buy a coin",
+                "Light a Hearth, grow it with sparks",
+                "Back the album, back the show",
                 "Back the work",
                 "Access, not speculation",
                 "Claim your share at splits.org",
@@ -186,10 +186,9 @@ export default function ManifestoPage() {
           The first live Hearth
         </div>
         <p className="text-sm text-foreground/80 leading-relaxed mb-3">
-          Zoostr (ZABAL × Boostr) is the first Hearth to graduate. 50+ people showed up
-          for the culture before a token existed. The community pulled. The token came
-          second. 50% of every $ZOOSTR trade goes to the community pool - claimed at
-          splits.org, pull model, no deadline.
+          Zoostr (ZABAL × Boostr) was the first live Hearth. 50+ people showed up
+          for the culture first. The community pulled, and every Spark since has
+          grown it.
         </p>
         <a
           href="https://zoostr.xyz"

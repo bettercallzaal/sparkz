@@ -109,7 +109,7 @@ Plain-language definitions. If a coined word shows up anywhere and you are not s
 | **Meme Engine** | The part of Sparkz that turns a cultural moment into a post and a permanent record. |
 | **Meme Receipt** | The record - which moment, which response, why it matched, and the outcomes it can generate. |
 | **Farcaster** | An open social network (like Twitter, but you own your identity). Sparkz shares there first. |
-| **Onchain action** | Something a person does around a project that is recorded onchain: wearing a hat, backing, attending, contributing. Sparkz is chain agnostic, Ethereum first. |
+| **Onchain action** | Something a person does around a project that is recorded onchain: wearing a hat, backing, attending, contributing.. Records live on Ethereum and its networks. |
 | **Empire** | A shared treasury a project can set up - a shared account for its money. |
 | **The ZAO** | The creator collective Sparkz is part of. |
 
@@ -140,7 +140,7 @@ Sparkz is built so a creator is never trapped - not in a vendor, not in a chain,
 - **Your data is yours.** A Hearth is an open record - identity, backers, receipts - built on an open schema in an open-source codebase. The moat is the record that accumulates around your work.
 - **Swap any piece.** Every external system sits behind an adapter - [SignalSource, BackingProvider, ApprovalChannel](#adapter-seams). Today that means human signals, ledger backing, and in-app approval with optional Discord notification; new rails and channels can slot in without a UI rewrite.
 - **Bring the tools you already use.** Farcaster identity and sharing, GitHub imports, and Empire are wired today; POIDH, Hats, Lens, Bluesky and more can join through the same open approach. Sparkz is connective tissue, not a walled garden that replaces them.
-- **Decentralized where it counts.** An identity you own, onchain records on Ethereum and its networks, and treasury rails you control when configured. Technology agnostic: Ethereum and Farcaster first, never locked in. Nothing goes onchain until you choose it.
+- **Decentralized where it counts.** An identity you own, onchain records on Ethereum and its networks, and treasury rails you control when configured. Members sign in with a wallet or a social account. Nothing goes onchain until you choose it.
 
 The pitch in one line: **own your work, use any tool, leave any time.**
 

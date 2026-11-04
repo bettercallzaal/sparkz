@@ -66,7 +66,7 @@ export default function CreateSparkAsFarcaster({
     <div className="mt-5 border-t border-border pt-5">
       <h2 className="mb-1 text-sm font-semibold">Light a spark as {username ? `@${username}` : "you"}</h2>
       <p className="mb-3 text-xs text-muted">
-        Opens a Hearth tied to your Farcaster identity. No wallet, no coin.
+        Opens a Hearth tied to your Farcaster identity. No wallet needed.
       </p>
       <div className="space-y-3">
         <input

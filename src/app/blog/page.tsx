@@ -6,7 +6,7 @@ export const dynamic = "force-static";
 
 export const metadata = {
   title: "Blog",
-  description: "Short pieces on the thesis and the stack - the Hearth, Farcaster, and the graduation rail.",
+  description: "Short pieces on the thesis and the stack: the Hearth, Sparks and open social.",
   openGraph: {
     title: "Sparkz Blog",
     description: "The thesis and the stack.",

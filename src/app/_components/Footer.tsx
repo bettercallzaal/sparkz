@@ -50,7 +50,6 @@ export default function Footer() {
             <Link href="/manifesto" className="hover:text-foreground">Manifesto</Link>
             <Link href="/hearth" className="hover:text-foreground">The Hearth</Link>
             <Link href="/meme-engine" className="hover:text-foreground">Meme Engine</Link>
-            <Link href="/graduation" className="hover:text-foreground">Graduation</Link>
           </div>
           <div className="flex flex-col gap-2">
             <span className="text-xs font-semibold uppercase tracking-wide text-foreground/80">
@@ -71,7 +70,7 @@ export default function Footer() {
           </div>
         </nav>
         <p className="mt-8 text-xs">
-          Sparkz - start with a spark, not a token. Back the work, build the collective,
+          Sparkz - light a Hearth, grow it with sparks. Back the work, build the collective,
           earn transparently. Part of{" "}
           <a
             href="https://zaoos.com"

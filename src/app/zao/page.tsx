@@ -184,7 +184,7 @@ export default function ZaoPage() {
         </div>
       </section>
 
-      {/* The first free hat: connect, sign once, the relayer mints the ZAO Member hat */}
+      {/* The first free hat: connect, then claim the ZAO Member hat from your own wallet */}
       <section id="hat">
         <h2 className="text-xl font-bold mb-2">Get your first hat</h2>
         <p className="text-muted text-sm mb-5 leading-relaxed">

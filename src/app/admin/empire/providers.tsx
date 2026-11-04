@@ -1,7 +1,7 @@
 "use client";
 
 import { createAppKit } from "@reown/appkit/react";
-import { base } from "@reown/appkit/networks";
+import { base, optimism } from "@reown/appkit/networks";
 import { WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { wagmiAdapter, projectId, wagmiConfig } from "@/lib/wallet/config";
@@ -14,7 +14,7 @@ const queryClient = new QueryClient();
 // WalletConnect relay is inert until the env var is provided.
 createAppKit({
   adapters: [wagmiAdapter],
-  networks: [base],
+  networks: [base, optimism],
   projectId: projectId || "sparkz-dev-placeholder",
   metadata: {
     name: "Sparkz",

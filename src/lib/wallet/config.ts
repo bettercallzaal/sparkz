@@ -1,5 +1,5 @@
 import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
-import { base } from "@reown/appkit/networks";
+import { base, optimism } from "@reown/appkit/networks";
 
 // Reown AppKit + wagmi config for the empire launcher. WalletConnect + injected +
 // Coinbase, so it works on mobile browsers (not just wallet in-app browsers) - the
@@ -7,10 +7,10 @@ import { base } from "@reown/appkit/networks";
 // reown.com) and safe as a NEXT_PUBLIC var.
 export const projectId = process.env.NEXT_PUBLIC_REOWN_PROJECT_ID ?? "";
 
-export const networks = [base] as const;
+export const networks = [base, optimism] as const;
 
 export const wagmiAdapter = new WagmiAdapter({
-  networks: [base],
+  networks: [base, optimism],
   projectId,
   ssr: true,
 });

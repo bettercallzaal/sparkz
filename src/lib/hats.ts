@@ -1,15 +1,13 @@
-import { createPublicClient, createWalletClient, http, parseAbi, type Address, type Hex } from "viem";
-import { privateKeyToAccount } from "viem/accounts";
+import { createPublicClient, http, isAddress, parseAbi, type Address } from "viem";
 import { optimism } from "viem/chains";
 
 // Hats Protocol: the first free hat (Zaal, 3 Nov 2026: "Sparkz need to get people to get
 // their first free hats. That's how you can start commitment"). The ZAO tree is tree 226 on
-// Optimism; the Member hat sits under a Sparkz admin hat that the relayer wallet wears, so
-// the relayer can mint it straight from Hats.sol (no claims module, no gas for the member).
-//
-// Server-only: HATS_RELAYER_PRIVATE_KEY never reaches the browser. The hat itself is
-// soulbound by protocol (no wearer transfer), max supply is set on the hat, and the
-// relayer can only mint hats it admins, so the blast radius of this key is "more free hats".
+// Optimism. No private key anywhere (Zaal, 4 Nov 2026: "i dont wanna ever use private keys if
+// i can avoid it"): the member claims the hat from their own wallet through the tree's
+// MultiClaimsHatter (Hats' claims module, set up once in the Hats app). The module wears an
+// admin hat above the Member hat, so Hats.sol lets it mint; the member pays the Optimism gas
+// (a fraction of a cent). The hat is soulbound by protocol and capped by its max supply.
 
 export const HATS_ADDRESS: Address = "0x3bc1A0Ad72417f2d411118085256fC53CBdDd137"; // same on every chain
 export const HATS_CHAIN_ID = optimism.id;
@@ -19,6 +17,13 @@ export const hatsAbi = parseAbi([
   "function isAdminOfHat(address user, uint256 hatId) view returns (bool)",
   "function mintHat(uint256 hatId, address wearer) returns (bool)",
   "function viewHat(uint256 hatId) view returns (string details, uint32 maxSupply, uint32 supply, address eligibility, address toggle, string imageURI, uint16 lastHatId, bool mutable_, bool active)",
+]);
+
+// Hats-Protocol/multi-claims-hatter, src/MultiClaimsHatter.sol.
+export const claimsHatterAbi = parseAbi([
+  "function claimHat(uint256 hatId)",
+  "function isClaimableBy(uint256 hatId) view returns (bool)",
+  "function accountCanClaim(address account, uint256 hatId) view returns (bool)",
 ]);
 
 // A hat id as the Hats app shows it: "226.1.1.1.1.5", or as hex "0x000000e2...", or a
@@ -64,21 +69,31 @@ export function prettyHatId(id: bigint): string {
   return parts.join(".");
 }
 
-export type HatsConfig = { hatId: bigint; relayerKey: Hex | null; rpcUrl: string };
+export type HatsConfig = { hatId: bigint; claimsHatter: Address | null; rpcUrl: string };
 
 export function hatsConfig(): HatsConfig | null {
   const hatId = parseHatId(process.env.HATS_MEMBER_HAT_ID ?? "");
   if (!hatId) return null;
-  const key = (process.env.HATS_RELAYER_PRIVATE_KEY ?? "").trim();
+  const hatter = (process.env.NEXT_PUBLIC_HATS_CLAIMS_HATTER ?? "").trim();
   return {
     hatId,
-    relayerKey: /^0x[0-9a-fA-F]{64}$/.test(key) ? (key as Hex) : null,
+    claimsHatter: isAddress(hatter) ? (hatter as Address) : null,
     rpcUrl: process.env.OPTIMISM_RPC_URL || "https://mainnet.optimism.io",
   };
 }
 
 export const hatsConfigured = () => hatsConfig() !== null;
-export const hatsCanMint = () => hatsConfig()?.relayerKey != null;
+// Open for claims when the module is set and, on chain, wears an admin hat and marks the
+// Member hat claimable. Read live so switching it off in the Hats app takes effect at once.
+export async function hatsClaimable(cfg = hatsConfig()): Promise<boolean> {
+  if (!cfg?.claimsHatter) return false;
+  return publicClient(cfg).readContract({
+    address: cfg.claimsHatter,
+    abi: claimsHatterAbi,
+    functionName: "isClaimableBy",
+    args: [cfg.hatId],
+  });
+}
 
 function publicClient(cfg: HatsConfig) {
   return createPublicClient({ chain: optimism, transport: http(cfg.rpcUrl) });
@@ -98,32 +113,4 @@ export async function hatSupply(cfg = hatsConfig()): Promise<{ supply: number; m
   if (!cfg) return null;
   const hat = await publicClient(cfg).readContract({ address: HATS_ADDRESS, abi: hatsAbi, functionName: "viewHat", args: [cfg.hatId] });
   return { supply: hat[2], max: hat[1] };
-}
-
-export class HatsMintError extends Error {}
-
-// Mints the Member hat to `wearer` from the relayer wallet. Idempotent in spirit: a wearer
-// who already has it gets `{ already: true }` and no transaction.
-export async function mintMemberHat(wearer: Address): Promise<{ tx: Hex | null; already: boolean }> {
-  const cfg = hatsConfig();
-  if (!cfg) throw new HatsMintError("Hats not configured (HATS_MEMBER_HAT_ID)");
-  if (!cfg.relayerKey) throw new HatsMintError("No relayer key (HATS_RELAYER_PRIVATE_KEY)");
-  const reader = publicClient(cfg);
-  if (await isWearer(wearer, cfg)) return { tx: null, already: true };
-
-  const account = privateKeyToAccount(cfg.relayerKey);
-  const admin = await reader.readContract({ address: HATS_ADDRESS, abi: hatsAbi, functionName: "isAdminOfHat", args: [account.address, cfg.hatId] });
-  if (!admin) throw new HatsMintError(`Relayer ${account.address} is not an admin of hat ${prettyHatId(cfg.hatId)}`);
-
-  const wallet = createWalletClient({ account, chain: optimism, transport: http(cfg.rpcUrl) });
-  const { request } = await reader.simulateContract({
-    account,
-    address: HATS_ADDRESS,
-    abi: hatsAbi,
-    functionName: "mintHat",
-    args: [cfg.hatId, wearer],
-  });
-  const tx = await wallet.writeContract(request);
-  await reader.waitForTransactionReceipt({ hash: tx, timeout: 60_000 });
-  return { tx, already: false };
 }

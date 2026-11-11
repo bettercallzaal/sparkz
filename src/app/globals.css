@@ -64,6 +64,9 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
   -webkit-text-size-adjust: 100%;
+  /* iPhone notch and home bar (native shell + installed PWA). 0 in a normal tab. */
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 /* Keyboard focus - visible ring for a11y (mouse clicks stay clean via :focus-visible). */

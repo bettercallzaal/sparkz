@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import MiniAppReady from "./_components/MiniAppReady";
@@ -38,6 +38,15 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+// Native shell (Capacitor) and notched iPhones: draw under the status bar and pad with
+// the safe-area insets in globals.css. No effect in a normal browser tab.
+export const viewport: Viewport = {
+  themeColor: "#0a0908",
+  viewportFit: "cover",
+  width: "device-width",
+  initialScale: 1,
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(ORIGIN),

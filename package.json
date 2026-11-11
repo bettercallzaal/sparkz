@@ -9,9 +9,15 @@
     "start": "next start",
     "lint": "eslint",
     "seed:zoostr": "node --env-file=.env.local scripts/seed-zoostr.mjs",
-    "seed:zao": "node --env-file=.env.local scripts/seed-zao-projects.mjs"
+    "seed:zao": "node --env-file=.env.local scripts/seed-zao-projects.mjs",
+    "cap:sync": "cap sync ios",
+    "cap:open": "cap open ios",
+    "cap:assets": "capacitor-assets generate --ios --iconBackgroundColor \"#0a0908\" --splashBackgroundColor \"#0a0908\""
   },
   "dependencies": {
+    "@capacitor/core": "^8.0.0",
+    "@capacitor/ios": "^8.0.0",
+    "@capacitor/splash-screen": "^8.0.0",
     "@farcaster/auth-client": "^0.7.1",
     "@farcaster/auth-kit": "^0.8.2",
     "@farcaster/miniapp-sdk": "^0.3.0",
@@ -28,6 +34,8 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.0.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

@@ -2,6 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { forbidCrossSite, ok, serverError, zodError } from "@/lib/http";
+import { ALPHA_CLOSED_MESSAGE, isAlphaAllowed } from "@/lib/alpha-access";
 import { verifySiweLogin } from "@/lib/siwe";
 import { isAdminAddress } from "@/lib/admin-identities";
 import { CANONICAL_HOST } from "@/lib/origin";
@@ -59,6 +60,11 @@ export async function POST(req: NextRequest) {
       console.warn("[sparkz:auth.siwe] rejected: nonce already used");
       return denied;
     }
+    // Private alpha (lib/alpha-access.ts): only listed identities get a session.
+    if (!isAlphaAllowed({ address })) {
+      return NextResponse.json({ ok: false, error: ALPHA_CLOSED_MESSAGE }, { status: 403 });
+    }
+
     // Any verified wallet gets a session.
     // Admin powers never come from the session alone: every admin route re-checks the
     // allowlist through isAdminSession(), so a member session opens nothing admin.

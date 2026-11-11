@@ -2,6 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { ok, serverError, zodError, forbidCrossSite } from "@/lib/http";
+import { ALPHA_CLOSED_MESSAGE, isAlphaAllowed } from "@/lib/alpha-access";
 import { verifyQuickAuth } from "@/lib/farcaster-auth";
 import { mintSession, setSessionCookie } from "@/lib/session";
 
@@ -25,6 +26,11 @@ export async function POST(req: NextRequest) {
     } catch (verifyErr) {
       console.warn("[sparkz:auth.quick] rejected:", (verifyErr as Error).message);
       return NextResponse.json({ ok: false, error: "Sign-in could not be verified" }, { status: 401 });
+    }
+
+    // Private alpha (lib/alpha-access.ts): only listed identities get a session.
+    if (!isAlphaAllowed({ fid })) {
+      return NextResponse.json({ ok: false, error: ALPHA_CLOSED_MESSAGE }, { status: 403 });
     }
 
     const session = mintSession(fid);

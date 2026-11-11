@@ -2,6 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { ok, serverError, zodError, forbidCrossSite } from "@/lib/http";
+import { ALPHA_CLOSED_MESSAGE, isAlphaAllowed } from "@/lib/alpha-access";
 import { verifySiwf } from "@/lib/farcaster-auth";
 import {
   consumeNonce,
@@ -52,6 +53,11 @@ export async function POST(req: NextRequest) {
     if (!consumeNonce(nonce)) {
       console.warn("[sparkz:auth.siwf] rejected: nonce already used");
       return denied;
+    }
+
+    // Private alpha (lib/alpha-access.ts): only listed identities get a session.
+    if (!isAlphaAllowed({ fid })) {
+      return NextResponse.json({ ok: false, error: ALPHA_CLOSED_MESSAGE }, { status: 403 });
     }
 
     const session = mintSession(fid);

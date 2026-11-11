@@ -52,7 +52,7 @@ export default function JoinTeamForm({ sparks }: { sparks: Spark[] }) {
     return (
       <div className="rounded-lg border border-accent/40 bg-accent/10 p-4 text-sm">
         You are on the {spark} team list. The wallet you gave is the one that counts for
-        this Hearth's onchain record.
+        this Hearth&apos;s onchain record.
       </div>
     );
   }

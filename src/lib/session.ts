@@ -1,6 +1,7 @@
 import type { NextRequest, NextResponse } from "next/server";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { isCrossSite } from "@/lib/http";
+import { isAlphaAllowed } from "@/lib/alpha-access";
 
 // The creator session: one server-minted, HMAC-signed `{fid, exp}` cookie, set by
 // either door (Quick Auth JWT in the mini app, SIWF on the web - see
@@ -92,7 +93,10 @@ export function readSession(value: string | undefined): number | null {
 // our origin inside the Farcaster frame) are same-origin and unaffected.
 export function sessionClaims(req: NextRequest): SessionClaims | null {
   if (isCrossSite(req)) return null;
-  return readSessionClaims(req.cookies.get(SESSION_COOKIE)?.value);
+  const claims = readSessionClaims(req.cookies.get(SESSION_COOKIE)?.value);
+  // Private alpha (lib/alpha-access.ts): a session minted before the lock went on, for
+  // someone who is not on the list, is treated as no session at all.
+  return isAlphaAllowed(claims) ? claims : null;
 }
 
 export function sessionFid(req: NextRequest): number | null {

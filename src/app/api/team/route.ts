@@ -1,8 +1,11 @@
-import type { NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { getServiceClient } from "@/lib/supabase/server";
 import { joinTeamSchema } from "@/lib/validation/schemas";
 import { badRequest, ok, serverError, tooManyRequests, zodError } from "@/lib/http";
 import { clientIpHash } from "@/lib/rate-limit";
+import { isAdmin } from "@/lib/auth";
+import { sessionClaims } from "@/lib/session";
+import { ALPHA_CLOSED_MESSAGE, ALPHA_LOCK } from "@/lib/alpha-access";
 
 // POST /api/team - "Join the team" on a Spark. Public, insert-only, like /api/waitlist:
 // anyone can put their name and wallet on a Spark's team list. A wallet that is already
@@ -13,6 +16,12 @@ const MAX_PER_WINDOW = 5;
 
 export async function POST(req: NextRequest) {
   try {
+    // Private alpha (lib/alpha-access.ts): this public route is closed to everyone but
+    // the listed identities until Sparkz opens.
+    if (ALPHA_LOCK && !isAdmin(req) && !sessionClaims(req)) {
+      return NextResponse.json({ ok: false, error: ALPHA_CLOSED_MESSAGE }, { status: 403 });
+    }
+
     const body = await req.json().catch(() => null);
     const parsed = joinTeamSchema.safeParse(body);
     if (!parsed.success) return zodError(parsed.error);

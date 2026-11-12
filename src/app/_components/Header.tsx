@@ -34,10 +34,12 @@ export default function Header() {
         <div className="ml-auto flex items-center gap-3">
           <AddMiniApp />
           <HeaderAuth />
-          <Link href="/start" className="btn-spark rounded-lg px-4 py-1.5 text-sm">
+          <Link href="/start" className="web-only btn-spark rounded-lg px-4 py-1.5 text-sm">
             Try Sparkz
           </Link>
-          <MobileNav />
+          <div className="web-only">
+            <MobileNav />
+          </div>
         </div>
       </div>
     </header>

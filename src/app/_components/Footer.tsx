@@ -4,7 +4,7 @@ import Flame from "./Flame";
 // Global footer - on every page via the root layout, so no page is a dead end.
 export default function Footer() {
   return (
-    <footer className="mt-auto border-t border-border">
+    <footer className="web-only mt-auto border-t border-border">
       <div className="mx-auto max-w-5xl px-4 py-10 text-sm text-muted">
         <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
           <Link href="/" className="flex items-center gap-2 font-semibold text-foreground">

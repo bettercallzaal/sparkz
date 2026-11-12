@@ -1,8 +1,8 @@
 # Sparkz iPhone design brief
 
-> **Status, 12 Nov 2026.** Build-first items in PRs: #323 (44pt tap targets and pressed states), #324 (bottom tab bar, app only), #325 (one-tap Boost, D4), #326 (Mine home, C1). Next: item 4, one New Hearth create sheet. Item 5 (Sparks as a real object) needs a DB migration and waits on Zaal's OK (CLAUDE.md: ask before any migration). Companion docs: [what Sparkz does today](01-sparkz-today.md), [the 7-app research](02-app-research.md).
+> **Status, 12 Nov 2026.** Merged: #323 (44pt tap targets and pressed states), #324 (bottom tab bar, app only), #325 (one-tap Boost, D4), #326 (Mine home, C1), #328 (one New Hearth form, E1), #330 (self-hosted fonts, a build fix found along the way). In review: #329 (Explore on phone, F1 and F2), #331 (Hearth action row, D1), #332 (app sign-in screen, B1), #333 (About Sparkz under Me, A2). Item 5 (Sparks as a real object) needs a DB migration and waits on Zaal's OK (CLAUDE.md: ask before any migration). Companion docs: [what Sparkz does today](01-sparkz-today.md), [the 7-app research](02-app-research.md).
 
-For Zaal using Sparkz daily on iPhone via the TestFlight Capacitor shell. Written 12 Nov 2026. Inputs: `01-sparkz-today.md` (repo read) and `02-app-research.md` (fetched sources). Style learning only: nothing here copies another app's logo, name, artwork or text.
+For Zaal using Sparkz daily on iPhone via the TestFlight Capacitor shell. Written 12 Nov 2026. Inputs: `01-sparkz-today.md` (repo read) and `02-app-research.md` (fetched sources). Style learning only: no other app's logo, name or artwork is used, and all Sparkz product copy is our own. The research file quotes two short marketing lines, attributed, as evidence only; neither is used in the product.
 
 ## The honest summary
 

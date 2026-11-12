@@ -2,29 +2,43 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useProfile } from "@farcaster/auth-kit";
 import Flame from "./Flame";
 import { useToast } from "./toast";
 
+// Boost a Hearth. Signed in with Farcaster: one tap, as you (the server reads the
+// session). Signed out, or if the server has no session for you: an email or handle.
 export default function BoostForm({ hearthId }: { hearthId: string }) {
   const router = useRouter();
   const toast = useToast();
+  const { isAuthenticated, profile } = useProfile();
   const [backer, setBacker] = useState("");
+  const [needsBacker, setNeedsBacker] = useState(false);
   const [state, setState] = useState<"idle" | "busy" | "done" | "error">("idle");
 
+  const oneTap = isAuthenticated && !!profile?.username && !needsBacker;
+
   const boost = async () => {
-    if (!backer.trim()) return;
+    if (!oneTap && !backer.trim()) return;
     setState("busy");
     try {
+      const body = oneTap
+        ? { hearth_id: hearthId, fc_username: profile?.username }
+        : { hearth_id: hearthId, backer: backer.trim() };
       const res = await fetch("/api/boost", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ hearth_id: hearthId, backer: backer.trim() }),
+        body: JSON.stringify(body),
       });
       const json = await res.json();
       if (json.ok) {
         setState("done");
         toast("Boost sent - you're backing the work now.");
         router.refresh();
+      } else if (oneTap && res.status === 400) {
+        // Signed in on the client but no server session: ask the old way.
+        setNeedsBacker(true);
+        setState("idle");
       } else {
         setState("error");
         toast(json.error ?? "Could not boost - try again.", "error");
@@ -44,6 +58,21 @@ export default function BoostForm({ hearthId }: { hearthId: string }) {
     );
   }
 
+  if (oneTap) {
+    return (
+      <div className="flex flex-col gap-2">
+        <button
+          onClick={boost}
+          disabled={state === "busy"}
+          className="btn-spark min-h-11 rounded-md px-5 py-2 text-sm disabled:opacity-40"
+        >
+          {state === "busy" ? "Boosting..." : `Boost as @${profile?.username}`}
+        </button>
+        {state === "error" && <span className="text-xs text-red-400">try again</span>}
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-2 sm:flex-row">
       <input
@@ -51,12 +80,12 @@ export default function BoostForm({ hearthId }: { hearthId: string }) {
         onChange={(e) => setBacker(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && backer.trim() && boost()}
         placeholder="your email or handle"
-        className="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-accent"
+        className="min-h-11 flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-accent"
       />
       <button
         onClick={boost}
         disabled={state === "busy" || !backer.trim()}
-        className="btn-spark rounded-md px-5 py-2 text-sm disabled:opacity-40"
+        className="btn-spark min-h-11 rounded-md px-5 py-2 text-sm disabled:opacity-40"
       >
         {state === "busy" ? "Boosting..." : "Boost"}
       </button>

@@ -8,14 +8,16 @@ import { sessionClaims } from "@/lib/session";
 import { ALPHA_CLOSED_MESSAGE, ALPHA_LOCK } from "@/lib/alpha-access";
 
 // POST /api/boost - public "Boost this Hearth" (the boost engine): a free support
-// signal, not a payment. Records a ledger backing of kind='boost', qty 1. Public
+// signal, not a payment. A signed-in backer boosts in one tap: the identity comes from
+// the session cookie (FID, or address for a wallet session), never from the body. Records a ledger backing of kind='boost', qty 1. Public
 // (not admin-gated). One boost per backer per Hearth (deduped). Dollar backing
 // comes later with the fiat/BYOK payment rails.
 export async function POST(req: NextRequest) {
   try {
     // Private alpha (lib/alpha-access.ts): this public route is closed to everyone but
     // the listed identities until Sparkz opens.
-    if (ALPHA_LOCK && !isAdmin(req) && !sessionClaims(req)) {
+    const claims = sessionClaims(req);
+    if (ALPHA_LOCK && !isAdmin(req) && !claims) {
       return NextResponse.json({ ok: false, error: ALPHA_CLOSED_MESSAGE }, { status: 403 });
     }
 
@@ -23,7 +25,18 @@ export async function POST(req: NextRequest) {
     const parsed = boostSchema.safeParse(body);
     if (!parsed.success) return zodError(parsed.error);
 
-    const backerId = parsed.data.backer.trim().toLowerCase();
+    let backerId: string;
+    if (claims?.fid) {
+      backerId = parsed.data.fc_username
+        ? `@${parsed.data.fc_username.toLowerCase()}`
+        : `fid:${claims.fid}`;
+    } else if (claims?.address) {
+      backerId = claims.address;
+    } else if (parsed.data.backer?.trim()) {
+      backerId = parsed.data.backer.trim().toLowerCase();
+    } else {
+      return badRequest("backer required (sign in, or give an email or handle)");
+    }
     const supabase = getServiceClient();
 
     // Per-IP rate limit (operator exempt). Boost is public + unauthenticated, so
@@ -63,7 +76,7 @@ export async function POST(req: NextRequest) {
       amount_or_qty: 1,
       unit: "boost",
       provider: "ledger",
-      metadata: { pledge: true, ip_hash: ipHash },
+      metadata: { pledge: true, ip_hash: ipHash, ...(claims?.fid ? { fid: claims.fid } : {}) },
     });
     if (error) throw error;
 

@@ -37,9 +37,7 @@ export default function Header() {
           <Link href="/start" className="web-only btn-spark rounded-lg px-4 py-1.5 text-sm">
             Try Sparkz
           </Link>
-          <div className="web-only">
-            <MobileNav />
-          </div>
+          <MobileNav />
         </div>
       </div>
     </header>

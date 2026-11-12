@@ -27,10 +27,10 @@ export const metadata: Metadata = {
     "fc:miniapp": "true",
     "fc:frame": "vNext",
     "fc:frame:image": OG,
-    "fc:frame:button:1": "🔥 Open a Hearth",
+    "fc:frame:button:1": "Open a Hearth",
     "fc:frame:button:1:action": "link",
     "fc:frame:button:1:target": `${BASE}/start`,
-    "fc:frame:button:2": "🔍 Browse Hearths",
+    "fc:frame:button:2": "Browse Hearths",
     "fc:frame:button:2:action": "link",
     "fc:frame:button:2:target": `${BASE}/explore`,
   },
@@ -53,19 +53,16 @@ const LIFECYCLE = [
   {
     stage: "Lit",
     desc: "A creator opens a Hearth. ZAO reviews and approves. First backers appear. Boosts and Meme Engine receipts accumulate.",
-    icon: "🔥",
     color: "text-accent",
   },
   {
     stage: "Sparked",
     desc: "Every event is a Spark: a show, a drop, a launch, a festival set. Each one brings new backers and leaves receipts of who showed up and who helped. A Hearth can have many.",
-    icon: "✨",
     color: "text-foreground",
   },
   {
     stage: "Dormant",
     desc: "The community has gone quiet. The Hearth is preserved. The creator can re-spark at any time.",
-    icon: "💤",
     color: "text-muted",
   },
 ];
@@ -111,7 +108,6 @@ export default function HearthPage() {
         <div className="space-y-4">
           {LIFECYCLE.map((l) => (
             <div key={l.stage} className="card-solid border border-border rounded-xl p-5 flex gap-4">
-              <span className="text-2xl shrink-0">{l.icon}</span>
               <div>
                 <div className={`font-bold text-sm mb-1 ${l.color}`}>{l.stage}</div>
                 <div className="text-muted text-xs leading-relaxed">{l.desc}</div>
@@ -146,7 +142,7 @@ export default function HearthPage() {
             href="/explore"
             className="text-sm px-4 py-2 border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
           >
-            🔍 Browse Hearths →
+            Browse Hearths →
           </Link>
           <a
             href="https://zoostr.xyz"
@@ -154,7 +150,7 @@ export default function HearthPage() {
             rel="noreferrer"
             className="text-sm px-4 py-2 border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
           >
-            ⚡ Zoostr live example ↗
+            Zoostr live example ↗
           </a>
         </div>
       </section>
@@ -202,19 +198,19 @@ export default function HearthPage() {
           href="/start"
           className="btn-spark px-5 py-2.5 text-sm font-semibold rounded-lg"
         >
-          🔥 Open a Hearth
+          Open a Hearth
         </Link>
         <Link
           href="/explore"
           className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
         >
-          🔍 Browse Hearths
+          Browse Hearths
         </Link>
         <Link
           href="/community-pool"
           className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
         >
-          📊 Economics
+          Economics
         </Link>
         <Link
           href="/split-wizard"

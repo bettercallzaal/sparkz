@@ -280,7 +280,7 @@ export default function ExplorePage() {
                 <span className="spark-text stat-num font-semibold">{c.receipts}</span>
                 <span>receipts</span>
                 {c.emails > 0 && <span>{c.emails} on list</span>}
-                {c.stars != null && <span>{c.stars}★</span>}
+                {c.stars != null && <span>{c.stars} stars</span>}
               </div>
             </Link>
           </li>

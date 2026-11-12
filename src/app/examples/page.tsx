@@ -28,10 +28,10 @@ export const metadata: Metadata = {
     "fc:miniapp": "true",
     "fc:frame": "vNext",
     "fc:frame:image": OG,
-    "fc:frame:button:1": "🔥 Start a Spark",
+    "fc:frame:button:1": "Start a Spark",
     "fc:frame:button:1:action": "link",
     "fc:frame:button:1:target": `${BASE}/start`,
-    "fc:frame:button:2": "🪄 Split wizard",
+    "fc:frame:button:2": "Split wizard",
     "fc:frame:button:2:action": "link",
     "fc:frame:button:2:target": `${BASE}/split-wizard`,
   },
@@ -42,7 +42,6 @@ type Timing = "now" | "later" | "never";
 const TEMPLATES = [
   {
     id: "community-leaderboard",
-    emoji: "📊",
     name: "Community Leaderboard",
     subtitle: "The Zoostr model",
     description:
@@ -60,7 +59,6 @@ const TEMPLATES = [
   },
   {
     id: "music-collab",
-    emoji: "🎵",
     name: "Music Collab",
     subtitle: "Both artists earn on every stream",
     description:
@@ -79,7 +77,6 @@ const TEMPLATES = [
   },
   {
     id: "group-crowdfund",
-    emoji: "🏛️",
     name: "Group Crowdfund",
     subtitle: "Fund a project without speculation",
     description:
@@ -99,7 +96,6 @@ const TEMPLATES = [
   },
   {
     id: "solo-backing",
-    emoji: "🎤",
     name: "Solo Creator Backing",
     subtitle: "Fans back the work, not the coin",
     description:
@@ -119,7 +115,6 @@ const TEMPLATES = [
   },
   {
     id: "pfp-community",
-    emoji: "🖼️",
     name: "PFP Community",
     subtitle: "Culture identity before any token",
     description:
@@ -138,7 +133,6 @@ const TEMPLATES = [
   },
   {
     id: "podcast-split",
-    emoji: "🎙️",
     name: "Podcast Split",
     subtitle: "Co-hosts and editors each earn on-chain",
     description:
@@ -158,7 +152,6 @@ const TEMPLATES = [
   },
   {
     id: "gaming-clan",
-    emoji: "🎮",
     name: "Gaming Clan",
     subtitle: "Tournament wins → on-chain receipts",
     description:
@@ -179,11 +172,11 @@ const TEMPLATES = [
 
 const TIMING_CONFIG: Record<
   Timing,
-  { label: string; icon: string; color: string }
+  { label: string; color: string }
 > = {
-  now: { label: "Token now", icon: "🚀", color: "text-accent" },
-  later: { label: "Token later", icon: "⏳", color: "text-foreground" },
-  never: { label: "Tokenless", icon: "🛡️", color: "text-muted" },
+  now: { label: "Token now", color: "text-accent" },
+  later: { label: "Token later", color: "text-foreground" },
+  never: { label: "Tokenless", color: "text-muted" },
 };
 
 export default function ExamplesPage() {
@@ -219,7 +212,6 @@ export default function ExamplesPage() {
               {/* Header row */}
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-start gap-3">
-                  <span className="text-3xl">{t.emoji}</span>
                   <div>
                     <div className="flex items-center gap-2 flex-wrap">
                       <h2 className="font-bold text-lg">{t.name}</h2>
@@ -235,7 +227,7 @@ export default function ExamplesPage() {
                 <div
                   className={`shrink-0 text-xs font-semibold ${timing.color} flex items-center gap-1`}
                 >
-                  {timing.icon} {timing.label}
+                  {timing.label}
                 </div>
               </div>
 
@@ -331,19 +323,19 @@ export default function ExamplesPage() {
             href="/start"
             className="btn-spark px-5 py-2.5 text-sm font-semibold rounded-lg"
           >
-            🔥 Open a Hearth
+            Open a Hearth
           </Link>
           <Link
             href="/split-wizard"
             className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
           >
-            🎯 Ask the advisor
+            Ask the advisor
           </Link>
           <Link
             href="/split-wizard"
             className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
           >
-            🪄 Split wizard
+            Split wizard
           </Link>
         </div>
       </section>

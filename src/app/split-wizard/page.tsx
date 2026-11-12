@@ -134,9 +134,9 @@ export default function SplitWizardPage() {
           Define who gets what - before the token drops. IPFS-attest the sheet, wire it to 0xSplits. The music-native way to kill revenue disputes before they start.
         </p>
         <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted">
-          <span className="rounded-full border border-border px-2 py-0.5">✓ IPFS-attestable</span>
-          <span className="rounded-full border border-border px-2 py-0.5">✓ Exports 0xSplits JSON</span>
-          <span className="rounded-full border border-border px-2 py-0.5">✓ No data sent to Sparkz</span>
+          <span className="rounded-full border border-border px-2 py-0.5">IPFS-attestable</span>
+          <span className="rounded-full border border-border px-2 py-0.5">Exports 0xSplits JSON</span>
+          <span className="rounded-full border border-border px-2 py-0.5">No data sent to Sparkz</span>
         </div>
       </section>
 
@@ -160,7 +160,7 @@ export default function SplitWizardPage() {
           <span
             className={`text-sm font-semibold ${valid ? "text-green-400" : sum > 100 ? "text-red-400" : "text-accent"}`}
           >
-            {sum}% {valid ? "✓" : sum > 100 ? "(over 100)" : `(${100 - sum}% remaining)`}
+            {sum}% {valid ? "(done)" : sum > 100 ? "(over 100)" : `(${100 - sum}% remaining)`}
           </span>
         </div>
 

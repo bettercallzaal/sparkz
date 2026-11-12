@@ -27,10 +27,10 @@ export const metadata: Metadata = {
     "fc:miniapp": "true",
     "fc:frame": "vNext",
     "fc:frame:image": OG,
-    "fc:frame:button:1": "🔥 Start a Hearth",
+    "fc:frame:button:1": "Start a Hearth",
     "fc:frame:button:1:action": "link",
     "fc:frame:button:1:target": `${BASE}/start`,
-    "fc:frame:button:2": "📖 Read the manifesto",
+    "fc:frame:button:2": "Read the manifesto",
     "fc:frame:button:2:action": "link",
     "fc:frame:button:2:target": `${BASE}/manifesto`,
   },
@@ -126,7 +126,7 @@ export default function ManifestoPage() {
         <ul className="space-y-2">
           {WHAT_WE_ARE_NOT.map((w) => (
             <li key={w} className="flex gap-3 text-sm">
-              <span className="text-muted shrink-0">✗</span>
+              <span className="text-muted shrink-0" aria-hidden="true">-</span>
               <span className="text-muted">{w}</span>
             </li>
           ))}
@@ -171,7 +171,7 @@ export default function ManifestoPage() {
                 "permissionless minting",
               ].map((s) => (
                 <li key={s} className="flex gap-2">
-                  <span className="text-muted shrink-0">✗</span>
+                  <span className="text-muted shrink-0" aria-hidden="true">-</span>
                   <span className="text-muted">{s}</span>
                 </li>
               ))}
@@ -206,25 +206,25 @@ export default function ManifestoPage() {
           href="/start"
           className="btn-spark px-5 py-2.5 text-sm font-semibold rounded-lg"
         >
-          🔥 Start a Hearth
+          Start a Hearth
         </Link>
         <Link
           href="/hearth"
           className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
         >
-          📦 What is a Hearth?
+          What is a Hearth?
         </Link>
         <Link
           href="/community-pool"
           className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
         >
-          💰 Community pool
+          Community pool
         </Link>
         <Link
           href="/zao"
           className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
         >
-          ⬡ The ZAO
+          The ZAO
         </Link>
       </section>
     </main>

@@ -9,7 +9,7 @@ import Avatar from "@/app/_components/Avatar";
 import CopyButton from "@/app/_components/CopyButton";
 import OwnerBadge from "@/app/_components/OwnerBadge";
 import { maskBacker } from "@/lib/sanitize";
-import ShareButton from "@/app/_components/ShareButton";
+import HearthActions from "@/app/_components/HearthActions";
 import Flame from "@/app/_components/Flame";
 import SparkLit from "@/app/_components/SparkLit";
 import EmpireLeaderboard from "@/app/_components/EmpireLeaderboard";
@@ -244,13 +244,14 @@ export default async function HearthPage({
               label="Hearth link copied"
               className="h-8 w-8"
             />
-            <ShareButton
-              path={`/c/${hearth.slug}`}
-              text={`Backing ${hearth.name} on Sparkz.`}
-              channel={fc?.channel ?? undefined}
-            />
           </div>
         </div>
+        <HearthActions
+          slug={hearth.slug}
+          name={hearth.name}
+          ownerFid={hearth.owner_fid}
+          channel={fc?.channel ?? undefined}
+        />
         {hearth.bio && <p className="mt-3 text-sm text-muted">{hearth.bio}</p>}
         {tags.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-1.5">
@@ -384,7 +385,7 @@ export default async function HearthPage({
       })()}
 
       {/* Boost engine: free public support signal (not a payment). */}
-      <section className="glass mb-8 p-4">
+      <section id="boost" className="glass mb-8 scroll-mt-20 p-4">
         <h2 className="mb-1 text-sm font-medium">Boost {hearth.name}</h2>
         <p className="mb-3 text-xs text-muted">
           Back the work with a free boost. Dollar backing opens with fiat/BYOK soon.

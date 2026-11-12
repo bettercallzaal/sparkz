@@ -6,6 +6,7 @@ import type { Hearth, HearthBacker, MemeReceipt } from "@/lib/supabase/types";
 import type { OssHearthMetadata } from "@/lib/brand-audit/types";
 import BoostForm from "@/app/_components/BoostForm";
 import Avatar from "@/app/_components/Avatar";
+import HypersnapProfile from "@/app/_components/HypersnapProfile";
 import CopyButton from "@/app/_components/CopyButton";
 import OwnerBadge from "@/app/_components/OwnerBadge";
 import { maskBacker } from "@/lib/sanitize";
@@ -276,6 +277,7 @@ export default async function HearthPage({
             {oss.repo_owner}/{oss.repo_name} -&gt;
           </a>
         )}
+        {fc?.fid ? <HypersnapProfile fid={fc.fid} /> : null}
         {fc && (fc.username || fc.channel || fc.fid) && (
           <div className="mt-2 flex flex-wrap gap-2 text-xs">
             {fc.username && (

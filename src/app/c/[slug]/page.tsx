@@ -13,6 +13,7 @@ import HearthActions from "@/app/_components/HearthActions";
 import Flame from "@/app/_components/Flame";
 import SparkLit from "@/app/_components/SparkLit";
 import EmpireLeaderboard from "@/app/_components/EmpireLeaderboard";
+import HearthTabs from "@/app/_components/HearthTabs";
 import { canonicalOrigin } from "@/lib/origin";
 import { hearthIntegrations, hiddenIntegrations } from "@/lib/hearth-integrations";
 import { connectorIntegrations } from "@/lib/hearth-connectors";
@@ -327,63 +328,6 @@ export default async function HearthPage({
         <Stat label="Receipts" value={receipts.length} />
       </div>
 
-      {econ.empire_id && (
-        <section className="mb-8">
-          <h2 className="mb-3 text-sm font-medium">Empire leaderboard</h2>
-          <div className="card-solid p-4">
-            <EmpireLeaderboard empireId={econ.empire_id} showHeader={false} />
-          </div>
-        </section>
-      )}
-
-      {meta.about && (
-        <section className="mb-8">
-          <h2 className="mb-3 text-sm font-medium">About</h2>
-          <div className="card-solid p-4">
-            <p className="whitespace-pre-line text-sm leading-relaxed text-muted">
-              {meta.about}
-            </p>
-          </div>
-        </section>
-      )}
-
-      {/* Integrations - the Spark as a hub. Connected first, available ones dimmed. */}
-      {(() => {
-        const hidden = hiddenIntegrations(hearth);
-        const integrations = [...hearthIntegrations(hearth, emailCount), ...connectorCards]
-          .filter((i) => !hidden.includes(i.id))
-          .sort((a, b) => Number(b.connected) - Number(a.connected));
-        const liveCount = integrations.filter((i) => i.connected).length;
-        return (
-          <section className="mb-8">
-            <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-sm font-medium">Integrations</h2>
-              <div className="flex items-center gap-3">
-                <span className="text-xs text-muted">{liveCount} live</span>
-                <Link
-                  href={`/c/${hearth.slug}/settings`}
-                  className="text-xs text-muted hover:text-accent"
-                >
-                  Manage
-                </Link>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-              {integrations.map((i) => (
-                <IntegrationCard
-                  key={i.id}
-                  label={i.label}
-                  sub={i.sub}
-                  value={i.value}
-                  connected={i.connected}
-                  href={i.href}
-                />
-              ))}
-            </div>
-          </section>
-        );
-      })()}
-
       {/* Boost engine: free public support signal (not a payment). */}
       <section id="boost" className="glass mb-8 scroll-mt-20 p-4">
         <h2 className="mb-1 text-sm font-medium">Boost {hearth.name}</h2>
@@ -393,70 +337,151 @@ export default async function HearthPage({
         <BoostForm hearthId={hearth.id} />
       </section>
 
-      <section className="mb-8">
-        <h2 className="mb-3 text-sm font-medium">Meme Receipts</h2>
-        {receipts.length === 0 ? (
-          <p className="rounded-lg border border-dashed border-border p-5 text-sm text-muted">
-            No receipts yet. When a moment lands, the Meme Engine writes one here - the
-            proof of what it matched and what it earned.
-          </p>
-        ) : (
-          <ul className="space-y-2">
-            {receipts.map((r) => (
-              <li key={r.id} className="rounded-lg border border-border bg-card p-4">
-                <div className="flex items-center gap-2">
-                  <span className="rounded-full bg-accent-2/15 px-2 py-0.5 text-[10px] uppercase tracking-wide text-accent-2">
-                    Meme Receipt
-                  </span>
-                  {r.published_at && (
-                    <span className="text-xs text-muted">
-                      {new Date(r.published_at).toLocaleDateString()}
-                    </span>
-                  )}
-                </div>
-                {r.why_it_matched && (
-                  <p className="mt-2 text-sm leading-relaxed">{r.why_it_matched}</p>
+      <HearthTabs
+        panes={[
+          {
+            id: "about",
+            label: "About",
+            content: (
+              <>
+                {econ.empire_id && (
+                  <section className="mb-8">
+                    <h2 className="mb-3 text-sm font-medium">Empire leaderboard</h2>
+                    <div className="card-solid p-4">
+                      <EmpireLeaderboard empireId={econ.empire_id} showHeader={false} />
+                    </div>
+                  </section>
                 )}
-                <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-xs text-muted">
-                  <span>
-                    <span className="spark-text stat-num font-semibold">{r.reach}</span> reach
-                  </span>
-                  <span>
-                    <span className="spark-text stat-num font-semibold">{r.referrals}</span> referrals
-                  </span>
-                  <span>
-                    <span className="spark-text stat-num font-semibold">{r.backing_generated}</span> backing
-                  </span>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
 
-      <section>
-        <h2 className="mb-3 text-sm font-medium">Backers</h2>
-        {backers.length === 0 ? (
-          <p className="rounded-lg border border-dashed border-border p-5 text-sm text-muted">
-            No backers yet. Be the first - boost above, no wallet needed.
-          </p>
-        ) : (
-          <ul className="space-y-2">
-            {backers.map((b) => (
-              <li
-                key={b.id}
-                className="flex items-center justify-between rounded-lg border border-border bg-card px-4 py-2.5 text-sm"
-              >
-                <span className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-accent-3" />
-                  {maskBacker(b.backer_id)}
-                </span>
-                <span className="text-xs uppercase tracking-wide text-muted">{b.kind}</span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+                {meta.about && (
+                  <section className="mb-8">
+                    <h2 className="mb-3 text-sm font-medium">About</h2>
+                    <div className="card-solid p-4">
+                      <p className="whitespace-pre-line text-sm leading-relaxed text-muted">
+                        {meta.about}
+                      </p>
+                    </div>
+                  </section>
+                )}
+
+                {/* Integrations - the Spark as a hub. Connected first, available ones dimmed. */}
+                {(() => {
+                  const hidden = hiddenIntegrations(hearth);
+                  const integrations = [...hearthIntegrations(hearth, emailCount), ...connectorCards]
+                    .filter((i) => !hidden.includes(i.id))
+                    .sort((a, b) => Number(b.connected) - Number(a.connected));
+                  const liveCount = integrations.filter((i) => i.connected).length;
+                  return (
+                    <section className="mb-8">
+                      <div className="mb-3 flex items-center justify-between">
+                        <h2 className="text-sm font-medium">Integrations</h2>
+                        <div className="flex items-center gap-3">
+                          <span className="text-xs text-muted">{liveCount} live</span>
+                          <Link
+                            href={`/c/${hearth.slug}/settings`}
+                            className="text-xs text-muted hover:text-accent"
+                          >
+                            Manage
+                          </Link>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                        {integrations.map((i) => (
+                          <IntegrationCard
+                            key={i.id}
+                            label={i.label}
+                            sub={i.sub}
+                            value={i.value}
+                            connected={i.connected}
+                            href={i.href}
+                          />
+                        ))}
+                      </div>
+                    </section>
+                  );
+                })()}
+              </>
+            ),
+          },
+          {
+            id: "receipts",
+            label: "Receipts",
+            count: receipts.length,
+            content: (
+              <section className="mb-8">
+                <h2 className="mb-3 text-sm font-medium">Meme Receipts</h2>
+                {receipts.length === 0 ? (
+                  <p className="rounded-lg border border-dashed border-border p-5 text-sm text-muted">
+                    No receipts yet. When a moment lands, the Meme Engine writes one here - the
+                    proof of what it matched and what it earned.
+                  </p>
+                ) : (
+                  <ul className="space-y-2">
+                    {receipts.map((r) => (
+                      <li key={r.id} className="rounded-lg border border-border bg-card p-4">
+                        <div className="flex items-center gap-2">
+                          <span className="rounded-full bg-accent-2/15 px-2 py-0.5 text-[10px] uppercase tracking-wide text-accent-2">
+                            Meme Receipt
+                          </span>
+                          {r.published_at && (
+                            <span className="text-xs text-muted">
+                              {new Date(r.published_at).toLocaleDateString()}
+                            </span>
+                          )}
+                        </div>
+                        {r.why_it_matched && (
+                          <p className="mt-2 text-sm leading-relaxed">{r.why_it_matched}</p>
+                        )}
+                        <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-xs text-muted">
+                          <span>
+                            <span className="spark-text stat-num font-semibold">{r.reach}</span> reach
+                          </span>
+                          <span>
+                            <span className="spark-text stat-num font-semibold">{r.referrals}</span> referrals
+                          </span>
+                          <span>
+                            <span className="spark-text stat-num font-semibold">{r.backing_generated}</span> backing
+                          </span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </section>
+            ),
+          },
+          {
+            id: "backers",
+            label: "Backers",
+            count: backers.length,
+            content: (
+              <section>
+                <h2 className="mb-3 text-sm font-medium">Backers</h2>
+                {backers.length === 0 ? (
+                  <p className="rounded-lg border border-dashed border-border p-5 text-sm text-muted">
+                    No backers yet. Be the first - boost above, no wallet needed.
+                  </p>
+                ) : (
+                  <ul className="space-y-2">
+                    {backers.map((b) => (
+                      <li
+                        key={b.id}
+                        className="flex items-center justify-between rounded-lg border border-border bg-card px-4 py-2.5 text-sm"
+                      >
+                        <span className="flex items-center gap-2">
+                          <span className="h-1.5 w-1.5 rounded-full bg-accent-3" />
+                          {maskBacker(b.backer_id)}
+                        </span>
+                        <span className="text-xs uppercase tracking-wide text-muted">{b.kind}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </section>
+            ),
+          },
+        ]}
+      />
     </main>
   );
 }

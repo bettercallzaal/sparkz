@@ -12,6 +12,9 @@ import { ALPHA_CLOSED_MESSAGE, ALPHA_LOCK } from "@/lib/alpha-access";
 // the session cookie (FID, or address for a wallet session), never from the body. Records a ledger backing of kind='boost', qty 1. Public
 // (not admin-gated). One boost per backer per Hearth (deduped). Dollar backing
 // comes later with the fiat/BYOK payment rails.
+// Exact error text the client matches to fall back to the email-or-handle input.
+const BACKER_REQUIRED = "backer required (sign in, or give an email or handle)";
+
 export async function POST(req: NextRequest) {
   try {
     // Private alpha (lib/alpha-access.ts): this public route is closed to everyone but
@@ -27,15 +30,15 @@ export async function POST(req: NextRequest) {
 
     let backerId: string;
     if (claims?.fid) {
-      backerId = parsed.data.fc_username
-        ? `@${parsed.data.fc_username.toLowerCase()}`
-        : `fid:${claims.fid}`;
+      // The session FID is the identity and the dedupe key. fc_username is stored in
+      // metadata as an unverified display hint only.
+      backerId = `fid:${claims.fid}`;
     } else if (claims?.address) {
       backerId = claims.address;
     } else if (parsed.data.backer?.trim()) {
       backerId = parsed.data.backer.trim().toLowerCase();
     } else {
-      return badRequest("backer required (sign in, or give an email or handle)");
+      return badRequest(BACKER_REQUIRED);
     }
     const supabase = getServiceClient();
 
@@ -76,7 +79,14 @@ export async function POST(req: NextRequest) {
       amount_or_qty: 1,
       unit: "boost",
       provider: "ledger",
-      metadata: { pledge: true, ip_hash: ipHash, ...(claims?.fid ? { fid: claims.fid } : {}) },
+      metadata: {
+        pledge: true,
+        ip_hash: ipHash,
+        ...(claims?.fid ? { fid: claims.fid } : {}),
+        ...(claims?.fid && parsed.data.fc_username
+          ? { fc_username: parsed.data.fc_username.toLowerCase() }
+          : {}),
+      },
     });
     if (error) throw error;
 

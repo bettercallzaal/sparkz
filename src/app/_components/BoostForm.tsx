@@ -35,7 +35,7 @@ export default function BoostForm({ hearthId }: { hearthId: string }) {
         setState("done");
         toast("Boost sent - you're backing the work now.");
         router.refresh();
-      } else if (oneTap && res.status === 400) {
+      } else if (oneTap && res.status === 400 && String(json.error ?? "").startsWith("backer required")) {
         // Signed in on the client but no server session: ask the old way.
         setNeedsBacker(true);
         setState("idle");

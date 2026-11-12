@@ -97,9 +97,9 @@ export default function MemeEnginePage() {
           One human-in-the-loop creative intelligence loop. ZOL reads your Hearth data, drafts three variants, and waits for your approval. You post. Community remixes. Attribution flows.
         </p>
         <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted">
-          <span className="rounded-full border border-border px-2 py-0.5">✓ ZOL drafts, human approves</span>
-          <span className="rounded-full border border-border px-2 py-0.5">✓ Grounded in real Hearth data</span>
-          <span className="rounded-full border border-border px-2 py-0.5">✓ No autonomous posting (v1)</span>
+          <span className="rounded-full border border-border px-2 py-0.5">ZOL drafts, human approves</span>
+          <span className="rounded-full border border-border px-2 py-0.5">Grounded in real Hearth data</span>
+          <span className="rounded-full border border-border px-2 py-0.5">No autonomous posting (v1)</span>
         </div>
       </section>
 

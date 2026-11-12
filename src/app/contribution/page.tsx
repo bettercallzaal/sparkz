@@ -27,10 +27,10 @@ export const metadata: Metadata = {
     "fc:miniapp": "true",
     "fc:frame": "vNext",
     "fc:frame:image": OG,
-    "fc:frame:button:1": "🔥 Start a Hearth",
+    "fc:frame:button:1": "Start a Hearth",
     "fc:frame:button:1:action": "link",
     "fc:frame:button:1:target": `${BASE}/start`,
-    "fc:frame:button:2": "📊 See the split",
+    "fc:frame:button:2": "See the split",
     "fc:frame:button:2:action": "link",
     "fc:frame:button:2:target": `${BASE}/community-pool`,
   },
@@ -38,7 +38,6 @@ export const metadata: Metadata = {
 
 const CONTRIBUTION_TYPES = [
   {
-    icon: "⚡",
     name: "Boost",
     what: "Like or amplify a Hearth cast on Farcaster.",
     weight: "High",
@@ -46,7 +45,6 @@ const CONTRIBUTION_TYPES = [
     example: "Like a ZABAL cast via Boostr → earns points on the leaderboard",
   },
   {
-    icon: "💸",
     name: "Back",
     what: "Support the Hearth with a free boost - no wallet, no card.",
     weight: "High",
@@ -54,7 +52,6 @@ const CONTRIBUTION_TYPES = [
     example: "A boost earns leaderboard weight and puts you in the receipts",
   },
   {
-    icon: "🎭",
     name: "Meme receipt",
     what: "Remix or quote-cast a Meme Engine post within the 24h community swarm window.",
     weight: "Medium",
@@ -62,7 +59,6 @@ const CONTRIBUTION_TYPES = [
     example: "Quote a ZOL post within 24h → 20% remix reward share",
   },
   {
-    icon: "🗣️",
     name: "Farcaster participation",
     what: "Reply, react, and engage with Hearth posts in Warpcast.",
     weight: "Low",
@@ -160,7 +156,6 @@ export default function ContributionPage() {
           {CONTRIBUTION_TYPES.map((c) => (
             <div key={c.name} className="card-solid border border-border rounded-xl p-5">
               <div className="flex items-center gap-3 mb-3">
-                <span className="text-xl">{c.icon}</span>
                 <div>
                   <div className="font-semibold text-sm">{c.name}</div>
                   <div className="text-muted text-xs">{c.what}</div>
@@ -264,19 +259,19 @@ export default function ContributionPage() {
           href="/start"
           className="btn-spark px-5 py-2.5 text-sm font-semibold rounded-lg"
         >
-          🔥 Start a Hearth
+          Start a Hearth
         </Link>
         <Link
           href="/community-pool"
           className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
         >
-          💰 Community pool
+          Community pool
         </Link>
         <Link
           href="/community-pool"
           className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
         >
-          📐 Economics
+          Economics
         </Link>
       </section>
     </main>

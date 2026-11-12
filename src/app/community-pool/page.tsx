@@ -27,10 +27,10 @@ export const metadata: Metadata = {
     "fc:miniapp": "true",
     "fc:frame": "vNext",
     "fc:frame:image": OG,
-    "fc:frame:button:1": "🔥 Start a Hearth",
+    "fc:frame:button:1": "Start a Hearth",
     "fc:frame:button:1:action": "link",
     "fc:frame:button:1:target": `${BASE}/start`,
-    "fc:frame:button:2": "📊 See the split",
+    "fc:frame:button:2": "See the split",
     "fc:frame:button:2:action": "link",
     "fc:frame:button:2:target": `${BASE}/split-wizard`,
   },
@@ -39,25 +39,21 @@ export const metadata: Metadata = {
 const HOW_IT_WORKS = [
   {
     n: "1",
-    icon: "⚡",
     title: "Contribute to the Hearth",
     body: "Boost, back, remix, or participate. Every action earns points on the leaderboard. Holding the token earns nothing - contribution earns the fee share.",
   },
   {
     n: "2",
-    icon: "📊",
     title: "Weekly snapshot",
     body: "ZOL runs a weekly leaderboard snapshot. Your proportional share of the community pool is calculated from your points vs. total points across all contributors.",
   },
   {
     n: "3",
-    icon: "🔄",
     title: "0xSplits weights updated",
     body: "The snapshot updates the allocation weights in the 0xSplits contract. Fees that accumulated since the last update are now claimable at the new proportions.",
   },
   {
     n: "4",
-    icon: "💰",
     title: "Claim at splits.org",
     body: "Pull model - you claim your share when you want at splits.org. No deadline. No auto-payout. Unclaimed fees accumulate until you claim. No minimum.",
   },
@@ -158,7 +154,6 @@ export default function CommunityPoolPage() {
           {HOW_IT_WORKS.map((s) => (
             <div key={s.n} className="card-solid border border-border rounded-xl p-5 flex gap-4">
               <div className="shrink-0 flex flex-col items-center gap-1">
-                <div className="text-lg">{s.icon}</div>
                 <div className="text-accent font-black text-sm">{s.n}</div>
               </div>
               <div>
@@ -253,13 +248,13 @@ export default function CommunityPoolPage() {
           href="/start"
           className="btn-spark px-5 py-2.5 text-sm font-semibold rounded-lg"
         >
-          🔥 Start a Hearth
+          Start a Hearth
         </Link>
         <Link
           href="/split-wizard"
           className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
         >
-          🪄 Split wizard
+          Split wizard
         </Link>
       </section>
     </main>

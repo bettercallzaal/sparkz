@@ -46,28 +46,24 @@ const FEF_POINTS = [
 const INTEGRATIONS = [
   {
     title: "Sign in with Farcaster",
-    icon: "🔐",
     body: "Log in using your Farcaster identity (SIWE). Your Hearth links to your Farcaster handle - no separate account needed.",
     link: "/profile",
     linkLabel: "Sign in →",
   },
   {
     title: "Warpcast miniapp",
-    icon: "📱",
     body: "Sparkz runs as a Warpcast miniapp via fc:miniapp protocol. Browse Hearths, back creators, and claim receipts without leaving Warpcast.",
     link: null,
     linkLabel: null,
   },
   {
     title: "Frame embeds",
-    icon: "🖼️",
     body: "Every page generates Farcaster frame metadata (fc:frame). Share a receipt or leaderboard as a frame - followers can see key data and tap through without leaving their feed.",
     link: null,
     linkLabel: null,
   },
   {
     title: "ZOL casts to Farcaster",
-    icon: "🤖",
     body: "The ZOL Meme Engine publishes to Farcaster first via Neynar. Each cast is grounded in real Hearth data and requires human approval before posting.",
     link: "/meme-engine",
     linkLabel: "Meme Engine →",
@@ -89,9 +85,9 @@ export default function FarcasterPage() {
           Sparkz is built inside the Farcaster ecosystem, not grafted onto it. First announcements, first participation windows, first backing opportunities - Farcaster gets them first.
         </p>
         <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted">
-          <span className="rounded-full border border-border px-2 py-0.5">✓ SIWE (Sign in with Farcaster)</span>
-          <span className="rounded-full border border-border px-2 py-0.5">✓ Warpcast miniapp</span>
-          <span className="rounded-full border border-border px-2 py-0.5">✓ fc:frame on every page</span>
+          <span className="rounded-full border border-border px-2 py-0.5">SIWE (Sign in with Farcaster)</span>
+          <span className="rounded-full border border-border px-2 py-0.5">Warpcast miniapp</span>
+          <span className="rounded-full border border-border px-2 py-0.5">fc:frame on every page</span>
         </div>
       </section>
 
@@ -118,7 +114,6 @@ export default function FarcasterPage() {
         <div className="space-y-3">
           {INTEGRATIONS.map((i) => (
             <div key={i.title} className="card-solid flex gap-4 p-4">
-              <div className="text-2xl shrink-0">{i.icon}</div>
               <div className="flex-1">
                 <div className="mb-1 font-semibold text-sm">{i.title}</div>
                 <p className="text-xs leading-relaxed text-muted">{i.body}</p>

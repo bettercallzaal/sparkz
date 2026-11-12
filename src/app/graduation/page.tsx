@@ -27,10 +27,10 @@ export const metadata: Metadata = {
     "fc:miniapp": "true",
     "fc:frame": "vNext",
     "fc:frame:image": OG,
-    "fc:frame:button:1": "🔥 Start a Hearth",
+    "fc:frame:button:1": "Start a Hearth",
     "fc:frame:button:1:action": "link",
     "fc:frame:button:1:target": `${BASE}/start`,
-    "fc:frame:button:2": "🪄 Split wizard",
+    "fc:frame:button:2": "Split wizard",
     "fc:frame:button:2:action": "link",
     "fc:frame:button:2:target": `${BASE}/split-wizard`,
   },
@@ -79,31 +79,26 @@ const STEPS = [
     n: "1",
     title: "ZAO review or waiver",
     body: "ZAO confirms the Hearth meets the graduation checklist: real community, locked split, no red flags. ZAO-vetted Hearths get expedited review.",
-    icon: "⬡",
   },
   {
     n: "2",
     title: "Split-wizard: lock the config",
     body: "Every collaborator's wallet, role, and percentage goes into the split-wizard. Output: 0xSplits JSON + IPFS-attestable markdown. This is the permanent record.",
-    icon: "🪄",
   },
   {
     n: "3",
     title: "Deploy 0xSplits contract",
     body: "The creator deploys the 0xSplits contract on Base. This is the fee recipient address for the Clanker launch. One human click - ZOL does not deploy.",
-    icon: "🔐",
   },
   {
     n: "4",
     title: "Clanker launch",
     body: "Creator launches on Clanker (1% fee tier, fee recipient = the 0xSplits address). Token goes live. This is the point of no return - Clanker rewardBps are immutable.",
-    icon: "🚀",
   },
   {
     n: "5",
     title: "Weekly snapshot begins",
     body: "ZOL runs a weekly leaderboard snapshot → updates 0xSplits weights → community can claim their share at splits.org. Pull model: no deadline, no auto-payout.",
-    icon: "📊",
   },
 ];
 
@@ -146,7 +141,7 @@ export default function GraduationPage() {
         <div className="space-y-3">
           {TRIGGERS.map((t) => (
             <div key={t.label} className="card-solid border border-accent/20 rounded-xl p-5 flex gap-4">
-              <span className="text-accent font-black text-sm shrink-0 mt-0.5">✓</span>
+              <span className="text-accent font-black text-sm shrink-0 mt-0.5" aria-hidden="true">+</span>
               <div>
                 <div className="font-semibold text-sm mb-1">{t.label}</div>
                 <div className="text-muted text-xs leading-relaxed">{t.desc}</div>
@@ -165,7 +160,7 @@ export default function GraduationPage() {
         <div className="space-y-3">
           {DONT_TRIGGER.map((d) => (
             <div key={d.label} className="card-solid border border-border rounded-xl p-4 flex gap-4">
-              <span className="text-muted font-black text-sm shrink-0 mt-0.5">✗</span>
+              <span className="text-muted font-black text-sm shrink-0 mt-0.5" aria-hidden="true">-</span>
               <div>
                 <div className="font-semibold text-sm mb-1">{d.label}</div>
                 <div className="text-muted text-xs leading-relaxed">{d.desc}</div>
@@ -182,7 +177,6 @@ export default function GraduationPage() {
           {STEPS.map((s) => (
             <div key={s.n} className="card-solid border border-border rounded-xl p-5 flex gap-4">
               <div className="shrink-0 flex flex-col items-center gap-1">
-                <div className="text-lg">{s.icon}</div>
                 <div className="text-accent font-black text-sm">{s.n}</div>
               </div>
               <div>
@@ -254,13 +248,13 @@ export default function GraduationPage() {
           href="/start"
           className="btn-spark px-5 py-2.5 text-sm font-semibold rounded-lg"
         >
-          🔥 Start a Hearth
+          Start a Hearth
         </Link>
         <Link
           href="/split-wizard"
           className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
         >
-          🪄 Split wizard
+          Split wizard
         </Link>
         <Link
           href="/manifesto"
@@ -272,7 +266,7 @@ export default function GraduationPage() {
           href="/hearth"
           className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
         >
-          📦 What is a Hearth?
+          What is a Hearth?
         </Link>
       </section>
     </main>

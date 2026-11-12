@@ -19,6 +19,10 @@
 #   SPARKZ_TEAM_ID              Apple team; default AYJY22EEPG (Zaal's).
 #   BUILD_NUMBER                optional: use this build number instead of current + 1.
 #
+# Notes: -allowProvisioningUpdates may create or renew signing certificates and profiles,
+# even on --dry-run. The key ID and issuer ID appear in the xcodebuild command line, so
+# other local users can see them in `ps` while it runs; the key itself does not.
+#
 # The ios/ folder is generated on the Mac (docs/TESTFLIGHT.md), so run this from a
 # checkout that has it. Build tooling only: it changes no app code.
 set -euo pipefail
@@ -31,7 +35,7 @@ DRY_RUN=0
 for arg in "$@"; do
   case "$arg" in
     --dry-run) DRY_RUN=1 ;;
-    -h|--help) sed -n '2,24p' "$0"; exit 0 ;;
+    -h|--help) sed -n '2,/^set -euo/p' "$0" | sed '$d'; exit 0 ;;
     *) die "unknown argument: $arg (use --dry-run or --help)" ;;
   esac
 done
@@ -106,8 +110,9 @@ VERSION="$(grep -oE 'MARKETING_VERSION = [^;]+;' "$PBX" | head -1 | sed -E 's/MA
 say "version $VERSION, build $CURRENT -> $NEXT"
 
 # --- archive -----------------------------------------------------------------
-TMP="${TMPDIR:-/tmp}"; OUT="${TMP%/}/sparkz-testflight/$NEXT"
-rm -rf "$OUT" && mkdir -p "$OUT"
+# A fresh directory for each run; nothing is ever deleted.
+TMP="${TMPDIR:-/tmp}"
+OUT="$(mktemp -d "${TMP%/}/sparkz-testflight-$NEXT.XXXXXX")" || die "could not create a temp directory"
 ARCHIVE="$OUT/Sparkz.xcarchive"
 
 say "xcodebuild archive -> $ARCHIVE"

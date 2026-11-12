@@ -17,7 +17,7 @@ export default function MobileNav() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="sm:hidden">
+    <div className="sm:hidden web-only">
       <button
         aria-label={open ? "Close menu" : "Open menu"}
         aria-expanded={open}

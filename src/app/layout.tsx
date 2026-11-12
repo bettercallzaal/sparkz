@@ -1,10 +1,13 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import "./shell.css";
 import MiniAppReady from "./_components/MiniAppReady";
 import Header from "./_components/Header";
 import Footer from "./_components/Footer";
 import Providers from "./_components/Providers";
+import NativeShell from "./_components/NativeShell";
+import TabBar from "./_components/TabBar";
 import { canonicalOrigin } from "@/lib/origin";
 
 const ORIGIN = canonicalOrigin();
@@ -104,9 +107,11 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col overflow-x-hidden">
         <Providers>
           <MiniAppReady />
+          <NativeShell />
           <Header />
           {children}
           <Footer />
+          <TabBar />
         </Providers>
       </body>
     </html>

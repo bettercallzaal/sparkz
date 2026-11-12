@@ -79,7 +79,14 @@ export const linkEmpireSchema = z.object({
 
 export const boostSchema = z.object({
   hearth_id: z.string().uuid(),
-  backer: z.string().min(1).max(200), // email or handle
+  // Email or handle. Optional: a signed-in backer is identified by the session instead.
+  backer: z.string().min(1).max(200).optional(),
+  // Unverified display hint for a signed-in Farcaster backer, stored in metadata
+  // only; the session FID is the backer id and the dedupe key.
+  fc_username: z
+    .string()
+    .regex(/^[a-z0-9][a-z0-9.-]{0,30}$/i)
+    .optional(),
 });
 
 export const joinWaitlistSchema = z.object({

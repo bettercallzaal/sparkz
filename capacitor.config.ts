@@ -34,6 +34,9 @@ const config: CapacitorConfig = {
     ],
   },
   ios: {
+    // Lets the site recognise the app (NativeShell.tsx) even if the native bridge
+    // is not injected into the remote page.
+    appendUserAgent: "SparkzApp",
     contentInset: "always",
     backgroundColor: "#0a0908",
     preferredContentMode: "mobile",

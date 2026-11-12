@@ -118,3 +118,22 @@ then bump Build to 2 in Xcode and repeat step 7. Builds expire after 90 days. Si
 - 218 mobile app strategy (PWA vs Capacitor vs Expo)
 - 416 TestFlight and Play Store playbook (Capacitor, limits, review times)
 - 966 Expo to TestFlight (the DJ Wavy day: encryption key, internal testers must be team members, test on the device early)
+
+## Rebuild once for the native tab bar (12 Nov 2026)
+
+The HTML tab bar from #324 is now a fallback. On a build that includes
+`@capgo/capacitor-native-navigation`, the app draws the system tab bar
+(UITabBar, Liquid Glass on iOS 26) and native pull-to-refresh on Home and
+Explore (`src/app/_components/NativeChrome.tsx`). That plugin is native code, so
+it needs one new TestFlight build:
+
+```bash
+git pull
+npm install
+npx cap sync ios
+npx cap open ios
+```
+
+Then in Xcode: Product, Archive, Distribute App, TestFlight, as in the steps
+above. After that, site changes keep flowing with normal Vercel deploys. The
+`capacitor.config.ts` change (`contentInset: "never"`) ships in the same build.

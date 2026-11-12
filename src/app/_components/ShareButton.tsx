@@ -68,7 +68,7 @@ export default function ShareButton({
     <div className={`relative ${className}`}>
       <button
         onClick={() => setOpen((v) => !v)}
-        className="rounded-md border border-border bg-card px-3 py-1.5 text-sm hover:border-accent"
+        className="min-h-11 rounded-md border border-border bg-card px-4 py-2 text-sm hover:border-accent active:bg-white/10 sm:min-h-0 sm:px-3 sm:py-1.5"
       >
         Share
       </button>
@@ -76,19 +76,19 @@ export default function ShareButton({
         <div className="absolute right-0 z-10 mt-2 w-44 overflow-hidden rounded-lg border border-border bg-card shadow-xl">
           <button
             onClick={farcaster}
-            className="block w-full px-4 py-2.5 text-left text-sm hover:bg-white/5"
+            className="block min-h-11 w-full px-4 py-2.5 text-left text-sm hover:bg-white/5 active:bg-white/10"
           >
             Cast to Farcaster
           </button>
           <button
             onClick={x}
-            className="block w-full px-4 py-2.5 text-left text-sm hover:bg-white/5"
+            className="block min-h-11 w-full px-4 py-2.5 text-left text-sm hover:bg-white/5 active:bg-white/10"
           >
             Post to X
           </button>
           <button
             onClick={copy}
-            className="block w-full px-4 py-2.5 text-left text-sm hover:bg-white/5"
+            className="block min-h-11 w-full px-4 py-2.5 text-left text-sm hover:bg-white/5 active:bg-white/10"
           >
             Copy link
           </button>

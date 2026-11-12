@@ -26,7 +26,7 @@ export default function CopyButton({
           toast("Could not copy", "error");
         }
       }}
-      className={`inline-flex h-6 w-6 items-center justify-center rounded-md border border-border text-muted hover:text-foreground ${className}`}
+      className={`inline-flex h-11 w-11 items-center justify-center rounded-md border border-border text-muted hover:text-foreground active:bg-white/10 sm:h-6 sm:w-6 ${className}`}
     >
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="9" y="9" width="11" height="11" rx="2" />

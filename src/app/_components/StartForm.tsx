@@ -32,14 +32,21 @@ export default function StartForm() {
   const [err, setErr] = useState("");
 
   // The server session is the truth for ownership (create-spark reads it too).
+  // A slow or hung check must not leave the button disabled: after 8s, treat it as
+  // signed out (the email path), which the server accepts either way.
   useEffect(() => {
     let alive = true;
-    fetch("/api/auth/me")
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 8000);
+    fetch("/api/auth/me", { signal: ctrl.signal })
       .then((r) => r.json())
       .then((j) => alive && setFid(j.ok && j.data?.fid ? j.data.fid : null))
-      .catch(() => alive && setFid(null));
+      .catch(() => alive && setFid(null))
+      .finally(() => clearTimeout(timer));
     return () => {
       alive = false;
+      clearTimeout(timer);
+      ctrl.abort();
     };
   }, []);
 

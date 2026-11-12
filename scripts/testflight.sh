@@ -22,7 +22,19 @@
 #   the key file                ~/.zao/private/asc/AuthKey_<ASC_KEY_ID>.p8, or ASC_KEY_PATH.
 #                               It must sit outside this repo. Its contents are never printed.
 #   SPARKZ_TEAM_ID              Apple team; default AYJY22EEPG (Zaal's).
-#   BUILD_NUMBER                optional: use this build number instead of current + 1.
+#   BUILD_NUMBER                optional: use this build number instead of the next one.
+#   ALLOW_DIRTY=1               optional: skip the clean-tree preflight.
+#   MIN_XCODE                   optional: lowest Xcode major version accepted; default 26.
+#
+# Build number: the next one is above both the local CURRENT_PROJECT_VERSION and the
+# highest build App Store Connect already has for this app (read-only API calls with the
+# key), so a stale checkout can never reuse a number. A dry run reads App Store Connect
+# when the key is available and otherwise falls back to the local number with a warning.
+#
+# Preflight, before anything is built: Xcode version, a clean git tree, and
+# ITSAppUsesNonExemptEncryption = NO in Info.plist (without it every build stops on the
+# export compliance question). After npx cap sync ios, any change to tracked files under
+# ios/ stops the run so it can be reviewed and committed first.
 #
 # Notes: -allowProvisioningUpdates may create or renew signing certificates and profiles,
 # even on --dry-run. The key ID and issuer ID appear in the altool command line, so other
@@ -59,12 +71,33 @@ else
 fi
 SCHEME="App"
 
-for tool in npx xcodebuild xcrun /usr/libexec/PlistBuddy; do
+for tool in npx xcodebuild xcrun git jq curl /usr/libexec/PlistBuddy; do
   command -v "$tool" >/dev/null || die "missing tool: $tool"
 done
 
-# --- credentials (upload only) ---------------------------------------------------
-if [ "$DRY_RUN" = 0 ]; then
+# --- preflight ---------------------------------------------------------------------
+# awk reads all input: `| head -1` would SIGPIPE the writer and, under pipefail, end the run silently.
+XV="$(xcodebuild -version 2>/dev/null | awk 'NR==1 {print $2}')"
+[ "${XV%%.*}" -ge "${MIN_XCODE:-26}" ] 2>/dev/null \
+  || die "Xcode ${XV:-unknown} is below ${MIN_XCODE:-26}; App Store Connect refuses uploads from old Xcode versions"
+ENC="$(/usr/libexec/PlistBuddy -c 'Print :ITSAppUsesNonExemptEncryption' "$IOS/App/Info.plist" 2>/dev/null || true)"
+[ "$ENC" = "false" ] \
+  || die "Info.plist must set ITSAppUsesNonExemptEncryption to NO; found '${ENC:-missing}'"
+if [ "${ALLOW_DIRTY:-0}" != 1 ]; then
+  dirty="$(git -C "$ROOT" status --porcelain)"
+  [ -z "$dirty" ] || die "uncommitted changes; commit them first or set ALLOW_DIRTY=1:
+$dirty"
+fi
+
+# --- credentials (required to upload; used by a dry run when available) -----------
+WANT_KEY=1
+if [ "$DRY_RUN" = 1 ]; then
+  WANT_KEY=0
+  if [ -n "${ASC_KEY_ID:-}" ] || { command -v zao-env >/dev/null && zao-env show "${ASC_ENV_NAME:-asc}" >/dev/null 2>&1; }; then
+    WANT_KEY=1
+  fi
+fi
+if [ "$WANT_KEY" = 1 ]; then
 if { [ -z "${ASC_KEY_ID:-}" ] || [ -z "${ASC_ISSUER_ID:-}" ]; } && command -v zao-env >/dev/null; then
   # Load first, then eval, so a missing env file stops here with its own message.
   asc_env="$(zao-env load "${ASC_ENV_NAME:-asc}")" \
@@ -93,6 +126,11 @@ SIGN=(-allowProvisioningUpdates) # the Xcode account signs; see the header
 # --- sync --------------------------------------------------------------------
 say "npx cap sync ios"
 (cd "$ROOT" && npx cap sync ios)
+if [ "${ALLOW_DIRTY:-0}" != 1 ]; then
+  changed="$(git -C "$ROOT" status --porcelain -- ios)"
+  [ -z "$changed" ] || die "npx cap sync ios changed tracked files; review and commit them, then rerun:
+$changed"
+fi
 
 # --- build number --------------------------------------------------------------
 PLIST_VER="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$IOS/App/Info.plist")"
@@ -101,9 +139,40 @@ PLIST_VER="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$IOS/App/Info.
 
 CURRENT="$(grep -oE 'CURRENT_PROJECT_VERSION = [0-9]+;' "$PBX" | grep -oE '[0-9]+' | sort -n | tail -1)"
 [ -n "$CURRENT" ] || die "no CURRENT_PROJECT_VERSION in $PBX"
-NEXT="${BUILD_NUMBER:-$((CURRENT + 1))}"
+# Highest build number App Store Connect has for this app. Read-only GET calls; any API
+# error stops the run rather than guessing.
+ASC_MAX=""
+asc_max_build() {
+  local token out code app bundle
+  bundle="$(grep -oE 'PRODUCT_BUNDLE_IDENTIFIER = [^;]+;' "$PBX" | awk 'NR==1' | sed -E 's/.* = (.*);/\1/')"
+  [ -n "$bundle" ] || die "no PRODUCT_BUNDLE_IDENTIFIER in $PBX"
+  token="$(xcrun altool --generate-jwt --apiKey "$ASC_KEY_ID" --apiIssuer "$ASC_ISSUER_ID" \
+    --p8-file-path "$KEY_ABS" 2>&1 | grep -oE 'eyJ[A-Za-z0-9._-]+' | awk 'NR==1' || true)"
+  [ -n "$token" ] || die "could not make an App Store Connect token (altool --generate-jwt)"
+  out="$(mktemp)"
+  code="$(curl -sg -o "$out" -w '%{http_code}' -H "Authorization: Bearer $token" \
+    "https://api.appstoreconnect.apple.com/v1/apps?filter[bundleId]=$bundle&fields[apps]=bundleId&limit=1")" || code=000
+  [ "$code" = 200 ] || { rm -f "$out"; die "App Store Connect app lookup for $bundle returned HTTP $code"; }
+  app="$(jq -r '.data[0].id // empty' "$out")"
+  [ -n "$app" ] || { rm -f "$out"; die "App Store Connect has no app with bundle id $bundle"; }
+  code="$(curl -sg -o "$out" -w '%{http_code}' -H "Authorization: Bearer $token" \
+    "https://api.appstoreconnect.apple.com/v1/builds?filter[app]=$app&limit=200&fields[builds]=version")" || code=000
+  [ "$code" = 200 ] || { rm -f "$out"; die "App Store Connect builds lookup returned HTTP $code"; }
+  ASC_MAX="$(jq -r '[.data[].attributes.version | tonumber? ] | max // 0' "$out")"
+  rm -f "$out"
+  [[ "$ASC_MAX" =~ ^[0-9]+$ ]] || die "could not read the highest build number from App Store Connect"
+}
+if [ "$WANT_KEY" = 1 ]; then
+  asc_max_build
+  say "App Store Connect: highest build so far is $ASC_MAX"
+else
+  ASC_MAX=0
+  say "warning: dry run without the API key, so App Store Connect was not checked; using the local number"
+fi
+FLOOR=$(( CURRENT > ASC_MAX ? CURRENT : ASC_MAX ))
+NEXT="${BUILD_NUMBER:-$((FLOOR + 1))}"
 [[ "$NEXT" =~ ^[0-9]+$ ]] || die "BUILD_NUMBER must be a whole number, got '$NEXT'"
-[ "$NEXT" -gt "$CURRENT" ] || die "build $NEXT is not above the current $CURRENT; App Store Connect refuses a repeat"
+[ "$NEXT" -gt "$FLOOR" ] || die "build $NEXT is not above $FLOOR (local $CURRENT, App Store Connect $ASC_MAX); App Store Connect refuses a repeat"
 
 cp "$PBX" "$PBX.testflight-bak"
 # Put the old number back on any exit except a finished upload (a dry run, or a failure).
@@ -111,7 +180,7 @@ restore() { if [ -f "$PBX.testflight-bak" ]; then mv "$PBX.testflight-bak" "$PBX
 trap restore EXIT
 
 sed -i '' -E "s/CURRENT_PROJECT_VERSION = [0-9]+;/CURRENT_PROJECT_VERSION = $NEXT;/" "$PBX"
-VERSION="$(grep -oE 'MARKETING_VERSION = [^;]+;' "$PBX" | head -1 | sed -E 's/MARKETING_VERSION = (.*);/\1/')"
+VERSION="$(grep -oE 'MARKETING_VERSION = [^;]+;' "$PBX" | awk 'NR==1' | sed -E 's/MARKETING_VERSION = (.*);/\1/')"
 say "version $VERSION, build $CURRENT -> $NEXT"
 
 # --- archive -----------------------------------------------------------------
@@ -147,7 +216,7 @@ xcodebuild -exportArchive -archivePath "$ARCHIVE" \
   -exportOptionsPlist "$OUT/ExportOptions.plist" -exportPath "$OUT/export" \
   "${SIGN[@]}" > "$OUT/export.log" 2>&1 \
   || { tail -30 "$OUT/export.log" >&2; die "export failed (full log: $OUT/export.log). If it names signing, check Xcode > Settings > Accounts is signed in to team $TEAM."; }
-IPA="$(find "$OUT/export" -maxdepth 1 -name '*.ipa' | head -1)"
+IPA="$(find "$OUT/export" -maxdepth 1 -name '*.ipa' | awk 'NR==1')"
 [ -n "$IPA" ] || die "export finished but wrote no .ipa (log: $OUT/export.log)"
 
 if [ "$DRY_RUN" = 1 ]; then

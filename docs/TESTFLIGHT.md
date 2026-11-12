@@ -106,6 +106,14 @@ npx cap sync ios
 
 then bump Build to 2 in Xcode and repeat step 7. Builds expire after 90 days. Site changes need nothing.
 
+**Or with no clicks:** `scripts/testflight.sh` syncs, bumps the build number, archives, and uploads with an App Store Connect API key.
+
+1. Once, Zaal creates a Team API key in App Store Connect (Users and Access > Integrations > App Store Connect API, role App Manager). He downloads `AuthKey_<KEY_ID>.p8` to `~/.zao/private/asc/` and runs `chmod 600` on it. Then `zao-env save asc` with two lines, `ASC_KEY_ID=...` and `ASC_ISSUER_ID=...`.
+2. Each build: `scripts/testflight.sh --dry-run` first if anything native changed. It archives and exports locally, uploads nothing, and puts the build number back. Then `scripts/testflight.sh`.
+3. Commit the bumped `ios/App/App.xcodeproj/project.pbxproj`.
+
+The script stops with a message if an ID, the key file or `ios/` is missing. It also stops if the key sits inside the repo or is world-readable. It never prints the key.
+
 ## Known gaps, for later
 
 - Push notifications: `@capacitor/push-notifications` plus an APNs key from the developer account. Needs a small API route on Sparkz to store device tokens.

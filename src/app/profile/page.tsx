@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { SignInButton, useProfile } from "@farcaster/auth-kit";
 import Flame from "@/app/_components/Flame";
-import CreateSparkAsFarcaster from "@/app/_components/CreateSparkAsFarcaster";
 import YourSparks from "@/app/_components/YourSparks";
 import {
   currentFid,
@@ -70,7 +69,12 @@ export default function ProfilePage() {
           <div className="text-lg font-semibold">Signed in</div>
           <div className="text-xs text-muted">fid {serverFid}</div>
           <YourSparks fid={serverFid} />
-          <CreateSparkAsFarcaster fid={serverFid} />
+          <Link
+            href="/start"
+            className="btn-spark mt-5 inline-flex min-h-11 w-full items-center justify-center rounded-lg px-4 text-sm"
+          >
+            New Hearth
+          </Link>
           <SignOutLink onDone={() => setServerFid(null)} />
         </section>
       ) : !isAuthenticated ? (
@@ -142,7 +146,14 @@ export default function ProfilePage() {
           </div>
 
           {fid && <YourSparks fid={fid} />}
-          {fid && <CreateSparkAsFarcaster fid={fid} username={username ?? undefined} />}
+          {fid && (
+            <Link
+              href="/start"
+              className="btn-spark mt-5 inline-flex min-h-11 w-full items-center justify-center rounded-lg px-4 text-sm"
+            >
+              New Hearth
+            </Link>
+          )}
           {serverFid === null && (
             <p className="mt-4 text-xs text-muted">
               {signInError ?? "Verifying your sign-in with the server..."}

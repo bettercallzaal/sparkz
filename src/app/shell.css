@@ -1,0 +1,24 @@
+/* iPhone app shell (html[data-shell="ios"], set by NativeShell.tsx): hide web-only
+   chrome, show the bottom tab bar. The tab bar owns the home-bar inset, so the body
+   swaps its bottom inset for the bar's height. Nothing here applies on the website. */
+.tab-bar {
+  display: none;
+}
+html[data-shell="ios"] .web-only {
+  display: none !important;
+}
+html[data-shell="ios"] body {
+  padding-bottom: calc(3.5rem + env(safe-area-inset-bottom));
+}
+html[data-shell="ios"] .tab-bar {
+  display: block;
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 60;
+  padding-bottom: env(safe-area-inset-bottom);
+  border-top: 1px solid var(--border);
+  background: color-mix(in srgb, var(--background) 88%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}

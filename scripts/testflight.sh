@@ -2,13 +2,18 @@
 # Builds the Sparkz iPhone app and uploads it to TestFlight with no clicks in Xcode.
 #
 #   scripts/testflight.sh            sync, bump the build number, archive, upload
-#   scripts/testflight.sh --dry-run  sync, bump, archive and export locally; stops before
-#                                    the upload and puts the build number back
+#   scripts/testflight.sh --dry-run  sync, bump, archive and export a signed .ipa; stops
+#                                    before the upload and puts the build number back
 #
 # Steps: npx cap sync ios; bump the build number (CFBundleVersion, which Info.plist takes
-# from CURRENT_PROJECT_VERSION); xcodebuild archive; xcodebuild -exportArchive with an
-# ExportOptions.plist whose method is app-store-connect and destination is upload.
-# Signing and upload use an App Store Connect API key, so no Apple ID sign-in is needed.
+# from CURRENT_PROJECT_VERSION); xcodebuild archive; xcodebuild -exportArchive with method
+# app-store-connect and destination export (an .ipa on disk); xcrun altool --upload-app.
+#
+# Least privilege, split in two:
+#   signing  uses the Apple ID signed in to Xcode on this Mac (Xcode > Settings > Accounts),
+#            the same identity as an Archive click. No -authenticationKey flags, so the API
+#            key does not need the Admin role that cloud signing would require.
+#   upload   uses the App Store Connect API key, which the App Manager role may do.
 #
 # Inputs (the script stops with a message if any is missing):
 #   ASC_KEY_ID, ASC_ISSUER_ID   from the environment. If they are not set and `zao-env`
@@ -20,8 +25,9 @@
 #   BUILD_NUMBER                optional: use this build number instead of current + 1.
 #
 # Notes: -allowProvisioningUpdates may create or renew signing certificates and profiles,
-# even on --dry-run. The key ID and issuer ID appear in the xcodebuild command line, so
-# other local users can see them in `ps` while it runs; the key itself does not.
+# even on --dry-run. The key ID and issuer ID appear in the altool command line, so other
+# local users can see them in `ps` while it runs; the key itself does not. A dry run does
+# not need the key at all.
 #
 # The ios/ folder is generated on the Mac (docs/TESTFLIGHT.md), so run this from a
 # checkout that has it. Build tooling only: it changes no app code.
@@ -53,11 +59,12 @@ else
 fi
 SCHEME="App"
 
-for tool in npx xcodebuild /usr/libexec/PlistBuddy; do
+for tool in npx xcodebuild xcrun /usr/libexec/PlistBuddy; do
   command -v "$tool" >/dev/null || die "missing tool: $tool"
 done
 
-# --- credentials -------------------------------------------------------------
+# --- credentials (upload only) ---------------------------------------------------
+if [ "$DRY_RUN" = 0 ]; then
 if { [ -z "${ASC_KEY_ID:-}" ] || [ -z "${ASC_ISSUER_ID:-}" ]; } && command -v zao-env >/dev/null; then
   # Load first, then eval, so a missing env file stops here with its own message.
   asc_env="$(zao-env load "${ASC_ENV_NAME:-asc}")" \
@@ -78,12 +85,10 @@ esac
 if [ -n "$(find "$KEY_ABS" -perm -004 2>/dev/null)" ]; then
   die "the API key file is world-readable. Run: chmod 600 on it."
 fi
+fi
 
 TEAM="${SPARKZ_TEAM_ID:-AYJY22EEPG}"
-AUTH=(-allowProvisioningUpdates
-  -authenticationKeyPath "$KEY_ABS"
-  -authenticationKeyID "$ASC_KEY_ID"
-  -authenticationKeyIssuerID "$ASC_ISSUER_ID")
+SIGN=(-allowProvisioningUpdates) # the Xcode account signs; see the header
 
 # --- sync --------------------------------------------------------------------
 say "npx cap sync ios"
@@ -119,18 +124,16 @@ say "xcodebuild archive -> $ARCHIVE"
 xcodebuild "${CONTAINER[@]}" -scheme "$SCHEME" -configuration Release \
   -destination 'generic/platform=iOS' -archivePath "$ARCHIVE" \
   DEVELOPMENT_TEAM="$TEAM" CODE_SIGN_STYLE=Automatic \
-  "${AUTH[@]}" archive > "$OUT/archive.log" 2>&1 \
+  "${SIGN[@]}" archive > "$OUT/archive.log" 2>&1 \
   || { tail -30 "$OUT/archive.log" >&2; die "archive failed (full log: $OUT/archive.log)"; }
 
-# --- export and upload ----------------------------------------------------------
-DEST=upload
-[ "$DRY_RUN" = 1 ] && DEST=export
+# --- export a signed .ipa ---------------------------------------------------------
 cat > "$OUT/ExportOptions.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0"><dict>
 <key>method</key><string>app-store-connect</string>
-<key>destination</key><string>$DEST</string>
+<key>destination</key><string>export</string>
 <key>teamID</key><string>$TEAM</string>
 <key>signingStyle</key><string>automatic</string>
 <key>testFlightInternalTestingOnly</key><true/>
@@ -139,20 +142,25 @@ cat > "$OUT/ExportOptions.plist" <<PLIST
 </dict></plist>
 PLIST
 
-if [ "$DRY_RUN" = 1 ]; then
-  say "dry run: exporting the signed .ipa locally, no upload"
-else
-  say "exporting and uploading to App Store Connect"
-fi
+say "exporting a signed .ipa (Xcode account signs)"
 xcodebuild -exportArchive -archivePath "$ARCHIVE" \
   -exportOptionsPlist "$OUT/ExportOptions.plist" -exportPath "$OUT/export" \
-  "${AUTH[@]}" > "$OUT/export.log" 2>&1 \
-  || { tail -30 "$OUT/export.log" >&2; die "export failed (full log: $OUT/export.log)"; }
+  "${SIGN[@]}" > "$OUT/export.log" 2>&1 \
+  || { tail -30 "$OUT/export.log" >&2; die "export failed (full log: $OUT/export.log). If it names signing, check Xcode > Settings > Accounts is signed in to team $TEAM."; }
+IPA="$(find "$OUT/export" -maxdepth 1 -name '*.ipa' | head -1)"
+[ -n "$IPA" ] || die "export finished but wrote no .ipa (log: $OUT/export.log)"
 
 if [ "$DRY_RUN" = 1 ]; then
-  say "DRY RUN OK: build $NEXT archived and exported to $OUT/export. Nothing uploaded; the build number is back at $CURRENT."
+  say "DRY RUN OK: build $NEXT signed and exported to $IPA. Nothing uploaded; the build number is back at $CURRENT."
 else
-  grep -q "Upload succeeded" "$OUT/export.log" || die "export finished but no 'Upload succeeded' line (log: $OUT/export.log)"
+  # --- upload with the API key ---------------------------------------------------
+  say "uploading with xcrun altool (API key)"
+  xcrun altool --upload-app --type ios --file "$IPA" \
+    --apiKey "$ASC_KEY_ID" --apiIssuer "$ASC_ISSUER_ID" --p8-file-path "$KEY_ABS" \
+    > "$OUT/upload.log" 2>&1 \
+    || { tail -30 "$OUT/upload.log" >&2; die "upload failed (full log: $OUT/upload.log)"; }
+  grep -qiE "UPLOAD SUCCEEDED|No errors uploading" "$OUT/upload.log" \
+    || die "altool finished but reported no success line (log: $OUT/upload.log)"
   rm -f "$PBX.testflight-bak" # keep the new number
   say "UPLOADED: version $VERSION build $NEXT. Apple processes it for 10 to 30 minutes, then it shows in TestFlight."
   say "Commit the bumped build number: git add ios/App/App.xcodeproj/project.pbxproj"

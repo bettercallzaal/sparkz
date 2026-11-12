@@ -48,6 +48,11 @@ set +x # never trace: the key path and IDs stay out of logs by default
 
 die() { echo "testflight: $*" >&2; exit 1; }
 say() { echo "testflight: $*"; }
+# One EXIT trap for everything: put the build number back unless an upload finished
+# (restore), and remove the App Store Connect temp files (asc_cleanup). Both are defined
+# below and are safe to run before they have anything to do.
+on_exit() { if declare -F restore >/dev/null; then restore; fi; if declare -F asc_cleanup >/dev/null; then asc_cleanup; fi; }
+trap on_exit EXIT
 
 DRY_RUN=0
 for arg in "$@"; do
@@ -142,24 +147,39 @@ CURRENT="$(grep -oE 'CURRENT_PROJECT_VERSION = [0-9]+;' "$PBX" | grep -oE '[0-9]
 # Highest build number App Store Connect has for this app. Read-only GET calls; any API
 # error stops the run rather than guessing.
 ASC_MAX=""
+# The token goes in a mode-600 header file, not on curl's command line, so `ps` never
+# shows it. Both files live in a private mktemp directory removed by the EXIT trap.
+ASC_TMP=""
+asc_cleanup() {
+  if [ -n "$ASC_TMP" ] && [ -d "$ASC_TMP" ]; then
+    rm -f "$ASC_TMP/headers" "$ASC_TMP/body"
+    rmdir "$ASC_TMP" 2>/dev/null || true
+  fi
+}
+asc_get() { # asc_get <url> -> prints the HTTP code; the body lands in $ASC_TMP/body
+  curl -sg -o "$ASC_TMP/body" -w '%{http_code}' -H @"$ASC_TMP/headers" "$1" || echo 000
+}
 asc_max_build() {
-  local token out code app bundle
+  local token code app bundle
   bundle="$(grep -oE 'PRODUCT_BUNDLE_IDENTIFIER = [^;]+;' "$PBX" | awk 'NR==1' | sed -E 's/.* = (.*);/\1/')"
   [ -n "$bundle" ] || die "no PRODUCT_BUNDLE_IDENTIFIER in $PBX"
   token="$(xcrun altool --generate-jwt --apiKey "$ASC_KEY_ID" --apiIssuer "$ASC_ISSUER_ID" \
     --p8-file-path "$KEY_ABS" 2>&1 | grep -oE 'eyJ[A-Za-z0-9._-]+' | awk 'NR==1' || true)"
   [ -n "$token" ] || die "could not make an App Store Connect token (altool --generate-jwt)"
-  out="$(mktemp)"
-  code="$(curl -sg -o "$out" -w '%{http_code}' -H "Authorization: Bearer $token" \
-    "https://api.appstoreconnect.apple.com/v1/apps?filter[bundleId]=$bundle&fields[apps]=bundleId&limit=1")" || code=000
-  [ "$code" = 200 ] || { rm -f "$out"; die "App Store Connect app lookup for $bundle returned HTTP $code"; }
-  app="$(jq -r '.data[0].id // empty' "$out")"
-  [ -n "$app" ] || { rm -f "$out"; die "App Store Connect has no app with bundle id $bundle"; }
-  code="$(curl -sg -o "$out" -w '%{http_code}' -H "Authorization: Bearer $token" \
-    "https://api.appstoreconnect.apple.com/v1/builds?filter[app]=$app&limit=200&fields[builds]=version")" || code=000
-  [ "$code" = 200 ] || { rm -f "$out"; die "App Store Connect builds lookup returned HTTP $code"; }
-  ASC_MAX="$(jq -r '[.data[].attributes.version | tonumber? ] | max // 0' "$out")"
-  rm -f "$out"
+  ASC_TMP="$(mktemp -d)" || die "could not create a temp directory"
+  (umask 077 && printf 'Authorization: Bearer %s\n' "$token" > "$ASC_TMP/headers")
+  unset token
+  code="$(asc_get "https://api.appstoreconnect.apple.com/v1/apps?filter[bundleId]=$bundle&fields[apps]=bundleId&limit=1")"
+  [ "$code" = 200 ] || die "App Store Connect app lookup for $bundle returned HTTP $code"
+  app="$(jq -r '.data[0].id // empty' "$ASC_TMP/body")" || die "could not read the App Store Connect app lookup"
+  [ -n "$app" ] || die "App Store Connect has no app with bundle id $bundle"
+  # Newest 200 uploads; the highest number is among them unless 200+ builds were uploaded
+  # after it, which App Store Connect would refuse anyway (numbers must keep rising).
+  code="$(asc_get "https://api.appstoreconnect.apple.com/v1/builds?filter[app]=$app&sort=-uploadedDate&limit=200&fields[builds]=version")"
+  [ "$code" = 200 ] || die "App Store Connect builds lookup returned HTTP $code"
+  ASC_MAX="$(jq -r '[.data[].attributes.version | tonumber? ] | max // 0' "$ASC_TMP/body")" \
+    || die "could not read build numbers from App Store Connect"
+  asc_cleanup
   [[ "$ASC_MAX" =~ ^[0-9]+$ ]] || die "could not read the highest build number from App Store Connect"
 }
 if [ "$WANT_KEY" = 1 ]; then
@@ -177,7 +197,6 @@ NEXT="${BUILD_NUMBER:-$((FLOOR + 1))}"
 cp "$PBX" "$PBX.testflight-bak"
 # Put the old number back on any exit except a finished upload (a dry run, or a failure).
 restore() { if [ -f "$PBX.testflight-bak" ]; then mv "$PBX.testflight-bak" "$PBX"; fi; }
-trap restore EXIT
 
 sed -i '' -E "s/CURRENT_PROJECT_VERSION = [0-9]+;/CURRENT_PROJECT_VERSION = $NEXT;/" "$PBX"
 VERSION="$(grep -oE 'MARKETING_VERSION = [^;]+;' "$PBX" | awk 'NR==1' | sed -E 's/MARKETING_VERSION = (.*);/\1/')"

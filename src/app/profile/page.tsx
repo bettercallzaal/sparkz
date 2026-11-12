@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { SignInButton, useProfile } from "@farcaster/auth-kit";
 import Flame from "@/app/_components/Flame";
-import CreateSparkAsFarcaster from "@/app/_components/CreateSparkAsFarcaster";
 import YourSparks from "@/app/_components/YourSparks";
 import {
   currentFid,
@@ -70,7 +69,12 @@ export default function ProfilePage() {
           <div className="text-lg font-semibold">Signed in</div>
           <div className="text-xs text-muted">fid {serverFid}</div>
           <YourSparks fid={serverFid} />
-          <CreateSparkAsFarcaster fid={serverFid} />
+          <Link
+            href="/start"
+            className="btn-spark mt-5 inline-flex min-h-11 w-full items-center justify-center rounded-lg px-4 text-sm"
+          >
+            New Hearth
+          </Link>
           <SignOutLink onDone={() => setServerFid(null)} />
         </section>
       ) : !isAuthenticated ? (
@@ -142,7 +146,14 @@ export default function ProfilePage() {
           </div>
 
           {fid && <YourSparks fid={fid} />}
-          {fid && <CreateSparkAsFarcaster fid={fid} username={username ?? undefined} />}
+          {fid && (
+            <Link
+              href="/start"
+              className="btn-spark mt-5 inline-flex min-h-11 w-full items-center justify-center rounded-lg px-4 text-sm"
+            >
+              New Hearth
+            </Link>
+          )}
           {serverFid === null && (
             <p className="mt-4 text-xs text-muted">
               {signInError ?? "Verifying your sign-in with the server..."}
@@ -151,9 +162,39 @@ export default function ProfilePage() {
           <SignOutLink onDone={() => setServerFid(null)} />
         </section>
       )}
+
+      {/* About Sparkz: in the iPhone app the header menu and footer are hidden, so the
+          marketing pages live here under Me as one list (design brief A2; App Store
+          guideline 4.2.2: an app should not be mainly marketing pages and links).
+          On the website the header and footer already carry these, so it stays hidden. */}
+      <section className="glass mt-6 hidden p-2 [html[data-shell=ios]_&]:block">
+        <h2 className="px-3 pt-2 pb-1 text-xs font-medium uppercase tracking-wide text-muted">
+          About Sparkz
+        </h2>
+        <ul>
+          {ABOUT.map((l) => (
+            <li key={l.href}>
+              <a
+                href={l.href}
+                className="flex min-h-11 items-center justify-between rounded-md px-3 text-sm active:bg-white/10"
+              >
+                {l.label}
+                <span aria-hidden className="text-muted">&rsaquo;</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
     </main>
   );
 }
+
+const ABOUT = [
+  { href: "/demo", label: "How it works" },
+  { href: "/manifesto", label: "Manifesto" },
+  { href: "/blog", label: "Blog" },
+  { href: "/architecture", label: "Architecture" },
+];
 
 // Ends the server session. auth-kit keeps its own browser state, so reload to
 // clear both.
@@ -166,7 +207,7 @@ function SignOutLink({ onDone }: { onDone: () => void }) {
         onDone();
         window.location.reload();
       }}
-      className="mt-6 text-xs text-muted underline hover:text-foreground"
+      className="mt-6 inline-flex min-h-11 items-center text-sm text-muted underline hover:text-foreground active:text-foreground sm:min-h-0 sm:text-xs"
     >
       Sign out
     </button>

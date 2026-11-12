@@ -115,13 +115,16 @@ h1, h2, h3 {
   transition: transform 620ms ease;
   pointer-events: none;
 }
-.btn-spark:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 16px 44px -10px color-mix(in srgb, var(--gold-bright) 65%, transparent);
-  filter: saturate(1.06) brightness(1.03);
-}
-.btn-spark:hover:not(:disabled)::after {
-  transform: translateX(120%);
+/* Hover lifts only on devices that hover; on touch the :active state below is the feedback. */
+@media (hover: hover) {
+  .btn-spark:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 44px -10px color-mix(in srgb, var(--gold-bright) 65%, transparent);
+    filter: saturate(1.06) brightness(1.03);
+  }
+  .btn-spark:hover:not(:disabled)::after {
+    transform: translateX(120%);
+  }
 }
 .btn-spark:active:not(:disabled) {
   transform: scale(0.98);
@@ -135,10 +138,16 @@ h1, h2, h3 {
   border-radius: 0.75rem;
   transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
 }
-.glass-hover:hover {
+@media (hover: hover) {
+  .glass-hover:hover {
+    border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent),
+      0 10px 34px -14px color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+}
+.glass-hover:active {
   border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent),
-    0 10px 34px -14px color-mix(in srgb, var(--accent) 45%, transparent);
+  transform: scale(0.99);
 }
 
 /* Solid card - for content/primary surfaces. */

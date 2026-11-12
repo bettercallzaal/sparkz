@@ -31,7 +31,8 @@ function Chip({
   return (
     <button
       onClick={onClick}
-      className={`rounded-full border px-3 py-1 text-xs transition-colors ${
+      aria-pressed={on}
+      className={`min-h-11 rounded-full border px-3.5 py-1 text-sm transition-colors active:opacity-80 sm:min-h-0 sm:px-3 sm:text-xs ${
         on
           ? "border-accent bg-accent/15 text-accent"
           : "border-border bg-card text-muted hover:border-accent/50"
@@ -50,6 +51,9 @@ export default function ExplorePage() {
   const [statuses, setStatuses] = useState<Set<string>>(new Set());
   const [flags, setFlags] = useState<Set<string>>(new Set());
   const [sort, setSort] = useState<SortKey>("backers");
+  // Phone: filters live behind one button so the list starts near the top.
+  // From sm up they stay inline as before.
+  const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
     fetch("/api/directory")
@@ -100,6 +104,19 @@ export default function ExplorePage() {
     setFlags(new Set());
   };
   const anyFilter = q || types.size || statuses.size || flags.size;
+  const filterCount = types.size + statuses.size + flags.size;
+
+  // "Rising": the Hearths with the most new backers this week (the same signal as the
+  // Momentum sort). Shown only on the unfiltered view. Pattern credit (design brief
+  // F2): a ranked "rising" row for discovery, taking none of the trading.
+  const rising = useMemo(
+    () =>
+      [...items]
+        .filter((c) => c.newThisWeek > 0)
+        .sort((a, b) => b.newThisWeek - a.newThisWeek)
+        .slice(0, 6),
+    [items],
+  );
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8">
@@ -113,13 +130,23 @@ export default function ExplorePage() {
 
       {/* Filters */}
       <div className="glass mb-4 space-y-3 p-3">
-        <input
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          placeholder="Search name, slug, bio..."
-          className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
-        />
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex gap-2">
+          <input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Search name, slug, bio..."
+            className="min-h-11 w-full min-w-0 rounded-md border border-border bg-background px-3 py-2 text-base sm:min-h-0 sm:text-sm"
+          />
+          <button
+            type="button"
+            onClick={() => setShowFilters((v) => !v)}
+            aria-expanded={showFilters}
+            className="min-h-11 shrink-0 rounded-md border border-border bg-card px-3 text-sm active:bg-white/10 sm:hidden"
+          >
+            Filters{filterCount > 0 ? ` (${filterCount})` : ""}
+          </button>
+        </div>
+        <div className={`${showFilters ? "flex" : "hidden"} flex-wrap gap-1.5 sm:flex`}>
           {TYPES.map((t) => (
             <Chip key={t} on={types.has(t)} onClick={() => toggle(types, t, setTypes)}>
               {t}
@@ -144,7 +171,7 @@ export default function ExplorePage() {
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value as SortKey)}
-              className="rounded-md border border-border bg-card px-2 py-1 text-xs"
+              className="min-h-11 rounded-md border border-border bg-card px-2 py-1 text-sm sm:min-h-0 sm:text-xs"
             >
               <option value="momentum">Momentum this week</option>
               <option value="backers">Most backers</option>
@@ -157,13 +184,33 @@ export default function ExplorePage() {
           <div className="flex items-center gap-3 text-xs text-muted">
             <span>{filtered.length} of {items.length}</span>
             {anyFilter && (
-              <button onClick={clearAll} className="text-accent hover:underline">
+              <button onClick={clearAll} className="min-h-11 px-2 text-accent hover:underline sm:min-h-0 sm:px-0">
                 clear
               </button>
             )}
           </div>
         </div>
       </div>
+
+      {/* Rising this week */}
+      {!loading && !anyFilter && rising.length > 0 && (
+        <section className="mb-5">
+          <h2 className="mb-2 text-sm font-semibold">Rising this week</h2>
+          <ul className="-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1">
+            {rising.map((c) => (
+              <li key={c.id} className="w-40 shrink-0 snap-start">
+                <Link href={`/c/${c.slug}`} className="glass glass-hover flex h-full flex-col gap-2 p-3">
+                  <Avatar name={c.name} className="h-10 w-10 text-sm" />
+                  <span className="line-clamp-2 text-sm font-medium">{c.name}</span>
+                  <span className="mt-auto text-[11px] font-medium text-accent-3">
+                    &uarr; {c.newThisWeek} new this week
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {/* Results */}
       {loading && (

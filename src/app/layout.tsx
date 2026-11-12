@@ -1,10 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
+import "./shell.css";
 import MiniAppReady from "./_components/MiniAppReady";
 import Header from "./_components/Header";
 import Footer from "./_components/Footer";
 import Providers from "./_components/Providers";
+import NativeShell from "./_components/NativeShell";
+import TabBar from "./_components/TabBar";
+import NativeChrome from "./_components/NativeChrome";
 import { canonicalOrigin } from "@/lib/origin";
 
 const ORIGIN = canonicalOrigin();
@@ -28,15 +32,23 @@ const fcMiniapp = JSON.stringify({
 // ZAO type system: Space Grotesk carries both body and headings; JetBrains Mono is the
 // stats/address/receipt face. This is what makes Sparkz visibly share DNA with the rest
 // of the ZAO estate (WaveWarZ, COC Concertz, ZABAL) instead of reading Farcaster-default.
-const spaceGrotesk = Space_Grotesk({
+//
+// Self-hosted (next/font/local) since 12 Nov 2026: next/font/google fetches from
+// fonts.gstatic at build time, and that fetch failed two Vercel builds that day
+// (one of them production). Files are the Latin variable-weight woff2 from
+// Fontsource 5.3.0, SIL Open Font License 1.1 (licence texts next to them).
+const spaceGrotesk = localFont({
+  src: "./fonts/space-grotesk-latin-wght-normal.woff2",
   variable: "--font-display",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: "300 700",
+  display: "swap",
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const jetbrainsMono = localFont({
+  src: "./fonts/jetbrains-mono-latin-wght-normal.woff2",
   variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: "100 800",
+  display: "swap",
 });
 
 // Native shell (Capacitor) and notched iPhones: draw under the status bar and pad with
@@ -96,9 +108,12 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col overflow-x-hidden">
         <Providers>
           <MiniAppReady />
+          <NativeShell />
+          <NativeChrome />
           <Header />
           {children}
           <Footer />
+          <TabBar />
         </Providers>
       </body>
     </html>

@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useProfile } from "@farcaster/auth-kit";
 import Avatar from "./Avatar";
+import Flame from "./Flame";
+import { isShell } from "./NativeShell";
 
 interface Row {
   slug: string;
@@ -20,14 +22,29 @@ interface Row {
 // Luma's Home tab as the hub for your own events, Kickstarter's backings dashboard
 // that surfaces pending actions first.
 //
-// Inside the iPhone app it also sets html[data-mine], which hides the marketing
-// sections below it on the home page (see the wrapper in src/app/page.tsx), so a
+// Inside the iPhone app it also sets html[data-mine] (signed in, or the signed-out
+// sign-in screen), which hides the marketing sections below it on the home page (see the wrapper in src/app/page.tsx), so a
 // signed-in user opens straight onto their own work. On the website the marketing
 // page stays below this section.
+const noopSubscribe = () => () => {};
+
 export default function MyHome() {
   const { isAuthenticated, profile } = useProfile();
   const fid = isAuthenticated ? profile?.fid : undefined;
   const [rows, setRows] = useState<Row[] | null>(null);
+  // Inside the iPhone app, a signed-out first open is a sign-in screen, not the
+  // marketing page (design brief B1). Read after mount so server and client agree.
+  // Server snapshot false, client snapshot from isShell(), so hydration stays clean.
+  const shell = useSyncExternalStore(noopSubscribe, isShell, () => false);
+  const signInScreen = shell && !fid;
+
+  useEffect(() => {
+    if (!signInScreen) return;
+    document.documentElement.dataset.mine = "1";
+    return () => {
+      delete document.documentElement.dataset.mine;
+    };
+  }, [signInScreen]);
 
   useEffect(() => {
     if (!fid) return;
@@ -44,6 +61,30 @@ export default function MyHome() {
       delete document.documentElement.dataset.mine;
     };
   }, [fid]);
+
+  if (signInScreen) {
+    return (
+      <section className="mx-auto flex w-full max-w-sm flex-1 flex-col items-center justify-center px-6 py-16 text-center">
+        <Flame className="h-14 w-14 flame-live" />
+        <h1 className="mt-4 text-2xl font-bold tracking-tight">Sparkz</h1>
+        <p className="mt-2 text-sm text-muted">
+          Your project&apos;s home. Sign in to see your Hearths and back the work you love.
+        </p>
+        <Link
+          href="/profile"
+          className="btn-spark mt-8 inline-flex min-h-12 w-full items-center justify-center rounded-lg px-5 text-sm"
+        >
+          Sign in with Farcaster
+        </Link>
+        <Link
+          href="/explore"
+          className="mt-3 inline-flex min-h-11 items-center px-3 text-sm text-muted active:text-foreground"
+        >
+          Look around first
+        </Link>
+      </section>
+    );
+  }
 
   if (!fid) return null;
 

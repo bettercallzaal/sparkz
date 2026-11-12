@@ -18,13 +18,22 @@ function subscribe(cb: () => void) {
   return () => window.removeEventListener("hashchange", cb);
 }
 
-const readHash = () => window.location.hash;
-const serverHash = () => "";
+// The last tab chosen on this page. Other hashes (the action row's Boost link is
+// #boost) must not reset the tabs to the first one, so a hash that is not a
+// #tab- value keeps whatever was chosen before. Keyed by path so a different
+// Hearth starts on its first tab.
+let last = { path: "", tab: "" };
+
+function readTab() {
+  const { hash, pathname } = window.location;
+  if (hash.startsWith("#tab-")) last = { path: pathname, tab: hash.slice(5) };
+  return last.path === pathname ? last.tab : "";
+}
+const serverTab = () => "";
 
 export default function HearthTabs({ panes }: { panes: HearthPane[] }) {
-  const hash = useSyncExternalStore(subscribe, readHash, serverHash);
-  const fromHash = hash.startsWith("#tab-") ? hash.slice(5) : "";
-  const active = panes.some((p) => p.id === fromHash) ? fromHash : panes[0]?.id;
+  const chosen = useSyncExternalStore(subscribe, readTab, serverTab);
+  const active = panes.some((p) => p.id === chosen) ? chosen : panes[0]?.id;
 
   if (panes.length === 0) return null;
 

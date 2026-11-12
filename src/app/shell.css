@@ -22,3 +22,13 @@ html[data-shell="ios"] .tab-bar {
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
 }
+
+/* Native tab bar up (NativeChrome.tsx sets html[data-native-chrome] once the system
+   UITabBar is drawn): hide the HTML bar and let the plugin inset variable size the
+   body padding. Falls back to the home-bar inset if the variable is missing. */
+html[data-native-chrome] .tab-bar {
+  display: none !important;
+}
+html[data-native-chrome] body {
+  padding-bottom: var(--cap-native-navigation-bottom, env(safe-area-inset-bottom));
+}

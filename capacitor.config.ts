@@ -37,7 +37,9 @@ const config: CapacitorConfig = {
     // Lets the site recognise the app (NativeShell.tsx) even if the native bridge
     // is not injected into the remote page.
     appendUserAgent: "SparkzApp",
-    contentInset: "always",
+    // "never": the native tab bar plugin reports its own insets as CSS variables
+    // (NativeChrome.tsx, shell.css); "always" would add the system inset on top.
+    contentInset: "never",
     backgroundColor: "#0a0908",
     preferredContentMode: "mobile",
     limitsNavigationsToAppBoundDomains: false,

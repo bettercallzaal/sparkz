@@ -4,6 +4,7 @@ import Ecosystem from "./_components/Ecosystem";
 import JoinForm from "./_components/JoinForm";
 import ActivityStrip from "./_components/ActivityStrip";
 import HeroHearthPreview from "./_components/HeroHearthPreview";
+import MyHome from "./_components/MyHome";
 
 export const dynamic = "force-dynamic";
 
@@ -47,6 +48,10 @@ export default async function Home() {
 
   return (
     <main className="w-full min-w-0 flex-1 overflow-x-hidden">
+      <MyHome />
+      {/* Marketing home. In the iPhone app, hidden once you are signed in (MyHome sets
+          html[data-mine]); on the website it always shows. */}
+      <div className="[html[data-shell=ios][data-mine]_&]:hidden">
       {/* Hero - full-bleed background, centered content (no black bars on wide screens) */}
       <section className="relative overflow-hidden">
         <div className="hero-blob hero-blob-v" aria-hidden />
@@ -198,6 +203,7 @@ export default async function Home() {
           <Ecosystem hearths={hearths} />
         </div>
       </section>
+      </div>
     </main>
   );
 }

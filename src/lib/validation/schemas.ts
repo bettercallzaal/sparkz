@@ -80,6 +80,8 @@ export const updateHearthSchema = z.object({
   about: z.string().trim().max(4000).optional(),
   image: optionalUrl,
   tags: z.array(z.string().trim().min(1).max(24)).max(8).optional(),
+  // true puts the Hearth to sleep (dormant), false lights it again (lib/hearth-sleep.ts).
+  asleep: z.boolean().optional(),
   links: z
     .object({
       website: optionalUrl,

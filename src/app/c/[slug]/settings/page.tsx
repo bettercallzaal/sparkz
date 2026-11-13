@@ -5,6 +5,7 @@ import VisibilitySettings from "@/app/_components/VisibilitySettings";
 import LinkFarcasterForm, { type FarcasterLink } from "@/app/_components/LinkFarcasterForm";
 import LinkEmpireForm from "@/app/_components/LinkEmpireForm";
 import EditHearthForm, { type HearthDetails } from "@/app/_components/EditHearthForm";
+import SleepHearthButton from "@/app/_components/SleepHearthButton";
 
 export const dynamic = "force-dynamic";
 
@@ -19,7 +20,7 @@ export default async function HearthSettingsPage({
   const supabase = getServiceClient();
   const { data } = await supabase
     .from("hearths")
-    .select("id, slug, name, bio, owner_fid, metadata, economic_config")
+    .select("id, slug, name, bio, status, owner_fid, metadata, economic_config")
     .eq("slug", slug)
     .maybeSingle();
   if (!data) notFound();
@@ -55,6 +56,7 @@ export default async function HearthSettingsPage({
         hearthId={data.id}
         current={{ empire_id: econ.empire_id ?? null, empire_address: econ.empire_address ?? null }}
       />
+      <SleepHearthButton hearthId={data.id} ownerFid={data.owner_fid ?? null} status={data.status} />
     </main>
   );
 }

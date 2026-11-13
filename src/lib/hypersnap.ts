@@ -5,10 +5,12 @@
 // HYPERSNAP_NODE_URL picks the node; the default is Quilibrium's public read node.
 // Every read is cached by Next's fetch cache for CACHE_SECONDS, so a Hearth page does
 // not hit the node on every view. A node that is down returns null, never throws into
-// a page: callers show what they have without it.
+// a page: callers show what they have without it. A node that accepts the connection and
+// never answers is cut off after NODE_TIMEOUT_MS, so a Hearth page cannot hang on it.
 
 export const DEFAULT_NODE_URL = "https://haatz.quilibrium.com";
 export const CACHE_SECONDS = 300;
+export const NODE_TIMEOUT_MS = 2000;
 
 export function nodeUrl(): string {
   const raw = (process.env.HYPERSNAP_NODE_URL ?? "").trim();
@@ -128,7 +130,11 @@ async function nodeGet<T>(path: string, params: Record<string, string | number>)
   const u = new URL(nodeUrl() + path);
   for (const [k, v] of Object.entries(params)) u.searchParams.set(k, String(v));
   try {
-    const res = await fetch(u, { next: { revalidate: CACHE_SECONDS }, headers: { accept: "application/json" } });
+    const res = await fetch(u, {
+      next: { revalidate: CACHE_SECONDS },
+      headers: { accept: "application/json" },
+      signal: AbortSignal.timeout(NODE_TIMEOUT_MS),
+    });
     if (!res.ok) return null;
     return (await res.json()) as T;
   } catch (err) {
@@ -150,26 +156,12 @@ export async function getProfile(fid: number): Promise<HypersnapProfile | null> 
   return p.username || p.display || p.pfp ? p : null;
 }
 
-export async function getCastsByFid(fid: number, limit = 10): Promise<HypersnapCast[]> {
-  const raw = await nodeGet<{ messages: NodeMessage<CastAddBody>[] }>("/v1/castsByFid", { fid, pageSize: limit, reverse: "true" });
-  return (raw?.messages ?? []).map(parseCast).filter((c): c is HypersnapCast => c !== null);
-}
-
-// A channel's casts, by the channel's parent URL (warpcast.com/~/channel/<id> is what the
-// network stores for the big channels).
-export async function getCastsByChannel(channelUrl: string, limit = 10): Promise<HypersnapCast[]> {
-  const raw = await nodeGet<{ messages: NodeMessage<CastAddBody>[] }>("/v1/castsByParent", { url: channelUrl, pageSize: limit, reverse: "true" });
-  return (raw?.messages ?? []).map(parseCast).filter((c): c is HypersnapCast => c !== null);
-}
-
-export async function getLikeCount(fid: number, hash: string): Promise<number> {
-  const raw = await nodeGet<{ messages: unknown[] }>("/v1/reactionsByCast", { target_fid: fid, target_hash: hash, reaction_type: "Like", pageSize: 1000 });
-  return raw?.messages?.length ?? 0;
-}
-
 export async function getFidByName(name: string): Promise<number | null> {
   const clean = name.replace(/^@/, "").trim().toLowerCase();
   if (!/^[a-z0-9][a-z0-9-]{0,15}$/.test(clean)) return null;
-  const raw = await nodeGet<{ fid?: number }>("/v1/userNameProofByName", { name: clean });
-  return raw?.fid && Number.isInteger(raw.fid) ? raw.fid : null;
+  // Native Hypersnap accounts have fids from 2^32 up and the node sends those as JSON
+  // strings, so coerce before checking. They fit in a JS number.
+  const raw = await nodeGet<{ fid?: number | string }>("/v1/userNameProofByName", { name: clean });
+  const fid = Number(raw?.fid);
+  return Number.isSafeInteger(fid) && fid > 0 ? fid : null;
 }

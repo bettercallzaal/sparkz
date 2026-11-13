@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { parseProfile, parseCast, parseInfo, toIso, nodeUrl, DEFAULT_NODE_URL } from "./hypersnap";
+import { parseProfile, parseCast, parseInfo, toIso, nodeUrl, getNodeInfo, getFidByName, DEFAULT_NODE_URL, NODE_TIMEOUT_MS } from "./hypersnap";
 
 const msg = (type: string, value: string) => ({
   hash: "0x1",
@@ -71,4 +71,34 @@ test("the node URL comes from HYPERSNAP_NODE_URL, trailing slash dropped, else t
   process.env.HYPERSNAP_NODE_URL = "";
   assert.equal(nodeUrl(), DEFAULT_NODE_URL);
   if (before === undefined) delete process.env.HYPERSNAP_NODE_URL; else process.env.HYPERSNAP_NODE_URL = before;
+});
+
+// The node is a third party's box: a read that never answers must come back null in time.
+const withFetch = async (impl: typeof fetch, run: () => Promise<void>) => {
+  const real = globalThis.fetch;
+  globalThis.fetch = impl;
+  try { await run(); } finally { globalThis.fetch = real; }
+};
+
+test("a node that never answers returns null inside the timeout, and the request carries an abort signal", async () => {
+  let signal: AbortSignal | null | undefined;
+  const hang: typeof fetch = (_u, init) => new Promise((_resolve, reject) => {
+    signal = init?.signal;
+    init?.signal?.addEventListener("abort", () => reject(init.signal?.reason ?? new Error("aborted")));
+  });
+  await withFetch(hang, async () => {
+    const t0 = Date.now();
+    assert.equal(await getNodeInfo(), null);
+    assert.ok(Date.now() - t0 < NODE_TIMEOUT_MS + 1500, "came back soon after the timeout");
+    assert.ok(signal instanceof AbortSignal, "fetch was given an abort signal");
+  });
+});
+
+test("a name resolves to a native fid sent as a string, an ordinary fid as a number, and an unsafe one to null", async () => {
+  const answer = (fid: unknown): typeof fetch => async () => new Response(JSON.stringify({ fid }), { status: 200, headers: { "content-type": "application/json" } });
+  await withFetch(answer("4294967297"), async () => assert.equal(await getFidByName("native-one"), 4294967297));
+  await withFetch(answer(19640), async () => assert.equal(await getFidByName("@Zaal"), 19640));
+  await withFetch(answer("99999999999999999999"), async () => assert.equal(await getFidByName("huge"), null));
+  await withFetch(answer(undefined), async () => assert.equal(await getFidByName("nobody"), null));
+  assert.equal(await getFidByName("Not A Name!"), null, "a bad name never reaches the node");
 });

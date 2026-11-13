@@ -6,12 +6,16 @@ at sign-in, Sparks and Boosts as casts and likes) are steps 2 and 3.
 
 ## What reads from the node today
 
-- `src/lib/hypersnap.ts`: profiles (`/v1/userDataByFid`), casts by fid and by channel
-  (`/v1/castsByFid`, `/v1/castsByParent`), like counts (`/v1/reactionsByCast`), fid by
-  name (`/v1/userNameProofByName`), node info (`/v1/info`). Reads are cached for five
-  minutes by Next's fetch cache. A node that is down returns null; pages never wait on it.
+- `src/lib/hypersnap.ts`: profiles (`/v1/userDataByFid`), fid by name
+  (`/v1/userNameProofByName`, native fids from 2^32 included), node info (`/v1/info`).
+  Reads are cached for five minutes by Next's fetch cache and cut off after two seconds
+  (`NODE_TIMEOUT_MS`), so a node that is down or hanging returns null and a page never
+  waits on it. Casts and reactions come with step 3, where they get their callers.
 - `GET /api/hypersnap/health`: which node, whether it answers, version, counts, shard heights.
 - `GET /api/hypersnap/profile?fid=19640` (or `?name=zaal`): a public profile from the node.
+  Public route, so it is capped at 60 reads a minute per IP (per server instance) and
+  carries a five-minute CDN cache header, so a loop over fids cannot use Sparkz to hammer
+  the node.
 - The Hearth page shows the owner's Farcaster profile (pfp, name, @name, bio) from the
   node when the Hearth carries a Farcaster fid.
 

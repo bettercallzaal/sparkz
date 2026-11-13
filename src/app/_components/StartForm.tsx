@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useProfile } from "@farcaster/auth-kit";
+import { useViewer, useViewerProfile } from "@/lib/view-as";
 import { useToast } from "./toast";
 
 // The one "New Hearth" form (used on /start, reached from the app's + tab and from
@@ -21,8 +21,12 @@ const TYPES = [
 export default function StartForm() {
   const router = useRouter();
   const toast = useToast();
-  const { profile } = useProfile();
-  const [fid, setFid] = useState<number | null | undefined>(undefined); // undefined = checking
+  const { profile } = useViewerProfile();
+  const [realFid, setFid] = useState<number | null | undefined>(undefined); // undefined = checking
+  // View-as Guest (lib/view-as.ts) shows the signed-out form. The server still reads
+  // the real session on submit, so the Hearth is created as the real owner.
+  const { viewAs } = useViewer();
+  const fid = viewAs === "guest" ? null : realFid;
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
   const [type, setType] = useState("creator");

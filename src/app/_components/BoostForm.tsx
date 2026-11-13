@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useProfile } from "@farcaster/auth-kit";
+import { useViewerProfile } from "@/lib/view-as";
 import Flame from "./Flame";
 import { useToast } from "./toast";
 
@@ -11,7 +11,7 @@ import { useToast } from "./toast";
 export default function BoostForm({ hearthId }: { hearthId: string }) {
   const router = useRouter();
   const toast = useToast();
-  const { isAuthenticated, profile } = useProfile();
+  const { isAuthenticated, profile } = useViewerProfile();
   const [backer, setBacker] = useState("");
   const [needsBacker, setNeedsBacker] = useState(false);
   const [state, setState] = useState<"idle" | "busy" | "done" | "error">("idle");

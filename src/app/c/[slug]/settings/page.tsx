@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getServiceClient } from "@/lib/supabase/server";
 import VisibilitySettings from "@/app/_components/VisibilitySettings";
+import LinkFarcasterForm, { type FarcasterLink } from "@/app/_components/LinkFarcasterForm";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +17,7 @@ export default async function HearthSettingsPage({
   const supabase = getServiceClient();
   const { data } = await supabase
     .from("hearths")
-    .select("id, slug, name")
+    .select("id, slug, name, metadata")
     .eq("slug", slug)
     .maybeSingle();
   if (!data) notFound();
@@ -34,6 +35,10 @@ export default async function HearthSettingsPage({
       <div className="mt-6">
         <VisibilitySettings hearthId={data.id} slug={data.slug} name={data.name} />
       </div>
+      <LinkFarcasterForm
+        hearthId={data.id}
+        current={((data.metadata ?? {}) as { farcaster?: FarcasterLink }).farcaster ?? null}
+      />
     </main>
   );
 }

@@ -13,14 +13,11 @@ export default function HearthActions({
   name,
   ownerFid,
   channel,
-  hearthId,
 }: {
   slug: string;
   name: string;
   ownerFid: number | null;
   channel?: string;
-  /** Needed for "Make me the owner" on a Hearth with no owner (admins only). */
-  hearthId?: string;
 }) {
   const { isAuthenticated, profile } = useViewerProfile();
   // An admin may edit any Hearth: requireHearthOwner (lib/auth.ts) already lets an
@@ -46,8 +43,8 @@ export default function HearthActions({
           Edit
         </Link>
       )}
-      {admin && ownerFid === null && hearthId && (
-        <ClaimHearthButton hearthId={hearthId} className={btn} />
+      {admin && ownerFid === null && (
+        <ClaimHearthButton slug={slug} className={btn} />
       )}
     </div>
   );

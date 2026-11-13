@@ -16,7 +16,7 @@ async function post(path: string, body: unknown) {
 
 // "Make me the owner": on a Hearth with no owner, an admin signed in with Farcaster
 // takes ownership in one tap (/api/admin/claim-hearth, which only fills an empty owner).
-export function ClaimHearthButton({ hearthId, className }: { hearthId: string; className?: string }) {
+export function ClaimHearthButton({ slug, className }: { slug: string; className?: string }) {
   const router = useRouter();
   const toast = useToast();
   const { admin, fid } = useViewer();
@@ -29,7 +29,7 @@ export function ClaimHearthButton({ hearthId, className }: { hearthId: string; c
       onClick={async () => {
         setBusy(true);
         try {
-          const j = await post("/api/admin/claim-hearth", { hearth_id: hearthId });
+          const j = await post("/api/admin/claim-hearth", { slug });
           if (j.ok) {
             toast("You own this Hearth now.", "success");
             router.refresh();

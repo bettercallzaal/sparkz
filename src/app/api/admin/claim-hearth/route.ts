@@ -5,7 +5,7 @@ import { ok, badRequest, serverError, zodError } from "@/lib/http";
 import { requireAdmin } from "@/lib/auth";
 import { sessionFid } from "@/lib/session";
 
-const schema = z.object({ hearth_id: z.string().uuid() });
+const schema = z.object({ slug: z.string().min(1).max(80).regex(/^[a-z0-9-]+$/) });
 
 // POST /api/admin/claim-hearth - "Make me the owner". An admin signed in with
 // Farcaster becomes the owner of a Hearth that has NO owner yet. Admin only; the FID
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     const { data, error } = await getServiceClient()
       .from("hearths")
       .update({ owner_fid: fid })
-      .eq("id", parsed.data.hearth_id)
+      .eq("slug", parsed.data.slug)
       .is("owner_fid", null)
       .select("slug, owner_fid");
     if (error) throw error;

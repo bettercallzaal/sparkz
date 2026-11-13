@@ -82,6 +82,17 @@ export default function Footer() {
           </a>
           .
         </p>
+        <p className="mt-2 text-xs">
+          Wallet connection: Portions © 2025 Reown, Inc. All Rights Reserved.{" "}
+          <a
+            href="https://github.com/bettercallzaal/sparkz/blob/main/NOTICE"
+            target="_blank"
+            rel="noreferrer"
+            className="hover:underline"
+          >
+            Notices
+          </a>
+        </p>
       </div>
     </footer>
   );

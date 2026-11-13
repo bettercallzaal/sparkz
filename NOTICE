@@ -6,3 +6,18 @@ This product includes software developed as part of The ZAO
 
 Licensed under the Apache License, Version 2.0. See the LICENSE file
 for the full license text.
+
+Third-party components under non-open-source licences
+-----------------------------------------------------
+
+Sparkz uses Reown AppKit (@reown/appkit and related packages) and WalletConnect
+(@walletconnect/* packages) to connect wallets. They are NOT under Apache-2.0 or
+any open-source licence. They are under the Reown Community License Agreement and
+the WalletConnect Community License Agreement, whose texts are in the licenses/
+folder. Those licences require this notice:
+
+  Portions © 2025 Reown, Inc. All Rights Reserved
+
+They also require a connection to Reown's network, and a paid commercial licence
+above 500 monthly active users or 2,500,000 RPC calls a month. Forks that do not
+want these terms can drop AppKit and use wagmi's own connectors.

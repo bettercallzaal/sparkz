@@ -5,6 +5,7 @@ import Link from "next/link";
 import { SignInButton } from "@farcaster/auth-kit";
 import { useViewer, useViewerProfile } from "@/lib/view-as";
 import { ViewAsSwitcher } from "@/app/_components/ViewAs";
+import { SetupZaoButton } from "@/app/_components/AdminSetup";
 import Flame from "@/app/_components/Flame";
 import YourSparks from "@/app/_components/YourSparks";
 import {
@@ -198,6 +199,7 @@ export default function ProfilePage() {
               </li>
             ))}
           </ul>
+          <SetupZaoButton />
         </section>
       )}
 

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useViewer, useViewerProfile } from "@/lib/view-as";
 import ShareButton from "./ShareButton";
+import { ClaimHearthButton } from "./AdminSetup";
 
 // The row of large actions under a Hearth's header: Share, Boost, and Edit for the
 // owner. 44pt targets on phone. Pattern credit (design brief D1): Luma's host tools
@@ -12,11 +13,14 @@ export default function HearthActions({
   name,
   ownerFid,
   channel,
+  hearthId,
 }: {
   slug: string;
   name: string;
   ownerFid: number | null;
   channel?: string;
+  /** Needed for "Make me the owner" on a Hearth with no owner (admins only). */
+  hearthId?: string;
 }) {
   const { isAuthenticated, profile } = useViewerProfile();
   // An admin may edit any Hearth: requireHearthOwner (lib/auth.ts) already lets an
@@ -41,6 +45,9 @@ export default function HearthActions({
         <Link href={`/c/${slug}/settings`} className={btn}>
           Edit
         </Link>
+      )}
+      {admin && ownerFid === null && hearthId && (
+        <ClaimHearthButton hearthId={hearthId} className={btn} />
       )}
     </div>
   );

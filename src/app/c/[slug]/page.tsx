@@ -252,6 +252,7 @@ export default async function HearthPage({
           name={hearth.name}
           ownerFid={hearth.owner_fid}
           channel={fc?.channel ?? undefined}
+          hearthId={hearth.id}
         />
         {hearth.bio && <p className="mt-3 text-sm text-muted">{hearth.bio}</p>}
         {tags.length > 0 && (

@@ -6,6 +6,7 @@ import LinkFarcasterForm, { type FarcasterLink } from "@/app/_components/LinkFar
 import LinkEmpireForm from "@/app/_components/LinkEmpireForm";
 import EditHearthForm, { type HearthDetails } from "@/app/_components/EditHearthForm";
 import SleepHearthButton from "@/app/_components/SleepHearthButton";
+import OwnerBackers from "@/app/_components/OwnerBackers";
 
 export const dynamic = "force-dynamic";
 
@@ -56,6 +57,7 @@ export default async function HearthSettingsPage({
         hearthId={data.id}
         current={{ empire_id: econ.empire_id ?? null, empire_address: econ.empire_address ?? null }}
       />
+      <OwnerBackers hearthId={data.id} ownerFid={data.owner_fid ?? null} />
       <SleepHearthButton hearthId={data.id} ownerFid={data.owner_fid ?? null} status={data.status} />
     </main>
   );

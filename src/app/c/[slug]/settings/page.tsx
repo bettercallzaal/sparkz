@@ -22,6 +22,11 @@ export default async function HearthSettingsPage({
     .eq("slug", slug)
     .maybeSingle();
   if (!data) notFound();
+  // Only the two empire fields reach the client form, not the whole economic_config.
+  const econ = (data.economic_config ?? {}) as {
+    empire_id?: string | null;
+    empire_address?: string | null;
+  };
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-12">
@@ -42,7 +47,7 @@ export default async function HearthSettingsPage({
       />
       <LinkEmpireForm
         hearthId={data.id}
-        current={(data.economic_config ?? null) as { empire_id?: string | null; empire_address?: string | null } | null}
+        current={{ empire_id: econ.empire_id ?? null, empire_address: econ.empire_address ?? null }}
       />
     </main>
   );

@@ -21,7 +21,7 @@ Sparkz is a server-rendered Next.js app (API routes, middleware, Supabase, sign 
 | `package.json` | `@capacitor/core`, `@capacitor/ios`, `@capacitor/cli`, `@capacitor/assets`, `@capacitor/splash-screen` and the `cap:*` scripts |
 | `src/app/layout.tsx`, `src/app/globals.css` | `viewport-fit=cover` plus safe-area padding so the header is not under the notch |
 
-The `ios/` folder (the Xcode project) is NOT in the repo yet. It is generated on the Mac in step 3 and committed from there.
+The `ios/` folder (the Xcode project) is in the repo on `main`, at the build number of the last TestFlight upload. Step 3 only syncs it; `npx cap add ios` is needed only to regenerate it from scratch.
 
 ## Before you start (Zaal, once)
 
@@ -38,7 +38,6 @@ The `ios/` folder (the Xcode project) is NOT in the repo yet. It is generated on
 ```bash
 git clone https://github.com/bettercallzaal/sparkz.git
 cd sparkz
-git checkout ios-testflight   # or main once the PR is merged
 npm install
 ```
 
@@ -50,10 +49,11 @@ npm run cap:assets
 
 Writes every iOS icon and splash size into `ios/` once it exists (run again after step 3 if it complains the platform is missing).
 
-### 3. Create the Xcode project
+### 3. Sync the Xcode project
+
+`ios/` is already in the repo. Run `npx cap add ios` only if you deleted it.
 
 ```bash
-npx cap add ios
 npx cap sync ios
 npm run cap:assets
 npx cap open ios

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useProfile } from "@farcaster/auth-kit";
 import Avatar from "./Avatar";
 import Flame from "./Flame";
+import HearthActivity from "./HearthActivity";
 import { isShell } from "./NativeShell";
 
 interface Row {
@@ -118,6 +119,8 @@ export default function MyHome() {
           </ul>
         </div>
       )}
+
+      <HearthActivity fid={fid} />
 
       {rows === null ? (
         <p className="text-sm text-muted">Loading your Hearths...</p>

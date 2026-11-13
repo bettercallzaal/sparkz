@@ -7,6 +7,7 @@ import LinkEmpireForm from "@/app/_components/LinkEmpireForm";
 import EditHearthForm, { type HearthDetails } from "@/app/_components/EditHearthForm";
 import SleepHearthButton from "@/app/_components/SleepHearthButton";
 import OwnerBackers from "@/app/_components/OwnerBackers";
+import SharePreview from "@/app/_components/SharePreview";
 
 export const dynamic = "force-dynamic";
 
@@ -56,6 +57,12 @@ export default async function HearthSettingsPage({
       <LinkEmpireForm
         hearthId={data.id}
         current={{ empire_id: econ.empire_id ?? null, empire_address: econ.empire_address ?? null }}
+      />
+      <SharePreview
+        slug={data.slug}
+        name={data.name}
+        ownerFid={data.owner_fid ?? null}
+        channel={((data.metadata ?? {}) as { farcaster?: { channel?: string | null } }).farcaster?.channel ?? null}
       />
       <OwnerBackers hearthId={data.id} ownerFid={data.owner_fid ?? null} />
       <SleepHearthButton hearthId={data.id} ownerFid={data.owner_fid ?? null} status={data.status} />

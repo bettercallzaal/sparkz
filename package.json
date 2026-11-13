@@ -27,12 +27,12 @@
     "@reown/appkit-adapter-wagmi": "^1.8.22",
     "@supabase/supabase-js": "^2.109.0",
     "@tanstack/react-query": "^5.101.4",
-    "next": "16.2.10",
+    "next": "16.4.6",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "viem": "^2.55.4",
     "wagmi": "^3.7.3",
-    "zod": "^4.4.3"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",
@@ -42,7 +42,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.2.10",
+    "eslint-config-next": "16.4.6",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

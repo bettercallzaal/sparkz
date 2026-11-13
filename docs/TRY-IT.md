@@ -2,7 +2,19 @@
 
 A checklist for trying the app end to end, on trysparkz.com or in the iPhone app.
 Each step says where to tap and what you should see. It covers what merged on
-12 to 13 Nov 2026 (#352 to #370). Sign in with Farcaster first (Me, then Sign in).
+12 to 13 Nov 2026 (#352 to #374). Sign in with Farcaster first (Me, then Sign in).
+
+**Main is red right now.** The Database workflow on main fails at Migrate until the three
+Production secrets are set (SUPABASE_DB_URL, NEXT_PUBLIC_SUPABASE_URL,
+SUPABASE_SERVICE_ROLE_KEY, in Settings, Environments, Production). Only Zaal can set them.
+Then run Actions, Database, Run workflow on main with seed ticked. Until then the merge lane
+refuses every Sparkz merge. The app itself still works; the buttons in section 1 do the
+seed's job from inside it.
+
+**The iPhone app** is build 4 (version 0.1.0) in TestFlight, for internal testers only.
+App Store Connect read it on 13 Nov as VALID and in beta testing; it expires on 10 Feb 2027.
+Open the TestFlight app on the phone and install Sparkz. The shell loads trysparkz.com, so
+everything below works the same in it, with no new build needed.
 
 Most of these need an admin or owner session. Under the private alpha only the admin
 FID and the listed testers can sign in (`src/lib/alpha-access.ts`).
@@ -53,11 +65,16 @@ Things to check in each view:
 ## 6. What visitors see under the private alpha
 
 - **Boost** on a Hearth, and the **team** form on /zao, say "Sparkz is in private testing" and offer the waitlist up front (#357). They no longer fail after you fill them in.
+- **A pending or rejected Hearth's backers stay hidden** (#369). Signed out, `/api/backers?hearth_id=<its id>` answers 404; as an admin it answers 200. A live Hearth answers 200 for everyone, as before.
+
+## Behind the scenes
+
+- **CI runs the unit tests** on every PR (#354).
+- **Open-source readiness** (#373, #374): the 13 Nov re-scan is folded into `docs/OPEN-SOURCE-READINESS.md`.
 
 ## Not yet in the app
 
-- **Posting to Farcaster from Sparkz with your own key:** Iman's #362 (Hypersnap app key), which needs #344 first.
-- **The ZAO Hearths via the Database workflow** (#355): needs the 3 Production secrets. The button in section 1 does the same job from inside the app.
-- **CI running the unit tests** (#354).
+- **Posting to Farcaster from Sparkz with your own key:** Iman's #362 (Hypersnap app key), which needs #344 first. Both wait on main going green.
+- **The ZAO Hearths via the Database workflow** (#355, merged): the seed runs only once the 3 Production secrets are set (see the top). The button in section 1 does the same job from inside the app.
 
 If something here does not behave as written, that is a bug. Note which step failed.

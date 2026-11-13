@@ -25,3 +25,18 @@ jobs:
         run: npm run lint
       - name: Build
         run: npm run build
+
+  # Unit tests (npm test): Node's own test runner with type stripping, plus the small
+  # resolve hook in scripts/test/. Node 22 because type stripping needs it; the build
+  # job above stays on Node 20 to match Vercel. No test framework is a dependency.
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install (clean, matches Vercel resolution)
+        run: npm install --legacy-peer-deps
+      - name: Unit tests
+        run: npm test

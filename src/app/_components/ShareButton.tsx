@@ -24,8 +24,11 @@ export default function ShareButton({
   const farcaster = async () => {
     const u = url();
     setOpen(false);
-    // Inside a Farcaster Mini App, open the native composer (composeCast). On plain
-    // web, fall back to the Warpcast compose deeplink.
+    // Inside a Farcaster Mini App, open the native composer (composeCast). Elsewhere,
+    // Farcaster's compose link. It points at farcaster.xyz directly: warpcast.com now
+    // answers with a 301 to farcaster.xyz, and on iPhone a universal link reached
+    // through a redirect may open the web page instead of the Farcaster app.
+    // farcaster.xyz's apple-app-site-association claims every path (checked 12 Nov 2026).
     try {
       const { sdk } = await import("@farcaster/miniapp-sdk");
       if (await sdk.isInMiniApp()) {
@@ -40,7 +43,7 @@ export default function ShareButton({
       // SDK unavailable / not in a Mini App - use the deeplink below.
     }
     const compose =
-      `https://warpcast.com/~/compose?text=${encodeURIComponent(text)}` +
+      `https://farcaster.xyz/~/compose?text=${encodeURIComponent(text)}` +
       `&embeds[]=${encodeURIComponent(u)}` +
       (channel ? `&channelKey=${encodeURIComponent(channel)}` : "");
     window.open(compose, "_blank", "noopener,noreferrer");

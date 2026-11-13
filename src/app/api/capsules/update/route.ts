@@ -3,6 +3,7 @@ import { getServiceClient } from "@/lib/supabase/server";
 import { updateHearthSchema } from "@/lib/validation/schemas";
 import { ok, badRequest, serverError, zodError, forbidCrossSite } from "@/lib/http";
 import { requireHearthOwner } from "@/lib/auth";
+import { sleepTransition, type HearthStatus } from "@/lib/hearth-sleep";
 
 // POST /api/capsules/update - the owner (or an admin) edits a Hearth's public
 // details: name, bio, about, picture, tags and links. Before this there was no way to
@@ -27,7 +28,7 @@ export async function POST(req: NextRequest) {
     const supabase = getServiceClient();
     const { data: hearth, error: readErr } = await supabase
       .from("hearths")
-      .select("slug, metadata")
+      .select("slug, status, metadata")
       .eq("id", input.hearth_id)
       .maybeSingle();
     if (readErr) throw readErr;
@@ -55,6 +56,13 @@ export async function POST(req: NextRequest) {
     }
 
     const update: Record<string, unknown> = { metadata: meta };
+    if (input.asleep !== undefined) {
+      const next = sleepTransition(hearth.status as HearthStatus, meta, input.asleep);
+      if (next) {
+        update.status = next.status;
+        update.metadata = next.metadata;
+      }
+    }
     if (input.name !== undefined) update.name = input.name;
     if (input.bio !== undefined) update.bio = input.bio === "" ? null : input.bio;
 

@@ -78,6 +78,8 @@ export default function ExplorePage() {
         return false;
       if (types.size && !types.has(c.type)) return false;
       if (statuses.size && !statuses.has(c.status)) return false;
+      // Asleep (dormant) Hearths stay out of the default view; the "dormant" chip shows them.
+      if (!statuses.size && c.status === "dormant") return false;
       for (const f of flags) {
         if (f === "empire" && !c.empire) return false;
         if (f === "token" && !c.token) return false;

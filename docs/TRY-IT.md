@@ -11,6 +11,11 @@ Then run Actions, Database, Run workflow on main with seed ticked. Until then th
 refuses every Sparkz merge. The app itself still works; the buttons in section 1 do the
 seed's job from inside it.
 
+**The iPhone app** is build 4 (version 0.1.0) in TestFlight, for internal testers only.
+App Store Connect read it on 13 Nov as VALID and in beta testing; it expires on 10 Feb 2027.
+Open the TestFlight app on the phone and install Sparkz. The shell loads trysparkz.com, so
+everything below works the same in it, with no new build needed.
+
 Most of these need an admin or owner session. Under the private alpha only the admin
 FID and the listed testers can sign in (`src/lib/alpha-access.ts`).
 

@@ -183,7 +183,23 @@ export default function ProfilePage() {
               </a>
             </li>
           ))}
+          <li>
+            <a
+              href="https://github.com/bettercallzaal/sparkz/blob/main/NOTICE"
+              target="_blank"
+              rel="noreferrer"
+              className="flex min-h-11 items-center justify-between rounded-md px-3 text-sm active:bg-white/10"
+            >
+              Open-source notices
+              <span aria-hidden className="text-muted">&rsaquo;</span>
+            </a>
+          </li>
         </ul>
+        {/* Required by the Reown and WalletConnect Community Licenses (see NOTICE). The
+            web footer carries the same line; the footer is hidden in the iPhone app. */}
+        <p className="px-3 pt-1 pb-2 text-xs text-muted">
+          Wallet connection: Portions © 2025 Reown, Inc. All Rights Reserved.
+        </p>
       </section>
     </main>
   );

@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useViewerProfile } from "@/lib/view-as";
+import { useViewer, useViewerProfile } from "@/lib/view-as";
+import JoinForm from "./JoinForm";
 import Flame from "./Flame";
 import { useToast } from "./toast";
 
@@ -16,6 +17,7 @@ export default function BoostForm({ hearthId }: { hearthId: string }) {
   const [needsBacker, setNeedsBacker] = useState(false);
   const [state, setState] = useState<"idle" | "busy" | "done" | "error">("idle");
 
+  const { ready, writesOpen } = useViewer();
   const oneTap = isAuthenticated && !!profile?.username && !needsBacker;
 
   const boost = async () => {
@@ -48,6 +50,20 @@ export default function BoostForm({ hearthId }: { hearthId: string }) {
       toast("Could not boost - try again.", "error");
     }
   };
+
+  // Private alpha (lib/alpha-access.ts): /api/boost refuses anyone without a listed
+  // session. Say so before they type, and let them join the waitlist right here.
+  if (ready && !writesOpen) {
+    return (
+      <div className="flex flex-col gap-2 text-sm">
+        <p className="text-muted">
+          Sparkz is in private testing, so Boost is closed for now. Join the waitlist and we
+          will tell you when it opens.
+        </p>
+        <JoinForm interest="sparkz" />
+      </div>
+    );
+  }
 
   if (state === "done") {
     return (

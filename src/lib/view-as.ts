@@ -30,6 +30,8 @@ const EVENT = "sparkz:view-as";
 interface Me {
   fid: number | null;
   admin: boolean;
+  writesOpen: boolean;
+  alphaLock: boolean;
 }
 
 // One /api/auth/me read per page load, shared by every component.
@@ -44,8 +46,11 @@ function loadMe(): Promise<Me> {
       .then((j) => ({
         fid: j?.ok && typeof j.data?.fid === "number" ? j.data.fid : null,
         admin: Boolean(j?.ok && j.data?.admin),
+        // Older servers did not send it: assume open, so nothing is hidden by mistake.
+        writesOpen: j?.ok && typeof j.data?.writesOpen === "boolean" ? j.data.writesOpen : true,
+        alphaLock: Boolean(j?.ok && j.data?.alphaLock),
       }))
-      .catch(() => ({ fid: null, admin: false }))
+      .catch(() => ({ fid: null, admin: false, writesOpen: true, alphaLock: false }))
       .then((me) => {
         meValue = me;
         meListeners.forEach((l) => l());
@@ -102,6 +107,9 @@ export interface Viewer {
   admin: boolean;
   /** True only in the ZAO member view; false or null otherwise (unknown for real). */
   member: boolean | null;
+  /** Public write actions (Boost, join the team) are open to this viewer. Guest view
+   *  shows what a signed-out visitor sees. */
+  writesOpen: boolean;
 }
 
 export function useViewer(): Viewer {
@@ -114,9 +122,20 @@ export function useViewer(): Viewer {
   const realAdmin = Boolean(me?.admin);
   const viewAs: ViewAs = realAdmin ? stored : "self";
   const realFid = me?.fid ?? null;
+  const realWritesOpen = me?.writesOpen ?? true;
 
   if (viewAs === "guest") {
-    return { ready: !!me, realAdmin, viewAs, fid: null, signedIn: false, admin: false, member: false };
+    return {
+      ready: !!me,
+      realAdmin,
+      viewAs,
+      fid: null,
+      signedIn: false,
+      admin: false,
+      member: false,
+      // What a signed-out visitor gets: closed while the alpha lock is on.
+      writesOpen: !(me?.alphaLock ?? false),
+    };
   }
   if (viewAs === "member" || viewAs === "user") {
     return {
@@ -127,6 +146,7 @@ export function useViewer(): Viewer {
       signedIn: realFid !== null,
       admin: false,
       member: viewAs === "member",
+      writesOpen: realWritesOpen,
     };
   }
   return {
@@ -137,6 +157,7 @@ export function useViewer(): Viewer {
     signedIn: realFid !== null,
     admin: realAdmin,
     member: null,
+    writesOpen: realWritesOpen,
   };
 }
 

@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useToast } from "./toast";
+import { useViewer } from "@/lib/view-as";
+import JoinForm from "./JoinForm";
 
 type Spark = { slug: string; name: string };
 
@@ -16,6 +18,7 @@ export default function JoinTeamForm({ sparks }: { sparks: Spark[] }) {
   const [handle, setHandle] = useState("");
   const [state, setState] = useState<"idle" | "busy" | "done" | "error">("idle");
 
+  const viewer = useViewer();
   const walletOk = /^0x[0-9a-fA-F]{40}$/.test(wallet.trim());
   const ready = slug && name.trim() && walletOk;
 
@@ -46,6 +49,20 @@ export default function JoinTeamForm({ sparks }: { sparks: Spark[] }) {
       toast("Could not join. Try again.", "error");
     }
   };
+
+  // Private alpha (lib/alpha-access.ts): /api/team refuses anyone without a listed
+  // session. Say so before they fill in a wallet, and offer the waitlist instead.
+  if (viewer.ready && !viewer.writesOpen) {
+    return (
+      <div className="flex flex-col gap-2 text-sm">
+        <p className="text-muted">
+          Sparkz is in private testing, so team sign-ups are closed for now. Join the
+          waitlist and we will tell you when they open.
+        </p>
+        <JoinForm interest="sparkz" />
+      </div>
+    );
+  }
 
   if (state === "done") {
     const spark = sparks.find((s) => s.slug === slug)?.name ?? "the Hearth";

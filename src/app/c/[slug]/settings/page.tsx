@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getServiceClient } from "@/lib/supabase/server";
 import VisibilitySettings from "@/app/_components/VisibilitySettings";
 import LinkFarcasterForm, { type FarcasterLink } from "@/app/_components/LinkFarcasterForm";
+import LinkEmpireForm from "@/app/_components/LinkEmpireForm";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +18,7 @@ export default async function HearthSettingsPage({
   const supabase = getServiceClient();
   const { data } = await supabase
     .from("hearths")
-    .select("id, slug, name, metadata")
+    .select("id, slug, name, metadata, economic_config")
     .eq("slug", slug)
     .maybeSingle();
   if (!data) notFound();
@@ -38,6 +39,10 @@ export default async function HearthSettingsPage({
       <LinkFarcasterForm
         hearthId={data.id}
         current={((data.metadata ?? {}) as { farcaster?: FarcasterLink }).farcaster ?? null}
+      />
+      <LinkEmpireForm
+        hearthId={data.id}
+        current={(data.economic_config ?? null) as { empire_id?: string | null; empire_address?: string | null } | null}
       />
     </main>
   );

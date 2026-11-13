@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useProfile } from "@farcaster/auth-kit";
+import { useViewerProfile } from "@/lib/view-as";
 
 // Compact header auth chip. When signed out, a link to /profile (where the full
 // Sign-In-With-Farcaster button lives). When signed in, the user's pfp -> /profile.
 export default function HeaderAuth() {
-  const { isAuthenticated, profile } = useProfile();
+  const { isAuthenticated, profile } = useViewerProfile();
 
   if (isAuthenticated && profile?.username) {
     return (

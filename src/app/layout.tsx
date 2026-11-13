@@ -9,6 +9,7 @@ import Providers from "./_components/Providers";
 import NativeShell from "./_components/NativeShell";
 import TabBar from "./_components/TabBar";
 import NativeChrome from "./_components/NativeChrome";
+import { ViewAsBar } from "./_components/ViewAs";
 import { canonicalOrigin } from "@/lib/origin";
 
 const ORIGIN = canonicalOrigin();
@@ -110,6 +111,7 @@ export default function RootLayout({
           <MiniAppReady />
           <NativeShell />
           <NativeChrome />
+          <ViewAsBar />
           <Header />
           {children}
           <Footer />

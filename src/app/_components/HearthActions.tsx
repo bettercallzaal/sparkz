@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useProfile } from "@farcaster/auth-kit";
+import { useViewer, useViewerProfile } from "@/lib/view-as";
 import ShareButton from "./ShareButton";
 
 // The row of large actions under a Hearth's header: Share, Boost, and Edit for the
@@ -18,8 +18,11 @@ export default function HearthActions({
   ownerFid: number | null;
   channel?: string;
 }) {
-  const { isAuthenticated, profile } = useProfile();
-  const isOwner = !!ownerFid && isAuthenticated && profile?.fid === ownerFid;
+  const { isAuthenticated, profile } = useViewerProfile();
+  // An admin may edit any Hearth: requireHearthOwner (lib/auth.ts) already lets an
+  // admin session through on the server, so this only shows the button it allows.
+  const { admin } = useViewer();
+  const isOwner = admin || (!!ownerFid && isAuthenticated && profile?.fid === ownerFid);
   const btn =
     "inline-flex min-h-11 flex-1 items-center justify-center rounded-lg border border-border bg-card px-4 text-sm font-medium active:bg-white/10 sm:flex-none";
 

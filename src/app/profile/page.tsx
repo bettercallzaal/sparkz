@@ -51,15 +51,21 @@ export default function ProfilePage() {
         <Link href="/" className="text-sm text-muted hover:text-foreground">
           &larr; Sparkz
         </Link>
-        <span className="text-sm font-medium">Your identity</span>
+
       </div>
 
       <header className="mb-8 flex items-center gap-3">
         <Flame className="h-8 w-8" />
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">ZAO profile</h1>
+          {/* Design brief G1: this page is "Me" in the tab bar, so it says Me once you
+              are signed in, and plainly asks you to sign in when you are not. */}
+          <h1 className="text-2xl font-semibold tracking-tight">
+            {isAuthenticated || serverFid !== null ? "Me" : "Sign in"}
+          </h1>
           <p className="text-sm text-muted">
-            Sign in with Farcaster - your identity across Sparkz.
+            {isAuthenticated || serverFid !== null
+              ? "Your Hearths and your Farcaster identity."
+              : "Sign in with Farcaster - your identity across Sparkz."}
           </p>
         </div>
       </header>

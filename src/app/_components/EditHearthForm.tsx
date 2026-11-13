@@ -50,6 +50,36 @@ export default function EditHearthForm({
     Object.fromEntries(LINK_KEYS.map((k) => [k, current.links?.[k] ?? ""])) as Record<LinkKey, string>,
   );
   const [busy, setBusy] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
+  // Upload a picture from the phone or computer: /api/upload with this Hearth's id,
+  // which lets the owner (or an admin) upload. The returned public https URL fills the
+  // Picture field; Save details stores it.
+  const upload = async (file: File | undefined) => {
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      toast("Pictures can be up to 2 MB.", "error");
+      return;
+    }
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("hearth_id", hearthId);
+      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      const json = await res.json();
+      if (json.ok && typeof json.data?.url === "string") {
+        setImage(json.data.url);
+        toast("Picture uploaded. Press Save details to keep it.", "success");
+      } else {
+        toast(json.error ?? "Could not upload. Try again.", "error");
+      }
+    } catch {
+      toast("Could not upload. Try again.", "error");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const canEdit = admin || (fid !== null && ownerFid !== null && fid === ownerFid);
   if (!canEdit) return null;
@@ -121,8 +151,18 @@ export default function EditHearthForm({
           />
         </label>
         <label className="text-xs text-muted">
-          Picture (https link to an image)
+          Picture (upload one, or paste an https link)
           <input value={image} onChange={(e) => setImage(e.target.value)} placeholder="https://..." className={input} />
+        </label>
+        <label className="inline-flex min-h-11 w-fit cursor-pointer items-center rounded-md border border-border px-4 text-sm active:bg-white/10">
+          {uploading ? "Uploading..." : "Upload a picture"}
+          <input
+            type="file"
+            accept="image/png,image/jpeg,image/webp,image/gif"
+            className="sr-only"
+            disabled={uploading}
+            onChange={(e) => upload(e.target.files?.[0])}
+          />
         </label>
         <label className="text-xs text-muted">
           Tags (comma separated, up to 8)

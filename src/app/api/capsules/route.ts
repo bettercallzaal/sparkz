@@ -8,12 +8,26 @@ import type { Hearth } from "@/lib/supabase/types";
 
 export async function GET(req: NextRequest) {
   try {
-    const wantPending = new URL(req.url).searchParams.get("review") === "pending";
+    const review = new URL(req.url).searchParams.get("review");
+    const wantPending = review === "pending";
+    // Admin-only views are gated before any database call.
+    if (wantPending || review === "all") {
+      const denied = requireAdmin(req);
+      if (denied) return denied;
+    }
     const supabase = getServiceClient();
     let query = supabase
       .from("hearths")
       .select("*")
       .order("created_at", { ascending: false });
+
+    if (review === "all") {
+      // Every Hearth for the admin "All Hearths" page: pending, rejected, asleep and
+      // ownerless included. Full rows, like the review queue below.
+      const { data, error } = await query;
+      if (error) throw error;
+      return ok(data);
+    }
 
     if (wantPending) {
       // The operator's review queue - admin only. Full rows (incl owner_email).

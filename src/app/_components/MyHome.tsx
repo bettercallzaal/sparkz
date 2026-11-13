@@ -6,6 +6,7 @@ import { useViewerProfile } from "@/lib/view-as";
 import Avatar from "./Avatar";
 import Flame from "./Flame";
 import HearthActivity from "./HearthActivity";
+import MyBackings from "./MyBackings";
 import { isShell } from "./NativeShell";
 
 interface Row {
@@ -161,6 +162,8 @@ export default function MyHome() {
           ))}
         </ul>
       )}
+
+      <MyBackings fid={fid} />
     </section>
   );
 }

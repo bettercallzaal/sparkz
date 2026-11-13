@@ -26,7 +26,7 @@ Open a Hearth, then **Edit**.
 
 - **Details** (#363): name, one-line bio, about, tags, links. Links and the picture must be https.
 - **Upload a picture** (#364): pick a photo (png, jpeg, webp or gif, up to 2 MB). The Picture field fills; then press Save details.
-- **How it looks when shared** (#370): the card the link makes, a copy button, and Share. On iPhone, Share then Farcaster opens the Farcaster app (#360).
+- **How it looks when shared** (#370): the card the link makes, a copy button, and Share. On iPhone, Share then Farcaster should open the Farcaster app (#360). Nobody has tried this on a phone yet, so check it.
 - **Backers** (#368): totals (backers, boosts, the last 7 days) and the newest backers.
 - **Farcaster** and **Empire Builder treasury** (#358, admins): link the Hearth's FID, @username and channel, or its empire.
 - **Put to sleep** / **Light it again** (#365): takes the Hearth off Explore's main list without deleting anything. Explore's "dormant" chip still shows it.
@@ -48,7 +48,7 @@ Open a Hearth, then **Edit**.
 Things to check in each view:
 
 - **Guest:** Home shows the signed-out page, there are no Edit buttons, and Boost shows "private testing, join the waitlist" (#357).
-- **Signed in:** your Hearths show, but the Admin card and All Hearths do not.
+- **Signed in:** your Hearths show, but the Admin card on Me is hidden. /admin and /admin/hearths still open if you type the address, because they check your real session, not the View as mode. That is expected, not a bug.
 
 ## 6. What visitors see under the private alpha
 

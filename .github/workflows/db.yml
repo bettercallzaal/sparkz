@@ -8,7 +8,8 @@ name: Database
 #   SUPABASE_DB_URL             Postgres connection string (Project settings > Database, session pooler)
 #   NEXT_PUBLIC_SUPABASE_URL    the project URL (same value Vercel has)
 #   SUPABASE_SERVICE_ROLE_KEY   the service-role key (same value Vercel has)
-# Without SUPABASE_DB_URL the job prints what it would do and exits green.
+# Without SUPABASE_DB_URL (or, for the seed, SUPABASE_SERVICE_ROLE_KEY) the job lists
+# the pending migrations and FAILS red, so a run that applied nothing never shows green.
 on:
   push:
     branches: [main]

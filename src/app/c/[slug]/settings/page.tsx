@@ -4,6 +4,7 @@ import { getServiceClient } from "@/lib/supabase/server";
 import VisibilitySettings from "@/app/_components/VisibilitySettings";
 import LinkFarcasterForm, { type FarcasterLink } from "@/app/_components/LinkFarcasterForm";
 import LinkEmpireForm from "@/app/_components/LinkEmpireForm";
+import EditHearthForm, { type HearthDetails } from "@/app/_components/EditHearthForm";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +19,7 @@ export default async function HearthSettingsPage({
   const supabase = getServiceClient();
   const { data } = await supabase
     .from("hearths")
-    .select("id, slug, name, metadata, economic_config")
+    .select("id, slug, name, bio, owner_fid, metadata, economic_config")
     .eq("slug", slug)
     .maybeSingle();
   if (!data) notFound();
@@ -33,11 +34,16 @@ export default async function HearthSettingsPage({
       <Link href={`/c/${data.slug}`} className="text-sm text-muted hover:text-foreground">
         &lt;- {data.name}
       </Link>
-      <h1 className="mt-4 text-2xl font-bold tracking-tight">Manage integrations</h1>
+      <h1 className="mt-4 text-2xl font-bold tracking-tight">Manage {data.name}</h1>
       <p className="mt-2 text-sm text-muted">
         Choose which integrations show on {data.name}&apos;s public page. Toggle one to
         Hidden and it disappears from the Hearth; toggle it Visible to bring it back.
       </p>
+      <EditHearthForm
+        hearthId={data.id}
+        ownerFid={data.owner_fid ?? null}
+        current={{ name: data.name, bio: data.bio ?? null, ...pickDetails(data.metadata) }}
+      />
       <div className="mt-6">
         <VisibilitySettings hearthId={data.id} slug={data.slug} name={data.name} />
       </div>
@@ -51,4 +57,15 @@ export default async function HearthSettingsPage({
       />
     </main>
   );
+}
+
+// Only the editable display fields go to the client form.
+function pickDetails(metadata: unknown): Omit<HearthDetails, "name" | "bio"> {
+  const m = (metadata ?? {}) as Record<string, unknown>;
+  return {
+    about: typeof m.about === "string" ? m.about : undefined,
+    image: typeof m.image === "string" ? m.image : undefined,
+    tags: Array.isArray(m.tags) ? m.tags.filter((t): t is string => typeof t === "string") : undefined,
+    links: m.links && typeof m.links === "object" ? (m.links as HearthDetails["links"]) : undefined,
+  };
 }

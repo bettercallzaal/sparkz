@@ -61,6 +61,37 @@ export const approveDraftSchema = z.object({
   lessons: z.string().max(2000).optional(),
 });
 
+// Owner or admin edits a Hearth's public details (POST /api/capsules/update). Only
+// these fields can change; review status, ownership and economics are not editable
+// here. Every URL must be https: the public page renders links as href and the picture
+// as an image source, so javascript: and data: URLs are refused.
+const httpsUrl = z
+  .string()
+  .trim()
+  .max(500)
+  .url()
+  .refine((u) => u.startsWith("https://"), "must start with https://");
+const optionalUrl = z.union([httpsUrl, z.literal("")]).optional();
+
+export const updateHearthSchema = z.object({
+  hearth_id: z.string().uuid(),
+  name: z.string().trim().min(1).max(120).optional(),
+  bio: z.string().trim().max(280).optional(),
+  about: z.string().trim().max(4000).optional(),
+  image: optionalUrl,
+  tags: z.array(z.string().trim().min(1).max(24)).max(8).optional(),
+  links: z
+    .object({
+      website: optionalUrl,
+      github: optionalUrl,
+      docs: optionalUrl,
+      x: optionalUrl,
+      farcaster: optionalUrl,
+      discord: optionalUrl,
+    })
+    .optional(),
+});
+
 export const linkFarcasterSchema = z
   .object({
     hearth_id: z.string().uuid(),

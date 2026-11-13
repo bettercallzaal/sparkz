@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useViewer, useViewerProfile } from "@/lib/view-as";
 import ShareButton from "./ShareButton";
+import { ClaimHearthButton } from "./AdminSetup";
 
 // The row of large actions under a Hearth's header: Share, Boost, and Edit for the
 // owner. 44pt targets on phone. Pattern credit (design brief D1): Luma's host tools
@@ -41,6 +42,9 @@ export default function HearthActions({
         <Link href={`/c/${slug}/settings`} className={btn}>
           Edit
         </Link>
+      )}
+      {admin && ownerFid === null && (
+        <ClaimHearthButton slug={slug} className={btn} />
       )}
     </div>
   );

@@ -126,12 +126,12 @@ export function parseInfo(raw: {
 
 // --- the node ---
 
-async function nodeGet<T>(path: string, params: Record<string, string | number>): Promise<T | null> {
+async function nodeGet<T>(path: string, params: Record<string, string | number>, fresh = false): Promise<T | null> {
   const u = new URL(nodeUrl() + path);
   for (const [k, v] of Object.entries(params)) u.searchParams.set(k, String(v));
   try {
     const res = await fetch(u, {
-      next: { revalidate: CACHE_SECONDS },
+      ...(fresh ? { cache: "no-store" as const } : { next: { revalidate: CACHE_SECONDS } }),
       headers: { accept: "application/json" },
       signal: AbortSignal.timeout(NODE_TIMEOUT_MS),
     });
@@ -164,4 +164,14 @@ export async function getFidByName(name: string): Promise<number | null> {
   const raw = await nodeGet<{ fid?: number | string }>("/v1/userNameProofByName", { name: clean });
   const fid = Number(raw?.fid);
   return Number.isSafeInteger(fid) && fid > 0 ? fid : null;
+}
+
+// Does the node list this Ed25519 public key (0x + 64 hex) as an active signer for the fid.
+// Read fresh: the browser asks right after a KEY_ADD. A node that is down reads as not listed.
+export async function signerListed(fid: number, signer: string): Promise<boolean> {
+  if (!Number.isSafeInteger(fid) || fid <= 0 || !/^0x[0-9a-f]{64}$/i.test(signer)) return false;
+  // the node answers { signer: { key, fid, source, addedAt, ... } } for a live key, an error otherwise
+  const raw = await nodeGet<{ signer?: { key?: string; fid?: number | string; removedAt?: number } }>("/v1/signer", { fid, signer }, true);
+  const s = raw?.signer;
+  return Boolean(s?.key && s.key.toLowerCase() === signer.toLowerCase() && Number(s.fid) === fid && !s.removedAt);
 }

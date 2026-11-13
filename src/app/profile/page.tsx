@@ -5,6 +5,7 @@ import Link from "next/link";
 import { SignInButton, useProfile } from "@farcaster/auth-kit";
 import Flame from "@/app/_components/Flame";
 import YourSparks from "@/app/_components/YourSparks";
+import HypersnapSigner from "@/app/_components/HypersnapSigner";
 import {
   currentFid,
   exchangeSiwf,
@@ -124,6 +125,8 @@ export default function ProfilePage() {
           </div>
 
           {bio && <p className="mt-4 text-sm text-muted">{bio}</p>}
+
+          {fid ? <HypersnapSigner fid={fid} custody={custody ?? null} /> : null}
 
           <div className="mt-4 space-y-1 text-xs text-muted">
             {custody && (

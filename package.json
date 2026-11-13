@@ -23,6 +23,7 @@
     "@farcaster/auth-kit": "^0.8.2",
     "@farcaster/miniapp-sdk": "^0.3.0",
     "@farcaster/miniapp-wagmi-connector": "^2.0.0",
+    "@noble/hashes": "^1.4.0",
     "@reown/appkit": "^1.8.22",
     "@reown/appkit-adapter-wagmi": "^1.8.22",
     "@supabase/supabase-js": "^2.109.0",

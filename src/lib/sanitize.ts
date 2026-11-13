@@ -25,3 +25,10 @@ export function maskBacker(id: string): string {
 // self-serve sparks. Use everywhere a public read lists hearths.
 export const PUBLIC_REVIEW_FILTER =
   "metadata->>review.is.null,metadata->>review.eq.approved";
+
+// The same rule for one Hearth already read: public when it has no review flag
+// (operator-created) or is approved. Pending and rejected are not public.
+export function isPublicReview(metadata: unknown): boolean {
+  const review = (metadata as { review?: unknown } | null | undefined)?.review;
+  return review === undefined || review === null || review === "approved";
+}

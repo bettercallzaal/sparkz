@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
-import { useProfile } from "@farcaster/auth-kit";
+import { useViewerProfile } from "@/lib/view-as";
 import Avatar from "./Avatar";
 import Flame from "./Flame";
 import { isShell } from "./NativeShell";
@@ -29,7 +29,7 @@ interface Row {
 const noopSubscribe = () => () => {};
 
 export default function MyHome() {
-  const { isAuthenticated, profile } = useProfile();
+  const { isAuthenticated, profile } = useViewerProfile();
   const fid = isAuthenticated ? profile?.fid : undefined;
   const [rows, setRows] = useState<Row[] | null>(null);
   // Inside the iPhone app, a signed-out first open is a sign-in screen, not the

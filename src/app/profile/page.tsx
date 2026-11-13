@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { SignInButton, useProfile } from "@farcaster/auth-kit";
+import { SignInButton } from "@farcaster/auth-kit";
+import { useViewer, useViewerProfile } from "@/lib/view-as";
+import { ViewAsSwitcher } from "@/app/_components/ViewAs";
 import Flame from "@/app/_components/Flame";
 import YourSparks from "@/app/_components/YourSparks";
 import {
-  currentAdmin,
   currentFid,
   exchangeSiwf,
   fetchNonce,
@@ -19,21 +20,23 @@ export default function ProfilePage() {
   const {
     isAuthenticated,
     profile: { fid, username, displayName, bio, pfpUrl, custody, verifications },
-  } = useProfile();
+  } = useViewerProfile();
 
   // The verified server session (lib/session.ts). auth-kit's state above is
   // browser-only; owner actions on the server need this.
-  const [serverFid, setServerFid] = useState<number | null>(null);
+  const [realServerFid, setServerFid] = useState<number | null>(null);
   // Admin is decided by the server from the verified session (lib/auth.ts
-  // isAdminSession, allowlist in lib/admin-identities.ts). This flag only decides
-  // whether to show the admin card; every admin route checks again on the server.
-  const [admin, setAdmin] = useState(false);
+  // isAdminSession, allowlist in lib/admin-identities.ts), read through useViewer.
+  // It only decides what to show; every admin route checks again on the server.
+  // View-as (lib/view-as.ts) can hide it and the session from the UI, never grant.
+  const viewer = useViewer();
+  const admin = viewer.admin;
+  const serverFid = viewer.viewAs === "guest" ? null : realServerFid;
   const [miniApp, setMiniApp] = useState(false);
   const [signInError, setSignInError] = useState<string | null>(null);
 
   useEffect(() => {
     currentFid().then(setServerFid).catch(() => setServerFid(null));
-    currentAdmin().then(setAdmin).catch(() => setAdmin(false));
     inMiniApp().then(setMiniApp);
   }, []);
 
@@ -174,6 +177,8 @@ export default function ProfilePage() {
           <SignOutLink onDone={() => setServerFid(null)} />
         </section>
       )}
+
+      <ViewAsSwitcher />
 
       {admin && (
         <section className="glass mt-6 p-2">

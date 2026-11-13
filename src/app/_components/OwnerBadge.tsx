@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useProfile } from "@farcaster/auth-kit";
+import { useViewerProfile } from "@/lib/view-as";
 
 // Shows a subtle "you own this" chip when the signed-in Farcaster user is the
 // Hearth's owner (owner_fid match). Progressive: invisible to everyone else.
 export default function OwnerBadge({ ownerFid }: { ownerFid: number | null }) {
-  const { isAuthenticated, profile } = useProfile();
+  const { isAuthenticated, profile } = useViewerProfile();
   if (!ownerFid || !isAuthenticated || profile?.fid !== ownerFid) return null;
   return (
     <Link

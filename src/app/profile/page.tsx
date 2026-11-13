@@ -6,6 +6,7 @@ import { SignInButton, useProfile } from "@farcaster/auth-kit";
 import Flame from "@/app/_components/Flame";
 import YourSparks from "@/app/_components/YourSparks";
 import {
+  currentAdmin,
   currentFid,
   exchangeSiwf,
   fetchNonce,
@@ -23,11 +24,16 @@ export default function ProfilePage() {
   // The verified server session (lib/session.ts). auth-kit's state above is
   // browser-only; owner actions on the server need this.
   const [serverFid, setServerFid] = useState<number | null>(null);
+  // Admin is decided by the server from the verified session (lib/auth.ts
+  // isAdminSession, allowlist in lib/admin-identities.ts). This flag only decides
+  // whether to show the admin card; every admin route checks again on the server.
+  const [admin, setAdmin] = useState(false);
   const [miniApp, setMiniApp] = useState(false);
   const [signInError, setSignInError] = useState<string | null>(null);
 
   useEffect(() => {
     currentFid().then(setServerFid).catch(() => setServerFid(null));
+    currentAdmin().then(setAdmin).catch(() => setAdmin(false));
     inMiniApp().then(setMiniApp);
   }, []);
 
@@ -169,6 +175,27 @@ export default function ProfilePage() {
         </section>
       )}
 
+      {admin && (
+        <section className="glass mt-6 p-2">
+          <h2 className="px-3 pt-2 pb-1 text-xs font-medium uppercase tracking-wide text-accent">
+            Admin
+          </h2>
+          <ul>
+            {ADMIN_LINKS.map((l) => (
+              <li key={l.href}>
+                <Link
+                  href={l.href}
+                  className="flex min-h-11 items-center justify-between rounded-md px-3 text-sm active:bg-white/10"
+                >
+                  {l.label}
+                  <span aria-hidden className="text-muted">&rsaquo;</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       {/* About Sparkz: in the iPhone app the header menu and footer are hidden, so the
           marketing pages live here under Me as one list (design brief A2; App Store
           guideline 4.2.2: an app should not be mainly marketing pages and links).
@@ -210,6 +237,16 @@ export default function ProfilePage() {
     </main>
   );
 }
+
+// Shown only to an admin session. The pages call admin-only API routes, which run
+// requireAdmin on the server.
+const ADMIN_LINKS = [
+  { href: "/admin", label: "Admin dashboard" },
+  { href: "/admin/pending", label: "Pending approvals" },
+  { href: "/admin/new", label: "New Hearth (operator)" },
+  { href: "/admin/add-repo", label: "Add a repo Hearth" },
+  { href: "/admin/empire", label: "Empire tools" },
+];
 
 const ABOUT = [
   { href: "/demo", label: "How it works" },

@@ -63,6 +63,11 @@ jobs:
           SPARKZ_DATABASE_URL: ${{ secrets.SPARKZ_DATABASE_URL }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          EVENT: ${{ github.event_name }}
+          SEED_INPUT: ${{ inputs.seed }}
         run: |
-          if [ -z "$SPARKZ_DATABASE_URL" ] && [ -z "$SUPABASE_SERVICE_ROLE_KEY" ]; then echo "::error::Neither SPARKZ_DATABASE_URL (Neon) nor SUPABASE_SERVICE_ROLE_KEY is set in the Production environment: seed not run"; exit 1; fi
+          # scripts/seed-gate.sh decides: on Neon only a manual run with seed ticked seeds
+          # (never a push, which could race the Supabase copy); red if no database is set.
+          gate="$(bash scripts/seed-gate.sh)" || { echo "::error::no database secret set in the Production environment: seed not run"; exit 1; }
+          if [ "$gate" != "run" ]; then echo "::notice::seed ${gate}"; exit 0; fi
           node --experimental-strip-types --no-warnings=ExperimentalWarning scripts/seed-zao-projects.mjs

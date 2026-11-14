@@ -4,14 +4,15 @@
 // Neon. It only READS from Supabase.
 //
 //   vercel env pull --environment=production .env.copy     (Supabase keys + STORAGE_* Neon URLs)
-//   node --env-file=.env.copy scripts/copy-supabase-to-neon.mjs --dry-run
-//   node --env-file=.env.copy scripts/copy-supabase-to-neon.mjs                  (copy rows)
-//   node --env-file=.env.copy scripts/copy-supabase-to-neon.mjs --with-images    (also move pictures to Blob)
+//   node --env-file=.env.copy scripts/copy-supabase-to-neon.mjs                          (dry run: reads and counts)
+//   node --env-file=.env.copy scripts/copy-supabase-to-neon.mjs --apply                  (copy rows)
+//   node --env-file=.env.copy scripts/copy-supabase-to-neon.mjs --apply --with-images    (also move pictures to Blob)
 //   rm .env.copy                                              (it holds production secrets)
 //
 // Safe to re-run: every row keeps its id and is inserted with ON CONFLICT (id) DO NOTHING,
 // so a row already on Neon is never overwritten. Tables go parents first, so every
-// foreign key resolves. --dry-run reads and counts, and writes nothing anywhere.
+// foreign key resolves. Without --apply it is a dry run: it reads and counts, and writes
+// nothing anywhere. It refuses to write to any host that is not Neon (*.neon.tech).
 //
 // --with-images: any Supabase Storage public URL found inside a Hearth's metadata or
 // economic_config (pictures, logos) is downloaded, uploaded to the public Blob store
@@ -20,9 +21,10 @@
 
 import { createClient } from "@supabase/supabase-js";
 import { neon } from "@neondatabase/serverless";
+import { neonHost, parseCopyArgs } from "./lib/copy-options.mjs";
 
-const DRY_RUN = process.argv.includes("--dry-run");
-const WITH_IMAGES = process.argv.includes("--with-images");
+const { apply, withImages: WITH_IMAGES } = parseCopyArgs(process.argv.slice(2));
+const DRY_RUN = !apply;
 
 const supaUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supaKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -35,6 +37,10 @@ if (!supaUrl || !supaKey) {
 }
 if (!DRY_RUN && !neonUrl) {
   console.error("Missing STORAGE_DATABASE_URL_UNPOOLED (or SPARKZ_DATABASE_URL): the Neon database to write to.");
+  process.exit(1);
+}
+if (neonUrl && !neonHost(neonUrl)) {
+  console.error("Refusing: the target database is not on Neon (*.neon.tech). Check SPARKZ_DATABASE_URL / STORAGE_DATABASE_URL_UNPOOLED.");
   process.exit(1);
 }
 if (WITH_IMAGES && !DRY_RUN && !process.env.BLOB_READ_WRITE_TOKEN) {
@@ -124,7 +130,11 @@ async function insertRows(table, rows) {
   return inserted;
 }
 
-console.log(DRY_RUN ? "DRY RUN: reads Supabase, writes nothing." : "COPY: Supabase -> Neon (existing ids are kept, never overwritten).");
+console.log(
+  DRY_RUN
+    ? "DRY RUN (add --apply to copy): reads Supabase, writes nothing."
+    : `COPY: Supabase -> Neon host ${neonHost(neonUrl)} (existing ids are kept, never overwritten).`,
+);
 
 let failed = false;
 for (const table of TABLES) {

@@ -60,7 +60,7 @@ export default async function Home() {
               <source src="/brand/sparkz-logo.mp4" type="video/mp4" />
             </video>
             <h1 className="mt-5 max-w-2xl text-[clamp(2rem,6.5vw,3.4rem)] font-bold leading-[1.02] tracking-tight">
-              Back the album, <span className="spark-text">not a coin.</span>
+              Back the album, <span className="spark-text whitespace-nowrap">not a coin.</span>
             </h1>
             <p className="mt-4 max-w-xl text-lg leading-relaxed text-muted">
               Sparkz gives every ZAO project a Hearth: one home for the people who back it,

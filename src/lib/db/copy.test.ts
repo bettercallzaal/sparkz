@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { COPY_TABLES, copySupabaseToNeon, insertStatement, replaceUrls, slugClashes, storageUrls } from "./copy";
+import { COPY_TABLES, copySupabaseToNeon, insertStatement, replaceUrls, runCopy, slugClashes, storageUrls, type CopyDeps } from "./copy";
 
 const PIC = "https://abc.supabase.co/storage/v1/object/public/empire-logos/x.png";
 
@@ -55,4 +55,73 @@ test("with no keys in the environment it stops before touching any database", as
   } finally {
     process.env = saved;
   }
+});
+
+// Fake outside world: Supabase tables in memory, every Neon write and Blob upload recorded.
+function fakeDeps(opts: { failRead?: string; neonHearths?: { id: string; slug: string }[] } = {}) {
+  const inserts: string[] = [];
+  const uploads: string[] = [];
+  const tables: Record<string, Record<string, unknown>[]> = {
+    hearths: [{ id: "h1", slug: "zabal", metadata: { picture: PIC }, economic_config: {} }],
+    hearth_backers: [{ id: "b1", hearth_id: "h1" }],
+  };
+  const deps: CopyDeps = {
+    readTable: async (t) => {
+      if (t === opts.failRead) throw new Error(`read ${t}: boom`);
+      return tables[t] ?? [];
+    },
+    neonQuery: async (text) => {
+      if (text.startsWith("SELECT")) return opts.neonHearths ?? [];
+      inserts.push(text.slice(0, 40));
+      return [{ id: "x" }];
+    },
+    moveImage: async (url) => {
+      uploads.push(url);
+      return "https://x.public.blob.vercel-storage.com/p.png";
+    },
+  };
+  return { deps, inserts, uploads };
+}
+
+test("a real copy with one failing table read writes nothing at all", async () => {
+  const f = fakeDeps({ failRead: "signals" });
+  const r = await runCopy({ apply: true, withImages: true }, "ep-x.neon.tech", f.deps);
+  assert.deepEqual(f.inserts, []);
+  assert.deepEqual(f.uploads, []);
+  assert.match(r.stopped ?? "", /could not be read\. Nothing was written/);
+  assert.match(r.errors[0], /read signals: boom/);
+});
+
+test("a failing hearths read also stops the copy (no slug check possible)", async () => {
+  const f = fakeDeps({ failRead: "hearths" });
+  const r = await runCopy({ apply: true, withImages: false }, "ep-x.neon.tech", f.deps);
+  assert.deepEqual(f.inserts, []);
+  assert.ok(r.stopped);
+});
+
+test("a slug clash stops a real copy before any write", async () => {
+  const f = fakeDeps({ neonHearths: [{ id: "other", slug: "zabal" }] });
+  const r = await runCopy({ apply: true, withImages: true }, "ep-x.neon.tech", f.deps);
+  assert.deepEqual(f.inserts, []);
+  assert.deepEqual(f.uploads, []);
+  assert.match(r.stopped ?? "", /already on Neon under a different id/);
+});
+
+test("a clean real copy moves the picture and inserts every row", async () => {
+  const f = fakeDeps();
+  const r = await runCopy({ apply: true, withImages: true }, "ep-x.neon.tech", f.deps);
+  assert.equal(r.stopped, null);
+  assert.deepEqual(f.uploads, [PIC]);
+  assert.equal(f.inserts.length, 2);
+  assert.deepEqual(r.images, { found: 1, moved: 1 });
+  assert.equal(r.tables.find((t) => t.table === "hearths")?.inserted, 1);
+});
+
+test("a dry run reads and counts but never writes or uploads", async () => {
+  const f = fakeDeps();
+  const r = await runCopy({ apply: false, withImages: true }, "ep-x.neon.tech", f.deps);
+  assert.deepEqual(f.inserts, []);
+  assert.deepEqual(f.uploads, []);
+  assert.equal(r.tables.find((t) => t.table === "hearths")?.read, 1);
+  assert.deepEqual(r.images, { found: 1, moved: 0 });
 });

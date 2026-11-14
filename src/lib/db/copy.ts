@@ -111,81 +111,90 @@ async function moveImage(url: string): Promise<string> {
   return blob.url;
 }
 
-export async function copySupabaseToNeon(opts: { apply: boolean; withImages: boolean }): Promise<CopyReport> {
+/** What the copy needs from the outside world; real ones below, fakes in tests. */
+export interface CopyDeps {
+  readTable: (table: string) => Promise<Row[]>;
+  neonQuery: (text: string, params?: unknown[]) => Promise<Row[]>;
+  moveImage: (url: string) => Promise<string>;
+}
+
+/**
+ * Two phases (seat-misc, #380): READ every table and run every check first; only when that
+ * phase is clean, and apply is true, WRITE. A failed read, a slug clash or a missing key
+ * returns before the first insert or Blob upload, so a real copy can never half-run on a
+ * dry run that would have failed. The page's "copy for real" lock is a second wall.
+ */
+export async function runCopy(opts: { apply: boolean; withImages: boolean }, target: string, deps: CopyDeps): Promise<CopyReport> {
   const report: CopyReport = {
     mode: opts.apply ? "apply" : "dry-run",
-    target: null,
+    target,
     tables: [],
     images: null,
     stopped: null,
     errors: [],
   };
 
-  const supaUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supaKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  const neonUrl = process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL || process.env.STORAGE_DATABASE_URL;
-  if (!supaUrl || !supaKey) {
-    report.stopped = "The Supabase keys are not set in this deployment (NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY).";
-    return report;
-  }
-  report.target = neonHost(neonUrl);
-  if (!neonUrl || !report.target) {
-    report.stopped = "The Neon database URL is missing or not on *.neon.tech (DATABASE_URL_UNPOOLED / DATABASE_URL).";
-    return report;
-  }
-
-  const supabase = createClient(supaUrl, supaKey, { auth: { persistSession: false, autoRefreshToken: false } });
-  const sql = neon(neonUrl);
-
+  // Phase 1: read everything, check everything. Writes nothing.
+  const data = new Map<string, Row[]>();
   for (const table of COPY_TABLES) {
-    let rows: Row[];
     try {
-      rows = await readAll(supabase, table);
+      data.set(table, await deps.readTable(table));
     } catch (err) {
       report.errors.push((err as Error).message);
-      continue;
     }
+  }
+  const hearths = data.get("hearths");
+  if (hearths) {
+    const clashes = slugClashes(hearths, await deps.neonQuery(`SELECT "id", "slug" FROM "hearths"`));
+    if (clashes.length) {
+      report.stopped =
+        `${clashes.length} Hearth slug(s) are already on Neon under a different id (${clashes.join(", ")}): ` +
+        "the seed ran before the copy. Nothing was written.";
+    }
+  }
+  const urls = new Set<string>();
+  if (opts.withImages && hearths) {
+    hearths.forEach((r) => {
+      storageUrls(r.metadata, urls);
+      storageUrls(r.economic_config, urls);
+    });
+    report.images = { found: urls.size, moved: 0 };
+  }
+  for (const table of COPY_TABLES) {
+    const rows = data.get(table);
+    if (rows) report.tables.push({ table, read: rows.length, inserted: null });
+  }
+  if (report.errors.length && !report.stopped) {
+    report.stopped = `${report.errors.length} table(s) could not be read. Nothing was written.`;
+  }
+  if (!opts.apply || report.stopped) return report;
 
-    if (table === "hearths") {
-      const onNeon = (await sql.query(`SELECT "id", "slug" FROM "hearths"`)) as Row[];
-      const clashes = slugClashes(rows, onNeon);
-      if (clashes.length) {
-        report.stopped =
-          `${clashes.length} Hearth slug(s) are already on Neon under a different id (${clashes.join(", ")}): ` +
-          "the seed ran before the copy. Nothing was written.";
-        return report;
-      }
-      if (opts.withImages) {
-        const urls = new Set<string>();
-        rows.forEach((r) => {
-          storageUrls(r.metadata, urls);
-          storageUrls(r.economic_config, urls);
-        });
-        report.images = { found: urls.size, moved: 0 };
-        if (opts.apply && urls.size) {
-          const map = new Map<string, string>();
-          for (const url of urls) {
-            try {
-              map.set(url, await moveImage(url));
-            } catch (err) {
-              report.errors.push(`picture kept on Supabase: ${(err as Error).message}`);
-            }
-          }
-          report.images.moved = map.size;
-          rows = rows.map((r) => ({ ...r, metadata: replaceUrls(r.metadata, map), economic_config: replaceUrls(r.economic_config, map) }));
-        }
+  // Phase 2: write. Only reached when every read and check above was clean.
+  let rowsByTable = data;
+  if (opts.withImages && urls.size) {
+    const map = new Map<string, string>();
+    for (const url of urls) {
+      try {
+        map.set(url, await deps.moveImage(url));
+      } catch (err) {
+        report.errors.push(`picture kept on Supabase: ${(err as Error).message}`);
       }
     }
-
-    if (!opts.apply) {
-      report.tables.push({ table, read: rows.length, inserted: null });
-      continue;
-    }
+    report.images = { found: urls.size, moved: map.size };
+    rowsByTable = new Map(data);
+    rowsByTable.set(
+      "hearths",
+      (data.get("hearths") ?? []).map((r) => ({ ...r, metadata: replaceUrls(r.metadata, map), economic_config: replaceUrls(r.economic_config, map) })),
+    );
+  }
+  report.tables = [];
+  for (const table of COPY_TABLES) {
+    const rows = rowsByTable.get(table) ?? [];
     let inserted = 0;
     try {
       for (const row of rows) {
         const { text, params } = insertStatement(table, row);
-        inserted += ((await sql.query(text, params)) as Row[]).length;
+        inserted += (await deps.neonQuery(text, params)).length;
       }
     } catch (err) {
       report.errors.push(`insert ${table}: ${(err as Error).message}`);
@@ -193,4 +202,25 @@ export async function copySupabaseToNeon(opts: { apply: boolean; withImages: boo
     report.tables.push({ table, read: rows.length, inserted });
   }
   return report;
+}
+
+export async function copySupabaseToNeon(opts: { apply: boolean; withImages: boolean }): Promise<CopyReport> {
+  const supaUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supaKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const neonUrl = process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL || process.env.STORAGE_DATABASE_URL;
+  const target = neonHost(neonUrl);
+  const empty: CopyReport = { mode: opts.apply ? "apply" : "dry-run", target, tables: [], images: null, stopped: null, errors: [] };
+  if (!supaUrl || !supaKey) {
+    return { ...empty, stopped: "The Supabase keys are not set in this deployment (NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)." };
+  }
+  if (!neonUrl || !target) {
+    return { ...empty, stopped: "The Neon database URL is missing or not on *.neon.tech (DATABASE_URL_UNPOOLED / DATABASE_URL)." };
+  }
+  const supabase = createClient(supaUrl, supaKey, { auth: { persistSession: false, autoRefreshToken: false } });
+  const sql = neon(neonUrl);
+  return runCopy(opts, target, {
+    readTable: (table) => readAll(supabase, table),
+    neonQuery: async (text, params) => (await sql.query(text, params ?? [])) as Row[],
+    moveImage,
+  });
 }

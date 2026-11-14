@@ -16,19 +16,32 @@ const IMAN_FID = 1057869; // lib/alpha-access.ts
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+// Neon (Zaal, 14 Nov 2026): with SPARKZ_DATABASE_URL set, the seed writes to Neon through
+// the same query builder the app uses (src/lib/db/query.ts). Needs Node 22+ run with
+// --experimental-strip-types, because it imports TypeScript; the db workflow does that.
+const neonUrl = process.env.SPARKZ_DATABASE_URL;
 
-if (!DRY_RUN && (!url || !key)) {
+if (!DRY_RUN && !neonUrl && (!url || !key)) {
   console.error(
-    "Missing NEXT_PUBLIC_SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY. Fill .env.local first.",
+    "Missing SPARKZ_DATABASE_URL (Neon), or NEXT_PUBLIC_SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY (Supabase).",
   );
   process.exit(1);
 }
 
-const supabase = DRY_RUN
-  ? null
-  : (await import("@supabase/supabase-js")).createClient(url, key, {
-      auth: { persistSession: false, autoRefreshToken: false },
-    });
+async function client() {
+  if (neonUrl) {
+    const { createQueryClient } = await import("../src/lib/db/query.ts");
+    const { neonExec } = await import("../src/lib/db/neon.ts");
+    console.log("target: Neon (SPARKZ_DATABASE_URL)");
+    return createQueryClient(neonExec(neonUrl));
+  }
+  console.log("target: Supabase");
+  return (await import("@supabase/supabase-js")).createClient(url, key, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+}
+
+const supabase = DRY_RUN ? null : await client();
 
 // All of them start as sparks: no token until the backing is real. The Empire rail is the
 // graduation path (Clanker via Empire Builder), held in config, nothing on-chain yet.

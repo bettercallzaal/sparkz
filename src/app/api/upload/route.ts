@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server";
-import { getServiceClient } from "@/lib/supabase/server";
+import { put } from "@vercel/blob";
+import { dbBackend, getServiceClient } from "@/lib/supabase/server";
 import { ok, badRequest, serverError } from "@/lib/http";
 import { requireAdmin, requireHearthOwner } from "@/lib/auth";
 import { sniffImage } from "@/lib/image-sniff";
@@ -17,8 +18,11 @@ const EXT_BY_MIME: Record<string, string> = {
   "image/gif": "gif",
 };
 
-// POST /api/upload - multipart form with a single `file`. Uploads to the public
-// empire-logos bucket (server-side, service role) and returns the public URL.
+// POST /api/upload - multipart form with a single `file`. Uploads to public storage
+// (server-side) and returns the public URL:
+//   SPARKZ_DB=neon -> the public Vercel Blob store sparkz-blob (BLOB_READ_WRITE_TOKEN),
+//                     under the same empire-logos/ prefix;
+//   unset          -> the public Supabase bucket empire-logos, as before.
 // Who may upload:
 //   - an admin, with no hearth_id (the empire launcher logo);
 //   - the owner of a Hearth (or an admin), with a `hearth_id` field: the Hearth's
@@ -47,6 +51,13 @@ export async function POST(req: NextRequest) {
     if (sniffImage(head) !== file.type) return badRequest("the file is not a valid image of that type");
 
     const key = `${crypto.randomUUID()}.${ext}`;
+
+    if (dbBackend() === "neon") {
+      // A random key and addRandomSuffix off: the name is ours, never the caller's, and an
+      // existing blob is never overwritten (put refuses by default).
+      const blob = await put(`${BUCKET}/${key}`, file, { access: "public", contentType: file.type, addRandomSuffix: false });
+      return ok({ url: blob.url }, 201);
+    }
 
     const supabase = getServiceClient();
     const { error } = await supabase.storage

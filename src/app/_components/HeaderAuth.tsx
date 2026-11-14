@@ -5,10 +5,12 @@ import { useViewerProfile } from "@/lib/view-as";
 
 // Compact header auth chip. When signed out, a link to /profile (where the full
 // Sign-In-With-Farcaster button lives). When signed in, the user's pfp -> /profile.
+// Signed in on the server session alone (app reopened, auth-kit empty) there is no
+// username or picture yet, so the chip shows a plain avatar and "Me".
 export default function HeaderAuth() {
   const { isAuthenticated, profile } = useViewerProfile();
 
-  if (isAuthenticated && profile?.username) {
+  if (isAuthenticated && (profile?.username || profile?.fid)) {
     return (
       <Link
         href="/profile"
@@ -20,7 +22,9 @@ export default function HeaderAuth() {
         ) : (
           <span className="h-9 w-9 rounded-full bg-accent/30 sm:h-6 sm:w-6" />
         )}
-        <span className="hidden max-w-24 truncate text-muted sm:inline">@{profile.username}</span>
+        <span className="hidden max-w-24 truncate text-muted sm:inline">
+          {profile.username ? `@${profile.username}` : "Me"}
+        </span>
       </Link>
     );
   }

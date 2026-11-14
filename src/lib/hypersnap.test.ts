@@ -82,9 +82,13 @@ const withFetch = async (impl: typeof fetch, run: () => Promise<void>) => {
 
 test("a node that never answers returns null inside the timeout, and the request carries an abort signal", async () => {
   let signal: AbortSignal | null | undefined;
+  // AbortSignal.timeout's timer does not hold the event loop open, so a fetch that never
+  // settles would let node:test see an empty loop and cancel the test before the abort fires.
+  // A plain timer keeps the loop alive until the abort, and is cleared as soon as it lands.
   const hang: typeof fetch = (_u, init) => new Promise((_resolve, reject) => {
     signal = init?.signal;
-    init?.signal?.addEventListener("abort", () => reject(init.signal?.reason ?? new Error("aborted")));
+    const keepAlive = setTimeout(() => reject(new Error("the abort never fired")), NODE_TIMEOUT_MS + 5000);
+    init?.signal?.addEventListener("abort", () => { clearTimeout(keepAlive); reject(init.signal?.reason ?? new Error("aborted")); });
   });
   await withFetch(hang, async () => {
     const t0 = Date.now();

@@ -9,8 +9,20 @@
 # sqls" - from here on, merge the PR and this runs).
 set -euo pipefail
 
-: "${SUPABASE_DB_URL:?SUPABASE_DB_URL is not set (Supabase > Project settings > Database > connection string, session pooler)}"
-BASELINE="${SPARKZ_DB_BASELINE:-0005}"
+# Two targets while Sparkz moves off Supabase (Zaal, 14 Nov 2026):
+#   SPARKZ_DATABASE_URL - the new Neon database (Vercel Storage > sparkz-db, the UNPOOLED
+#                         string). It starts EMPTY, so nothing is baselined: every
+#                         migration, 0001 onwards, is applied.
+#   SUPABASE_DB_URL     - the old Supabase database, where 0001-0005 were pasted by hand.
+if [[ -n "${SPARKZ_DATABASE_URL:-}" ]]; then
+  SUPABASE_DB_URL="$SPARKZ_DATABASE_URL"
+  BASELINE="${SPARKZ_DB_BASELINE:-0000}"
+  echo "target: Neon (SPARKZ_DATABASE_URL), baseline $BASELINE"
+else
+  : "${SUPABASE_DB_URL:?neither SPARKZ_DATABASE_URL (Neon) nor SUPABASE_DB_URL (Supabase) is set}"
+  BASELINE="${SPARKZ_DB_BASELINE:-0005}"
+  echo "target: Supabase (SUPABASE_DB_URL), baseline $BASELINE"
+fi
 DIR="$(cd "$(dirname "$0")/.." && pwd)/supabase/migrations"
 
 psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -q <<'SQL'

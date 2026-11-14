@@ -40,15 +40,18 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          # 22: the Neon seed imports the TypeScript query builder (--experimental-strip-types).
+          node-version: 22
       - name: Migrate
         env:
+          # Neon (Zaal, 14 Nov 2026) wins when its secret is set; Supabase otherwise.
+          SPARKZ_DATABASE_URL: ${{ secrets.SPARKZ_DATABASE_URL }}
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
-          if [ -z "$SUPABASE_DB_URL" ]; then
+          if [ -z "$SPARKZ_DATABASE_URL" ] && [ -z "$SUPABASE_DB_URL" ]; then
             # Fail red, not green: on 4 Nov this exited 0 and the run showed success while
             # nothing was applied (0 secrets in the Production environment).
-            echo "::error::SUPABASE_DB_URL secret not set in the Production environment: nothing applied. Pending files:"; ls supabase/migrations; exit 1
+            echo "::error::Neither SPARKZ_DATABASE_URL (Neon) nor SUPABASE_DB_URL is set in the Production environment: nothing applied. Pending files:"; ls supabase/migrations; exit 1
           fi
           bash scripts/db-migrate.sh
       - name: Install (seed needs @supabase/supabase-js)
@@ -57,8 +60,14 @@ jobs:
       - name: Seed the ZAO Sparks (safe to re-run, existing slugs are kept)
         if: ${{ github.event_name == 'push' || inputs.seed }}
         env:
+          SPARKZ_DATABASE_URL: ${{ secrets.SPARKZ_DATABASE_URL }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          EVENT: ${{ github.event_name }}
+          SEED_INPUT: ${{ inputs.seed }}
         run: |
-          if [ -z "$SUPABASE_SERVICE_ROLE_KEY" ]; then echo "::error::SUPABASE_SERVICE_ROLE_KEY secret not set in the Production environment: seed not run"; exit 1; fi
-          node scripts/seed-zao-projects.mjs
+          # scripts/seed-gate.sh decides: on Neon only a manual run with seed ticked seeds
+          # (never a push, which could race the Supabase copy); red if no database is set.
+          gate="$(bash scripts/seed-gate.sh)" || { echo "::error::no database secret set in the Production environment: seed not run"; exit 1; }
+          if [ "$gate" != "run" ]; then echo "::notice::seed ${gate}"; exit 0; fi
+          node --experimental-strip-types --no-warnings=ExperimentalWarning scripts/seed-zao-projects.mjs

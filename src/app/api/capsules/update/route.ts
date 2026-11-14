@@ -4,9 +4,10 @@ import { updateHearthSchema } from "@/lib/validation/schemas";
 import { ok, badRequest, serverError, zodError, forbidCrossSite } from "@/lib/http";
 import { requireHearthOwner } from "@/lib/auth";
 import { sleepTransition, type HearthStatus } from "@/lib/hearth-sleep";
+import { applyContext } from "@/lib/hearth-context";
 
 // POST /api/capsules/update - the owner (or an admin) edits a Hearth's public
-// details: name, bio, about, picture, tags and links. Before this there was no way to
+// details: name, bio, about, picture, tags, links and project context (stage, done, needs). Before this there was no way to
 // change any of them after creation.
 //
 // Gate: requireHearthOwner (verified session FID equals owner_fid, or an admin), plus
@@ -47,6 +48,7 @@ export async function POST(req: NextRequest) {
       if (tags.length) meta.tags = tags;
       else delete meta.tags;
     }
+    applyContext(meta, { stage: input.stage, done: input.done, needs: input.needs });
     if (input.links !== undefined) {
       const links = Object.fromEntries(
         Object.entries(input.links).filter(([, v]) => typeof v === "string" && v !== ""),

@@ -19,6 +19,8 @@ import { canonicalOrigin } from "@/lib/origin";
 import { hearthIntegrations, hiddenIntegrations } from "@/lib/hearth-integrations";
 import { connectorIntegrations } from "@/lib/hearth-connectors";
 import { hearthLogo } from "@/lib/hearth-logo";
+import HearthContextPanel from "@/app/_components/HearthContextPanel";
+import { readContext } from "@/lib/hearth-context";
 
 export const dynamic = "force-dynamic";
 
@@ -332,6 +334,8 @@ export default async function HearthPage({
       </div>
 
       {/* Boost engine: free public support signal (not a payment). */}
+      <HearthContextPanel context={readContext(hearth.metadata)} />
+
       <section id="boost" className="glass mb-8 scroll-mt-20 p-4">
         <h2 className="mb-1 text-sm font-medium">Boost {hearth.name}</h2>
         <p className="mb-3 text-xs text-muted">

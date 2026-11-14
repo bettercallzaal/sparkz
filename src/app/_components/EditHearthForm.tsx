@@ -4,8 +4,23 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useViewer } from "@/lib/view-as";
 import { useToast } from "./toast";
+import {
+  STAGES,
+  STAGE_LABEL,
+  MAX_ITEMS,
+  MAX_ITEM_LENGTH,
+  linesToList,
+  type Stage,
+} from "@/lib/hearth-context";
 
-const LINK_KEYS = ["website", "github", "docs", "x", "farcaster", "discord"] as const;
+const LINK_KEYS = [
+  "website",
+  "github",
+  "docs",
+  "x",
+  "farcaster",
+  "discord",
+] as const;
 type LinkKey = (typeof LINK_KEYS)[number];
 const LINK_LABEL: Record<LinkKey, string> = {
   website: "Website",
@@ -23,9 +38,13 @@ export interface HearthDetails {
   image?: string;
   tags?: string[];
   links?: Partial<Record<LinkKey, string>>;
+  stage?: Stage | null;
+  done?: string[];
+  needs?: string[];
 }
 
-// Edit a Hearth's public details: name, one-line bio, about, picture, tags and links.
+// Edit a Hearth's public details: name, one-line bio, about, picture, tags, links and
+// project context (stage, done so far, needs help with).
 // Shown to the owner (session FID equals owner_fid) or an admin; the server checks the
 // same thing (requireHearthOwner in /api/capsules/update). Pattern credit: Luma's and
 // Partiful's edit-your-event page. Links and the picture must be https.
@@ -47,8 +66,13 @@ export default function EditHearthForm({
   const [image, setImage] = useState(current.image ?? "");
   const [tags, setTags] = useState((current.tags ?? []).join(", "));
   const [links, setLinks] = useState<Record<LinkKey, string>>(
-    Object.fromEntries(LINK_KEYS.map((k) => [k, current.links?.[k] ?? ""])) as Record<LinkKey, string>,
+    Object.fromEntries(
+      LINK_KEYS.map((k) => [k, current.links?.[k] ?? ""])
+    ) as Record<LinkKey, string>
   );
+  const [stage, setStage] = useState<Stage | "">(current.stage ?? "");
+  const [done, setDone] = useState((current.done ?? []).join("\n"));
+  const [needs, setNeeds] = useState((current.needs ?? []).join("\n"));
   const [busy, setBusy] = useState(false);
   const [uploading, setUploading] = useState(false);
 
@@ -81,17 +105,24 @@ export default function EditHearthForm({
     }
   };
 
-  const canEdit = admin || (fid !== null && ownerFid !== null && fid === ownerFid);
+  const canEdit =
+    admin || (fid !== null && ownerFid !== null && fid === ownerFid);
   if (!canEdit) return null;
 
-  const httpsOk = (u: string) => u.trim() === "" || /^https:\/\/\S+$/.test(u.trim());
+  const httpsOk = (u: string) =>
+    u.trim() === "" || /^https:\/\/\S+$/.test(u.trim());
   const badUrl = [image, ...Object.values(links)].some((u) => !httpsOk(u));
   const tagList = tags
     .split(",")
     .map((t) => t.trim())
     .filter(Boolean);
   const tooManyTags = tagList.length > 8;
-  const invalid = !name.trim() || badUrl || tooManyTags;
+  const doneList = linesToList(done);
+  const needsList = linesToList(needs);
+  const badContext = [doneList, needsList].some(
+    (l) => l.length > MAX_ITEMS || l.some((x) => x.length > MAX_ITEM_LENGTH)
+  );
+  const invalid = !name.trim() || badUrl || tooManyTags || badContext;
 
   const save = async () => {
     if (invalid) return;
@@ -107,6 +138,9 @@ export default function EditHearthForm({
           about: about.trim(),
           image: image.trim(),
           tags: tagList,
+          stage,
+          done: doneList,
+          needs: needsList,
           links: Object.fromEntries(LINK_KEYS.map((k) => [k, links[k].trim()])),
         }),
       });
@@ -130,15 +164,27 @@ export default function EditHearthForm({
   return (
     <section className="glass mt-8 p-4">
       <h2 className="text-base font-semibold">Details</h2>
-      <p className="mt-1 text-sm text-muted">What people see on this Hearth&apos;s page.</p>
+      <p className="mt-1 text-sm text-muted">
+        What people see on this Hearth&apos;s page.
+      </p>
       <div className="mt-4 grid gap-3">
         <label className="text-xs text-muted">
           Name
-          <input value={name} onChange={(e) => setName(e.target.value)} maxLength={120} className={input} />
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            maxLength={120}
+            className={input}
+          />
         </label>
         <label className="text-xs text-muted">
           One-line bio
-          <input value={bio} onChange={(e) => setBio(e.target.value)} maxLength={280} className={input} />
+          <input
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
+            maxLength={280}
+            className={input}
+          />
         </label>
         <label className="text-xs text-muted">
           About
@@ -152,7 +198,12 @@ export default function EditHearthForm({
         </label>
         <label className="text-xs text-muted">
           Picture (upload one, or paste an https link)
-          <input value={image} onChange={(e) => setImage(e.target.value)} placeholder="https://..." className={input} />
+          <input
+            value={image}
+            onChange={(e) => setImage(e.target.value)}
+            placeholder="https://..."
+            className={input}
+          />
         </label>
         <label className="inline-flex min-h-11 w-fit cursor-pointer items-center rounded-md border border-border px-4 text-sm active:bg-white/10">
           {uploading ? "Uploading..." : "Upload a picture"}
@@ -166,7 +217,47 @@ export default function EditHearthForm({
         </label>
         <label className="text-xs text-muted">
           Tags (comma separated, up to 8)
-          <input value={tags} onChange={(e) => setTags(e.target.value)} placeholder="music, live, zao" className={input} />
+          <input
+            value={tags}
+            onChange={(e) => setTags(e.target.value)}
+            placeholder="music, live, zao"
+            className={input}
+          />
+        </label>
+        <label className="text-xs text-muted">
+          Stage
+          <select
+            value={stage}
+            onChange={(e) => setStage(e.target.value as Stage | "")}
+            className={input}
+          >
+            <option value="">Not set</option>
+            {STAGES.map((s) => (
+              <option key={s} value={s}>
+                {STAGE_LABEL[s]}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="text-xs text-muted">
+          Done so far (one per line, up to {MAX_ITEMS})
+          <textarea
+            value={done}
+            onChange={(e) => setDone(e.target.value)}
+            rows={3}
+            placeholder="First show streamed live"
+            className={`${input} min-h-20`}
+          />
+        </label>
+        <label className="text-xs text-muted">
+          Needs help with (one per line, up to {MAX_ITEMS})
+          <textarea
+            value={needs}
+            onChange={(e) => setNeeds(e.target.value)}
+            rows={3}
+            placeholder="A venue for the next show"
+            className={`${input} min-h-20`}
+          />
         </label>
         <div className="grid gap-3 sm:grid-cols-2">
           {LINK_KEYS.map((k) => (
@@ -182,8 +273,20 @@ export default function EditHearthForm({
           ))}
         </div>
       </div>
-      {badUrl && <p className="mt-2 text-xs text-red-400">Links and the picture must start with https://</p>}
-      {tooManyTags && <p className="mt-2 text-xs text-red-400">Up to 8 tags.</p>}
+      {badUrl && (
+        <p className="mt-2 text-xs text-red-400">
+          Links and the picture must start with https://
+        </p>
+      )}
+      {tooManyTags && (
+        <p className="mt-2 text-xs text-red-400">Up to 8 tags.</p>
+      )}
+      {badContext && (
+        <p className="mt-2 text-xs text-red-400">
+          Done and Needs: up to {MAX_ITEMS} lines each, {MAX_ITEM_LENGTH}{" "}
+          characters a line.
+        </p>
+      )}
       <button
         type="button"
         onClick={save}

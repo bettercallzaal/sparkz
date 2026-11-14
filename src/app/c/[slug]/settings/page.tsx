@@ -9,6 +9,7 @@ import SleepHearthButton from "@/app/_components/SleepHearthButton";
 import OwnerBackers from "@/app/_components/OwnerBackers";
 import SharePreview from "@/app/_components/SharePreview";
 import OwnerOnly from "@/app/_components/OwnerOnly";
+import { readContext } from "@/lib/hearth-context";
 
 export const dynamic = "force-dynamic";
 
@@ -83,5 +84,6 @@ function pickDetails(metadata: unknown): Omit<HearthDetails, "name" | "bio"> {
     image: typeof m.image === "string" ? m.image : undefined,
     tags: Array.isArray(m.tags) ? m.tags.filter((t): t is string => typeof t === "string") : undefined,
     links: m.links && typeof m.links === "object" ? (m.links as HearthDetails["links"]) : undefined,
+    ...readContext(m),
   };
 }

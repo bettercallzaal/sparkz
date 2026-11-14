@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { getServiceClient } from "@/lib/supabase/server";
-import { ok, badRequest, serverError } from "@/lib/http";
+import { ok, badRequest, serverError, forbidCrossSite } from "@/lib/http";
 import { requireAdmin } from "@/lib/auth";
 import type { Hearth } from "@/lib/supabase/types";
 
@@ -8,6 +8,9 @@ import type { Hearth } from "@/lib/supabase/types";
 // spark, moving it into (or out of) the public listings. Admin only.
 // Body: { id: string, decision?: "approve" | "reject" } (defaults to approve).
 export async function POST(req: NextRequest) {
+  // Defence in depth (issue #381): refuse a cross-site POST with 403 before anything else.
+  const crossSite = forbidCrossSite(req);
+  if (crossSite) return crossSite;
   try {
     const denied = requireAdmin(req);
     if (denied) return denied;

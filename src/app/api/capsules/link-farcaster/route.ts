@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { getServiceClient } from "@/lib/supabase/server";
 import { linkFarcasterSchema } from "@/lib/validation/schemas";
-import { ok, badRequest, serverError, zodError } from "@/lib/http";
+import { ok, badRequest, serverError, zodError, forbidCrossSite } from "@/lib/http";
 import { requireAdmin } from "@/lib/auth";
 import type { Hearth } from "@/lib/supabase/types";
 
@@ -9,6 +9,9 @@ import type { Hearth } from "@/lib/supabase/types";
 // / channel) to a Hearth. Stored in metadata.farcaster; used for share-to-channel
 // casts and (later) auto-casting receipts + collabs. Admin-gated.
 export async function POST(req: NextRequest) {
+  // Defence in depth (issue #381): refuse a cross-site POST with 403 before anything else.
+  const crossSite = forbidCrossSite(req);
+  if (crossSite) return crossSite;
   try {
     const denied = requireAdmin(req);
     if (denied) return denied;

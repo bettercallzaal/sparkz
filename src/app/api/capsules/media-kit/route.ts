@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { z } from "zod";
 import { getServiceClient } from "@/lib/supabase/server";
-import { ok, badRequest, serverError, zodError } from "@/lib/http";
+import { ok, badRequest, serverError, zodError, forbidCrossSite } from "@/lib/http";
 import { requireAdmin } from "@/lib/auth";
 import {
   getMediaKitProvider,
@@ -76,6 +76,9 @@ function jobFromStored(s: StoredSegment): SegmentJob {
 }
 
 export async function POST(req: NextRequest) {
+  // Defence in depth (issue #381): refuse a cross-site POST with 403 before anything else.
+  const crossSite = forbidCrossSite(req);
+  if (crossSite) return crossSite;
   try {
     const authFail = requireAdmin(req);
     if (authFail) return authFail;

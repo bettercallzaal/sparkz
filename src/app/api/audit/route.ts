@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { getServiceClient } from "@/lib/supabase/server";
 import { auditGateSchema } from "@/lib/validation/schemas";
-import { ok, badRequest, serverError, zodError } from "@/lib/http";
+import { ok, badRequest, serverError, zodError, forbidCrossSite } from "@/lib/http";
 import { requireAdmin } from "@/lib/auth";
 import type { Hearth } from "@/lib/supabase/types";
 import { emptyAudit, type OssHearthMetadata } from "@/lib/brand-audit/types";
@@ -9,6 +9,9 @@ import { emptyAudit, type OssHearthMetadata } from "@/lib/brand-audit/types";
 // POST /api/audit - set the Spark-readiness gate verdicts / security-reviewed /
 // notes on an `oss` Hearth. Merges into metadata.audit_result; stamps audited_at.
 export async function POST(req: NextRequest) {
+  // Defence in depth (issue #381): refuse a cross-site POST with 403 before anything else.
+  const crossSite = forbidCrossSite(req);
+  if (crossSite) return crossSite;
   try {
     const denied = requireAdmin(req);
     if (denied) return denied;

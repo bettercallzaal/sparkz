@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 import "@/lib/adapters/bootstrap";
 import { getServiceClient } from "@/lib/supabase/server";
 import { flagSignalSchema } from "@/lib/validation/schemas";
-import { ok, badRequest, serverError, zodError } from "@/lib/http";
+import { ok, badRequest, serverError, zodError, forbidCrossSite } from "@/lib/http";
 import { generateDrafts } from "@/lib/meme-engine/draft";
 import { routeApproval } from "@/lib/adapters/approval-channel";
 import { getHearthRuntime } from "@/lib/plugins/hearth-config";
@@ -53,6 +53,9 @@ export async function GET(req: NextRequest) {
 // POST /api/signals - flag a moment, then run the Meme Engine: 3 Hearth-grounded
 // drafts -> persist -> notify approval channels. The whole flag->3-drafts step.
 export async function POST(req: NextRequest) {
+  // Defence in depth (issue #381): refuse a cross-site POST with 403 before anything else.
+  const crossSite = forbidCrossSite(req);
+  if (crossSite) return crossSite;
   try {
     const denied = requireAdmin(req);
     if (denied) return denied;

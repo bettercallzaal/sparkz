@@ -23,12 +23,6 @@ export default function Header() {
           <Link href="/demo" className="hover:text-foreground">
             How it works
           </Link>
-          <Link href="/blog" className="hover:text-foreground">
-            Blog
-          </Link>
-          <a href="/architecture" className="hover:text-foreground">
-            Architecture
-          </a>
         </nav>
 
         <div className="ml-auto flex items-center gap-3">

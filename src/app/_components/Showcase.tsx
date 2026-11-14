@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Avatar from "./Avatar";
 import type { Hearth, HearthType } from "@/lib/supabase/types";
+import { hearthLogo } from "@/lib/hearth-logo";
 
 const TYPE_LABEL: Record<HearthType, string> = {
   creator: "Creator",
@@ -23,7 +24,7 @@ export default function Showcase({ featured, others }: { featured: Hearth[]; oth
             <Link href={`/c/${c.slug}`} className="flex items-center gap-3">
               <Avatar
                 name={c.name}
-                image={(c.metadata as { image?: string })?.image ?? null}
+                image={hearthLogo(c)}
                 className="h-12 w-12 text-lg"
               />
               <div className="min-w-0">

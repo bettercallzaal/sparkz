@@ -18,6 +18,7 @@ import HearthTabs from "@/app/_components/HearthTabs";
 import { canonicalOrigin } from "@/lib/origin";
 import { hearthIntegrations, hiddenIntegrations } from "@/lib/hearth-integrations";
 import { connectorIntegrations } from "@/lib/hearth-connectors";
+import { hearthLogo } from "@/lib/hearth-logo";
 
 export const dynamic = "force-dynamic";
 
@@ -195,7 +196,7 @@ export default async function HearthPage({
       discord?: string;
     };
   };
-  const image = meta.image ?? null;
+  const image = hearthLogo(hearth);
   const pending = meta.review === "pending";
   const tags = Array.isArray(meta.tags) ? meta.tags : [];
   const links = meta.links ?? {};

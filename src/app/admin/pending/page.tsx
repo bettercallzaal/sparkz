@@ -5,6 +5,7 @@ import Link from "next/link";
 import Avatar from "@/app/_components/Avatar";
 import AdminSignIn from "@/app/_components/AdminSignIn";
 import type { Hearth } from "@/lib/supabase/types";
+import { hearthLogo } from "@/lib/hearth-logo";
 
 export const dynamic = "force-dynamic";
 
@@ -79,7 +80,7 @@ export default function PendingReview() {
           const meta = (c.metadata ?? {}) as { owner_email?: string };
           return (
             <li key={c.id} className="glass flex items-center gap-3 p-4">
-              <Avatar name={c.name} className="h-10 w-10 text-sm" />
+              <Avatar name={c.name} image={hearthLogo(c)} className="h-10 w-10 text-sm" />
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <Link href={`/c/${c.slug}`} className="font-medium hover:underline">

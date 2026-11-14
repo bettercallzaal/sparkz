@@ -8,6 +8,7 @@ import Flame from "./Flame";
 import HearthActivity from "./HearthActivity";
 import MyBackings from "./MyBackings";
 import { isShell } from "./NativeShell";
+import { hearthLogo } from "@/lib/hearth-logo";
 
 interface Row {
   slug: string;
@@ -143,7 +144,7 @@ export default function MyHome() {
                 href={`/c/${r.slug}`}
                 className="glass glass-hover flex min-h-16 items-center gap-3 p-4"
               >
-                <Avatar name={r.name} className="h-11 w-11 text-sm" />
+                <Avatar name={r.name} image={hearthLogo(r)} className="h-11 w-11 text-sm" />
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-medium">{r.name}</span>
                   <span className="block truncate text-xs text-muted">

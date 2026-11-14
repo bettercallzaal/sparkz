@@ -1,4 +1,4 @@
-// Hearth avatar - a real logo when the Hearth has one (metadata.image), otherwise
+// Hearth avatar - a real logo when the Hearth has one (lib/hearth-logo.ts), otherwise
 // a deterministic gradient tile with the first initial. Gives every Hearth and
 // every /explore row a visual identity instead of text alone.
 
@@ -32,7 +32,7 @@ export default function Avatar({
       <img
         src={image}
         alt={name}
-        className={`shrink-0 rounded-2xl object-cover ${className}`}
+        className={`shrink-0 rounded-2xl bg-black/60 object-cover ${className}`}
       />
     );
   }

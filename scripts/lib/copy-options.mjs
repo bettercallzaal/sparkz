@@ -29,6 +29,19 @@ export function copyTargetUrl(env) {
 }
 
 /**
+ * Whether the Vercel Blob SDK (2.8.2) has credentials for --with-images. Its own error text
+ * names the two forms it accepts: BLOB_READ_WRITE_TOKEN, or an OIDC token (VERCEL_OIDC_TOKEN)
+ * together with BLOB_STORE_ID. sparkz-blob is connected to the project over OIDC (14 Nov
+ * 2026: BLOB_STORE_ID, no read-write token), and `vercel env pull` writes a short-lived
+ * VERCEL_OIDC_TOKEN next to it, so a freshly pulled .env.copy is enough.
+ */
+export function blobAuth(env) {
+  if (env.BLOB_READ_WRITE_TOKEN) return "token";
+  if (env.VERCEL_OIDC_TOKEN && env.BLOB_STORE_ID) return "oidc";
+  return null;
+}
+
+/**
  * The copy may only write to a Neon database. Returns the host when the URL points at Neon
  * (*.neon.tech), otherwise null, so a Supabase or other URL set by mistake is refused.
  */

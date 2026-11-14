@@ -17,11 +17,13 @@
 // --with-images: any Supabase Storage public URL found inside a Hearth's metadata or
 // economic_config (pictures, logos) is downloaded, uploaded to the public Blob store
 // sparkz-blob under the same path, and the copied row points at the Blob URL instead.
-// Needs BLOB_READ_WRITE_TOKEN (pulled with the env above).
+// Needs Blob credentials: BLOB_STORE_ID plus the short-lived VERCEL_OIDC_TOKEN that
+// `vercel env pull` writes (sparkz-blob is connected over OIDC), or a BLOB_READ_WRITE_TOKEN.
+// The OIDC token expires after some hours, so pull the env right before the run.
 
 import { createClient } from "@supabase/supabase-js";
 import { neon } from "@neondatabase/serverless";
-import { copyTargetUrl, neonHost, parseCopyArgs } from "./lib/copy-options.mjs";
+import { blobAuth, copyTargetUrl, neonHost, parseCopyArgs } from "./lib/copy-options.mjs";
 
 const { apply, withImages: WITH_IMAGES } = parseCopyArgs(process.argv.slice(2));
 const DRY_RUN = !apply;
@@ -42,8 +44,10 @@ if (neonUrl && !neonHost(neonUrl)) {
   console.error("Refusing: the target database is not on Neon (*.neon.tech). Check DATABASE_URL_UNPOOLED / SPARKZ_DATABASE_URL.");
   process.exit(1);
 }
-if (WITH_IMAGES && !DRY_RUN && !process.env.BLOB_READ_WRITE_TOKEN) {
-  console.error("--with-images needs BLOB_READ_WRITE_TOKEN (Vercel Blob store sparkz-blob).");
+if (WITH_IMAGES && !DRY_RUN && !blobAuth(process.env)) {
+  console.error(
+    "--with-images needs Blob credentials: BLOB_STORE_ID with VERCEL_OIDC_TOKEN (re-run vercel env pull; the OIDC token is short-lived), or BLOB_READ_WRITE_TOKEN.",
+  );
   process.exit(1);
 }
 

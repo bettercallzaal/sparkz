@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { copyTargetUrl, neonHost, parseCopyArgs } from "../../../scripts/lib/copy-options.mjs";
+import { blobAuth, copyTargetUrl, neonHost, parseCopyArgs } from "../../../scripts/lib/copy-options.mjs";
 
 test("the copy is a dry run unless --apply is given", () => {
   assert.deepEqual(parseCopyArgs([]), { apply: false, withImages: false });
@@ -43,4 +43,14 @@ test("the copy target accepts Vercel's unprefixed Neon names, unpooled first", (
   assert.equal(copyTargetUrl({}), undefined);
   // Whatever name it comes from, the host check still applies.
   assert.equal(neonHost(copyTargetUrl({ DATABASE_URL: "postgresql://u:p@db.x.supabase.co/postgres" })), null);
+});
+
+test("--with-images accepts the store's OIDC form or a read-write token", () => {
+  // sparkz-blob is connected over OIDC: BLOB_STORE_ID, plus the token vercel env pull writes.
+  assert.equal(blobAuth({ BLOB_STORE_ID: "store_x", VERCEL_OIDC_TOKEN: "test-only" }), "oidc");
+  assert.equal(blobAuth({ BLOB_READ_WRITE_TOKEN: "test-only" }), "token");
+  // Half of the OIDC pair is not enough.
+  assert.equal(blobAuth({ BLOB_STORE_ID: "store_x" }), null);
+  assert.equal(blobAuth({ VERCEL_OIDC_TOKEN: "test-only" }), null);
+  assert.equal(blobAuth({}), null);
 });

@@ -27,6 +27,19 @@ export const COPY_TABLES = [
 ] as const;
 
 const PAGE = 500;
+
+/** Thrown by a reader when the table does not exist at the source. */
+export class TableAbsent extends Error {}
+
+/** PostgREST and Postgres codes for "no such table" (same test as lib/plugins/hearth-config.ts). */
+export function isTableMissing(error: { code?: string; message?: string }): boolean {
+  return (
+    error.code === "PGRST205" ||
+    error.code === "42P01" ||
+    /could not find the table/i.test(error.message ?? "") ||
+    /relation .* does not exist/i.test(error.message ?? "")
+  );
+}
 const STORAGE_MARK = "/storage/v1/object/public/";
 
 type Row = Record<string, unknown>;
@@ -34,6 +47,8 @@ type Row = Record<string, unknown>;
 export interface CopyReport {
   mode: "dry-run" | "apply";
   target: string | null;
+  /** Tables that do not exist on Supabase: nothing to copy (e.g. a migration never applied there). */
+  absent: string[];
   tables: { table: string; read: number; inserted: number | null }[];
   images: { found: number; moved: number } | null;
   stopped: string | null;
@@ -92,7 +107,12 @@ async function readAll(supabase: SupabaseClient, table: string): Promise<Row[]> 
       .select("*")
       .order("created_at", { ascending: true })
       .range(from, from + PAGE - 1);
-    if (error) throw new Error(`read ${table}: ${error.message}`);
+    if (error) {
+      // team_signups (migration 0006) was never applied on the old Supabase project, so it is
+      // absent there: nothing to copy, not a failure (Zaal's dry run, 14 Nov 2026).
+      if (isTableMissing(error)) throw new TableAbsent(table);
+      throw new Error(`read ${table}: ${error.message}`);
+    }
     rows.push(...(data as Row[]));
     if (data.length < PAGE) return rows;
   }
@@ -128,6 +148,7 @@ export async function runCopy(opts: { apply: boolean; withImages: boolean }, tar
   const report: CopyReport = {
     mode: opts.apply ? "apply" : "dry-run",
     target,
+    absent: [],
     tables: [],
     images: null,
     stopped: null,
@@ -140,7 +161,8 @@ export async function runCopy(opts: { apply: boolean; withImages: boolean }, tar
     try {
       data.set(table, await deps.readTable(table));
     } catch (err) {
-      report.errors.push((err as Error).message);
+      if (err instanceof TableAbsent) report.absent.push(table);
+      else report.errors.push((err as Error).message);
     }
   }
   const hearths = data.get("hearths");
@@ -209,7 +231,7 @@ export async function copySupabaseToNeon(opts: { apply: boolean; withImages: boo
   const supaKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const neonUrl = process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL || process.env.STORAGE_DATABASE_URL;
   const target = neonHost(neonUrl);
-  const empty: CopyReport = { mode: opts.apply ? "apply" : "dry-run", target, tables: [], images: null, stopped: null, errors: [] };
+  const empty: CopyReport = { mode: opts.apply ? "apply" : "dry-run", target, absent: [], tables: [], images: null, stopped: null, errors: [] };
   if (!supaUrl || !supaKey) {
     return { ...empty, stopped: "The Supabase keys are not set in this deployment (NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)." };
   }

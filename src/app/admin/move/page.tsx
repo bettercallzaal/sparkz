@@ -93,6 +93,11 @@ export default function MovePage() {
               ))}
             </ul>
           )}
+          {report.absent?.length > 0 && (
+            <p className="mt-3 text-muted">
+              Not on Supabase, so nothing to copy: {report.absent.join(", ")}
+            </p>
+          )}
           {report.images && (
             <p className="mt-3 text-muted">
               Pictures: {report.images.found} found on Supabase

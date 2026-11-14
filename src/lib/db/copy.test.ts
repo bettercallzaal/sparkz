@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { COPY_TABLES, copySupabaseToNeon, insertStatement, replaceUrls, runCopy, slugClashes, storageUrls, type CopyDeps } from "./copy";
+import { COPY_TABLES, TableAbsent, copySupabaseToNeon, insertStatement, isTableMissing, replaceUrls, runCopy, slugClashes, storageUrls, type CopyDeps } from "./copy";
 
 const PIC = "https://abc.supabase.co/storage/v1/object/public/empire-logos/x.png";
 
@@ -58,7 +58,7 @@ test("with no keys in the environment it stops before touching any database", as
 });
 
 // Fake outside world: Supabase tables in memory, every Neon write and Blob upload recorded.
-function fakeDeps(opts: { failRead?: string; neonHearths?: { id: string; slug: string }[] } = {}) {
+function fakeDeps(opts: { failRead?: string; absent?: string; neonHearths?: { id: string; slug: string }[] } = {}) {
   const inserts: string[] = [];
   const uploads: string[] = [];
   const tables: Record<string, Record<string, unknown>[]> = {
@@ -68,6 +68,7 @@ function fakeDeps(opts: { failRead?: string; neonHearths?: { id: string; slug: s
   const deps: CopyDeps = {
     readTable: async (t) => {
       if (t === opts.failRead) throw new Error(`read ${t}: boom`);
+      if (t === opts.absent) throw new TableAbsent(t);
       return tables[t] ?? [];
     },
     neonQuery: async (text) => {
@@ -124,4 +125,24 @@ test("a dry run reads and counts but never writes or uploads", async () => {
   assert.deepEqual(f.uploads, []);
   assert.equal(r.tables.find((t) => t.table === "hearths")?.read, 1);
   assert.deepEqual(r.images, { found: 1, moved: 0 });
+});
+
+test("a table missing on Supabase is listed as absent, not an error, and the copy goes ahead", async () => {
+  const f = fakeDeps({ absent: "team_signups" });
+  const dry = await runCopy({ apply: false, withImages: false }, "ep-x.neon.tech", f.deps);
+  assert.deepEqual(dry.absent, ["team_signups"]);
+  assert.equal(dry.stopped, null);
+  assert.deepEqual(dry.errors, []);
+  const real = await runCopy({ apply: true, withImages: false }, "ep-x.neon.tech", f.deps);
+  assert.equal(real.stopped, null);
+  assert.equal(f.inserts.length, 2);
+});
+
+test("only no-such-table errors count as absent", () => {
+  // The exact text Zaal's dry run showed (PostgREST PGRST205), plus the Postgres code.
+  assert.equal(isTableMissing({ code: "PGRST205", message: "Could not find the table 'public.team_signups' in the schema cache" }), true);
+  assert.equal(isTableMissing({ message: "Could not find the table 'public.team_signups' in the schema cache" }), true);
+  assert.equal(isTableMissing({ code: "42P01", message: 'relation "team_signups" does not exist' }), true);
+  assert.equal(isTableMissing({ code: "42501", message: "permission denied for table hearths" }), false);
+  assert.equal(isTableMissing({ message: "fetch failed" }), false);
 });

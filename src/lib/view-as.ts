@@ -2,6 +2,7 @@
 
 import { useEffect, useSyncExternalStore } from "react";
 import { useProfile } from "@farcaster/auth-kit";
+import { mergeSessionProfile } from "@/lib/session-profile";
 
 // "View as": lets an admin see Sparkz the way other people see it (Zaal, 2026-11-12:
 // "a button to view as Zaal, view as guest, view as ZAO member").
@@ -161,11 +162,12 @@ export function useViewer(): Viewer {
   };
 }
 
-// Drop-in for auth-kit's useProfile(): same shape, but an admin viewing as Guest gets
-// the signed-out shape. Components that branch on isAuthenticated/profile use this.
+// Drop-in for auth-kit's useProfile(): same shape. An admin viewing as Guest gets the
+// signed-out shape; and when auth-kit has no client state (the app or page was reopened)
+// but the server session is valid, the session's FID counts as signed in
+// (lib/session-profile.ts). Components that branch on isAuthenticated/profile use this.
 export function useViewerProfile(): ReturnType<typeof useProfile> {
   const real = useProfile();
   const viewer = useViewer();
-  if (viewer.viewAs !== "guest") return real;
-  return { ...real, isAuthenticated: false, profile: {} as ReturnType<typeof useProfile>["profile"] };
+  return mergeSessionProfile(real as unknown as Parameters<typeof mergeSessionProfile>[0], viewer) as unknown as ReturnType<typeof useProfile>;
 }

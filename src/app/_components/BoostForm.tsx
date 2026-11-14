@@ -18,14 +18,17 @@ export default function BoostForm({ hearthId }: { hearthId: string }) {
   const [state, setState] = useState<"idle" | "busy" | "done" | "error">("idle");
 
   const { ready, writesOpen } = useViewer();
-  const oneTap = isAuthenticated && !!profile?.username && !needsBacker;
+  // One tap for any signed-in backer: the server takes the identity from the session
+  // cookie. On the session alone (app reopened, auth-kit empty) there is a FID but no
+  // username yet (lib/session-profile.ts).
+  const oneTap = isAuthenticated && !!(profile?.username || profile?.fid) && !needsBacker;
 
   const boost = async () => {
     if (!oneTap && !backer.trim()) return;
     setState("busy");
     try {
       const body = oneTap
-        ? { hearth_id: hearthId, fc_username: profile?.username }
+        ? { hearth_id: hearthId, ...(profile?.username ? { fc_username: profile.username } : {}) }
         : { hearth_id: hearthId, backer: backer.trim() };
       const res = await fetch("/api/boost", {
         method: "POST",
@@ -82,7 +85,7 @@ export default function BoostForm({ hearthId }: { hearthId: string }) {
           disabled={state === "busy"}
           className="btn-spark min-h-11 rounded-md px-5 py-2 text-sm disabled:opacity-40"
         >
-          {state === "busy" ? "Boosting..." : `Boost as @${profile?.username}`}
+          {state === "busy" ? "Boosting..." : profile?.username ? `Boost as @${profile.username}` : "Boost"}
         </button>
         {state === "error" && <span className="text-xs text-red-400">try again</span>}
       </div>

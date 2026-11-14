@@ -8,11 +8,14 @@ import EditHearthForm, { type HearthDetails } from "@/app/_components/EditHearth
 import SleepHearthButton from "@/app/_components/SleepHearthButton";
 import OwnerBackers from "@/app/_components/OwnerBackers";
 import SharePreview from "@/app/_components/SharePreview";
+import OwnerOnly from "@/app/_components/OwnerOnly";
 
 export const dynamic = "force-dynamic";
 
 // Owner settings for a Hearth: control which integrations show on the public page.
 // Gated at the API layer: the Hearth's owner (verified Farcaster session) or the operator.
+// The page itself shows its forms only to the owner or an admin (OwnerOnly); anyone
+// else who types this address gets a short note instead of forms they cannot save.
 export default async function HearthSettingsPage({
   params,
 }: {
@@ -38,6 +41,7 @@ export default async function HearthSettingsPage({
         &lt;- {data.name}
       </Link>
       <h1 className="mt-4 text-2xl font-bold tracking-tight">Manage {data.name}</h1>
+      <OwnerOnly ownerFid={data.owner_fid ?? null} slug={data.slug} name={data.name}>
       <p className="mt-2 text-sm text-muted">
         Choose which integrations show on {data.name}&apos;s public page. Toggle one to
         Hidden and it disappears from the Hearth; toggle it Visible to bring it back.
@@ -66,6 +70,7 @@ export default async function HearthSettingsPage({
       />
       <OwnerBackers hearthId={data.id} ownerFid={data.owner_fid ?? null} />
       <SleepHearthButton hearthId={data.id} ownerFid={data.owner_fid ?? null} status={data.status} />
+      </OwnerOnly>
     </main>
   );
 }

@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { z } from "zod";
 import { getServiceClient } from "@/lib/supabase/server";
-import { ok, badRequest, serverError, zodError } from "@/lib/http";
+import { ok, badRequest, serverError, zodError, forbidCrossSite } from "@/lib/http";
 import { requireAdmin } from "@/lib/auth";
 import { sessionFid } from "@/lib/session";
 
@@ -12,6 +12,9 @@ const schema = z.object({ slug: z.string().min(1).max(80).regex(/^[a-z0-9-]+$/) 
 // is the verified session's, never from the body; a Hearth that already has an owner
 // is never changed (the update matches owner_fid IS NULL).
 export async function POST(req: NextRequest) {
+  // Defence in depth (issue #381): refuse a cross-site POST with 403 before anything else.
+  const crossSite = forbidCrossSite(req);
+  if (crossSite) return crossSite;
   try {
     const denied = requireAdmin(req);
     if (denied) return denied;

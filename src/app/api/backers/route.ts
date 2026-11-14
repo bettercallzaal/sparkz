@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import "@/lib/adapters/bootstrap";
 import { createBackingSchema } from "@/lib/validation/schemas";
-import { ok, badRequest, serverError, zodError } from "@/lib/http";
+import { ok, badRequest, serverError, zodError, forbidCrossSite } from "@/lib/http";
 import { getBackingProvider } from "@/lib/adapters/backing-provider";
 import { isAdmin, requireAdmin } from "@/lib/auth";
 import { getServiceClient } from "@/lib/supabase/server";
@@ -44,6 +44,9 @@ export async function GET(req: NextRequest) {
 // POST /api/backers - record a pre-token "spark" backing through a provider
 // (m1: ledger, off-chain). Provider-agnostic so on-chain rails slot in later.
 export async function POST(req: NextRequest) {
+  // Defence in depth (issue #381): refuse a cross-site POST with 403 before anything else.
+  const crossSite = forbidCrossSite(req);
+  if (crossSite) return crossSite;
   try {
     const denied = requireAdmin(req);
     if (denied) return denied;

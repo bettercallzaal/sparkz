@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { getServiceClient } from "@/lib/supabase/server";
-import { ok, serverError } from "@/lib/http";
+import { ok, serverError, forbidCrossSite } from "@/lib/http";
 import { requireAdmin } from "@/lib/auth";
 import { OWNER_BACKFILL, ZAO_HEARTHS } from "@/lib/zao-seed";
 
@@ -9,6 +9,9 @@ import { OWNER_BACKFILL, ZAO_HEARTHS } from "@/lib/zao-seed";
 // the listed Hearths only where it is NULL. Admin only. Safe to tap twice. Same rows
 // as scripts/seed-zao-projects.mjs, from lib/zao-seed.ts.
 export async function POST(req: NextRequest) {
+  // Defence in depth (issue #381): refuse a cross-site POST with 403 before anything else.
+  const crossSite = forbidCrossSite(req);
+  if (crossSite) return crossSite;
   try {
     const denied = requireAdmin(req);
     if (denied) return denied;

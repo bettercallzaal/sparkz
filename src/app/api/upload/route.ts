@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { put } from "@vercel/blob";
 import { dbBackend, getServiceClient } from "@/lib/supabase/server";
-import { ok, badRequest, serverError } from "@/lib/http";
+import { ok, badRequest, serverError, forbidCrossSite } from "@/lib/http";
 import { requireAdmin, requireHearthOwner } from "@/lib/auth";
 import { sniffImage } from "@/lib/image-sniff";
 
@@ -30,6 +30,9 @@ const EXT_BY_MIME: Record<string, string> = {
 // The file's first bytes must match an accepted image type (lib/image-sniff.ts); the
 // browser-declared File.type alone is not trusted.
 export async function POST(req: NextRequest) {
+  // Defence in depth (issue #381): refuse a cross-site POST with 403 before anything else.
+  const crossSite = forbidCrossSite(req);
+  if (crossSite) return crossSite;
   try {
     const form = await req.formData().catch(() => null);
     const hearthId = form?.get("hearth_id");

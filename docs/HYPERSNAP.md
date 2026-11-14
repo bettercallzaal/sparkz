@@ -43,8 +43,10 @@ the node, and do not migrate the ZAO FIDs.
 - `src/lib/hypersnap-vault.ts`: the key is a non-extractable WebCrypto Ed25519 key in
   IndexedDB, one per fid. Page code can sign with it; nothing can read it out; it never
   reaches our server. Browsers without WebCrypto Ed25519 get a clear error.
-- `POST /api/hypersnap/submit`: relays the signed bytes to the node's `/v1/submitMessage`
-  (octet-stream, 8 KB cap, 20 a minute per IP). The browser signs; the server only relays.
+- `POST /api/hypersnap/submit`: public, no session, relay only. Relays the signed bytes to the
+  node's `/v1/submitMessage` (octet-stream, 8 KB cap, 20 a minute per IP, in memory and per
+  server instance). The browser signs; the server only relays. The caller gets a fixed error
+  string; the node's own text is logged on the server.
 - `GET /api/hypersnap/signer?fid=&signer=0x...`: does the node list the key (fresh read).
 - `src/app/_components/HypersnapSigner.tsx` on the profile page: Turn on connects a wallet
   (the existing AppKit/wagmi providers), checks it is the Farcaster custody address, asks it

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { STAGES, MAX_ITEMS, MAX_ITEM_LENGTH } from "@/lib/hearth-context";
 
 // Zod schemas for every API input (safeParse in the routes). Keep the enums in
 // lockstep with the CHECK constraints in 0001_hearth_foundation.sql.
@@ -80,6 +81,10 @@ export const updateHearthSchema = z.object({
   about: z.string().trim().max(4000).optional(),
   image: optionalUrl,
   tags: z.array(z.string().trim().min(1).max(24)).max(8).optional(),
+  // Project context (lib/hearth-context.ts): stage, what is done, what it needs help with.
+  stage: z.union([z.enum(STAGES), z.literal("")]).optional(),
+  done: z.array(z.string().trim().max(MAX_ITEM_LENGTH)).max(MAX_ITEMS).optional(),
+  needs: z.array(z.string().trim().max(MAX_ITEM_LENGTH)).max(MAX_ITEMS).optional(),
   // true puts the Hearth to sleep (dormant), false lights it again (lib/hearth-sleep.ts).
   asleep: z.boolean().optional(),
   links: z

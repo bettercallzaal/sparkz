@@ -5,6 +5,7 @@ import Link from "next/link";
 import Flame from "@/app/_components/Flame";
 import Avatar from "@/app/_components/Avatar";
 import type { DirectoryItem } from "@/app/api/directory/route";
+import { hearthLogo } from "@/lib/hearth-logo";
 
 type SortKey = "momentum" | "new" | "backers" | "boosts" | "receipts" | "name";
 
@@ -202,7 +203,7 @@ export default function ExplorePage() {
             {rising.map((c) => (
               <li key={c.id} className="w-40 shrink-0 snap-start">
                 <Link href={`/c/${c.slug}`} className="glass glass-hover flex h-full flex-col gap-2 p-3">
-                  <Avatar name={c.name} className="h-10 w-10 text-sm" />
+                  <Avatar name={c.name} image={hearthLogo(c)} className="h-10 w-10 text-sm" />
                   <span className="line-clamp-2 text-sm font-medium">{c.name}</span>
                   <span className="mt-auto text-[11px] font-medium text-accent-3">
                     &uarr; {c.newThisWeek} new this week
@@ -233,7 +234,7 @@ export default function ExplorePage() {
           <li key={c.id}>
             <Link href={`/c/${c.slug}`} className="glass glass-hover block p-4">
               <div className="flex items-start gap-3">
-                <Avatar name={c.name} className="h-10 w-10 text-sm" />
+                <Avatar name={c.name} image={hearthLogo(c)} className="h-10 w-10 text-sm" />
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="font-medium">{c.name}</span>

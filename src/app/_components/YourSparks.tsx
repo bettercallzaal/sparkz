@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Avatar from "./Avatar";
+import { hearthLogo } from "@/lib/hearth-logo";
 
 interface Row {
   slug: string;
@@ -71,7 +72,7 @@ export default function YourSparks({ fid }: { fid: number }) {
               href={`/c/${r.slug}`}
               className="flex items-center gap-3 rounded-lg border border-border p-3 hover:border-accent/60"
             >
-              <Avatar name={r.name} className="h-8 w-8 text-xs" />
+              <Avatar name={r.name} image={hearthLogo(r)} className="h-8 w-8 text-xs" />
               <span className="min-w-0 flex-1 truncate text-sm font-medium">{r.name}</span>
               {r.review === "pending" ? (
                 <span className="shrink-0 rounded-full bg-accent-3/15 px-2 py-0.5 text-[10px] uppercase tracking-wide text-accent-3">

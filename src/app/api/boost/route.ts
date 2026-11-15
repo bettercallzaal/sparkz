@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getServiceClient } from "@/lib/supabase/server";
 import { boostSchema } from "@/lib/validation/schemas";
-import { ok, badRequest, serverError, zodError, tooManyRequests } from "@/lib/http";
+import { ok, badRequest, serverError, zodError, tooManyRequests, forbidCrossSite } from "@/lib/http";
 import { clientIpHash, boostCountInWindow, BOOST_LIMIT, BOOST_WINDOW_MS } from "@/lib/rate-limit";
 import { isAdmin } from "@/lib/auth";
 import { sessionClaims } from "@/lib/session";
@@ -16,6 +16,8 @@ import { ALPHA_CLOSED_MESSAGE, ALPHA_LOCK } from "@/lib/alpha-access";
 const BACKER_REQUIRED = "backer required (sign in, or give an email or handle)";
 
 export async function POST(req: NextRequest) {
+  const crossSite = forbidCrossSite(req);
+  if (crossSite) return crossSite;
   try {
     // Private alpha (lib/alpha-access.ts): this public route is closed to everyone but
     // the listed identities until Sparkz opens.

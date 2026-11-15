@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { NextRequest } from "next/server";
 import { SESSION_COOKIE, mintSession } from "@/lib/session";
 
-// Issue #381: every admin- or owner-gated mutating route refuses a cross-site POST with 403
+// Issue #381: every mutating route (admin- or owner-gated, and the public boost, team and waitlist writes) refuses a cross-site POST with 403
 // as its first step, before auth, body parsing or any database call. The session check
 // already ignored cross-site requests (sessionClaims), so this is a second wall.
 // Each request carries an ADMIN session cookie, so a route that skipped the guard would
@@ -27,6 +27,9 @@ const ROUTES: Record<string, () => Promise<{ POST: (req: NextRequest) => Promise
   "signals/detect": () => import("./signals/detect/route"),
   signals: () => import("./signals/route"),
   upload: () => import("./upload/route"),
+  boost: () => import("./boost/route"),
+  team: () => import("./team/route"),
+  waitlist: () => import("./waitlist/route"),
 };
 
 const KEY = "test-only-session-secret-0123456789abcdef"; // throwaway, never a real secret
@@ -50,6 +53,6 @@ for (const [path, load] of Object.entries(ROUTES)) {
   });
 }
 
-test("the table covers exactly the 17 routes listed in issue #381", () => {
-  assert.equal(Object.keys(ROUTES).length, 17);
+test("the table covers the 17 gated routes listed in issue #381 plus boost, team and waitlist", () => {
+  assert.equal(Object.keys(ROUTES).length, 20);
 });

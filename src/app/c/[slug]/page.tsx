@@ -200,6 +200,7 @@ export default async function HearthPage({
   };
   const image = hearthLogo(hearth);
   const pending = meta.review === "pending";
+  const isCreator = hearth.type === "creator";
   const tags = Array.isArray(meta.tags) ? meta.tags : [];
   const links = meta.links ?? {};
   const linkRow: { label: string; href: string }[] = [
@@ -280,10 +281,12 @@ export default async function HearthPage({
             {oss.repo_owner}/{oss.repo_name} -&gt;
           </a>
         )}
-        {fc?.fid ? <HypersnapProfile fid={fc.fid} /> : null}
-        {fc && (fc.username || fc.channel || fc.fid) && (
+        {/* The owner's profile card only on a Creator Hearth, where the Hearth is that
+            person. On a culture, OSS or meme Hearth it read as if the Hearth were the owner. */}
+        {fc?.fid && isCreator ? <HypersnapProfile fid={fc.fid} /> : null}
+        {fc && (fc.channel || (isCreator && (fc.username || fc.fid))) && (
           <div className="mt-2 flex flex-wrap gap-2 text-xs">
-            {fc.username && (
+            {isCreator && fc.username && (
               <a
                 href={`https://farcaster.xyz/${fc.username}`}
                 target="_blank"
@@ -303,7 +306,7 @@ export default async function HearthPage({
                 /{fc.channel}
               </a>
             )}
-            {fc.fid && !fc.username && (
+            {isCreator && fc.fid && !fc.username && (
               <span className="rounded-full border border-border px-2 py-0.5 text-muted">
                 fid {fc.fid}
               </span>
@@ -327,11 +330,14 @@ export default async function HearthPage({
         )}
       </header>
 
-      <div className="mb-6 grid grid-cols-3 gap-2">
-        <Stat label="Backers" value={backers.length} />
-        <Stat label="Boosts" value={boostCount} />
-        <Stat label="Receipts" value={receipts.length} />
-      </div>
+      {/* Stats only once there is something to count; an all-zero row is noise. */}
+      {backers.length + boostCount + receipts.length > 0 && (
+        <div className="mb-6 grid grid-cols-3 gap-2">
+          <Stat label="Backers" value={backers.length} />
+          <Stat label="Boosts" value={boostCount} />
+          <Stat label="Receipts" value={receipts.length} />
+        </div>
+      )}
 
       {/* Boost engine: free public support signal (not a payment). */}
       <HearthContextPanel context={readContext(hearth.metadata)} />
@@ -375,9 +381,10 @@ export default async function HearthPage({
                 {(() => {
                   const hidden = hiddenIntegrations(hearth);
                   const integrations = [...hearthIntegrations(hearth, emailCount), ...connectorCards]
-                    .filter((i) => !hidden.includes(i.id))
-                    .sort((a, b) => Number(b.connected) - Number(a.connected));
-                  const liveCount = integrations.filter((i) => i.connected).length;
+                    // Only connected integrations show publicly; the rest stay on Manage.
+                    .filter((i) => !hidden.includes(i.id) && i.connected);
+                  if (integrations.length === 0) return null;
+                  const liveCount = integrations.length;
                   return (
                     <section className="mb-8">
                       <div className="mb-3 flex items-center justify-between">

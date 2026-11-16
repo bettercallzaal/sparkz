@@ -9,7 +9,7 @@ import AddMiniApp from "./AddMiniApp";
 // visitor always has a way forward.
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 border-b border-border/80 bg-background/80 backdrop-blur-md">
+    <header className="sticky top-[env(safe-area-inset-top)] z-50 border-b border-border/80 bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-5xl items-center gap-4 px-4">
         <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
           <Flame className="h-6 w-6" />

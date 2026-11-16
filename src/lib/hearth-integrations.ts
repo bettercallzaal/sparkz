@@ -32,6 +32,10 @@ export function hearthIntegrations(
   const fc = (hearth.metadata as { farcaster?: { fid?: number | null; username?: string | null; channel?: string | null } })
     .farcaster;
 
+  // A poidh link the owner adds under Links on the settings page (metadata.links.bounties).
+  const rawBounties = (hearth.metadata as { links?: { bounties?: unknown } }).links?.bounties;
+  const bounties = typeof rawBounties === "string" && rawBounties.startsWith("https://") ? rawBounties : undefined;
+
   return [
     {
       id: "empire",
@@ -74,7 +78,14 @@ export function hearthIntegrations(
       connected: Boolean(econ.agent),
       value: econ.agent ? "configured" : "scaffold",
     },
-    { id: "bounties", label: "Bounties", sub: "POIDH", connected: false, value: "soon" },
+    {
+      id: "bounties",
+      label: "Bounties",
+      sub: "POIDH",
+      connected: Boolean(bounties),
+      value: bounties ? "live" : "none yet",
+      href: bounties,
+    },
   ];
 }
 

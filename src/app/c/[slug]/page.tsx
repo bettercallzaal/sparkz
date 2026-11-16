@@ -196,6 +196,7 @@ export default async function HearthPage({
       x?: string;
       farcaster?: string;
       discord?: string;
+      bounties?: string;
     };
   };
   const image = hearthLogo(hearth);
@@ -210,6 +211,7 @@ export default async function HearthPage({
     links.x ? { label: "X", href: links.x } : null,
     links.farcaster ? { label: "Farcaster", href: links.farcaster } : null,
     links.discord ? { label: "Discord", href: links.discord } : null,
+    links.bounties ? { label: "Bounties", href: links.bounties } : null,
   ].filter((l): l is { label: string; href: string } => l !== null);
 
   return (

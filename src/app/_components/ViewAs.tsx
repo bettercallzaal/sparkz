@@ -10,7 +10,7 @@ export function ViewAsBar() {
   return (
     <div
       role="status"
-      className="sticky top-0 z-50 flex min-h-11 items-center justify-between gap-3 bg-accent px-4 text-sm font-medium text-black"
+      className="sticky top-[env(safe-area-inset-top)] z-50 flex min-h-11 items-center justify-between gap-3 bg-accent px-4 text-sm font-medium text-black"
       style={{ paddingTop: "env(safe-area-inset-top)" }}
     >
       <span>

@@ -11,6 +11,7 @@ import CopyButton from "@/app/_components/CopyButton";
 import OwnerBadge from "@/app/_components/OwnerBadge";
 import { maskBacker } from "@/lib/sanitize";
 import HearthActions from "@/app/_components/HearthActions";
+import PendingApprove from "@/app/_components/PendingApprove";
 import Flame from "@/app/_components/Flame";
 import SparkLit from "@/app/_components/SparkLit";
 import EmpireLeaderboard from "@/app/_components/EmpireLeaderboard";
@@ -228,6 +229,7 @@ export default async function HearthPage({
             This spark is <span className="font-semibold">pending review</span>. It is
             live for you to share, but stays out of Explore until an operator approves it.
           </span>
+          <PendingApprove hearthId={hearth.id} />
         </div>
       )}
 

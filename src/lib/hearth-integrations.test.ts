@@ -28,7 +28,18 @@ test("a bare Hearth shows every card as not connected, with the default wording"
   assert.equal(g.email.value, "0 on list");
   assert.equal(g.token.value, "spark (no coin)");
   assert.equal(g.agent.value, "scaffold");
-  assert.equal(g.bounties.value, "soon");
+  assert.equal(g.bounties.value, "none yet");
+});
+
+test("Bounties: an https poidh link under links turns the card live and links it", () => {
+  const url = "https://poidh.xyz/base/bounty/1536";
+  const b = byId(hearth({ metadata: { links: { bounties: url } } })).bounties;
+  assert.equal(b.connected, true);
+  assert.equal(b.value, "live");
+  assert.equal(b.href, url);
+  const bad = byId(hearth({ metadata: { links: { bounties: "javascript:alert(1)" } } })).bounties;
+  assert.equal(bad.connected, false);
+  assert.equal(bad.href, undefined);
 });
 
 test("Empire: an address is shortened; an id alone reads linked and links to Empire Builder", () => {

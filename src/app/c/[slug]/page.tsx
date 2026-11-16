@@ -11,6 +11,7 @@ import CopyButton from "@/app/_components/CopyButton";
 import OwnerBadge from "@/app/_components/OwnerBadge";
 import { maskBacker } from "@/lib/sanitize";
 import HearthActions from "@/app/_components/HearthActions";
+import PendingApprove from "@/app/_components/PendingApprove";
 import Flame from "@/app/_components/Flame";
 import SparkLit from "@/app/_components/SparkLit";
 import EmpireLeaderboard from "@/app/_components/EmpireLeaderboard";
@@ -228,6 +229,7 @@ export default async function HearthPage({
             This spark is <span className="font-semibold">pending review</span>. It is
             live for you to share, but stays out of Explore until an operator approves it.
           </span>
+          <PendingApprove hearthId={hearth.id} />
         </div>
       )}
 
@@ -341,16 +343,16 @@ export default async function HearthPage({
         </div>
       )}
 
-      {/* Boost engine: free public support signal (not a payment). */}
-      <HearthContextPanel context={readContext(hearth.metadata)} />
-
+      {/* Boost engine: free public support signal (not a payment). The one Boost on the
+          page (Zaal, 16 Nov: the header's Boost only jumped down to this box, "kinda weird"),
+          so it sits right under the header. */}
       <section id="boost" className="glass mb-8 scroll-mt-20 p-4">
         <h2 className="mb-1 text-sm font-medium">Boost {hearth.name}</h2>
-        <p className="mb-3 text-xs text-muted">
-          Back the work with a free boost. Dollar backing opens with fiat/BYOK soon.
-        </p>
+        <p className="mb-3 text-xs text-muted">Back the work with a free boost.</p>
         <BoostForm hearthId={hearth.id} />
       </section>
+
+      <HearthContextPanel context={readContext(hearth.metadata)} />
 
       <HearthTabs
         panes={[

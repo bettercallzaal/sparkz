@@ -31,7 +31,7 @@ export default function Footer() {
             GitHub
           </a>
           <Link href="/profile" className="hover:text-foreground">
-            Sign in
+            Account
           </Link>
         </div>
         <p className="mt-6 text-xs">

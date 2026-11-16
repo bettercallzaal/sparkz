@@ -5,8 +5,8 @@ import { useViewer, useViewerProfile } from "@/lib/view-as";
 import ShareButton from "./ShareButton";
 import { ClaimHearthButton } from "./AdminSetup";
 
-// The row of large actions under a Hearth's header: Share, Boost, and Edit for the
-// owner. 44pt targets on phone. Pattern credit (design brief D1): Luma's host tools
+// The row of large actions under a Hearth's header: Share, and Edit for the
+// owner (Boost lives in its own box right below, one Boost per page). 44pt targets on phone. Pattern credit (design brief D1): Luma's host tools
 // put share and manage one tap from the event page.
 export default function HearthActions({
   slug,
@@ -35,9 +35,6 @@ export default function HearthActions({
         channel={channel}
         className="flex-1 sm:flex-none [&>button]:w-full"
       />
-      <a href="#boost" className={`btn-spark ${btn} border-transparent`}>
-        Boost
-      </a>
       {isOwner && (
         <Link href={`/c/${slug}/settings`} className={btn}>
           Edit

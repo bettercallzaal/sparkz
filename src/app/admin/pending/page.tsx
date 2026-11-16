@@ -23,6 +23,9 @@ export default function PendingReview() {
   const [authed, setAuthed] = useState<boolean | null>(null);
   const [list, setList] = useState<Hearth[]>([]);
   const [busy, setBusy] = useState<string | null>(null);
+  // Zaal, 16 Nov: "admin dashboard doesn't seem to work". A failed approve used to
+  // drop the card anyway, so it looked done while the Hearth stayed pending.
+  const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(() => {
     api<Hearth[]>("/api/capsules?review=pending").then((r) => {
@@ -41,8 +44,15 @@ export default function PendingReview() {
 
   const decide = async (id: string, decision: "approve" | "reject") => {
     setBusy(id);
-    await api("/api/capsules/approve", { id, decision });
-    setList((l) => l.filter((c) => c.id !== id));
+    setError(null);
+    const r = await api("/api/capsules/approve", { id, decision });
+    if (r.ok) {
+      setList((l) => l.filter((c) => c.id !== id));
+    } else if (r.status === 401) {
+      setAuthed(false);
+    } else {
+      setError(`${decision === "approve" ? "Approve" : "Reject"} did not go through (${r.status}): ${r.error ?? "try again"}`);
+    }
     setBusy(null);
   };
 
@@ -69,6 +79,11 @@ export default function PendingReview() {
       </p>
 
       {authed === null && <p className="text-sm text-muted">Loading...</p>}
+      {error && (
+        <p role="alert" className="mb-3 rounded-lg border border-red-500/40 bg-red-500/10 p-3 text-sm">
+          {error}
+        </p>
+      )}
       {authed && list.length === 0 && (
         <p className="rounded-lg border border-border p-6 text-center text-sm text-muted">
           Nothing pending. The queue is clear.

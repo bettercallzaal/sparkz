@@ -2,12 +2,13 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { isAdminAddress, isAdminFid } from "./admin-identities";
 
-test("the admin FID is an admin", () => {
+test("the admin FIDs are admins (Zaal, IMan)", () => {
   assert.equal(isAdminFid(19640), true);
+  assert.equal(isAdminFid(1057869), true);
 });
 
 test("other FIDs are not", () => {
-  for (const fid of [0, 1, 19641, 1057869, -19640, null, undefined]) {
+  for (const fid of [0, 1, 19641, 1057868, 1057870, -19640, -1057869, null, undefined]) {
     assert.equal(isAdminFid(fid), false, String(fid));
   }
 });

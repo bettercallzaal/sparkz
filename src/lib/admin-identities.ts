@@ -6,8 +6,9 @@
 // proven by a verified sign-in (Farcaster SIWF / Quick Auth, or SIWE) - never taken
 // from a request body. Both are public identifiers, so pinning them in code is safe.
 
-// Zaal's Farcaster FID.
-export const ADMIN_FIDS: ReadonlySet<number> = new Set([19640]);
+// Zaal's Farcaster FID, and IMan Afrikah's (@imanafrikah, 1057869; added 2026-11-18 so IMan
+// can link and run tokenless Empires for Hearths, e.g. Sparkz and Zoostr, without waiting on Zaal).
+export const ADMIN_FIDS: ReadonlySet<number> = new Set([19640, 1057869]);
 
 // zaal.eth, resolved on Ethereum mainnet at block 26219375 (2026-10-18T12:13:35Z).
 // Two independent RPCs agreed (publicnode, 1rpc). It is an EOA (no contract code at

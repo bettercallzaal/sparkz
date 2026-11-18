@@ -20,6 +20,7 @@ const LINK_KEYS = [
   "x",
   "farcaster",
   "discord",
+  "bounties",
 ] as const;
 type LinkKey = (typeof LINK_KEYS)[number];
 const LINK_LABEL: Record<LinkKey, string> = {
@@ -29,6 +30,7 @@ const LINK_LABEL: Record<LinkKey, string> = {
   x: "X",
   farcaster: "Farcaster",
   discord: "Discord",
+  bounties: "Bounties (poidh link)",
 };
 
 export interface HearthDetails {

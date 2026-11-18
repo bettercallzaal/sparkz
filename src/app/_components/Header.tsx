@@ -3,13 +3,14 @@ import Flame from "./Flame";
 import HeaderAuth from "./HeaderAuth";
 import MobileNav from "./MobileNav";
 import AddMiniApp from "./AddMiniApp";
+import TryCta from "./TryCta";
 
 // Global sticky header - every page gets it via the root layout. Flame home,
 // a few key destinations, and a persistent "Try Sparkz" CTA so a first-time
 // visitor always has a way forward.
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 border-b border-border/80 bg-background/80 backdrop-blur-md">
+    <header className="sticky top-[env(safe-area-inset-top)] z-50 border-b border-border/80 bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-5xl items-center gap-4 px-4">
         <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
           <Flame className="h-6 w-6" />
@@ -28,9 +29,7 @@ export default function Header() {
         <div className="ml-auto flex items-center gap-3">
           <AddMiniApp />
           <HeaderAuth />
-          <Link href="/start" className="web-only btn-spark rounded-lg px-4 py-1.5 text-sm">
-            Try Sparkz
-          </Link>
+          <TryCta />
           <MobileNav />
         </div>
       </div>

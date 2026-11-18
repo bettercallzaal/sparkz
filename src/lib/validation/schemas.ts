@@ -95,6 +95,7 @@ export const updateHearthSchema = z.object({
       x: optionalUrl,
       farcaster: optionalUrl,
       discord: optionalUrl,
+      bounties: optionalUrl, // a poidh bounty or a page listing them
     })
     .optional(),
 });

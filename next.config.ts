@@ -18,6 +18,22 @@ const nextConfig: NextConfig = {
       "@x402/svm/exact/client": x402Stub,
     },
   },
+  // Baseline security headers (backend review, 2026-11-19). frame-ancestors / X-Frame-Options
+  // are left out on purpose: Farcaster clients embed Sparkz as a mini app in a frame, and
+  // their exact origins have to be listed before framing can be restricted.
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Strict-Transport-Security", value: "max-age=31536000" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+        ],
+      },
+    ];
+  },
   // Clean URL for the static interactive architecture page (public/architecture.html).
   async rewrites() {
     return [{ source: "/architecture", destination: "/architecture.html" }];

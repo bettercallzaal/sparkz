@@ -10,7 +10,8 @@ import { isAdminAddress, isAdminFid } from "./admin-identities";
 // Like the admin list, this is only ever checked AFTER a verified sign-in (Farcaster
 // SIWF / Quick Auth, or SIWE), never against a value from a request body. FIDs and
 // addresses are public identifiers, so pinning them in code is safe.
-export const ALPHA_LOCK = true;
+// Opened for the public TestFlight beta (Zaal, 2026-11-19: "i wanna allow signin").
+export const ALPHA_LOCK = false;
 
 export const ALPHA_CLOSED_MESSAGE =
   "Sparkz is in private testing right now. Join the waitlist and we will let you know when it opens.";

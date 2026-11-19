@@ -12,6 +12,7 @@ import {
   sessionConfigured,
   sessionFid,
 } from "./session";
+import { ALPHA_LOCK } from "./alpha-access";
 
 // A throwaway test key, 40 characters; never a real secret.
 const KEY = "test-only-session-secret-0123456789abcdef";
@@ -134,10 +135,12 @@ test("a cross-site request is treated as having no session", () => {
   });
 });
 
-test("under the alpha lock, a valid session for an unlisted FID reads as none", () => {
+// Follows the live ALPHA_LOCK setting: locked, an unlisted FID reads as none; open,
+// the same valid session reads as that FID. (isAlphaAllowed's own tests cover both.)
+test("a valid session for an unlisted FID follows the alpha lock", () => {
   withSecret(KEY, () => {
     const cookie = mintSession(424242) ?? undefined;
     assert.equal(readSession(cookie), 424242); // the cookie itself is valid
-    assert.equal(sessionFid(request({}, cookie)), null); // the route still sees no one
+    assert.equal(sessionFid(request({}, cookie)), ALPHA_LOCK ? null : 424242);
   });
 });

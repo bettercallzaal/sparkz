@@ -42,7 +42,8 @@ export default function StartForm() {
 
   // The server session is the truth for ownership (create-spark reads it too).
   // A slow or hung check must not leave the button disabled: after 8s, treat it as
-  // signed out (the email path), which the server accepts either way.
+  // signed out (the email path) and show the form; while Hearth creation is
+  // allowlist-only the server refuses a signed-out create with a 403 and its message.
   useEffect(() => {
     let alive = true;
     const ctrl = new AbortController();
@@ -57,7 +58,9 @@ export default function StartForm() {
       .catch(() => {
         if (!alive) return;
         setFid(null);
-        setAllowed(false);
+        // Could not ask (slow, offline, a 500): do not lock an allowed person out of the
+        // form. Show it, and let create-spark's 403 answer if they are not on the list.
+        setAllowed(true);
       })
       .finally(() => clearTimeout(timer));
     return () => {

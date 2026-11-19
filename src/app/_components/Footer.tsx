@@ -33,6 +33,9 @@ export default function Footer() {
           <Link href="/profile" className="hover:text-foreground">
             Account
           </Link>
+          <Link href="/privacy" className="hover:text-foreground">
+            Privacy
+          </Link>
         </div>
         <p className="mt-6 text-xs">
           Back the album, not a coin. Part of{" "}

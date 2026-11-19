@@ -7,6 +7,7 @@ import { tokenlessCustomMessage } from "@/lib/empire/client";
 import { useAppKit } from "@reown/appkit/react";
 import { useAccount, useSignMessage } from "wagmi";
 import AdminSignIn from "@/app/_components/AdminSignIn";
+import { projectId } from "@/lib/wallet/config";
 
 function Flame({ className = "" }: { className?: string }) {
   return (
@@ -59,7 +60,7 @@ export default function EmpirePage() {
       });
   }, []);
 
-  const walletConfigured = Boolean(process.env.NEXT_PUBLIC_REOWN_PROJECT_ID);
+  const walletConfigured = Boolean(projectId);
 
   const connect = () => {
     setErr(null);

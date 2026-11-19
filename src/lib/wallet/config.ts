@@ -5,7 +5,11 @@ import { base, optimism } from "@reown/appkit/networks";
 // Coinbase, so it works on mobile browsers (not just wallet in-app browsers) - the
 // core fix from the connecting-wallets skill. projectId is public (free, from
 // reown.com) and safe as a NEXT_PUBLIC var.
-export const projectId = process.env.NEXT_PUBLIC_REOWN_PROJECT_ID ?? "";
+// Fallback: the Sparkz project on cloud.reown.com (team ZAO). Public by design; the
+// Reown allowlist (trysparkz.com) is what stops other sites using it.
+export const SPARKZ_REOWN_PROJECT_ID = "1a2125cb32e5d6d09c56f354cac7fcfe";
+export const projectId =
+  process.env.NEXT_PUBLIC_REOWN_PROJECT_ID || SPARKZ_REOWN_PROJECT_ID;
 
 export const networks = [base, optimism] as const;
 

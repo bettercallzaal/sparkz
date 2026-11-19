@@ -392,7 +392,7 @@ Surfaced on each Hearth page (`/c/[slug]`) as an integrations panel - **the Hear
 
 > **TL;DR** Every endpoint is validated and error-handled; administrative writes and Meme Engine routes need an admin.
 
-Routes validate request data with Zod `safeParse`, wrap handlers in try/catch, log server-side, and return sanitized errors. Public creation, boosting, and waitlist routes are intentionally narrow; administrative writes and the Meme Engine require an admin: a human signed in with Farcaster or Sign-In with Ethereum as an allowlisted identity (`src/lib/admin-identities.ts`), or the background agent sending `SPARKZ_ADMIN_TOKEN` as the `x-sparkz-admin-token` header.
+Routes validate request data with Zod `safeParse`, wrap handlers in try/catch, log server-side, and return sanitized errors. Public creation, boosting, and waitlist routes are intentionally narrow; administrative writes and the Meme Engine require an admin: a human signed in with Farcaster or Sign-In with Ethereum as an allowlisted identity (`src/lib/admin-identities.ts`), and the background agent sends its token (`SPARKZ_AGENT_TOKEN`, or the older name `SPARKZ_ADMIN_TOKEN`) as the `x-sparkz-admin-token` header. That token is scoped to the routes the agent calls (signals, signal approve and detect, receipts); it is not admin and cannot use the Hearth owner or admin routes.
 
 | Method | Route | Purpose |
 | --- | --- | --- |

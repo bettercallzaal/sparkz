@@ -1,5 +1,8 @@
 import { randomBytes } from "node:crypto";
-import { ok, serverError } from "@/lib/http";
+import type { NextRequest } from "next/server";
+import { ok, serverError, tooManyRequests } from "@/lib/http";
+import { memoryLimitHit, SIGN_IN_LIMIT, SIGN_IN_WINDOW_MS } from "@/lib/memory-limit";
+import { clientIpHash } from "@/lib/rate-limit";
 import { NextResponse } from "next/server";
 import { crossSiteCookie, mintNonceCookie, NONCE_COOKIE, NONCE_MAX_AGE } from "@/lib/session";
 
@@ -7,8 +10,11 @@ import { crossSiteCookie, mintNonceCookie, NONCE_COOKIE, NONCE_MAX_AGE } from "@
 // puts it in the message the user signs; /api/auth/siwf only accepts a message that
 // carries the nonce held in this signed, time-limited httpOnly cookie (see
 // mintNonceCookie), so a signed message cannot be replayed later.
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    if (memoryLimitHit(`auth:${clientIpHash(req)}`, SIGN_IN_LIMIT, SIGN_IN_WINDOW_MS)) {
+      return tooManyRequests("Too many sign-in attempts. Wait a few minutes and try again.");
+    }
     const nonce = randomBytes(16).toString("hex");
     const cookie = mintNonceCookie(nonce);
     if (!cookie) {

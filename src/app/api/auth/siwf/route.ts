@@ -1,7 +1,9 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { ok, serverError, zodError, forbidCrossSite } from "@/lib/http";
+import { ok, serverError, zodError, forbidCrossSite, tooManyRequests } from "@/lib/http";
+import { memoryLimitHit, SIGN_IN_LIMIT, SIGN_IN_WINDOW_MS } from "@/lib/memory-limit";
+import { clientIpHash } from "@/lib/rate-limit";
 import { ALPHA_CLOSED_MESSAGE, isAlphaAllowed } from "@/lib/alpha-access";
 import { verifySiwf } from "@/lib/farcaster-auth";
 import {
@@ -26,6 +28,9 @@ export async function POST(req: NextRequest) {
   try {
     const crossSite = forbidCrossSite(req);
     if (crossSite) return crossSite;
+    if (memoryLimitHit(`auth:${clientIpHash(req)}`, SIGN_IN_LIMIT, SIGN_IN_WINDOW_MS)) {
+      return tooManyRequests("Too many sign-in attempts. Wait a few minutes and try again.");
+    }
 
     const body = await req.json().catch(() => null);
     const parsed = schema.safeParse(body);

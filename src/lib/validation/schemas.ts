@@ -167,12 +167,15 @@ export const deployEmpireSchema = z.object({
   hearth_id: z.string().uuid(),
   name: z.string().min(1).max(100),
   owner: z.string().regex(/^0x[a-fA-F0-9]{40}$/),
-  signature: z.string().regex(/^0x[a-fA-F0-9]+$/),
-  logo_uri: z.string().url().max(500).optional(),
+  // A personal_sign signature is 65 bytes (132 chars); 1000 leaves room for smart-wallet
+  // signatures without accepting an unbounded string.
+  signature: z.string().max(1000).regex(/^0x[a-fA-F0-9]+$/),
+  // https only, like the Hearth links: bare .url() accepts javascript: and data:.
+  logo_uri: httpsUrl.optional(),
   bio: z.string().max(2000).optional(),
-  website_url: z.string().url().max(300).optional(),
-  twitter_url: z.string().url().max(300).optional(),
-  telegram_url: z.string().url().max(300).optional(),
+  website_url: httpsUrl.optional(),
+  twitter_url: httpsUrl.optional(),
+  telegram_url: httpsUrl.optional(),
 });
 
 // "Join the team" on a Spark: name required, wallet on Base (0x + 40 hex), handle optional.
@@ -184,4 +187,11 @@ export const joinTeamSchema = z.object({
   // Where the sign-up came from: "zao" is the /zao page's team list, "apply" is the
   // public "apply to the Sparkz team" form (Zaal, 2026-11-19). Stored in team_signups.source.
   source: z.enum(["zao", "apply"]).optional(),
+});
+
+// POST /api/capsules/approve - the admin review decision on a self-serve Hearth.
+// The admin pages send "approve" or "reject"; anything else is a 400, not a silent approve.
+export const approveHearthSchema = z.object({
+  id: z.string().uuid(),
+  decision: z.enum(["approve", "reject"]).optional(),
 });

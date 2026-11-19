@@ -106,6 +106,15 @@ export function getDistributionRecords(empireAddress: string) {
   return getJson(`/distribution-records/${encodeURIComponent(empireAddress)}`);
 }
 
+// True when a name is one string typed twice ("WaveWarZ AfricaWaveWarZ Africa"), the
+// mistake that happens when someone types over the name the launcher pre-fills.
+export function isDoubledName(name: string): boolean {
+  const n = name.trim();
+  if (n.length < 6 || n.length % 2 !== 0) return false; // short names like "lala" are fine
+  const half = n.length / 2;
+  return n.slice(0, half).trim() !== "" && n.slice(0, half) === n.slice(half);
+}
+
 // The exact byte-exact message the tokenless deploy endpoint enforces (custom mode).
 export function tokenlessCustomMessage(name: string): string {
   return `I am deploying a custom tokenless Empire named ${name.trim()}`;

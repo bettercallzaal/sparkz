@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { Hearth } from "@/lib/supabase/types";
-import { tokenlessCustomMessage } from "@/lib/empire/client";
+import { tokenlessCustomMessage, isDoubledName } from "@/lib/empire/client";
 import { useAppKit } from "@reown/appkit/react";
 import { useAccount, useSignMessage } from "wagmi";
 import AdminSignIn from "@/app/_components/AdminSignIn";
@@ -98,8 +98,12 @@ export default function EmpirePage() {
   };
 
   const deploy = async () => {
-    setBusy(true);
     setErr(null);
+    if (isDoubledName(name)) {
+      setErr(`The name looks typed twice ("${name.trim()}"). Fix it before signing: the name can't be changed after launch.`);
+      return;
+    }
+    setBusy(true);
     try {
       const signature = await signMessageAsync({
         message: tokenlessCustomMessage(name),
@@ -256,6 +260,7 @@ export default function EmpirePage() {
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                onFocus={(e) => e.target.select()}
                 placeholder="Empire name"
                 className="w-full rounded-md border border-border bg-card px-3 py-2.5 text-sm"
               />

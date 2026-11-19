@@ -6,7 +6,7 @@ import { ok, badRequest, serverError, zodError, forbidCrossSite } from "@/lib/ht
 import { generateDrafts } from "@/lib/meme-engine/draft";
 import { routeApproval } from "@/lib/adapters/approval-channel";
 import { getHearthRuntime } from "@/lib/plugins/hearth-config";
-import { requireAdmin } from "@/lib/auth";
+import { requireAdminOrAgent } from "@/lib/auth";
 import { canonicalOrigin } from "@/lib/origin";
 import type { Hearth, Signal, SignalDraft } from "@/lib/supabase/types";
 
@@ -14,7 +14,7 @@ import type { Hearth, Signal, SignalDraft } from "@/lib/supabase/types";
 // Gated: drafts are internal (pre-publish) operator data.
 export async function GET(req: NextRequest) {
   try {
-    const denied = requireAdmin(req);
+    const denied = requireAdminOrAgent(req);
     if (denied) return denied;
 
     const hearthId = req.nextUrl.searchParams.get("hearth_id");
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
   const crossSite = forbidCrossSite(req);
   if (crossSite) return crossSite;
   try {
-    const denied = requireAdmin(req);
+    const denied = requireAdminOrAgent(req);
     if (denied) return denied;
 
     const body = await req.json().catch(() => null);

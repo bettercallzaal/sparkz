@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { httpsHref } from "@/lib/safe-href";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getServiceClient } from "@/lib/supabase/server";
@@ -205,15 +206,21 @@ export default async function HearthPage({
   const isCreator = hearth.type === "creator";
   const tags = Array.isArray(meta.tags) ? meta.tags : [];
   const links = meta.links ?? {};
-  const linkRow: { label: string; href: string }[] = [
-    links.website ? { label: "Website", href: links.website } : null,
-    links.github ? { label: "GitHub", href: links.github } : null,
-    links.docs ? { label: "Docs", href: links.docs } : null,
-    links.x ? { label: "X", href: links.x } : null,
-    links.farcaster ? { label: "Farcaster", href: links.farcaster } : null,
-    links.discord ? { label: "Discord", href: links.discord } : null,
-    links.bounties ? { label: "Bounties", href: links.bounties } : null,
-  ].filter((l): l is { label: string; href: string } => l !== null);
+  // https only, checked at render (lib/safe-href.ts): a stored javascript: link is dropped.
+  const linkRow: { label: string; href: string }[] = (
+    [
+      ["Website", links.website],
+      ["GitHub", links.github],
+      ["Docs", links.docs],
+      ["X", links.x],
+      ["Farcaster", links.farcaster],
+      ["Discord", links.discord],
+      ["Bounties", links.bounties],
+    ] as const
+  ).flatMap(([label, raw]) => {
+    const href = httpsHref(raw);
+    return href ? [{ label, href }] : [];
+  });
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-8">

@@ -1,4 +1,5 @@
 import { readFileSync, readdirSync } from "node:fs";
+import { articleHref } from "./safe-href";
 import { join } from "node:path";
 
 // Articles live as markdown in content/articles (also the blog source). We read them
@@ -67,14 +68,23 @@ function parseList(v?: string): string[] {
 }
 
 function esc(s: string): string {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 // Inline: code, links, bold, italic. Input is already HTML-escaped.
 function inline(s: string): string {
   return esc(s)
     .replace(/`([^`]+)`/g, "<code>$1</code>")
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
+    // A link target that is not https, http, a site path or an anchor renders as plain text.
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_m, text: string, href: string) => {
+      const safe = articleHref(href.replace(/&amp;/g, "&"));
+      return safe ? `<a href="${esc(safe)}">${text}</a>` : text;
+    })
     .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
     .replace(/\*([^*]+)\*/g, "<em>$1</em>");
 }

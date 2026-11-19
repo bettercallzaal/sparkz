@@ -78,11 +78,29 @@ export async function POST(req: NextRequest) {
       console.error("[sparkz:empire.deploy] upstream:", msg);
       // Nothing was deployed: release the owner's claim so they can retry.
       if (!operator) {
-        await supabase.from("hearths").update({ economic_config: econBefore }).eq("id", parsed.data.hearth_id);
+        const { error: releaseErr } = await supabase
+          .from("hearths")
+          .update({ economic_config: econBefore })
+          .eq("id", parsed.data.hearth_id);
+        if (releaseErr) {
+          // The claim stays set, so a retry answers 409. Say which Hearth, so an operator can clear it.
+          console.error("[sparkz:empire.deploy] claim release failed for hearth", parsed.data.hearth_id, releaseErr);
+        }
       }
       return badRequest(msg);
     }
-    const resolved = baseToken ? await resolveEmpire(baseToken) : null;
+    // The empire now exists on Base. Log its id before anything else can fail, so it is
+    // never lost if the record update below does not land.
+    console.error("[sparkz:empire.deploy] deployed", { hearth_id: parsed.data.hearth_id, empire_id: baseToken });
+    // Resolving the address is a nice-to-have: a failure here must not lose the deploy.
+    let resolved: Awaited<ReturnType<typeof resolveEmpire>> | null = null;
+    if (baseToken) {
+      try {
+        resolved = await resolveEmpire(baseToken);
+      } catch (resolveErr) {
+        console.error("[sparkz:empire.deploy] resolve failed, saving the id without an address:", resolveErr);
+      }
+    }
 
     const { data, error } = await supabase.from("hearths").update({
       economic_config: {
@@ -92,7 +110,19 @@ export async function POST(req: NextRequest) {
         empire_mode: "custom", empire_owner: parsed.data.owner,
       },
     }).eq("id", parsed.data.hearth_id).select("*").single();
-    if (error) throw error;
+    if (error) {
+      // The deploy happened, so hand back its id rather than a bare 500: the owner can attach
+      // it with "Link an existing Empire" (capsules/link-empire).
+      console.error("[sparkz:empire.deploy] saving the deployed empire failed", { hearth_id: parsed.data.hearth_id, empire_id: baseToken }, error);
+      return NextResponse.json(
+        {
+          ok: false,
+          empire_id: baseToken,
+          error: `Your Empire was deployed (id ${baseToken}) but saving it to this Hearth failed. Link it with that id.`,
+        },
+        { status: 500 },
+      );
+    }
 
     return ok({ empire_id: baseToken, empire_address: resolved?.empireAddress ?? null, hearth: data }, 201);
   } catch (err) {

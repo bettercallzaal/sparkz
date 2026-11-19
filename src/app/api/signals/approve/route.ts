@@ -59,18 +59,21 @@ export async function POST(req: NextRequest) {
 
     // Mark the chosen draft; stamp the rejected ones with a reject_reason so the
     // "what the human passed on" signal is captured (the moat).
-    await supabase
+    // Each write is checked: a failed one must not come back to the agent as "published".
+    const { error: chosenErr } = await supabase
       .from("signal_drafts")
       .update({ chosen: true, approver: input.approver ?? null })
       .eq("id", chosen.id);
-    await supabase
+    if (chosenErr) throw chosenErr;
+    const { error: rejectErr } = await supabase
       .from("signal_drafts")
       .update({ reject_reason: "not chosen by approver" })
       .eq("signal_id", signal.id)
       .neq("id", chosen.id);
+    if (rejectErr) throw rejectErr;
 
     // Advance the signal to published.
-    await supabase
+    const { error: publishErr } = await supabase
       .from("signals")
       .update({
         status: "published",
@@ -79,6 +82,7 @@ export async function POST(req: NextRequest) {
         approved_at: now,
       })
       .eq("id", signal.id);
+    if (publishErr) throw publishErr;
 
     // Write the Meme Receipt.
     const { data: receiptRow, error: recErr } = await supabase

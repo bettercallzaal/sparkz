@@ -9,7 +9,8 @@ import {
   SELF_SERVE_WINDOW_MS,
 } from "@/lib/rate-limit";
 import { isAdmin } from "@/lib/auth";
-import { sessionFid } from "@/lib/session";
+import { sessionClaims, sessionFid } from "@/lib/session";
+import { canCreateHearth, HEARTH_CREATE_CLOSED_MESSAGE } from "@/lib/alpha-access";
 import { NextResponse } from "next/server";
 import type { Hearth } from "@/lib/supabase/types";
 
@@ -36,6 +37,12 @@ export async function POST(req: NextRequest) {
     // Honeypot tripped: pretend success, create nothing.
     if (input.website && input.website.trim().length > 0) {
       return ok({ slug: null, ignored: true }, 200);
+    }
+
+    // Allowlist-only for now (lib/alpha-access.ts HEARTH_CREATE_LOCK). Checked against the
+    // verified session, never the body; the operator token still passes.
+    if (!isAdmin(req) && !canCreateHearth(sessionClaims(req))) {
+      return NextResponse.json({ ok: false, error: HEARTH_CREATE_CLOSED_MESSAGE }, { status: 403 });
     }
 
     // Ownership comes ONLY from the verified session (lib/session.ts). A body

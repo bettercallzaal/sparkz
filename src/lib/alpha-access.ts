@@ -24,6 +24,16 @@ export const ALPHA_ADDRESSES: ReadonlySet<string> = new Set([
   "0xf73485a61856ab07ad57152151db3ab99df9a8ea",
 ]);
 
+// Opening a Hearth is allowlist-only for now (Zaal, 2026-11-19: "Let's make it so people
+// cannot open up a hearth for now unless they are whitelisted"). Browsing, signing in and
+// boosting stay open. The allowlist is the same one as above: admins plus ALPHA_FIDS and
+// ALPHA_ADDRESSES. To let someone open Hearths, add their FID or wallet there; to open
+// Hearth creation to everyone, set this to false.
+export const HEARTH_CREATE_LOCK = true;
+
+export const HEARTH_CREATE_CLOSED_MESSAGE =
+  "Opening a Hearth is invite-only while Sparkz is in beta. Join the list and we will light yours next.";
+
 export interface AlphaIdentity {
   fid?: number | null;
   address?: string | null;
@@ -42,4 +52,13 @@ export function isAlphaAllowed(
   if (typeof fid === "number" && ALPHA_FIDS.has(fid)) return true;
   if (typeof address === "string" && ALPHA_ADDRESSES.has(address.toLowerCase())) return true;
   return false;
+}
+
+// May this verified identity open a Hearth right now? Same allowlist as the alpha lock,
+// behind its own switch. Fails CLOSED while locked: signed out (the email path) is refused.
+export function canCreateHearth(
+  identity: AlphaIdentity | null | undefined,
+  locked: boolean = HEARTH_CREATE_LOCK,
+): boolean {
+  return isAlphaAllowed(identity, locked);
 }

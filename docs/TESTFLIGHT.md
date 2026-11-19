@@ -84,7 +84,7 @@ https://appstoreconnect.apple.com > My Apps > + > New App:
 
 ### 7. Archive and upload
 
-In Xcode: set the run target to "Any iOS Device (arm64)", then Product > Archive. When the Organizer opens: Distribute App > TestFlight Internal Only > Upload. Keep the defaults (upload symbols, manage version and build number).
+In Xcode: set the run target to "Any iOS Device (arm64)", then Product > Archive. When the Organizer opens: Distribute App > App Store Connect > Upload (not "TestFlight Internal Only": an internal-only build can never be added to an external group, so it cannot go in the public beta). Keep the defaults (upload symbols, manage version and build number).
 
 Processing takes 5 to 60 minutes. App Store Connect emails when the build is ready.
 

@@ -71,15 +71,17 @@ export async function POST(req: NextRequest) {
 
     // Dedupe: one boost per backer per Hearth. The unique index from migration 0007 is
     // the real guard; this read only saves an insert in the common case.
+    // limit(1), not maybeSingle: a backer who already has two boost rows (from before
+    // 0007) must read as deduped, not as a "multiple rows" error.
     const { data: existing, error: dupErr } = await supabase
       .from("hearth_backers")
       .select("id")
       .eq("hearth_id", parsed.data.hearth_id)
       .eq("backer_id", backerId)
       .eq("kind", "boost")
-      .maybeSingle();
+      .limit(1);
     if (dupErr) throw dupErr;
-    if (existing) return ok({ boosted: true, deduped: true }, 200);
+    if (Array.isArray(existing) && existing.length > 0) return ok({ boosted: true, deduped: true }, 200);
 
     const { error } = await supabase.from("hearth_backers").insert({
       hearth_id: parsed.data.hearth_id,

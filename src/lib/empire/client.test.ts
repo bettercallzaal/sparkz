@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { parseEmpire } from "./client";
+import { parseEmpire, isDoubledName } from "./client";
 
 // The live answer for the Sparkz empire (trimmed), 2026-11-18.
 const live = {
@@ -30,4 +30,12 @@ test("an empty answer gives nulls, not a crash", () => {
   assert.equal(r.empireAddress, null);
   assert.equal(r.tokenType, null);
   assert.equal(r.empireId, "x");
+});
+
+test("isDoubledName catches a pre-filled name typed again", () => {
+  assert.equal(isDoubledName("WaveWarZ AfricaWaveWarZ Africa"), true);
+  assert.equal(isDoubledName("WaveWarZ Africa"), false);
+  assert.equal(isDoubledName("Zoostr"), false);
+  assert.equal(isDoubledName("lala"), false);
+  assert.equal(isDoubledName(""), false);
 });

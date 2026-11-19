@@ -33,3 +33,24 @@ test("when the lock is off, everyone is allowed", () => {
   assert.equal(isAlphaAllowed({ fid: 1 }, false), true);
   assert.equal(isAlphaAllowed(null, false), true);
 });
+
+test("opening a Hearth: while locked, only the allowlist may", async () => {
+  const { canCreateHearth } = await import("./alpha-access");
+  assert.equal(canCreateHearth({ fid: 19640 }, true), true); // Zaal, admin
+  assert.equal(canCreateHearth({ fid: 1057869 }, true), true); // IMan
+  assert.equal(canCreateHearth({ address: "0xF73485A61856Ab07Ad57152151db3ab99dF9a8Ea" }, true), true);
+  for (const identity of [null, undefined, {}, { fid: 2 }, { address: "0x0000000000000000000000000000000000000000" }]) {
+    assert.equal(canCreateHearth(identity, true), false, JSON.stringify(identity));
+  }
+});
+
+test("opening a Hearth: unlocked, anyone may", async () => {
+  const { canCreateHearth } = await import("./alpha-access");
+  assert.equal(canCreateHearth(null, false), true);
+  assert.equal(canCreateHearth({ fid: 2 }, false), true);
+});
+
+test("Hearth creation ships locked", async () => {
+  const { HEARTH_CREATE_LOCK } = await import("./alpha-access");
+  assert.equal(HEARTH_CREATE_LOCK, true);
+});

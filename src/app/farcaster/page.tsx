@@ -139,7 +139,7 @@ export default function FarcasterPage() {
             Farcaster has the highest signal-to-noise creator community on any network right now. It&apos;s where culture forms before it spreads. Sparkz launches here first because the best early backing comes from people who actually understand the work - not from a broadcast to everyone at once.
           </p>
           <p className="mt-3 text-sm text-muted leading-relaxed">
-            FEF is not about locking creators in - it&apos;s about starting with the right community. Zoostr proved it: 34+ boosters on Farcaster built the empire before $ZOOSTR even had a price.
+            FEF is not about locking creators in - it&apos;s about starting with the right community. Zoostr starts there: its leaderboard comes first, and a token waits until the community pulls for one.
           </p>
         </div>
       </section>

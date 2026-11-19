@@ -46,7 +46,7 @@ const TEMPLATES = [
     subtitle: "The Zoostr model",
     description:
       "Build a public leaderboard of contributors before any token exists. Boost content → earn points → claim fee share weekly. The community creates the value; the token reflects it.",
-    realExample: "Zoostr - 50+ boosters, live on Base",
+    realExample: "Zoostr, the first Hearth (leaderboard first, token later)",
     realLink: "/c/zoostr",
     tokenless: "Leaderboard + Boostr backing + weekly Meme Engine receipts",
     split: { community: 50, creator: 25, treasury: 25 },

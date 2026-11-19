@@ -186,9 +186,8 @@ export default function ManifestoPage() {
           The first live Hearth
         </div>
         <p className="text-sm text-foreground/80 leading-relaxed mb-3">
-          Zoostr (ZABAL × Boostr) was the first live Hearth. 50+ people showed up
-          for the culture first. The community pulled, and every Spark since has
-          grown it.
+          Zoostr (ZABAL × Boostr) was the first live Hearth. Culture comes first:
+          the community pulls, and every Spark grows it.
         </p>
         <Link href="/c/zoostr" className="text-accent text-sm hover:underline">
           Zoostr&apos;s Hearth on Sparkz →

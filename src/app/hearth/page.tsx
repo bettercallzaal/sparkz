@@ -144,14 +144,12 @@ export default function HearthPage() {
           >
             Browse Hearths →
           </Link>
-          <a
-            href="https://zoostr.xyz"
-            target="_blank"
-            rel="noreferrer"
+          <Link
+            href="/c/zoostr"
             className="text-sm px-4 py-2 border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
           >
-            Zoostr live example ↗
-          </a>
+            Zoostr live example →
+          </Link>
         </div>
       </section>
 

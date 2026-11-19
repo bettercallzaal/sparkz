@@ -149,14 +149,9 @@ export default function MemeEnginePage() {
           <p className="mb-3 text-sm text-muted">
             ZABAL runs ZOL to track the Zoostr empire: milestone detection from live Boostr stats, three-variant drafting for Farcaster casts, human approval via the /zol panel, 24h remix scoring, weekly snapshot → receipt. The full loop runs on one human click.
           </p>
-          <a
-            href="https://zoostr.xyz/zol"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-block text-sm text-accent hover:underline"
-          >
-            See the /zol admin panel at zoostr.xyz ↗
-          </a>
+          <Link href="/c/zoostr" className="inline-block text-sm text-accent hover:underline">
+            See Zoostr&apos;s receipts on its Hearth →
+          </Link>
         </div>
       </section>
 

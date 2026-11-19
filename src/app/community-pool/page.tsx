@@ -232,14 +232,9 @@ export default function CommunityPoolPage() {
           community pool. Boosters earn points by liking ZABAL casts via Boostr. Weekly
           snapshot → 0xSplits update → claim at splits.org.
         </p>
-        <a
-          href="https://zoostr.xyz/leaderboard"
-          target="_blank"
-          rel="noreferrer"
-          className="text-accent text-sm hover:underline"
-        >
-          Zoostr leaderboard → zoostr.xyz/leaderboard ↗
-        </a>
+        <Link href="/c/zoostr" className="text-accent text-sm hover:underline">
+          Zoostr leaderboard, on its Hearth →
+        </Link>
       </section>
 
       {/* CTAs */}

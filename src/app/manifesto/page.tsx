@@ -190,14 +190,9 @@ export default function ManifestoPage() {
           for the culture first. The community pulled, and every Spark since has
           grown it.
         </p>
-        <a
-          href="https://zoostr.xyz"
-          target="_blank"
-          rel="noreferrer"
-          className="text-accent text-sm hover:underline"
-        >
-          zoostr.xyz - the live empire ↗
-        </a>
+        <Link href="/c/zoostr" className="text-accent text-sm hover:underline">
+          Zoostr&apos;s Hearth on Sparkz →
+        </Link>
       </section>
 
       {/* CTAs */}

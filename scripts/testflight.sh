@@ -9,6 +9,10 @@
 # from CURRENT_PROJECT_VERSION); xcodebuild archive; xcodebuild -exportArchive with method
 # app-store-connect and destination export (an .ipa on disk); xcrun altool --upload-app.
 #
+# The export is NOT marked internal-only, so a build can join an external TestFlight group
+# (the public beta) after Beta App Review. Builds 1, 2 and 4 were internal-only and can
+# never be added to an external group (App Store Connect, 19 Nov 2026).
+#
 # Least privilege, split in two:
 #   signing  uses the Apple ID signed in to Xcode on this Mac (Xcode > Settings > Accounts),
 #            the same identity as an Archive click. No -authenticationKey flags, so the API
@@ -224,7 +228,6 @@ cat > "$OUT/ExportOptions.plist" <<PLIST
 <key>destination</key><string>export</string>
 <key>teamID</key><string>$TEAM</string>
 <key>signingStyle</key><string>automatic</string>
-<key>testFlightInternalTestingOnly</key><true/>
 <key>uploadSymbols</key><true/>
 <key>manageAppVersionAndBuildNumber</key><false/>
 </dict></plist>

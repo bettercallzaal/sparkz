@@ -42,6 +42,32 @@ export default function ProfilePage() {
     inMiniApp().then(setMiniApp);
   }, []);
 
+  // Zaal, 19 Nov 2026 (screenshot): reopened, this page showed "fid 19640" twice and no
+  // picture. Only a fresh Farcaster sign-in fills auth-kit's profile; a reopened session
+  // knows the FID alone. The header already fetches the public profile for that case
+  // (HeaderAuth); this page now does the same.
+  const lookupFid = fid ?? serverFid ?? null;
+  const [looked, setLooked] = useState<PublicProfile | null>(null);
+  useEffect(() => {
+    if (!lookupFid || (displayName && pfpUrl)) return;
+    let alive = true;
+    fetch(`/api/hypersnap/profile?fid=${lookupFid}`)
+      .then((r) => r.json())
+      .then((j) => {
+        if (alive && j?.ok && j.data) setLooked(j.data as PublicProfile);
+      })
+      .catch(() => {
+        // The FID still shows; a missing name is not worth an error banner.
+      });
+    return () => {
+      alive = false;
+    };
+  }, [lookupFid, displayName, pfpUrl]);
+  const shownName = displayName ?? looked?.display ?? username ?? looked?.username ?? null;
+  const shownUsername = username ?? looked?.username ?? null;
+  const shownPfp = pfpUrl ?? looked?.pfp ?? null;
+  const shownBio = bio ?? looked?.bio ?? null;
+
   async function onMiniAppSignIn() {
     setSignInError(null);
     try {
@@ -83,8 +109,13 @@ export default function ProfilePage() {
 
       {miniAppSession ? (
         <section className="glass p-5">
-          <div className="text-lg font-semibold">Signed in</div>
-          <div className="text-xs text-muted">fid {serverFid}</div>
+          <ProfileHeader
+            name={shownName}
+            username={shownUsername}
+            pfp={shownPfp}
+            fid={serverFid}
+          />
+          {shownBio && <p className="mt-4 text-sm text-muted">{shownBio}</p>}
           <YourSparks fid={serverFid} />
           <Link
             href="/start"
@@ -124,23 +155,14 @@ export default function ProfilePage() {
         </section>
       ) : (
         <section className="glass p-5">
-          <div className="flex items-center gap-4">
-            {pfpUrl && (
-              <div
-                className="h-16 w-16 shrink-0 rounded-full bg-cover bg-center ring-2 ring-accent"
-                style={{ backgroundImage: `url(${pfpUrl})` }}
-              />
-            )}
-            <div className="min-w-0">
-              <div className="text-lg font-semibold">
-                {displayName ?? username ?? `fid ${fid}`}
-              </div>
-              {username && <div className="text-sm text-accent">@{username}</div>}
-              <div className="text-xs text-muted">fid {fid}</div>
-            </div>
-          </div>
+          <ProfileHeader
+            name={shownName}
+            username={shownUsername}
+            pfp={shownPfp}
+            fid={fid ?? null}
+          />
 
-          {bio && <p className="mt-4 text-sm text-muted">{bio}</p>}
+          {shownBio && <p className="mt-4 text-sm text-muted">{shownBio}</p>}
 
           {fid ? <HypersnapSigner fid={fid} custody={custody ?? null} /> : null}
 
@@ -202,7 +224,16 @@ export default function ProfilePage() {
               </li>
             ))}
           </ul>
-          <SetupZaoButton />
+          {/* One-time seeding, safe to run twice. Kept out of the main list so it does
+              not read as the page's main action. */}
+          <details className="mt-1 rounded-md px-3 pb-2 text-sm">
+            <summary className="flex min-h-11 cursor-pointer items-center text-muted">
+              One-time setup
+            </summary>
+            <div className="-mx-3">
+              <SetupZaoButton />
+            </div>
+          </details>
         </section>
       )}
 
@@ -266,6 +297,43 @@ const ABOUT = [
   { href: "/architecture", label: "Architecture" },
 ];
 
+type PublicProfile = {
+  username?: string;
+  display?: string;
+  pfp?: string;
+  bio?: string;
+};
+
+// Name, @handle and picture, with the FID as the small line. Falls back to "fid N" as
+// the name only when the public profile could not be read.
+function ProfileHeader({
+  name,
+  username,
+  pfp,
+  fid,
+}: {
+  name: string | null;
+  username: string | null;
+  pfp: string | null;
+  fid: number | null;
+}) {
+  return (
+    <div className="flex items-center gap-4">
+      {pfp && (
+        <div
+          className="h-16 w-16 shrink-0 rounded-full bg-cover bg-center ring-2 ring-accent"
+          style={{ backgroundImage: `url(${pfp})` }}
+        />
+      )}
+      <div className="min-w-0">
+        <div className="text-lg font-semibold">{name ?? (fid ? `fid ${fid}` : "Signed in")}</div>
+        {username && <div className="text-sm text-accent">@{username}</div>}
+        {name && fid ? <div className="text-xs text-muted">fid {fid}</div> : null}
+      </div>
+    </div>
+  );
+}
+
 // Ends the server session. auth-kit keeps its own browser state, so reload to
 // clear both.
 function SignOutLink({ onDone }: { onDone: () => void }) {
@@ -277,7 +345,7 @@ function SignOutLink({ onDone }: { onDone: () => void }) {
         onDone();
         window.location.reload();
       }}
-      className="mt-6 inline-flex min-h-11 items-center text-sm text-muted underline hover:text-foreground active:text-foreground sm:min-h-0 sm:text-xs"
+      className="mt-3 inline-flex min-h-11 w-full items-center justify-center rounded-lg border border-border px-4 text-sm text-muted hover:text-foreground active:bg-white/10"
     >
       Sign out
     </button>

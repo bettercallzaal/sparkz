@@ -232,14 +232,9 @@ export default function GraduationPage() {
           0xSplits was deployed first; Clanker came second. The 50/25/25 split was locked before
           launch day.
         </p>
-        <a
-          href="https://zoostr.xyz/token"
-          target="_blank"
-          rel="noreferrer"
-          className="text-accent text-sm hover:underline"
-        >
-          $ZOOSTR token details → zoostr.xyz/token ↗
-        </a>
+        <Link href="/c/zoostr" className="text-accent text-sm hover:underline">
+          Zoostr&apos;s Hearth on Sparkz →
+        </Link>
       </section>
 
       {/* CTAs */}

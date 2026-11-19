@@ -46,8 +46,8 @@ const TEMPLATES = [
     subtitle: "The Zoostr model",
     description:
       "Build a public leaderboard of contributors before any token exists. Boost content → earn points → claim fee share weekly. The community creates the value; the token reflects it.",
-    realExample: "Zoostr (zoostr.xyz) - 50+ boosters, live on Base",
-    realLink: "https://zoostr.xyz/leaderboard",
+    realExample: "Zoostr - 50+ boosters, live on Base",
+    realLink: "/c/zoostr",
     tokenless: "Leaderboard + Boostr backing + weekly Meme Engine receipts",
     split: { community: 50, creator: 25, treasury: 25 },
     tokenTiming: "later" as Timing,
@@ -296,14 +296,9 @@ export default function ExamplesPage() {
               {t.realExample && t.realLink && (
                 <div className="text-xs">
                   <span className="text-muted">Live example: </span>
-                  <a
-                    href={t.realLink}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-accent hover:underline"
-                  >
+                  <Link href={t.realLink} className="text-accent hover:underline">
                     {t.realExample} →
-                  </a>
+                  </Link>
                 </div>
               )}
             </div>

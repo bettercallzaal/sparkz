@@ -9,7 +9,7 @@ const KEY = "test-only-session-secret-0123456789abcdef";
 const AGENT = "test-only-agent-token-abcdef0123456789";
 const ADMIN_FID = 19640;
 const ADMIN_ADDRESS = "0x7234c36a71ec237c2ae7698e8916e0735001e9af";
-const TESTER_FID = 1057869; // alpha tester, not an admin
+const TESTER_FID = 424242; // a signed-in non-admin (IMan, 1057869, is an admin since 2026-11-18)
 
 const saved = {
   secret: process.env.SPARKZ_SESSION_SECRET,

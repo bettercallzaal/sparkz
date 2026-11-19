@@ -181,4 +181,7 @@ export const joinTeamSchema = z.object({
   name: z.string().trim().min(1).max(60),
   wallet: z.string().trim().regex(/^0x[0-9a-fA-F]{40}$/, "wallet must be a 0x address"),
   handle: z.string().trim().max(60).optional(),
+  // Where the sign-up came from: "zao" is the /zao page's team list, "apply" is the
+  // public "apply to the Sparkz team" form (Zaal, 2026-11-19). Stored in team_signups.source.
+  source: z.enum(["zao", "apply"]).optional(),
 });

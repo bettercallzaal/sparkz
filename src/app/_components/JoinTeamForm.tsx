@@ -10,7 +10,18 @@ type Spark = { slug: string; name: string };
 // "Join the team" for The ZAO's Sparks: pick a Spark, give a name and a wallet, done.
 // No wallet connect, no signature: the address is typed, the route validates it and
 // writes one row per wallet per Spark (see /api/team).
-export default function JoinTeamForm({ sparks }: { sparks: Spark[] }) {
+//
+// With one Spark and source "apply" it is the "apply to the Sparkz team" form (Zaal,
+// 2026-11-19: Hearth creation stays allowlist-only, "but people can apply to be part of
+// the sparkz team"). The picker is hidden when there is only one Spark.
+export default function JoinTeamForm({
+  sparks,
+  source = "zao",
+}: {
+  sparks: Spark[];
+  source?: "zao" | "apply";
+}) {
+  const applying = source === "apply";
   const toast = useToast();
   const [slug, setSlug] = useState(sparks[0]?.slug ?? "");
   const [name, setName] = useState("");
@@ -34,12 +45,13 @@ export default function JoinTeamForm({ sparks }: { sparks: Spark[] }) {
           name: name.trim(),
           wallet: wallet.trim(),
           handle: handle.trim() || undefined,
+          source,
         }),
       });
       const json = await res.json();
       if (json.ok) {
         setState("done");
-        toast("You're on the team list.", "success");
+        toast(applying ? "Application sent." : "You're on the team list.", "success");
       } else {
         setState("error");
         toast(json.error ?? "Could not join. Try again.", "error");
@@ -66,6 +78,14 @@ export default function JoinTeamForm({ sparks }: { sparks: Spark[] }) {
 
   if (state === "done") {
     const spark = sparks.find((s) => s.slug === slug)?.name ?? "the Hearth";
+    if (applying) {
+      return (
+        <div className="rounded-lg border border-accent/40 bg-accent/10 p-4 text-sm">
+          Your application to the {spark} team is in. We read every one and reach out on
+          the handle or wallet you gave.
+        </div>
+      );
+    }
     return (
       <div className="rounded-lg border border-accent/40 bg-accent/10 p-4 text-sm">
         You are on the {spark} team list. The wallet you gave is the one that counts for
@@ -80,6 +100,7 @@ export default function JoinTeamForm({ sparks }: { sparks: Spark[] }) {
   return (
     <div className="flex flex-col gap-3">
       <div className="grid gap-3 sm:grid-cols-2">
+        {sparks.length > 1 && (
         <label className="flex flex-col gap-1 text-xs text-muted">
           Spark
           <select value={slug} onChange={(e) => setSlug(e.target.value)} className={input}>
@@ -90,6 +111,7 @@ export default function JoinTeamForm({ sparks }: { sparks: Spark[] }) {
             ))}
           </select>
         </label>
+        )}
         <label className="flex flex-col gap-1 text-xs text-muted">
           Name (required)
           <input
@@ -130,7 +152,13 @@ export default function JoinTeamForm({ sparks }: { sparks: Spark[] }) {
           disabled={state === "busy" || !ready}
           className="btn-spark rounded-md px-5 py-2 text-sm disabled:opacity-40"
         >
-          {state === "busy" ? "Joining..." : "Join the team"}
+          {state === "busy"
+            ? applying
+              ? "Sending..."
+              : "Joining..."
+            : applying
+              ? "Apply to the team"
+              : "Join the team"}
         </button>
         {state === "error" && <span className="text-xs text-red-400">try again</span>}
       </div>

@@ -253,6 +253,7 @@ export default function ProfilePage() {
 const ADMIN_LINKS = [
   { href: "/admin", label: "Admin dashboard" },
   { href: "/admin/pending", label: "Pending approvals" },
+  { href: "/admin/team", label: "Team applications" },
   { href: "/admin/new", label: "New Hearth (operator)" },
   { href: "/admin/add-repo", label: "Add a repo Hearth" },
   { href: "/admin/empire", label: "Empire tools" },

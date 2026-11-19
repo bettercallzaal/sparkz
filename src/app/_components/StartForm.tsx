@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useViewer, useViewerProfile } from "@/lib/view-as";
 import { useToast } from "./toast";
+import JoinForm from "./JoinForm";
+import { HEARTH_CREATE_CLOSED_MESSAGE } from "@/lib/alpha-access";
 
 // The one "New Hearth" form (used on /start, reached from the app's + tab and from
 // Me). Signed in (any server session: SIWF on the web, Quick Auth in the mini app,
@@ -34,18 +36,32 @@ export default function StartForm() {
   const [website, setWebsite] = useState(""); // honeypot
   const [state, setState] = useState<"idle" | "busy" | "error">("idle");
   const [err, setErr] = useState("");
+  // Opening a Hearth is allowlist-only for now; /api/auth/me says whether this visitor may.
+  // The server refuses anyway (create-spark), this only avoids a form that fails on submit.
+  const [allowed, setAllowed] = useState<boolean | undefined>(undefined);
 
   // The server session is the truth for ownership (create-spark reads it too).
   // A slow or hung check must not leave the button disabled: after 8s, treat it as
-  // signed out (the email path), which the server accepts either way.
+  // signed out (the email path) and show the form; while Hearth creation is
+  // allowlist-only the server refuses a signed-out create with a 403 and its message.
   useEffect(() => {
     let alive = true;
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 8000);
     fetch("/api/auth/me", { signal: ctrl.signal })
       .then((r) => r.json())
-      .then((j) => alive && setFid(j.ok && j.data?.fid ? j.data.fid : null))
-      .catch(() => alive && setFid(null))
+      .then((j) => {
+        if (!alive) return;
+        setFid(j.ok && j.data?.fid ? j.data.fid : null);
+        setAllowed(Boolean(j.ok && j.data?.canCreateHearth));
+      })
+      .catch(() => {
+        if (!alive) return;
+        setFid(null);
+        // Could not ask (slow, offline, a 500): do not lock an allowed person out of the
+        // form. Show it, and let create-spark's 403 answer if they are not on the list.
+        setAllowed(true);
+      })
       .finally(() => clearTimeout(timer));
     return () => {
       alive = false;
@@ -94,6 +110,15 @@ export default function StartForm() {
       toast("Something went wrong - try again.", "error");
     }
   };
+
+  if (allowed === false) {
+    return (
+      <div className="space-y-4">
+        <p className="text-sm">{HEARTH_CREATE_CLOSED_MESSAGE}</p>
+        <JoinForm interest="hearth" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-5">
@@ -181,7 +206,7 @@ export default function StartForm() {
 
       <button
         onClick={submit}
-        disabled={state === "busy" || !ready || fid === undefined}
+        disabled={state === "busy" || !ready || fid === undefined || allowed !== true}
         className="btn-spark min-h-12 w-full rounded-lg px-5 py-3 text-sm disabled:opacity-40"
       >
         {state === "busy" ? "Creating..." : "Create Hearth"}

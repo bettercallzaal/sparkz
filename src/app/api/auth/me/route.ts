@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 import { ok, serverError } from "@/lib/http";
 import { sessionClaims } from "@/lib/session";
 import { isAdmin, isAdminSession } from "@/lib/auth";
-import { ALPHA_LOCK } from "@/lib/alpha-access";
+import { ALPHA_LOCK, canCreateHearth } from "@/lib/alpha-access";
 
 // GET /api/auth/me - the current verified session: its FID or address (or nulls) and
 // whether it is an admin. Lets the client know whether the server-side session exists
@@ -19,6 +19,8 @@ export async function GET(req: NextRequest) {
       // so the UI shows the waitlist up front instead of a form that fails on submit.
       writesOpen: !ALPHA_LOCK || claims !== null || isAdmin(req),
       alphaLock: ALPHA_LOCK,
+      // May this visitor open a Hearth? The New Hearth form shows the waitlist when not.
+      canCreateHearth: isAdmin(req) || canCreateHearth(claims),
     });
   } catch (err) {
     return serverError(err, "auth.me.GET");

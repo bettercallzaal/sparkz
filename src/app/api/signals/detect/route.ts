@@ -3,7 +3,7 @@ import { z } from "zod";
 import "@/lib/adapters/bootstrap";
 import { getSignalSource, listSignalSources } from "@/lib/adapters/signal-source";
 import { ok, badRequest, serverError, zodError, forbidCrossSite } from "@/lib/http";
-import { requireAdmin } from "@/lib/auth";
+import { requireAdminOrAgent } from "@/lib/auth";
 import { getHearthRuntime } from "@/lib/plugins/hearth-config";
 
 // POST /api/signals/detect - run a signal source's detectSignals for a Hearth and
@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
   const crossSite = forbidCrossSite(req);
   if (crossSite) return crossSite;
   try {
-    const denied = requireAdmin(req);
+    const denied = requireAdminOrAgent(req);
     if (denied) return denied;
 
     const body = await req.json().catch(() => null);

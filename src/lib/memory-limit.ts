@@ -6,6 +6,13 @@
 const windows = new Map<string, number[]>();
 const MAX_KEYS = 10_000;
 
+// Sign-in (nonce, SIWE, SIWF, Quick Auth), per IP across all four routes. Each SIWF
+// verify calls a public Optimism RPC, so an unthrottled caller could get the server's
+// address throttled there and block sign-in for everyone. 30 per 10 minutes is far
+// above a person signing in, even with retries.
+export const SIGN_IN_LIMIT = 30;
+export const SIGN_IN_WINDOW_MS = 10 * 60 * 1000;
+
 export const HYPERSNAP_READ_LIMIT = 60;
 export const HYPERSNAP_READ_WINDOW_MS = 60 * 1000;
 

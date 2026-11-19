@@ -182,3 +182,10 @@ export const joinTeamSchema = z.object({
   wallet: z.string().trim().regex(/^0x[0-9a-fA-F]{40}$/, "wallet must be a 0x address"),
   handle: z.string().trim().max(60).optional(),
 });
+
+// POST /api/capsules/approve - the admin review decision on a self-serve Hearth.
+// The admin pages send "approve" or "reject"; anything else is a 400, not a silent approve.
+export const approveHearthSchema = z.object({
+  id: z.string().uuid(),
+  decision: z.enum(["approve", "reject"]).optional(),
+});

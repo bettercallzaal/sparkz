@@ -67,7 +67,11 @@ queued; `failed|error|errored` -> failed; anything else -> keep polling.
 ## Testing from the Sparkz side (now, stub mode)
 
 ```bash
-# 1. render an ad-hoc script (operator token via cookie or header)
+# The agent token no longer opens media-kit (2026-11-19: it is scoped to the agent's
+# routes). Sign in as an admin in the browser and send that session cookie instead:
+#   -H "cookie: <the sparkz session cookie from your signed-in browser>"
+# The header lines below are kept for history and now answer 401.
+# 1. render an ad-hoc script
 curl -sX POST http://localhost:3000/api/capsules/media-kit \
   -H 'content-type: application/json' \
   -H "x-sparkz-admin-token: $SPARKZ_ADMIN_TOKEN" \

@@ -145,7 +145,8 @@ async function notify(
     await fetch(config.discordWebhook, {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ content }),
+      // Draft text is model output: never let it ping @everyone, @here or a role.
+      body: JSON.stringify({ content, allowed_mentions: { parse: [] } }),
     });
   } catch {
     // best-effort; the console log already recorded the proposal

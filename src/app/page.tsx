@@ -5,6 +5,7 @@ import JoinForm from "./_components/JoinForm";
 import ActivityStrip from "./_components/ActivityStrip";
 import MyHome from "./_components/MyHome";
 import Showcase from "./_components/Showcase";
+import { iosBetaUrl } from "@/lib/ios-beta";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +30,7 @@ const GOALS = [
 // front. The showcase list is in lib/showcase.ts.
 export default async function Home() {
   const { featured, others } = pickShowcase(await loadPublicHearths());
+  const betaUrl = iosBetaUrl();
 
   return (
     <main className="w-full min-w-0 flex-1 overflow-x-hidden">
@@ -76,6 +78,18 @@ export default async function Home() {
               >
                 How it works
               </Link>
+              {/* The iOS beta, website only: hidden inside the iPhone app, and absent until
+                  SPARKZ_TESTFLIGHT_URL holds the public TestFlight link (lib/ios-beta.ts). */}
+              {betaUrl && (
+                <a
+                  href={betaUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-lg border border-accent px-5 py-2.5 text-sm text-accent hover:bg-accent/10 [html[data-shell=ios]_&]:hidden"
+                >
+                  Try the iOS beta
+                </a>
+              )}
             </div>
           </div>
         </section>

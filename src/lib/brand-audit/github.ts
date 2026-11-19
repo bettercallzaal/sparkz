@@ -52,6 +52,7 @@ export function parseRepoRef(input: string): { owner: string; repo: string } | n
 export async function fetchRepo(owner: string, repo: string): Promise<RepoInfo> {
   const repoRes = await fetch(`${API}/repos/${owner}/${repo}`, {
     headers: headers(),
+    signal: AbortSignal.timeout(10_000),
   });
   if (!repoRes.ok) {
     throw new Error(`GitHub repo fetch failed: ${repoRes.status}`);
@@ -67,7 +68,7 @@ export async function fetchRepo(owner: string, repo: string): Promise<RepoInfo> 
   // Top contributors (first page = up to 100, by contributions).
   const contribRes = await fetch(
     `${API}/repos/${owner}/${repo}/contributors?per_page=100`,
-    { headers: headers() },
+    { headers: headers(), signal: AbortSignal.timeout(10_000) },
   );
   let contributors: RepoContributor[] = [];
   if (contribRes.ok) {

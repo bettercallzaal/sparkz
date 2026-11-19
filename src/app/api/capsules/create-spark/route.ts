@@ -132,11 +132,13 @@ async function uniqueSlug(
 ): Promise<string> {
   for (let n = 0; n < 50; n++) {
     const candidate = n === 0 ? base : `${base}-${n + 1}`;
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("hearths")
       .select("id")
       .eq("slug", candidate)
       .maybeSingle();
+    // A failed read must not read as "this slug is free".
+    if (error) throw error;
     if (!data) return candidate;
   }
   // Extremely unlikely fallback.

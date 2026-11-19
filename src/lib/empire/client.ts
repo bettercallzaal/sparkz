@@ -21,6 +21,7 @@ export interface EmpireResolved {
 export async function resolveEmpire(empireId: string): Promise<EmpireResolved | null> {
   const res = await fetch(`${BASE}/empires/${encodeURIComponent(empireId)}`, {
     headers: { Accept: "application/json" },
+    signal: AbortSignal.timeout(10_000),
   });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`Empire resolve failed: ${res.status}`);
@@ -49,7 +50,10 @@ export function parseEmpire(empireId: string, body: unknown): EmpireResolved {
 // empireId accepts a base_token (0x...), fid<number>, or a custom slug.
 
 async function getJson(path: string): Promise<unknown | null> {
-  const res = await fetch(`${BASE}${path}`, { headers: { Accept: "application/json" } });
+  const res = await fetch(`${BASE}${path}`, {
+    headers: { Accept: "application/json" },
+    signal: AbortSignal.timeout(10_000),
+  });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`Empire GET ${path} failed: ${res.status}`);
   return res.json();
@@ -141,6 +145,8 @@ export async function deployTokenlessCustom(
   if (!apiKey) {
     throw new Error("EMPIRE_API_KEY not set - tokenless deploy is disabled");
   }
+  // No timeout on purpose: aborting here could not stop a deploy Empire had already started,
+  // and the route would then release the claim for an empire that exists.
   const res = await fetch(`${BASE}/deploy-empire-tokenless`, {
     method: "POST",
     headers: {

@@ -154,8 +154,9 @@ export async function GET(req: Request) {
           size,
         );
       }
-    } catch {
-      // fall through to generic
+    } catch (err) {
+      // Fall through to the generic card, but say why.
+      console.warn("[sparkz:og] Hearth card failed, serving the generic card:", err);
     }
   }
 

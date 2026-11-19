@@ -48,10 +48,11 @@ export class LedgerProvider implements BackingProvider {
 
     const row = data as HearthBacker;
     // provider_ref for the ledger IS the row id - backfill it so getBacking works.
-    await supabase
+    const { error: refErr } = await supabase
       .from("hearth_backers")
       .update({ provider_ref: row.id })
       .eq("id", row.id);
+    if (refErr) throw refErr;
 
     return toRecord({ ...row, provider_ref: row.id });
   }

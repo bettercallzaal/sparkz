@@ -46,7 +46,7 @@ export class FarcasterSignalSource implements SignalSource {
     url.searchParams.set("q", query);
     url.searchParams.set("limit", "10");
 
-    const res = await fetch(url, { headers: { "x-api-key": apiKey } });
+    const res = await fetch(url, { headers: { "x-api-key": apiKey }, signal: AbortSignal.timeout(10_000) });
     if (!res.ok) {
       const body = await res.text().catch(() => "");
       console.warn(

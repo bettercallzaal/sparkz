@@ -119,10 +119,11 @@ export async function POST(req: NextRequest) {
     const drafts = draftRows as SignalDraft[];
 
     // 3. Move to drafted + notify approval channels (redundant fan-out).
-    await supabase
+    const { error: draftedErr } = await supabase
       .from("signals")
       .update({ status: "drafted" })
       .eq("id", signal.id);
+    if (draftedErr) throw draftedErr;
 
     // Trusted origin from server env - NOT req.nextUrl.origin. This URL is sent
     // outward to operators via approval channels; a spoofed Host header must not
@@ -136,6 +137,9 @@ export async function POST(req: NextRequest) {
       drafts: drafts.map((d) => ({ id: d.id, rank: d.rank, text: d.draft_text })),
       approveUrl: `${origin}/admin?hearth=${signal.hearth_id}&signal=${signal.id}`,
     }, runtime.enabledApprovalChannels);
+    if (routing.failed.length > 0) {
+      console.error("[sparkz:signals.POST] approval channels failed:", routing.failed);
+    }
 
     return ok(
       { signal: { ...signal, status: "drafted" }, drafts, routing },

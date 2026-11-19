@@ -24,16 +24,24 @@ export async function resolveEmpire(empireId: string): Promise<EmpireResolved | 
   });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`Empire resolve failed: ${res.status}`);
-  const data = (await res.json()) as Record<string, unknown>;
+  return parseEmpire(empireId, await res.json());
+}
+
+// Empire Builder answers GET /empires/{id} as { empire: {...} } (checked live 2026-11-18 on
+// sparkz6071a1). Reading the top level left empire_address and token_type empty, so a linked
+// Hearth recorded no treasury. Read the nested object; the old flat shape still works.
+export function parseEmpire(empireId: string, body: unknown): EmpireResolved {
+  const top = (body ?? {}) as Record<string, unknown>;
+  const data = (top.empire && typeof top.empire === "object" ? top.empire : top) as Record<string, unknown>;
   return {
-    empireId,
+    empireId: (data.base_token as string) || empireId,
     empireAddress:
       (data.empire_address as string) ??
       (data.empireAddress as string) ??
       (data.treasuryAddress as string) ??
       null,
     tokenType: (data.token_type as string) ?? null,
-    raw: data,
+    raw: body,
   };
 }
 

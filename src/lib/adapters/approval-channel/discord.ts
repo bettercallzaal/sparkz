@@ -35,6 +35,7 @@ export class DiscordChannel implements ApprovalChannel {
       headers: { "Content-Type": "application/json" },
       // Discord caps content at 2000 chars.
       body: JSON.stringify({ content: content.slice(0, 2000) }),
+      signal: AbortSignal.timeout(8_000),
     });
 
     if (!res.ok) {

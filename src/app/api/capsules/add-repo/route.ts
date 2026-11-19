@@ -65,12 +65,13 @@ export async function POST(req: NextRequest) {
     // Do not duplicate: if this repo already has a Hearth, return it so the operator
     // can enrich/un-hide the existing one instead of creating a second row.
     const canonicalRepo = `https://github.com/${target.owner}/${target.repo}`;
-    const { data: existing } = await supabase
+    const { data: existing, error: existingErr } = await supabase
       .from("hearths")
       .select("*")
       .eq("metadata->>repo_owner", target.owner)
       .eq("metadata->>repo_name", target.repo)
       .maybeSingle();
+    if (existingErr) throw existingErr;
     if (existing) {
       return ok({ ...(existing as Hearth), already: true }, 200);
     }
@@ -84,6 +85,7 @@ export async function POST(req: NextRequest) {
     if (process.env.GITHUB_TOKEN) headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
     const ghRes = await fetch(`https://api.github.com/repos/${target.owner}/${target.repo}`, {
       headers,
+      signal: AbortSignal.timeout(10_000),
     });
     if (ghRes.status === 404) return badRequest("Repo not found (or it is private).");
     if (ghRes.status === 403) return badRequest("GitHub rate limit hit - try again shortly.");
@@ -139,11 +141,13 @@ async function uniqueSlug(
 ): Promise<string> {
   for (let n = 0; n < 50; n++) {
     const candidate = n === 0 ? base : `${base}-${n + 1}`;
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("hearths")
       .select("id")
       .eq("slug", candidate)
       .maybeSingle();
+    // A failed read must not read as "this slug is free".
+    if (error) throw error;
     if (!data) return candidate;
   }
   return `${base}-${Date.now().toString(36)}`;

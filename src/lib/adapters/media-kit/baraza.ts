@@ -75,6 +75,8 @@ async function renderSegment(req: SegmentRequest): Promise<SegmentJob> {
       format: req.format ?? "vertical",
       sourceRef: req.sourceRef,
     }),
+    // Starting a render returns a job id; it should not take long even if rendering does.
+    signal: AbortSignal.timeout(30_000),
   });
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
@@ -89,6 +91,7 @@ async function renderSegment(req: SegmentRequest): Promise<SegmentJob> {
 async function getSegment(jobId: string): Promise<SegmentJob> {
   const res = await fetch(`${base()}/api/render/${encodeURIComponent(jobId)}`, {
     headers: headers(),
+    signal: AbortSignal.timeout(10_000),
   });
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));

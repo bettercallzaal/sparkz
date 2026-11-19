@@ -32,16 +32,18 @@ export async function GET() {
   try {
     const supabase = getServiceClient();
 
-    const { data: hearthRows } = await supabase
+    const { data: hearthRows, error: hearthErr } = await supabase
       .from("hearths")
       .select("id, name, slug, created_at")
       .or(PUBLIC_REVIEW_FILTER)
       .order("created_at", { ascending: false });
+    // A database failure answers 500, not an empty feed that reads as "nothing happened".
+    if (hearthErr) throw hearthErr;
     const hearths = (hearthRows as Pick<Hearth, "id" | "name" | "slug" | "created_at">[]) ?? [];
     const byId = new Map(hearths.map((c) => [c.id, c]));
     const publicIds = new Set(hearths.map((c) => c.id));
 
-    const [{ data: backerRows }, { data: receiptRows }] = await Promise.all([
+    const [{ data: backerRows, error: backerErr }, { data: receiptRows, error: receiptErr }] = await Promise.all([
       supabase
         .from("hearth_backers")
         .select("hearth_id, backer_id, kind, created_at")
@@ -53,6 +55,8 @@ export async function GET() {
         .order("created_at", { ascending: false })
         .limit(20),
     ]);
+    if (backerErr) throw backerErr;
+    if (receiptErr) throw receiptErr;
 
     const events: ActivityEvent[] = [];
 

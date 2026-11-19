@@ -55,6 +55,7 @@ export class SparkzClient {
 
   private async call<T>(path: string, init?: RequestInit): Promise<T> {
     const res = await this.fetchImpl(`${this.base}${path}`, {
+      signal: AbortSignal.timeout(30_000),
       ...init,
       headers: {
         "content-type": "application/json",

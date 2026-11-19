@@ -158,6 +158,8 @@ export async function generateDrafts(
         temperature: 0.9,
         max_tokens: 500,
       }),
+      // A stalled model falls through to the fallback drafts below instead of holding the route.
+      signal: AbortSignal.timeout(30_000),
     });
 
     if (!res.ok) {

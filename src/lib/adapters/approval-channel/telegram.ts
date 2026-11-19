@@ -44,6 +44,7 @@ export class TelegramChannel implements ApprovalChannel {
         headers: { "Content-Type": "application/json" },
         // Plain text (no parse_mode) so draft punctuation never breaks Markdown parsing.
         body: JSON.stringify({ chat_id: chatId, text, disable_web_page_preview: true }),
+        signal: AbortSignal.timeout(8_000),
       },
     );
 

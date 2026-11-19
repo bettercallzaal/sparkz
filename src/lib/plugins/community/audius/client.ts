@@ -50,7 +50,8 @@ async function discoveryHost(): Promise<string> {
     const j = (await fetchJson(BOOTSTRAP)) as { data?: string[] };
     const host = j.data?.[0];
     return host && host.startsWith("http") ? host : FALLBACK_HOST;
-  } catch {
+  } catch (err) {
+    console.warn("[sparkz:audius] bootstrap failed, using the fallback host:", err);
     return FALLBACK_HOST;
   }
 }
@@ -82,8 +83,9 @@ export async function getAudiusCatalog(handle: string, limit = 6): Promise<Audiu
           permalink: t.permalink ? `https://audius.co${t.permalink}` : "https://audius.co",
           playCount: Number(t.play_count ?? 0),
         }));
-    } catch {
+    } catch (err) {
       // Tracks are a nice-to-have; a found artist with no tracks is still "found".
+      console.warn(`[sparkz:audius] tracks failed for ${clean}:`, err);
     }
 
     return {
@@ -95,7 +97,9 @@ export async function getAudiusCatalog(handle: string, limit = 6): Promise<Audiu
       profileUrl: `https://audius.co/${clean}`,
       tracks,
     };
-  } catch {
+  } catch (err) {
+    // An outage still answers "not found" to the page, but the log says it was an outage.
+    console.warn(`[sparkz:audius] catalog lookup failed for ${clean}:`, err);
     return empty;
   }
 }

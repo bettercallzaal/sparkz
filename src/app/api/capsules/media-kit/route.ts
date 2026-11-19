@@ -179,7 +179,9 @@ export async function GET(req: NextRequest) {
         const entry = Object.values(store).find((s) => s.jobId === jobId);
         if (entry && entry.status !== "ready") {
           const next = writeCachedSegment(hearth.metadata, { ...entry, status: "ready", videoUrl: job.videoUrl });
-          await supabase.from("hearths").update({ metadata: next }).eq("id", hearthId);
+          const { error: cacheErr } = await supabase.from("hearths").update({ metadata: next }).eq("id", hearthId);
+          // The job is ready either way; a failed cache write only means the next read asks Baraza again.
+          if (cacheErr) console.error("[sparkz:media-kit.GET] caching the ready segment failed:", cacheErr);
         }
       }
     }

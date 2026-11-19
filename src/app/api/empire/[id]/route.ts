@@ -27,11 +27,19 @@ export async function GET(
     if (!empire) return badRequest(`empire not found: ${id}`);
 
     // Fetch the read surface in parallel; a partial failure on any one shouldn't sink
-    // the bundle, so each degrades to null and is reported as-is.
+    // the bundle, so each degrades to null. Failures are logged and named in `degraded`,
+    // so a null that means "Empire is down" can be told from one that means "no data".
+    const degraded: string[] = [];
+    const soft = <T,>(part: string, p: Promise<T>): Promise<T | null> =>
+      p.catch((err) => {
+        console.error(`[sparkz:empire.GET] ${part} failed for ${id}:`, err);
+        degraded.push(part);
+        return null;
+      });
     const [boardsRaw, rewards, boosters] = await Promise.all([
-      listEmpireLeaderboards(id).catch(() => null),
-      getEmpireRewards(id).catch(() => null),
-      getBoosters(id).catch(() => null),
+      soft("leaderboards", listEmpireLeaderboards(id)),
+      soft("rewards", getEmpireRewards(id)),
+      soft("boosters", getBoosters(id)),
     ]);
 
     // Pull the first leaderboard's ranked entries (the one the UI shows by default).
@@ -39,7 +47,7 @@ export async function GET(
       (boardsRaw as { leaderboards?: { id: string }[] } | null)?.leaderboards ?? [];
     const topBoardId = boards[0]?.id ?? null;
     const entries = topBoardId
-      ? await getLeaderboard(topBoardId).catch(() => null)
+      ? await soft("leaderboard", getLeaderboard(topBoardId))
       : null;
 
     return ok({
@@ -48,6 +56,7 @@ export async function GET(
       leaderboard: entries, // ranked entries for boards[0]
       rewards,
       boosters,
+      degraded,
     });
   } catch (err) {
     return serverError(err, "empire.read.GET");

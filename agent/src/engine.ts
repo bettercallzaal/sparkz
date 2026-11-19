@@ -142,12 +142,15 @@ async function notify(
     `> ${best.draft.draft_text}\n` +
     `Approve: ${approveUrl}`;
   try {
-    await fetch(config.discordWebhook, {
+    const res = await fetch(config.discordWebhook, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ content }),
+      signal: AbortSignal.timeout(8_000),
     });
-  } catch {
-    // best-effort; the console log already recorded the proposal
+    if (!res.ok) console.error(`[agent] discord proposal notify failed: HTTP ${res.status}`);
+  } catch (err) {
+    // Best-effort: the proposal is already in the console log. Say the notify failed.
+    console.error("[agent] discord proposal notify failed:", err);
   }
 }

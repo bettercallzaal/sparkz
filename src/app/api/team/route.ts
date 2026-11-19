@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getServiceClient } from "@/lib/supabase/server";
 import { joinTeamSchema } from "@/lib/validation/schemas";
-import { badRequest, ok, serverError, tooManyRequests, zodError } from "@/lib/http";
+import { badRequest, ok, serverError, tooManyRequests, zodError, forbidCrossSite } from "@/lib/http";
 import { clientIpHash } from "@/lib/rate-limit";
 import { isAdmin } from "@/lib/auth";
 import { sessionClaims } from "@/lib/session";
@@ -15,6 +15,8 @@ const WINDOW_MS = 60 * 60 * 1000;
 const MAX_PER_WINDOW = 5;
 
 export async function POST(req: NextRequest) {
+  const crossSite = forbidCrossSite(req);
+  if (crossSite) return crossSite;
   try {
     // Private alpha (lib/alpha-access.ts): this public route is closed to everyone but
     // the listed identities until Sparkz opens.

@@ -1,12 +1,14 @@
 import type { NextRequest } from "next/server";
 import { getServiceClient } from "@/lib/supabase/server";
 import { joinWaitlistSchema } from "@/lib/validation/schemas";
-import { ok, serverError, zodError } from "@/lib/http";
+import { ok, serverError, zodError, forbidCrossSite } from "@/lib/http";
 
 // POST /api/waitlist - public "Join Sparkz" capture. Intentionally NOT admin-gated
 // (anyone can join). A single validated insert-only op; duplicate emails resolve
 // to a friendly success (no enumeration leak). Reads are not exposed here.
 export async function POST(req: NextRequest) {
+  const crossSite = forbidCrossSite(req);
+  if (crossSite) return crossSite;
   try {
     const body = await req.json().catch(() => null);
     const parsed = joinWaitlistSchema.safeParse(body);

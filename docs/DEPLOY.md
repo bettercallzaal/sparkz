@@ -9,7 +9,7 @@ One app, three front doors routed by hostname (`src/middleware.ts`):
 |-----|-------|
 | `NEXT_PUBLIC_SUPABASE_URL` | `https://noytvuorbdmgjfxwbufj.supabase.co` |
 | `SUPABASE_SERVICE_ROLE_KEY` | SECRET - server only |
-| `SPARKZ_ADMIN_TOKEN` | gates the write routes (fails closed if unset) |
+| `SPARKZ_AGENT_TOKEN` | the background agent's token, scoped to the signals, approve, detect and receipts routes; not admin. `SPARKZ_ADMIN_TOKEN` is still read as the same token while the agent moves over |
 | `OPENROUTER_API_KEY` | cheap-tier drafts (optional; fallback works without) |
 | `DISCORD_WEBHOOK_URL` | optional - Discord approval channel |
 | `GITHUB_TOKEN` | optional - brand-audit repo import rate limit |

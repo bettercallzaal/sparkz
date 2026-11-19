@@ -34,7 +34,9 @@ export class DiscordChannel implements ApprovalChannel {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       // Discord caps content at 2000 chars.
-      body: JSON.stringify({ content: content.slice(0, 2000) }),
+      // allowed_mentions parse [] : a draft containing @everyone, @here or a role must
+      // not ping the server. Drafts are model output, so they are untrusted text.
+      body: JSON.stringify({ content: content.slice(0, 2000), allowed_mentions: { parse: [] } }),
       signal: AbortSignal.timeout(8_000),
     });
 

@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server";
 import { getServiceClient } from "@/lib/supabase/server";
-import { ok, badRequest, serverError, forbidCrossSite } from "@/lib/http";
+import { ok, badRequest, serverError, forbidCrossSite, zodError } from "@/lib/http";
+import { approveHearthSchema } from "@/lib/validation/schemas";
 import { requireAdmin } from "@/lib/auth";
 import type { Hearth } from "@/lib/supabase/types";
 
@@ -15,12 +16,10 @@ export async function POST(req: NextRequest) {
     const denied = requireAdmin(req);
     if (denied) return denied;
 
-    const body = (await req.json().catch(() => null)) as
-      | { id?: string; decision?: string }
-      | null;
-    const id = body?.id;
-    if (!id) return badRequest("id is required");
-    const decision = body?.decision === "reject" ? "rejected" : "approved";
+    const parsed = approveHearthSchema.safeParse(await req.json().catch(() => null));
+    if (!parsed.success) return zodError(parsed.error);
+    const { id } = parsed.data;
+    const decision = parsed.data.decision === "reject" ? "rejected" : "approved";
 
     const supabase = getServiceClient();
     const { data: row, error: getErr } = await supabase

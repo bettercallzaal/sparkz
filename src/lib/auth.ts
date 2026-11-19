@@ -29,11 +29,19 @@ function safeEqual(a: string, b: string): boolean {
   return timingSafeEqual(ab, bb);
 }
 
-// The background agent's machine credential.
+// The background agent's machine credential. Scoped (backend review, 2026-11-19): it
+// opens only the routes the agent calls (requireAdminOrAgent / isAdminOrAgent below),
+// never the admin or Hearth-owner routes, so a token leaked from the agent host cannot
+// edit Hearths, upload, link empires or change plugin config.
+// SPARKZ_AGENT_TOKEN is the name going forward; SPARKZ_ADMIN_TOKEN is still read so the
+// running agent keeps working. Rotation: set the new value as SPARKZ_AGENT_TOKEN, move the
+// agent to it, then delete SPARKZ_ADMIN_TOKEN. Both are accepted while both are set.
 function hasAgentToken(req: NextRequest): boolean {
-  const expected = process.env.SPARKZ_ADMIN_TOKEN;
-  if (!expected) return false;
-  return safeEqual(req.headers.get(ADMIN_TOKEN_HEADER) ?? "", expected);
+  const sent = req.headers.get(ADMIN_TOKEN_HEADER) ?? "";
+  if (!sent) return false;
+  return [process.env.SPARKZ_AGENT_TOKEN, process.env.SPARKZ_ADMIN_TOKEN].some(
+    (expected) => typeof expected === "string" && expected.length > 0 && safeEqual(sent, expected),
+  );
 }
 
 // A human admin: a verified session whose FID or address is on the allowlist.
@@ -44,8 +52,9 @@ export function isAdminSession(req: NextRequest): boolean {
 
 // Boolean predicate: is this request from an admin? For routes that stay open to the
 // public but grant an admin an exemption (e.g. skip the self-serve rate limit).
+// A human admin session only: the agent token is not admin (see hasAgentToken).
 export function isAdmin(req: NextRequest): boolean {
-  return isAdminSession(req) || hasAgentToken(req);
+  return isAdminSession(req);
 }
 
 // Returns null when authorized; otherwise the response to return immediately.
@@ -54,8 +63,20 @@ export function requireAdmin(req: NextRequest): NextResponse | null {
   return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
 }
 
+// The routes the background agent calls (agent/src/sparkz.ts): the capsules list, the
+// signals list, create and approve, signal detection and receipts. A human admin or the
+// agent token.
+export function isAdminOrAgent(req: NextRequest): boolean {
+  return isAdminSession(req) || hasAgentToken(req);
+}
+
+export function requireAdminOrAgent(req: NextRequest): NextResponse | null {
+  if (isAdminOrAgent(req)) return null;
+  return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+}
+
 // Owner-or-operator gate for one Hearth. Allows the request when the verified
-// session FID equals hearths.owner_fid, or when the operator token passes. Both
+// session FID equals hearths.owner_fid, or when a human admin session is present. Both
 // paths fail closed: no session, no owner, or an unknown Hearth is a 401/404.
 // Returns null when authorized; otherwise the response to return immediately.
 export async function requireHearthOwner(

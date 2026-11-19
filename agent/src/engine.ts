@@ -145,7 +145,8 @@ async function notify(
     const res = await fetch(config.discordWebhook, {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ content }),
+      // Draft text is model output: never let it ping @everyone, @here or a role.
+      body: JSON.stringify({ content, allowed_mentions: { parse: [] } }),
       signal: AbortSignal.timeout(8_000),
     });
     if (!res.ok) console.error(`[agent] discord proposal notify failed: HTTP ${res.status}`);

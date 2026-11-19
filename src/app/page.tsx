@@ -2,6 +2,7 @@ import Link from "next/link";
 import { loadPublicHearths } from "@/lib/public-hearths";
 import { pickShowcase } from "@/lib/showcase";
 import JoinForm from "./_components/JoinForm";
+import JoinTeamForm from "./_components/JoinTeamForm";
 import ActivityStrip from "./_components/ActivityStrip";
 import MyHome from "./_components/MyHome";
 import Showcase from "./_components/Showcase";
@@ -126,6 +127,22 @@ export default async function Home() {
             </p>
             <div className="max-w-md">
               <JoinForm interest="sparkz" />
+            </div>
+          </div>
+        </section>
+
+        {/* Zaal, 2026-11-19: opening a Hearth stays allowlist-only, "but people can
+            apply to be part of the sparkz team". Applications land in team_signups on
+            the sparkz Hearth with source "apply"; admins read them at /admin/team. */}
+        <section className="border-t border-border">
+          <div className="mx-auto max-w-5xl px-4 py-10">
+            <h2 className="text-lg font-semibold">Help build Sparkz</h2>
+            <p className="mt-1 mb-4 text-sm text-muted">
+              Sparkz is open source and built in the open with The ZAO. Apply to the team
+              with a name and a wallet.
+            </p>
+            <div className="max-w-md">
+              <JoinTeamForm sparks={[{ slug: "sparkz", name: "Sparkz" }]} source="apply" />
             </div>
           </div>
         </section>

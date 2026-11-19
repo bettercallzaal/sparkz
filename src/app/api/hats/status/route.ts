@@ -19,10 +19,16 @@ export async function GET(req: NextRequest) {
     if (query && !isAddress(query)) return badRequest("Not an address.");
     const address = (query ?? sessionClaims(req)?.address ?? null) as Address | null;
 
-    const [supply, worn, canMint] = await Promise.all([
-      hatSupply(cfg).catch(() => null),
-      hatsClaimable(cfg).catch(() => false),
-      address ? isWearer(address, cfg).catch(() => false) : Promise.resolve(false),
+    // Order matters: supply, then claimable (can this hat be minted now), then wearer
+    // (does this address already wear it). These two were once swapped, which disabled the
+    // mint button for everyone who did not yet wear the hat. Chain errors are logged and
+    // read as closed / not worn.
+    const [supply, canMint, worn] = await Promise.all([
+      hatSupply(cfg).catch((e) => { console.error("[sparkz:hats.status] hatSupply:", e); return null; }),
+      hatsClaimable(cfg).catch((e) => { console.error("[sparkz:hats.status] hatsClaimable:", e); return false; }),
+      address
+        ? isWearer(address, cfg).catch((e) => { console.error("[sparkz:hats.status] isWearer:", e); return false; })
+        : Promise.resolve(false),
     ]);
     return ok({ configured: true, canMint, hat: prettyHatId(cfg.hatId), hatId: cfg.hatId.toString(), claimsHatter: cfg.claimsHatter, supply, address, worn });
   } catch (err) {

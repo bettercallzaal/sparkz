@@ -6,6 +6,7 @@ import { clientIpHash, boostCountInWindow, BOOST_LIMIT, BOOST_WINDOW_MS } from "
 import { isAdmin } from "@/lib/auth";
 import { sessionClaims } from "@/lib/session";
 import { ALPHA_CLOSED_MESSAGE, ALPHA_LOCK } from "@/lib/alpha-access";
+import { looksLikeVerifiedIdentity, SIGN_IN_FOR_IDENTITY } from "@/lib/backer-identity";
 
 // POST /api/boost - public "Boost this Hearth" (the boost engine): a free support
 // signal, not a payment. A signed-in backer boosts in one tap: the identity comes from
@@ -38,7 +39,12 @@ export async function POST(req: NextRequest) {
     } else if (claims?.address) {
       backerId = claims.address;
     } else if (parsed.data.backer?.trim()) {
-      backerId = parsed.data.backer.trim().toLowerCase();
+      const typed = parsed.data.backer.trim().toLowerCase();
+      // Without a session a typed backer is a free-text name or email. It may not take the
+      // shape of a verified identity (fid:<n> or a wallet address), or anyone could boost as
+      // someone else and pre-empt that person's own boost through the dedupe.
+      if (looksLikeVerifiedIdentity(typed)) return badRequest(SIGN_IN_FOR_IDENTITY);
+      backerId = typed;
     } else {
       return badRequest(BACKER_REQUIRED);
     }
@@ -63,15 +69,19 @@ export async function POST(req: NextRequest) {
     if (capErr) throw capErr;
     if (!hearth) return badRequest("hearth not found");
 
-    // Dedupe: one boost per backer per Hearth.
-    const { data: existing } = await supabase
+    // Dedupe: one boost per backer per Hearth. The unique index from migration 0007 is
+    // the real guard; this read only saves an insert in the common case.
+    // limit(1), not maybeSingle: a backer who already has two boost rows (from before
+    // 0007) must read as deduped, not as a "multiple rows" error.
+    const { data: existing, error: dupErr } = await supabase
       .from("hearth_backers")
       .select("id")
       .eq("hearth_id", parsed.data.hearth_id)
       .eq("backer_id", backerId)
       .eq("kind", "boost")
-      .maybeSingle();
-    if (existing) return ok({ boosted: true, deduped: true }, 200);
+      .limit(1);
+    if (dupErr) throw dupErr;
+    if (Array.isArray(existing) && existing.length > 0) return ok({ boosted: true, deduped: true }, 200);
 
     const { error } = await supabase.from("hearth_backers").insert({
       hearth_id: parsed.data.hearth_id,
@@ -90,6 +100,8 @@ export async function POST(req: NextRequest) {
           : {}),
       },
     });
+    // Two taps at once: the second insert hits hearth_backers_boost_unique (23505).
+    if (error?.code === "23505") return ok({ boosted: true, deduped: true }, 200);
     if (error) throw error;
 
     return ok({ boosted: true }, 201);

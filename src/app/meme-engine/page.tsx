@@ -162,10 +162,6 @@ export default function MemeEnginePage() {
             <div className="font-medium text-sm">Light a spark</div>
             <div className="text-xs text-muted">Open your Hearth - Meme Engine activates at your first milestone</div>
           </Link>
-          <Link href="/vetted" className="glass glass-hover p-3">
-            <div className="font-medium text-sm">Get ZOL support</div>
-            <div className="text-xs text-muted">Vetted projects get ZOL agent access + aligned stake</div>
-          </Link>
           <Link href="/examples" className="glass glass-hover p-3">
             <div className="font-medium text-sm">See spark templates</div>
             <div className="text-xs text-muted">How the Meme Engine fits different creator types</div>

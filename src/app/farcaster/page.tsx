@@ -159,10 +159,6 @@ export default function FarcasterPage() {
             <div className="font-medium text-sm">Meme Engine</div>
             <div className="text-xs text-muted">ZOL posts to Farcaster (with your approval)</div>
           </Link>
-          <Link href="/vetted" className="glass glass-hover p-3">
-            <div className="font-medium text-sm">Vetted by ZAO</div>
-            <div className="text-xs text-muted">ZAO-backed projects get priority FEF support</div>
-          </Link>
         </div>
       </section>
 

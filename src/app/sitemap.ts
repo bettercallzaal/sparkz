@@ -8,10 +8,7 @@ const BASE = canonicalOrigin();
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes = [
     "", "/explore", "/start", "/demo", "/blog",
-    // Content pages (consolidated from the ZOL page set).
-    "/manifesto", "/hearth",
-    "/examples", "/contribution", "/split-wizard", "/community-pool",
-    "/zao", "/farcaster", "/audius", "/privacy",
+    "/manifesto", "/zao", "/privacy",
   ].map(
     (p) => ({ url: `${BASE}${p}`, changeFrequency: "weekly" as const, priority: p === "" ? 1 : 0.7 }),
   );

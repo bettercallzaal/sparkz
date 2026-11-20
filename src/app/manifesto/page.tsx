@@ -203,18 +203,6 @@ export default function ManifestoPage() {
           Start a Hearth
         </Link>
         <Link
-          href="/hearth"
-          className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
-        >
-          What is a Hearth?
-        </Link>
-        <Link
-          href="/community-pool"
-          className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
-        >
-          Community pool
-        </Link>
-        <Link
           href="/zao"
           className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
         >

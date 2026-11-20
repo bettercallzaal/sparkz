@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Autonomous Meme Engine operator for a Sparkz Hearth - flag -> draft -> approve -> cast to Farcaster.",
+  "description": "Autonomous Meme Engine operator for a Sparkz Capsule - flag -> draft -> approve -> cast to Farcaster.",
   "engines": { "node": ">=20" },
   "scripts": {
     "dev": "tsx watch src/index.ts",

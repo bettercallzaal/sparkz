@@ -1,8 +1,8 @@
 # Sparkz Agent
 
 The autonomous Meme Engine operator. A **separate runtime** from the Next.js app: it
-runs the flag -> draft -> approve -> cast loop for one Hearth on its own, casting to
-Farcaster, so a Hearth's momentum keeps moving without a human at the keyboard.
+runs the flag -> draft -> approve -> cast loop for one Capsule on its own, casting to
+Farcaster, so a Capsule's momentum keeps moving without a human at the keyboard.
 
 It talks to Sparkz over the operator API and to Farcaster via Neynar. Lean by design -
 no heavy framework, native `fetch`, so it runs anywhere Node 20+ does (a box, a cron,
@@ -10,23 +10,23 @@ a Fly/Railway worker).
 
 ## What it does
 
-The Sparkz web app already flags a moment, drafts 3 Hearth-grounded responses, and
+The Sparkz web app already flags a moment, drafts 3 Capsule-grounded responses, and
 writes a Meme Receipt on approval. The agent adds the three things the app can't:
 
 1. **Judgment** - scores the 3 drafts (`src/score.ts`): cast-length fit, no
-   moon/token shilling, grounded in the Hearth. Picks the best and a confidence.
+   moon/token shilling, grounded in the Capsule. Picks the best and a confidence.
 2. **Autonomy** - a gate (`decide()` in `src/engine.ts`) decides whether to act:
    - `propose` (default) - pick a draft, notify a human (Discord + log), never publish. Human-in-the-loop.
    - `confidence` - auto-publish only when the winner's confidence clears a threshold.
    - `auto` - always publish the best draft.
 3. **Casting** - the app holds no Farcaster signer; the agent does. On publish it
-   approves the draft (writing the receipt) and **casts** it to the Hearth's linked
+   approves the draft (writing the receipt) and **casts** it to the Capsule's linked
    channel via a Neynar managed signer (`src/farcaster.ts`).
 
 ## The loop (per tick)
 
 ```
-resolve Hearth by slug
+resolve Capsule by slug
   -> list its signals, keep the ones "drafted" (have drafts, not yet published)
     -> score the 3 drafts, pick the best + a confidence
       -> gate: propose  -> notify a human, stop
@@ -61,22 +61,22 @@ npm run dev               # the live loop
 
 ## Keys
 
-- `CAPSULE_SLUG` + `SPARKZ_API_BASE` + `SPARKZ_ADMIN_TOKEN` - which Hearth, and talk to Sparkz.
+- `CAPSULE_SLUG` + `SPARKZ_API_BASE` + `SPARKZ_ADMIN_TOKEN` - which Capsule, and talk to Sparkz.
 - `AGENT_AUTONOMY` (`propose`|`confidence`|`auto`) + `AGENT_CONFIDENCE_THRESHOLD`.
 - `NEYNAR_API_KEY` + `NEYNAR_SIGNER_UUID` - the agent's Farcaster account (to cast). Without them it writes receipts but does not cast.
 - `DISCORD_APPROVAL_WEBHOOK` - optional, where `propose` notifications go.
 
-## One agent per Hearth
+## One agent per Capsule
 
-Each Hearth runs one agent (its `CAPSULE_SLUG`). The agent's identity is a Farcaster
-account (a Neynar managed signer), and it casts from that account into the Hearth's
+Each Capsule runs one agent (its `CAPSULE_SLUG`). The agent's identity is a Farcaster
+account (a Neynar managed signer), and it casts from that account into the Capsule's
 linked channel (`metadata.farcaster.channel`, set via `/api/capsules/link-farcaster`).
 
 ## The autonomy path
 
 Start in `propose` (nothing publishes without a human). Move to `confidence` with a
-high threshold once the scorer earns trust for a given Hearth. `auto` is for a
-Hearth whose voice is well-established and whose operator wants a hands-off engine.
+high threshold once the scorer earns trust for a given Capsule. `auto` is for a
+Capsule whose voice is well-established and whose operator wants a hands-off engine.
 
 ## Persona: the cheeky intern, not the billboard
 

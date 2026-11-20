@@ -7,7 +7,7 @@ const BASE = canonicalOrigin();
 // Dynamic sitemap: the static marketing/product routes + every public Hearth.
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes = [
-    "", "/explore", "/start", "/demo", "/blog", "/architecture",
+    "", "/explore", "/start", "/demo", "/blog",
     // Content pages (consolidated from the ZOL page set).
     "/manifesto", "/hearth",
     "/examples", "/contribution", "/split-wizard", "/community-pool",

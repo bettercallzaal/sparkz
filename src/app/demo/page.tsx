@@ -137,10 +137,6 @@ export default function DemoPage() {
             <div className="font-medium">The directory</div>
             <div className="text-xs text-muted">every Spark + its parameters, filterable</div>
           </Link>
-          <a href="/architecture" className="glass glass-hover p-3">
-            <div className="font-medium">The architecture</div>
-            <div className="text-xs text-muted">interactive - the loop, system map, data model</div>
-          </a>
           <Link href="/profile" className="glass glass-hover p-3">
             <div className="font-medium">Sign in with Farcaster</div>
             <div className="text-xs text-muted">your identity across Sparkz</div>

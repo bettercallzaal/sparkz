@@ -103,9 +103,14 @@ export default function AudiusPage() {
         </ol>
         <p className="mt-4 text-xs text-muted">
           Audius is the first live API spoke. The integration is open source -
-          <Link href="/architecture" className="text-accent hover:underline">
+          <a
+            href="https://github.com/bettercallzaal/sparkz/tree/main/src/lib/adapters"
+            target="_blank"
+            rel="noreferrer"
+            className="text-accent hover:underline"
+          >
             {" "}see how spokes work
-          </Link>
+          </a>
           .
         </p>
       </section>

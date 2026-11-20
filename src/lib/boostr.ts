@@ -18,7 +18,8 @@ const userSchema = z.object({
 });
 
 const statsSchema = z.object({
-  success: z.boolean().optional(),
+  // Boostr says success true on a good read; anything else is treated as a failed read.
+  success: z.literal(true),
   stats: z.object({
     totalCastsLiked: z.number(),
     activeContributorsCount: z.number(),

@@ -29,4 +29,9 @@ test("an unexpected body is null, so the page hides numbers instead of showing 0
   assert.equal(parseBoostrStats(null), null);
   assert.equal(parseBoostrStats({ success: false }), null);
   assert.equal(parseBoostrStats({ stats: { totalCastsLiked: "many" } }), null);
+  // A valid stats body with success false, or with no success flag, is not shown.
+  assert.equal(parseBoostrStats({ ...body, success: false }), null);
+  const { success: _drop, ...noFlag } = body;
+  void _drop;
+  assert.equal(parseBoostrStats(noFlag), null);
 });

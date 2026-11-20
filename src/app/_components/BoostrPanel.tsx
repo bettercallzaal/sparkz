@@ -42,7 +42,7 @@ export default function BoostrPanel({ stats }: { stats: BoostrStats | null }) {
                   {httpsHref(c.pfp) ? (
                     <span
                       className="h-6 w-6 shrink-0 rounded-full bg-cover bg-center"
-                      style={{ backgroundImage: `url(${httpsHref(c.pfp)})` }}
+                      style={{ backgroundImage: `url(${JSON.stringify(httpsHref(c.pfp))})` }}
                     />
                   ) : (
                     <span className="h-6 w-6 shrink-0 rounded-full bg-white/10" />

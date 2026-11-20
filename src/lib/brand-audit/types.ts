@@ -1,7 +1,7 @@
 // Brand-audit / OSS-repo Hearth support. Each audited ZAO repo is a Hearth
 // candidate (type='oss'); the audit is the Spark-readiness pass. This data lives
 // in hearths.metadata (jsonb) so an oss Hearth is just a different type + config,
-// never a new schema. CoCConcertZ is the first intended Spark.
+// never a new schema. COC Concertz is the first intended Spark.
 
 // The 4 anti-failure gates (ARCHITECTURE / V1-SCOPE). An audit scores each.
 export type GateKey = "earn" | "measurable" | "proprietary_data" | "testable_30d";

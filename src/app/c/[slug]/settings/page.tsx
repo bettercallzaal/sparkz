@@ -10,6 +10,7 @@ import OwnerBackers from "@/app/_components/OwnerBackers";
 import SharePreview from "@/app/_components/SharePreview";
 import OwnerOnly from "@/app/_components/OwnerOnly";
 import { readContext } from "@/lib/hearth-context";
+import SparksPanel from "@/app/_components/SparksPanel";
 
 export const dynamic = "force-dynamic";
 
@@ -47,6 +48,9 @@ export default async function HearthSettingsPage({
         Choose which integrations show on {data.name}&apos;s public page. Toggle one to
         Hidden and it disappears from the Hearth; toggle it Visible to bring it back.
       </p>
+      <div className="mt-6">
+        <SparksPanel slug={data.slug} hearthId={data.id} manage />
+      </div>
       <EditHearthForm
         hearthId={data.id}
         ownerFid={data.owner_fid ?? null}

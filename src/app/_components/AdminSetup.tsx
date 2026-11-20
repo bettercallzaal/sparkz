@@ -85,7 +85,7 @@ export function SetupZaoButton() {
       </button>
       <p className="mt-1 text-xs text-muted">
         {result ??
-          "Adds ZAO DEVZ, IMan Afrikah and ZAO Festivals if missing, and makes you the owner of ZABAL, ZABAL Gamez, CoC ConcertZ and Sparkz where nobody owns them."}
+          "Adds ZAO DEVZ, IMan Afrikah and ZAO Festivals if missing, and makes you the owner of ZABAL, ZABAL Gamez, COC Concertz and Sparkz where nobody owns them."}
       </p>
     </div>
   );

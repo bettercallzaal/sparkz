@@ -96,3 +96,25 @@ export interface MemeReceipt {
   created_at: string;
   updated_at: string;
 }
+
+// A Spark: an event on a Hearth (migration 0008).
+export type SparkKind = "moment" | "token" | "nft" | "bounty" | "event";
+export type SparkStatus = "planned" | "live" | "ended" | "cancelled";
+
+export interface Spark {
+  id: string;
+  hearth_id: string;
+  kind: SparkKind;
+  title: string;
+  body: string | null;
+  status: SparkStatus;
+  goal_metric: "backers" | "boosts" | null;
+  goal_target: number | null;
+  starts_at: string | null;
+  ends_at: string | null;
+  link: string | null;
+  chain_ref: { chain_id?: number; contract?: string; tx?: string };
+  created_by_fid: number | null;
+  created_at: string;
+  updated_at: string;
+}

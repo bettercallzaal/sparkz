@@ -1,5 +1,6 @@
 "use client";
 
+import { hearthStatusLabel } from "@/lib/hearth-status";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Flame from "@/app/_components/Flame";
@@ -242,7 +243,7 @@ export default function ExplorePage() {
                       {c.type}
                     </span>
                     <span className="rounded bg-accent/15 px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-accent">
-                      {c.status}
+                      {hearthStatusLabel(c.status)}
                     </span>
                     {c.farcaster && (
                       <span className="text-[11px] text-accent">{c.farcaster}</span>

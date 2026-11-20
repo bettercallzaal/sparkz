@@ -23,7 +23,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Next.js-16-black" alt="Next.js 16" />
-  <img src="https://img.shields.io/badge/Supabase-Postgres%20%2B%20RLS-3ecf8e" alt="Supabase" />
+  <img src="https://img.shields.io/badge/Neon-Postgres-00e599" alt="Neon Postgres" />
   <img src="https://img.shields.io/badge/TypeScript-strict-3178c6" alt="TypeScript" />
   <img src="https://img.shields.io/badge/Base-Farcaster-8a63d2" alt="Base + Farcaster" />
   <img src="https://img.shields.io/badge/status-Milestone%201-fbbf24" alt="Milestone 1" />
@@ -191,7 +191,7 @@ The Hearth type lives in `hearths.type` (`creator | culture | oss | meme`); type
 
 > **TL;DR** Server-first Next.js; secrets never reach the browser; every external system is a swappable adapter.
 
-Server-first Next.js App Router. All privileged work runs server-side with the Supabase service-role key; the browser never sees a secret. Every external system sits behind an adapter or a thin client so it can be swapped without touching the UI.
+Server-first Next.js App Router. All privileged work runs server-side with the database's service credentials (Neon in production, Supabase's service-role key on the older backend); the browser never sees a secret. Every external system sits behind an adapter or a thin client so it can be swapped without touching the UI.
 
 > [View the interactive architecture](https://trysparkz.com/architecture) - step through the Meme Engine loop, the system map, the data model, and the adapter seams.
 
@@ -204,10 +204,10 @@ flowchart TB
   subgraph Next["Next.js (App Router, server-first)"]
     Pages["Server components<br/>(read via service role)"]
     API["API routes<br/>(Zod safeParse -> try/catch -> JSON)"]
-    Auth["requireAdmin<br/>(admin sign-in session, or agent token header)"]
+    Auth["requireAdmin<br/>(admin sign-in session only;<br/>agent token on agent routes only)"]
   end
 
-  subgraph Data["Supabase (RLS on every table)"]
+  subgraph Data["Postgres: Neon in production (RLS on every table)"]
     DB[("Postgres<br/>hearths - backers - signals<br/>drafts - receipts")]
     Store[("Storage<br/>logos / assets")]
   end
@@ -263,7 +263,7 @@ Both unchosen drafts and their rejection reason are stored on purpose - what the
 
 > **TL;DR** Five core Hearth tables plus a waitlist, with RLS on all six. Backing settles into one provider-agnostic table; the receipts are the moat.
 
-Sparkz has five core Hearth tables plus `waitlist`. RLS is ON everywhere with no anon policies - every read and write goes through the server on the service-role key, which bypasses RLS. Types are CHECK constraints, not Postgres enums, so a new type/status/provider is a plain migration.
+Sparkz has five core Hearth tables plus `waitlist`. RLS is ON everywhere (each `create table` in `supabase/migrations/` is followed by `enable row level security`; `scripts/db-migrate.sh` applies them to Neon or Supabase) with no anon policies - every read and write goes through the server on the service-role key, which bypasses RLS. Types are CHECK constraints, not Postgres enums, so a new type/status/provider is a plain migration.
 
 ```mermaid
 erDiagram
@@ -432,10 +432,10 @@ Routes validate request data with Zod `safeParse`, wrap handlers in try/catch, l
 
 ## Tech stack
 
-> **TL;DR** Next.js 16 + Supabase (RLS) + Tailwind + Base/Farcaster; a cheap LLM tier drafts the memes.
+> **TL;DR** Next.js 16 + Neon Postgres and Vercel Blob (RLS on every table) + Tailwind + Base/Farcaster; a cheap LLM tier drafts the memes.
 
 - **Next.js 16** (App Router, Turbopack), **React 19**, **TypeScript** (strict).
-- **Supabase** - Postgres + RLS on every table + Storage. Service role server-only.
+- **Neon Postgres + Vercel Blob** in production (`SPARKZ_DB=neon`, `src/lib/db/`). Supabase (Postgres + RLS + Storage) is the older backend, used when `SPARKZ_DB` is unset. Service credentials are server-only.
 - **Tailwind** (v4) - mobile-first, dark theme. Space Grotesk display, violet-to-amber gradient.
 - **Base / Farcaster** - viem + wagmi + Reown AppKit; Farcaster AuthKit + Mini App SDK.
 - **Meme Engine drafts** - OpenRouter cheap tier (deepseek-chat), never a metered Claude path.
@@ -460,7 +460,8 @@ src/
     api/                all API routes (Zod + try/catch)
     _components/        Flame, Avatar, Header, Footer, ShareButton, BoostForm, ...
   lib/
-    supabase/           server client (service role) + DB types
+    supabase/           server client: picks Neon or Supabase (SPARKZ_DB) + DB types
+    db/                 Neon query builder that answers the supabase-js calls Sparkz uses
     adapters/           the 4 seams (signal/backing/approval/connector) + bootstrap
     plugins/            the spoke system (registry, built-ins) + community/ (vendor spokes)
     meme-engine/        3-draft generation (OpenRouter)
@@ -469,7 +470,7 @@ src/
     rate-limit.ts, auth.ts, http.ts, validation/
 agent/                  the runnable Meme Engine agent (separate runtime)
 content/articles/       the blog source
-supabase/migrations/    0001 foundation, 0002 waitlist, 0003 receipt-unique, 0004 spokes, 0005 Hearth rename
+supabase/migrations/    0001 foundation, 0002 waitlist, 0003 receipt-unique, 0004 spokes, 0005 Hearth rename, 0006 team sign-ups, 0007 boost unique + indexes, 0008 sparks
 docs/                   deep docs + assets
 ```
 
@@ -479,7 +480,7 @@ docs/                   deep docs + assets
 
 ```bash
 npm install
-cp .env.example .env.local   # fill in Supabase + the session secret (+ agent token if you run the agent)
+cp .env.example .env.local   # fill in the database (Neon or Supabase) + the session secret (+ agent token if you run the agent)
 npm run dev                  # http://localhost:3000
 npm run seed:zoostr          # optional: the first spark
 ```

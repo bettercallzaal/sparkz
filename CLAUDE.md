@@ -32,12 +32,20 @@ public repo.)
 
 ## Operating mode (right now)
 
-Milestone 1. **Brainstorm the Hearth + Meme Receipts schema with Zaal first** (one
-round of questions, then confirm) BEFORE writing code. Plan, then build.
+Live alpha at trysparkz.com. On main: migrations 0001 to 0008 (supabase/migrations/), the
+Hearth (src/app/c/[slug]/, src/app/api/capsules/), backing (src/app/api/boost/,
+src/lib/adapters/backing-provider/), the Meme Engine loop (src/lib/meme-engine/,
+src/app/api/signals/), Farcaster and wallet sign-in (src/app/api/auth/), and
+the iOS shell (ios/).
+Work is PR-only from the lane's backlog. For a schema change, a new product surface or a
+money/token decision, plan it with Zaal first (one round of questions, then confirm).
 
 ## Stack + conventions
 
-- Next.js (App Router) + Supabase (RLS on every table) + Tailwind + TypeScript.
+- Next.js (App Router) + Tailwind + TypeScript. Data: Neon Postgres plus Vercel Blob in
+  production (`SPARKZ_DB=neon`, `src/lib/db/`); Supabase is the older backend, still
+  supported when `SPARKZ_DB` is unset (`src/lib/supabase/server.ts`). RLS on every table (each migration in
+  `supabase/migrations/` enables it; `scripts/db-migrate.sh` applies them).
 - Validate ALL API input with Zod `safeParse`; return `NextResponse.json`; wrap
   handlers in try/catch, log server-side, return a sanitized 500.
 - Mobile-first, dark theme.

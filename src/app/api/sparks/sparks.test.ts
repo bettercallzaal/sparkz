@@ -21,6 +21,7 @@ test("a goal is a metric and a target together, or neither", () => {
   assert.equal(lightSparkSchema.safeParse({ ...base, goal_target: 10 }).success, false);
   assert.equal(lightSparkSchema.safeParse({ ...base, goal_metric: "backers", goal_target: 0 }).success, false);
   assert.equal(lightSparkSchema.safeParse({ ...base, goal_metric: "likes", goal_target: 5 }).success, false);
+  assert.equal(lightSparkSchema.safeParse({ ...base, goal_metric: "receipts", goal_target: 5 }).success, false);
 });
 
 test("the end date comes after the start", () => {

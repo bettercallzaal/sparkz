@@ -17,8 +17,6 @@ const ADMIN = 19640; // in ADMIN_FIDS (src/lib/admin-identities.ts)
 const HEARTH = "11111111-1111-4111-8111-111111111111";
 const OTHER_HEARTH = "22222222-2222-4222-8222-222222222222";
 const SPARK = "33333333-3333-4333-8333-333333333333";
-const RECEIPT_HERE = "44444444-4444-4444-8444-444444444444";
-const RECEIPT_ELSEWHERE = "55555555-5555-4555-8555-555555555555";
 
 let tables: FakeTables;
 
@@ -35,10 +33,6 @@ beforeEach(() => {
       { id: crypto.randomUUID(), hearth_id: HEARTH, kind: "event", title: "Planned one", status: "planned", created_at: "2026-11-19T11:00:00Z" },
       { id: crypto.randomUUID(), hearth_id: HEARTH, kind: "bounty", title: "Cancelled one", status: "cancelled", created_at: "2026-11-19T12:00:00Z" },
       { id: crypto.randomUUID(), hearth_id: HEARTH, kind: "nft", title: "Ended one", status: "ended", created_at: "2026-11-19T09:00:00Z" },
-    ],
-    meme_receipts: [
-      { id: RECEIPT_HERE, hearth_id: HEARTH },
-      { id: RECEIPT_ELSEWHERE, hearth_id: OTHER_HEARTH },
     ],
   };
   setServiceClientForTests(fakeClient(tables));
@@ -93,12 +87,11 @@ test("POST: an admin may light a Spark on any Hearth", async () => {
   assert.equal(res.status, 201);
 });
 
-test("POST: a receipt from another Hearth is refused", async () => {
+test("POST: a receipt link is refused (Meme Receipts are deprecated, Zaal 19 Nov 2026)", async () => {
   const { POST } = await import("./route");
-  const bad = await POST(req("POST", { fid: OWNER, body: { ...light, receipt_id: RECEIPT_ELSEWHERE } }));
-  assert.equal(bad.status, 400);
-  const good = await POST(req("POST", { fid: OWNER, body: { ...light, receipt_id: RECEIPT_HERE } }));
-  assert.equal(good.status, 201);
+  const res = await POST(req("POST", { fid: OWNER, body: { ...light, receipt_id: SPARK } }));
+  assert.equal(res.status, 400);
+  assert.equal(tables.sparks.length, 4);
 });
 
 test("PATCH: signed out 401, stranger 403, agent 401, owner 200", async () => {
@@ -112,11 +105,6 @@ test("PATCH: signed out 401, stranger 403, agent 401, owner 200", async () => {
   assert.equal(tables.sparks.find((s) => s.id === SPARK)?.status, "ended");
 });
 
-test("PATCH: a receipt from another Hearth is refused", async () => {
-  const { PATCH } = await import("./route");
-  const res = await PATCH(req("PATCH", { fid: OWNER, body: { id: SPARK, receipt_id: RECEIPT_ELSEWHERE } }));
-  assert.equal(res.status, 400);
-});
 
 test("GET: visitors see live and ended only; the owner also sees planned and cancelled", async () => {
   const { GET } = await import("./route");

@@ -437,7 +437,7 @@ export default async function HearthPage({
               <SparksPanel
                 slug={hearth.slug}
                 hearthId={hearth.id}
-                counts={{ backers: backers.length, boosts: boostCount, receipts: receipts.length }}
+                counts={{ backers: backers.length, boosts: boostCount }}
               />
             ),
           },

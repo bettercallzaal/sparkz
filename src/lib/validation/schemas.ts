@@ -200,7 +200,7 @@ export const approveHearthSchema = z.object({
 // give the caller a readable 400 instead of a constraint error.
 export const SPARK_KINDS = ["moment", "token", "nft", "bounty", "event"] as const;
 export const SPARK_STATUSES = ["planned", "live", "ended", "cancelled"] as const;
-export const SPARK_GOAL_METRICS = ["backers", "boosts", "receipts"] as const;
+export const SPARK_GOAL_METRICS = ["backers", "boosts"] as const;
 
 const sparkFields = {
   title: z.string().trim().min(1).max(120),
@@ -219,7 +219,6 @@ const sparkFields = {
     })
     .strict()
     .optional(),
-  receipt_id: z.string().uuid().nullable().optional(),
 };
 
 type SparkShape = {

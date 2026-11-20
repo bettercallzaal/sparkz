@@ -51,18 +51,6 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// A receipt linked to a Spark must belong to the same Hearth.
-async function receiptOnHearth(receiptId: string, hearthId: string): Promise<boolean> {
-  const { data, error } = await getServiceClient()
-    .from("meme_receipts")
-    .select("id")
-    .eq("id", receiptId)
-    .eq("hearth_id", hearthId)
-    .maybeSingle();
-  if (error) throw error;
-  return !!data;
-}
-
 export async function POST(req: NextRequest) {
   const crossSite = forbidCrossSite(req);
   if (crossSite) return crossSite;
@@ -74,10 +62,6 @@ export async function POST(req: NextRequest) {
 
     const denied = await requireHearthOwner(req, input.hearth_id);
     if (denied) return denied;
-
-    if (input.receipt_id && !(await receiptOnHearth(input.receipt_id, input.hearth_id))) {
-      return badRequest("That receipt is not on this Hearth.");
-    }
 
     const { data, error } = await getServiceClient()
       .from("sparks")
@@ -93,7 +77,6 @@ export async function POST(req: NextRequest) {
         ends_at: input.ends_at ?? null,
         link: input.link ?? null,
         chain_ref: input.chain_ref ?? {},
-        receipt_id: input.receipt_id ?? null,
         created_by_fid: sessionFid(req),
       })
       .select("*")
@@ -126,10 +109,6 @@ export async function PATCH(req: NextRequest) {
 
     const denied = await requireHearthOwner(req, spark.hearth_id);
     if (denied) return denied;
-
-    if (changes.receipt_id && !(await receiptOnHearth(changes.receipt_id, spark.hearth_id))) {
-      return badRequest("That receipt is not on this Hearth.");
-    }
 
     // Only the fields the caller sent; undefined means "leave as is".
     const update: Record<string, unknown> = { updated_at: new Date().toISOString() };

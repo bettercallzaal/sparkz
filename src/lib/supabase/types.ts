@@ -108,13 +108,12 @@ export interface Spark {
   title: string;
   body: string | null;
   status: SparkStatus;
-  goal_metric: "backers" | "boosts" | "receipts" | null;
+  goal_metric: "backers" | "boosts" | null;
   goal_target: number | null;
   starts_at: string | null;
   ends_at: string | null;
   link: string | null;
   chain_ref: { chain_id?: number; contract?: string; tx?: string };
-  receipt_id: string | null;
   created_by_fid: number | null;
   created_at: string;
   updated_at: string;

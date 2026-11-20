@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { Spark } from "@/lib/supabase/types";
 import { httpsHref } from "@/lib/safe-href";
 
-type Counts = { backers: number; boosts: number; receipts: number };
+type Counts = { backers: number; boosts: number };
 
 const KIND_LABEL: Record<Spark["kind"], string> = {
   moment: "Moment",

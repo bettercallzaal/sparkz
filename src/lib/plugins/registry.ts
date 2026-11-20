@@ -11,7 +11,7 @@ import { registerSignalSource } from "@/lib/adapters/signal-source";
 import { registerBackingProvider } from "@/lib/adapters/backing-provider";
 import { registerApprovalChannel } from "@/lib/adapters/approval-channel";
 import { registerConnector } from "@/lib/adapters/connector";
-import type { HearthPlugin, PluginMeta } from "./types";
+import type { HearthPlugin } from "./types";
 
 const plugins = new Map<string, HearthPlugin>();
 
@@ -28,27 +28,3 @@ export function registerPlugin(plugin: HearthPlugin): void {
   plugin.connectors?.forEach(registerConnector);
 }
 
-export function getPlugin(id: string): HearthPlugin | undefined {
-  return plugins.get(id);
-}
-
-export function listPlugins(): HearthPlugin[] {
-  return [...plugins.values()];
-}
-
-/** Safe, listable metadata (no component internals, no secret values). */
-export function listPluginMeta(): PluginMeta[] {
-  return [...plugins.values()].map((p) => ({
-    id: p.id,
-    version: p.version,
-    name: p.name,
-    description: p.description,
-    provides: {
-      signalSources: (p.signalSources ?? []).map((s) => s.id),
-      backingProviders: (p.backingProviders ?? []).map((b) => b.id),
-      approvalChannels: (p.approvalChannels ?? []).map((c) => c.id),
-      connectors: (p.connectors ?? []).map((c) => c.id),
-    },
-    configSchema: p.configSchema ?? {},
-  }));
-}

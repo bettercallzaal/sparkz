@@ -53,6 +53,3 @@ export function getBackingProvider(id: string): BackingProvider | undefined {
   return registry.get(id);
 }
 
-export function listBackingProviders(): BackingProvider[] {
-  return [...registry.values()];
-}

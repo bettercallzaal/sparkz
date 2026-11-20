@@ -22,6 +22,8 @@ import { hearthIntegrations, hiddenIntegrations } from "@/lib/hearth-integration
 import { connectorIntegrations } from "@/lib/hearth-connectors";
 import { hearthLogo } from "@/lib/hearth-logo";
 import HearthContextPanel from "@/app/_components/HearthContextPanel";
+import BoostrPanel from "@/app/_components/BoostrPanel";
+import { BOOSTR_HEARTHS, fetchBoostrStats } from "@/lib/boostr";
 import { readContext } from "@/lib/hearth-context";
 import SparksPanel from "@/app/_components/SparksPanel";
 import { hearthStatusLabel } from "@/lib/hearth-status";
@@ -350,6 +352,8 @@ export default async function HearthPage({
         <p className="mb-3 text-xs text-muted">Back the work with a free boost.</p>
         <BoostForm hearthId={hearth.id} />
       </section>
+
+      {BOOSTR_HEARTHS.has(hearth.slug) && <BoostrPanel stats={await fetchBoostrStats()} />}
 
       <HearthContextPanel context={readContext(hearth.metadata)} />
 

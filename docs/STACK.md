@@ -7,8 +7,8 @@ The living map of what Sparkz is made of and how the pieces fit. Keep current.
 | Layer | What | Where |
 |-------|------|-------|
 | App / deploy | Next.js 16 (App Router), TypeScript, Tailwind. Vercel, host-routed. | `trysparkz.com` -> `/try`, `sparkz.lol` -> `/lol`, else `/`. `src/middleware.ts` |
-| Data | Supabase: Postgres + RLS (every table) + Storage | tables: `hearths`, `hearth_backers`, `signals`, `signal_drafts`, `meme_receipts`, `waitlist`; bucket `empire-logos`. `src/lib/supabase/` |
-| Auth (now) | Shared operator token (`SPARKZ_ADMIN_TOKEN`), fails closed | `src/lib/auth.ts`. Replaced later by Farcaster SIWF + Privy (see spec) |
+| Data | Neon Postgres + Vercel Blob in production (`SPARKZ_DB=neon`, `src/lib/db/`); Supabase (Postgres + RLS + Storage) when `SPARKZ_DB` is unset | tables: `hearths`, `hearth_backers`, `signals`, `signal_drafts`, `meme_receipts`, `waitlist`; bucket `empire-logos`. `src/lib/supabase/` |
+| Auth (now) | Farcaster SIWF and Quick Auth, or wallet SIWE, into a signed session cookie; admin by FID or wallet. The agent's bearer token (`SPARKZ_AGENT_TOKEN`, `SPARKZ_ADMIN_TOKEN` still read) opens only the agent routes | `src/lib/auth.ts`, `src/lib/session.ts`, `src/app/api/auth/` |
 | Wallet | Reown AppKit + wagmi + viem - mobile connect + signing | scoped to `/admin/empire` via `src/app/admin/empire/{layout,providers}.tsx`, `src/lib/wallet/config.ts` |
 | On-chain rails | Empire Builder (tokenless empire = create2 + 0xSplits treasury on Base); Clanker (token graduation later) | `src/lib/empire/client.ts`, `src/app/api/empire/deploy` |
 | Value / backing | LedgerProvider (off-chain, live) + Boost engine (free support signal) | `src/lib/adapters/backing-provider/`, `src/app/api/boost` |

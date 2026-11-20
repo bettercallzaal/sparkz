@@ -48,7 +48,7 @@ const TEMPLATES = [
       "Build a public leaderboard of contributors before any token exists. Boost content → earn points → claim fee share weekly. The community creates the value; the token reflects it.",
     realExample: "Zoostr, the first Hearth (leaderboard first, token later)",
     realLink: "/c/zoostr",
-    tokenless: "Leaderboard + Boostr backing + weekly Meme Engine receipts",
+    tokenless: "Leaderboard + Boostr backing + weekly leaderboard updates",
     split: { community: 50, creator: 25, treasury: 25 },
     tokenTiming: "later" as Timing,
     tokenNote: "Launch when 30+ consistent contributors prove the leaderboard",
@@ -65,7 +65,7 @@ const TEMPLATES = [
       "Two artists release a joint track. Split-sheet is locked before launch: artist A gets 50%, artist B gets 40%, producer gets 10%. Every fee split routes through 0xSplits automatically.",
     realExample: null,
     realLink: null,
-    tokenless: "0xSplits split-sheet + Farcaster promo + meme receipt at release",
+    tokenless: "0xSplits split-sheet + Farcaster promo at release",
     split: { community: 20, creator: 70, treasury: 10 },
     tokenTiming: "later" as Timing,
     tokenNote:
@@ -80,11 +80,11 @@ const TEMPLATES = [
     name: "Group Crowdfund",
     subtitle: "Fund a project without speculation",
     description:
-      "A community rallies around a real-world project (conference, album, event). Backers boost it for free and are recorded as early supporters. When the project ships, the receipts show who showed up. No coin, no paywall.",
+      "A community rallies around a real-world project (conference, album, event). Backers boost it for free and are recorded as early supporters. When the project ships, the backer list shows who showed up. No coin, no paywall.",
     realExample: null,
     realLink: null,
     tokenless:
-      "Free boosts (no wallet, no card) + Farcaster backing window + milestone receipts",
+      "Free boosts (no wallet, no card) + Farcaster backing window + milestone updates",
     split: { community: 80, creator: 10, treasury: 10 },
     tokenTiming: "never" as Timing,
     tokenNote:
@@ -103,7 +103,7 @@ const TEMPLATES = [
     realExample: null,
     realLink: null,
     tokenless:
-      "Free boosts (no wallet) + a Meme Engine update post + 0xSplits for collaborators",
+      "Free boosts (no wallet) + Farcaster update posts + 0xSplits for collaborators",
     split: { community: 1, creator: 97, treasury: 2 },
     tokenTiming: "later" as Timing,
     tokenNote:
@@ -122,7 +122,7 @@ const TEMPLATES = [
     realExample: null,
     realLink: null,
     tokenless:
-      "Boostr leaderboard + PFP-gated Discord via Farcaster SIWE + weekly receipts",
+      "Boostr leaderboard + PFP-gated Discord via Farcaster SIWE + weekly updates",
     split: { community: 30, creator: 60, treasury: 10 },
     tokenTiming: "later" as Timing,
     tokenNote: "Token when leaderboard proves 30+ consistent contributors",
@@ -140,7 +140,7 @@ const TEMPLATES = [
     realExample: null,
     realLink: null,
     tokenless:
-      "0xSplits for co-host split + Farcaster episode posts + episode receipt after each drop",
+      "0xSplits for co-host split + Farcaster episode posts",
     split: { community: 15, creator: 75, treasury: 10 },
     tokenTiming: "never" as Timing,
     tokenNote:
@@ -153,13 +153,13 @@ const TEMPLATES = [
   {
     id: "gaming-clan",
     name: "Gaming Clan",
-    subtitle: "Tournament wins → on-chain receipts",
+    subtitle: "Tournament wins shared with the clan",
     description:
       "A competitive gaming clan uses Sparkz to distribute tournament earnings and sponsor fees to members by contribution (practice hours, match wins, content creation). No token required to start.",
     realExample: null,
     realLink: null,
     tokenless:
-      "0xSplits clan treasury + Farcaster win receipts + contribution-weighted leaderboard",
+      "0xSplits clan treasury + Farcaster win posts + contribution-weighted leaderboard",
     split: { community: 40, creator: 50, treasury: 10 },
     tokenTiming: "later" as Timing,
     tokenNote: "Token if the clan grows to 50+ active members and wants a tradeable stake",

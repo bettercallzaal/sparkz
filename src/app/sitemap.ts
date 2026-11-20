@@ -9,7 +9,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes = [
     "", "/explore", "/start", "/demo", "/blog", "/architecture",
     // Content pages (consolidated from the ZOL page set).
-    "/manifesto", "/hearth", "/meme-engine",
+    "/manifesto", "/hearth",
     "/examples", "/contribution", "/split-wizard", "/community-pool",
     "/zao", "/farcaster", "/audius", "/privacy",
   ].map(

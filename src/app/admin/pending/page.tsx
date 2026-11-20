@@ -70,7 +70,7 @@ export default function PendingReview() {
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold tracking-tight">Review queue</h1>
         <Link href="/admin" className="text-sm text-muted hover:text-foreground">
-          Meme Engine -&gt;
+          Admin -&gt;
         </Link>
       </div>
       <p className="mb-5 text-sm text-muted">

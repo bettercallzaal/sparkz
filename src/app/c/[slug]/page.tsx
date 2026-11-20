@@ -3,7 +3,7 @@ import { httpsHref } from "@/lib/safe-href";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getServiceClient } from "@/lib/supabase/server";
-import type { Hearth, HearthBacker, MemeReceipt } from "@/lib/supabase/types";
+import type { Hearth, HearthBacker } from "@/lib/supabase/types";
 import type { OssHearthMetadata } from "@/lib/brand-audit/types";
 import BoostForm from "@/app/_components/BoostForm";
 import Avatar from "@/app/_components/Avatar";
@@ -79,7 +79,6 @@ export async function generateMetadata({
 
 interface HearthView {
   hearth: Hearth;
-  receipts: MemeReceipt[];
   backers: HearthBacker[];
   boostCount: number;
 }
@@ -94,23 +93,15 @@ async function load(slug: string): Promise<HearthView | null> {
   if (!hearth) return null;
 
   const c = hearth as Hearth;
-  const [{ data: receipts }, { data: backers }] = await Promise.all([
-    supabase
-      .from("meme_receipts")
-      .select("*")
-      .eq("hearth_id", c.id)
-      .order("created_at", { ascending: false }),
-    supabase
-      .from("hearth_backers")
-      .select("*")
-      .eq("hearth_id", c.id)
-      .order("created_at", { ascending: false }),
-  ]);
+  const { data: backers } = await supabase
+    .from("hearth_backers")
+    .select("*")
+    .eq("hearth_id", c.id)
+    .order("created_at", { ascending: false });
 
   const backersList = (backers as HearthBacker[]) ?? [];
   return {
     hearth: c,
-    receipts: (receipts as MemeReceipt[]) ?? [],
     backers: backersList,
     boostCount: backersList.filter((b) => b.kind === "boost").length,
   };
@@ -172,7 +163,7 @@ export default async function HearthPage({
   const view = await load(slug);
   if (!view) notFound();
 
-  const { hearth, receipts, backers, boostCount } = view;
+  const { hearth, backers, boostCount } = view;
   const oss = hearth.type === "oss" ? (hearth.metadata as OssHearthMetadata) : null;
   const fc = (hearth.metadata as { farcaster?: { fid?: number | null; username?: string | null; channel?: string | null } }).farcaster;
   const econ = (hearth.economic_config ?? {}) as {
@@ -342,11 +333,10 @@ export default async function HearthPage({
       </header>
 
       {/* Stats only once there is something to count; an all-zero row is noise. */}
-      {backers.length + boostCount + receipts.length > 0 && (
-        <div className="mb-6 grid grid-cols-3 gap-2">
+      {backers.length + boostCount > 0 && (
+        <div className="mb-6 grid grid-cols-2 gap-2">
           <Stat label="Backers" value={backers.length} />
           <Stat label="Boosts" value={boostCount} />
-          <Stat label="Receipts" value={receipts.length} />
         </div>
       )}
 
@@ -426,53 +416,6 @@ export default async function HearthPage({
                   );
                 })()}
               </>
-            ),
-          },
-          {
-            id: "receipts",
-            label: "Receipts",
-            count: receipts.length,
-            content: (
-              <section className="mb-8">
-                <h2 className="mb-3 text-sm font-medium">Meme Receipts</h2>
-                {receipts.length === 0 ? (
-                  <p className="rounded-lg border border-dashed border-border p-5 text-sm text-muted">
-                    No receipts yet. When a moment lands, the Meme Engine writes one here - the
-                    proof of what it matched and what it earned.
-                  </p>
-                ) : (
-                  <ul className="space-y-2">
-                    {receipts.map((r) => (
-                      <li key={r.id} className="rounded-lg border border-border bg-card p-4">
-                        <div className="flex items-center gap-2">
-                          <span className="rounded-full bg-accent-2/15 px-2 py-0.5 text-[10px] uppercase tracking-wide text-accent-2">
-                            Meme Receipt
-                          </span>
-                          {r.published_at && (
-                            <span className="text-xs text-muted">
-                              {new Date(r.published_at).toLocaleDateString()}
-                            </span>
-                          )}
-                        </div>
-                        {r.why_it_matched && (
-                          <p className="mt-2 text-sm leading-relaxed">{r.why_it_matched}</p>
-                        )}
-                        <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-xs text-muted">
-                          <span>
-                            <span className="spark-text stat-num font-semibold">{r.reach}</span> reach
-                          </span>
-                          <span>
-                            <span className="spark-text stat-num font-semibold">{r.referrals}</span> referrals
-                          </span>
-                          <span>
-                            <span className="spark-text stat-num font-semibold">{r.backing_generated}</span> backing
-                          </span>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </section>
             ),
           },
           {

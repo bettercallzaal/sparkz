@@ -8,11 +8,11 @@ const OG = `${BASE}/api/og?title=${encodeURIComponent("Contribution")}&subtitle=
 export const metadata: Metadata = {
   title: "Contribution - Sparkz",
   description:
-    "How Sparkz measures contribution: boosts, backs, receipts, and remixes - each earns leaderboard points. Contribution-weighted, not holding-weighted. Pull model via 0xSplits.",
+    "How Sparkz measures contribution: boosts and backs - each earns leaderboard points. Contribution-weighted, not holding-weighted. Pull model via 0xSplits.",
   openGraph: {
     title: "Contribution - Sparkz",
     description:
-      "Owning earns optionality. Contributing earns fee share. Here's how Sparkz tracks what you actually give: boosts, backs, meme receipts, remixes - points, not bags.",
+      "Owning earns optionality. Contributing earns fee share. Here's how Sparkz tracks what you actually give: boosts and backs - points, not bags.",
     url: `${BASE}/contribution`,
     images: [{ url: OG, width: 1200, height: 630, alt: "Contribution - Sparkz" }],
     type: "website",
@@ -41,7 +41,7 @@ const CONTRIBUTION_TYPES = [
     name: "Boost",
     what: "Like or amplify a Hearth cast on Farcaster.",
     weight: "High",
-    tracked: "Boostr points (zabalLikesCount), Meme Engine engagement score",
+    tracked: "Boostr points (zabalLikesCount)",
     example: "Like a ZABAL cast via Boostr → earns points on the leaderboard",
   },
   {
@@ -49,14 +49,7 @@ const CONTRIBUTION_TYPES = [
     what: "Support the Hearth with a free boost - no wallet, no card.",
     weight: "High",
     tracked: "Boost (free) - who showed up and when",
-    example: "A boost earns leaderboard weight and puts you in the receipts",
-  },
-  {
-    name: "Meme receipt",
-    what: "Remix or quote-cast a Meme Engine post within the 24h community swarm window.",
-    weight: "Medium",
-    tracked: "Remix score via track-remix CLI; attribution logged to Hearth",
-    example: "Quote a ZOL post within 24h → 20% remix reward share",
+    example: "A boost earns leaderboard weight and puts you on the Hearth's backer list",
   },
   {
     name: "Farcaster participation",
@@ -83,7 +76,7 @@ const HOLDING_VS_CONTRIBUTION = [
 ];
 
 const HOW_POINTS_WORK = [
-  { n: "1", title: "You act", body: "You boost, back, remix, or participate. Each action is tracked by the relevant integration (Boostr, Meme Engine, patronage)." },
+  { n: "1", title: "You act", body: "You boost, back, or participate. Each action is tracked by the relevant integration (Boostr, patronage)." },
   { n: "2", title: "Points accumulate", body: "Each action earns points on the Hearth leaderboard. Points are cumulative - they don't reset unless the creator explicitly resets the leaderboard." },
   { n: "3", title: "Weekly snapshot", body: "ZOL takes a weekly snapshot of total points across all contributors. Your proportional share = your points ÷ total points." },
   { n: "4", title: "0xSplits weights updated", body: "Proportional shares convert to integer weights (sum 1,000,000). The 0xSplits contract is updated with the new weights." },
@@ -98,15 +91,9 @@ const INTEGRATIONS = [
     status: "Live (Zoostr first circle)",
   },
   {
-    name: "Meme Engine",
-    url: "/meme-engine",
-    what: "Cultural contribution layer: 24h community swarm window for remixing ZOL drafts. Track-remix CLI scores attribution.",
-    status: "Beta - runs on each ZOL post",
-  },
-  {
     name: "Free backing",
     url: "/start",
-    what: "Anyone can boost a Hearth for free - no wallet, no card. Boosts earn leaderboard weight and land in the receipts.",
+    what: "Anyone can boost a Hearth for free - no wallet, no card. Boosts earn leaderboard weight and show on the Hearth.",
     status: "Live",
   },
 ];

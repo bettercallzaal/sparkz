@@ -113,7 +113,6 @@ const WHAT_CHANGES = [
 const WHAT_DOESNT_CHANGE = [
   "The Hearth identity, name, and bio",
   "The existing backer and boost history",
-  "The Meme Engine and receipt cadence",
   "The community leaderboard (keeps accumulating)",
   "The creator's ability to adjust the 0xSplits config",
   "ZAO's aligned stake - it graduates with the Hearth",

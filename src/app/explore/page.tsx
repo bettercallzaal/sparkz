@@ -7,7 +7,7 @@ import Avatar from "@/app/_components/Avatar";
 import type { DirectoryItem } from "@/app/api/directory/route";
 import { hearthLogo } from "@/lib/hearth-logo";
 
-type SortKey = "momentum" | "new" | "backers" | "boosts" | "receipts" | "name";
+type SortKey = "momentum" | "new" | "backers" | "boosts" | "name";
 
 const TYPES = ["creator", "culture", "oss", "meme"];
 const STATUSES = ["spark", "tokenized", "dormant"];
@@ -16,7 +16,6 @@ const FLAGS = [
   { key: "token", label: "Token" },
   { key: "farcaster", label: "Farcaster" },
   { key: "agent", label: "Agent" },
-  { key: "receipts", label: "Has receipts" },
   { key: "boosts", label: "Has boosts" },
 ] as const;
 
@@ -86,7 +85,6 @@ export default function ExplorePage() {
         if (f === "token" && !c.token) return false;
         if (f === "farcaster" && !c.farcaster) return false;
         if (f === "agent" && !c.agent) return false;
-        if (f === "receipts" && c.receipts === 0) return false;
         if (f === "boosts" && c.boosts === 0) return false;
       }
       return true;
@@ -179,7 +177,6 @@ export default function ExplorePage() {
               <option value="momentum">Momentum this week</option>
               <option value="backers">Most backers</option>
               <option value="boosts">Most boosts</option>
-              <option value="receipts">Most receipts</option>
               <option value="new">Newest</option>
               <option value="name">Name</option>
             </select>
@@ -280,8 +277,6 @@ export default function ExplorePage() {
                 <span>backers</span>
                 <span className="spark-text stat-num font-semibold">{c.boosts}</span>
                 <span>boosts</span>
-                <span className="spark-text stat-num font-semibold">{c.receipts}</span>
-                <span>receipts</span>
                 {c.emails > 0 && <span>{c.emails} on list</span>}
                 {c.stars != null && <span>{c.stars} stars</span>}
               </div>

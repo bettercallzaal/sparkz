@@ -64,9 +64,8 @@ export default function DemoPage() {
             the metaverse. On Sparkz it&apos;s a <span className="spark-text font-semibold">Hearth</span> -
             not a coin. It has an identity, a Farcaster home (
             <span className="font-mono text-accent">/zao</span>), supporters who back
-            the work, and a growing trail of receipts. When a show packs the venue,
-            the Meme Engine drafts that moment into content, a human picks the draft,
-            and a receipt is logged. No token required - and if the energy&apos;s ever
+            the work, and free boosts from the community. Every show is a Spark that
+            grows it. No token required - and if the energy&apos;s ever
             there, it can graduate to a treasury or a coin. That&apos;s a spark.
           </p>
           <Link
@@ -85,26 +84,18 @@ export default function DemoPage() {
         </h2>
         <div className="grid gap-3 sm:grid-cols-2">
           <Step n="1" title="Open a Hearth">
-            Identity, backing, receipts, economic config. No coin, no wallet required
+            Identity, backers, boosts, economic config. No coin, no wallet required
             to start.
           </Step>
           <Step n="2" title="People back it">
             Supporters boost and collect. The boost engine amplifies the creator and
             the community that shows up.
           </Step>
-          <Step n="3" title="The Meme Engine">
-            Flag a cultural moment - Sparkz drafts 3 Hearth-grounded responses (cheap
-            AI tier) - you approve one - it publishes.
-          </Step>
-          <Step n="4" title="Distributed on Farcaster">
-            The approved response casts to the Hearth&apos;s Farcaster channel. The
+          <Step n="3" title="Distributed on Farcaster">
+            Sparks and updates cast to the Hearth&apos;s Farcaster channel. The
             game is internet traffic; Farcaster eats first.
           </Step>
-          <Step n="5" title="Receipts accumulate">
-            Every response writes a Meme Receipt - which moment, why it matched, what
-            it earned. That data is the moat.
-          </Step>
-          <Step n="6" title="Graduate, only if it fits">
+          <Step n="4" title="Graduate, only if it fits">
             If the momentum&apos;s real: a tokenless empire (create2 treasury) or a
             token on the Clanker rail. Some do, some never. Fine either way.
           </Step>
@@ -117,10 +108,8 @@ export default function DemoPage() {
           Why it&apos;s different
         </h2>
         <p className="text-sm leading-relaxed text-muted">
-          The moat isn&apos;t the token contract, and it isn&apos;t image generation.
-          It&apos;s the accumulating system - Hearths + backing + cultural memory +
-          meme lineage + receipts + attribution. The more Sparkz runs, the smarter
-          every Hearth gets. A price pump with a dead community isn&apos;t healthy; a
+          The value isn&apos;t the token contract. It&apos;s the accumulating
+          Hearth - identity, backers, boosts and the Sparks that grew them. A price pump with a dead community isn&apos;t healthy; a
           small project with growing contributors and repeat backers is - even
           pre-token.
         </p>

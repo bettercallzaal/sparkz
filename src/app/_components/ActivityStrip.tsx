@@ -47,7 +47,10 @@ export default function ActivityStrip() {
   }, []);
 
   if (!data || data.events.length === 0) return null;
-  const { stats, events } = data;
+  const { stats } = data;
+  // The feed API still emits receipt rows until it is retired; they are not shown.
+  const events = data.events.filter((e) => e.kind !== "receipt");
+  if (events.length === 0) return null;
 
   return (
     <section className="py-8">
@@ -55,7 +58,6 @@ export default function ActivityStrip() {
         <div className="flex flex-wrap items-center gap-x-8 gap-y-3 border-b border-border pb-4">
           <Stat n={stats.sparks} label="sparks" />
           <Stat n={stats.backers} label="backers" />
-          <Stat n={stats.receipts} label="receipts" />
           <span className="ml-auto flex items-center gap-1.5 text-xs text-muted">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-green-500" />
             live - value, not price

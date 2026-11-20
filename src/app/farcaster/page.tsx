@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 const FEF_POINTS = [
   {
     title: "First announcements",
-    body: "When a Spark goes live, when a receipt drops, when a leaderboard milestone hits - Farcaster sees it first. Other channels distribute later.",
+    body: "When a Spark goes live, when a boost lands, when a leaderboard milestone hits - Farcaster sees it first. Other channels distribute later.",
   },
   {
     title: "First participation window",
@@ -39,7 +39,7 @@ const FEF_POINTS = [
   },
   {
     title: "Frame embeds on every page",
-    body: "Every Sparkz page has fc:frame metadata for Warpcast embedding. Receipts, leaderboards, backing pages - all shareable as interactive frames directly in Warpcast casts.",
+    body: "Every Sparkz page has fc:frame metadata for Warpcast embedding. Hearths, leaderboards, backing pages - all shareable as interactive frames directly in Warpcast casts.",
   },
 ];
 
@@ -52,21 +52,15 @@ const INTEGRATIONS = [
   },
   {
     title: "Warpcast miniapp",
-    body: "Sparkz runs as a Warpcast miniapp via fc:miniapp protocol. Browse Hearths, back creators, and claim receipts without leaving Warpcast.",
+    body: "Sparkz runs as a Warpcast miniapp via fc:miniapp protocol. Browse Hearths, back creators, and boost without leaving Warpcast.",
     link: null,
     linkLabel: null,
   },
   {
     title: "Frame embeds",
-    body: "Every page generates Farcaster frame metadata (fc:frame). Share a receipt or leaderboard as a frame - followers can see key data and tap through without leaving their feed.",
+    body: "Every page generates Farcaster frame metadata (fc:frame). Share a Hearth or leaderboard as a frame - followers can see key data and tap through without leaving their feed.",
     link: null,
     linkLabel: null,
-  },
-  {
-    title: "ZOL casts to Farcaster",
-    body: "The ZOL Meme Engine publishes to Farcaster first via Neynar. Each cast is grounded in real Hearth data and requires human approval before posting.",
-    link: "/meme-engine",
-    linkLabel: "Meme Engine →",
   },
 ];
 
@@ -154,10 +148,6 @@ export default function FarcasterPage() {
           <Link href="/start" className="glass glass-hover p-3">
             <div className="font-medium text-sm">Light a spark</div>
             <div className="text-xs text-muted">Open your Hearth - FEF from day one</div>
-          </Link>
-          <Link href="/meme-engine" className="glass glass-hover p-3">
-            <div className="font-medium text-sm">Meme Engine</div>
-            <div className="text-xs text-muted">ZOL posts to Farcaster (with your approval)</div>
           </Link>
         </div>
       </section>

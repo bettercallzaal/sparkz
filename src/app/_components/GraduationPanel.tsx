@@ -7,7 +7,7 @@ const RAILS = [
   {
     rail: "Stay a spark",
     fee: "0%",
-    get: "Keep everything. Identity, backers, receipts - no coin, no wallet.",
+    get: "Keep everything. Identity, backers, boosts - no coin, no wallet.",
     accent: "text-accent",
   },
   {

@@ -128,7 +128,7 @@ export default function MyHome() {
         <p className="text-sm text-muted">Loading your Hearths...</p>
       ) : rows.length === 0 ? (
         <div className="rounded-lg border border-dashed border-border p-5 text-sm">
-          <p className="mb-3 text-muted">You have not lit a Hearth yet. It takes a minute.</p>
+          <p className="mb-3 text-muted">You have not lit a Hearth yet. Hearths open by invitation during the alpha; ask for one here.</p>
           <Link
             href="/start"
             className="btn-spark inline-flex min-h-11 items-center rounded-lg px-4 text-sm"

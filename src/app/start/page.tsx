@@ -5,11 +5,11 @@ export const dynamic = "force-static";
 
 export const metadata = {
   title: "New Hearth",
-  description: "Open a Hearth in under a minute. No wallet needed, just your project's home.",
+  description: "Hearths open by invitation while Sparkz is in alpha. Ask for one here. No wallet needed.",
   openGraph: {
     title: "New Hearth",
-    description: "Open a Hearth in under a minute. No wallet needed.",
-    images: [{ url: "/api/og?title=New%20Hearth&subtitle=Open%20a%20Hearth%20in%20under%20a%20minute.", width: 1200, height: 800 }],
+    description: "Hearths open by invitation while Sparkz is in alpha. Ask for one here.",
+    images: [{ url: "/api/og?title=New%20Hearth&subtitle=Hearths%20open%20by%20invitation%20during%20the%20alpha.", width: 1200, height: 800 }],
   },
 };
 
@@ -20,7 +20,7 @@ export default function StartPage() {
         <Flame className="h-9 w-9 flame-live" />
         <div>
           <h1 className="text-2xl font-bold tracking-tight">New Hearth</h1>
-          <p className="text-sm text-muted">A project home in under a minute. No wallet needed.</p>
+          <p className="text-sm text-muted">A home for your project. No wallet needed.</p>
         </div>
       </div>
 
@@ -29,8 +29,11 @@ export default function StartPage() {
       </div>
 
       <p className="mt-4 text-center text-xs text-muted">
-        This creates a real Hearth you can share right away. Every show, drop or
-        launch after that is a Spark that grows it.
+        {/* Zaal, 2026-11-19: opening a Hearth is allowlist-only for now (#408). Say so,
+            instead of promising every visitor a Hearth in a minute. */}
+        Hearths open by invitation while Sparkz is in alpha. If you are on the list, the
+        form above opens yours; if not, join the waitlist and we will reach out. Every
+        show, drop or launch after that is a Spark that grows it.
       </p>
     </main>
   );

@@ -59,4 +59,3 @@ export interface MediaKitProvider {
 
 export const MAX_SCRIPT_CHARS = 1200;
 export const DEFAULT_ANCHOR: BarazaAnchor = "amina";
-export const BARAZA_ANCHORS: readonly BarazaAnchor[] = ["amina", "jabari"];

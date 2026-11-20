@@ -45,10 +45,3 @@ export function registerConnector(connector: Connector): void {
   registry.set(connector.id, connector);
 }
 
-export function getConnector(id: string): Connector | undefined {
-  return registry.get(id);
-}
-
-export function listConnectors(): Connector[] {
-  return [...registry.values()];
-}

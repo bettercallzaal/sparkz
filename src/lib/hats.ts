@@ -82,7 +82,6 @@ export function hatsConfig(): HatsConfig | null {
   };
 }
 
-export const hatsConfigured = () => hatsConfig() !== null;
 // Open for claims when the module is set and, on chain, wears an admin hat and marks the
 // Member hat claimable. Read live so switching it off in the Hats app takes effect at once.
 export async function hatsClaimable(cfg = hatsConfig()): Promise<boolean> {

@@ -1,5 +1,6 @@
 "use client";
 
+import { hearthStatusLabel } from "@/lib/hearth-status";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Avatar from "./Avatar";
@@ -80,7 +81,7 @@ export default function YourSparks({ fid }: { fid: number }) {
                 </span>
               ) : (
                 <span className="shrink-0 text-[10px] uppercase tracking-wide text-muted">
-                  {r.status}
+                  {hearthStatusLabel(r.status)}
                 </span>
               )}
             </Link>

@@ -470,7 +470,7 @@ src/
     rate-limit.ts, auth.ts, http.ts, validation/
 agent/                  the runnable Meme Engine agent (separate runtime)
 content/articles/       the blog source
-supabase/migrations/    0001 foundation, 0002 waitlist, 0003 receipt-unique, 0004 spokes, 0005 Hearth rename, 0006 team sign-ups, 0007 boost unique + indexes
+supabase/migrations/    0001 foundation, 0002 waitlist, 0003 receipt-unique, 0004 spokes, 0005 Hearth rename, 0006 team sign-ups, 0007 boost unique + indexes, 0008 sparks
 docs/                   deep docs + assets
 ```
 

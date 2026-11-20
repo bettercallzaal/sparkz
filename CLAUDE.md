@@ -32,7 +32,7 @@ public repo.)
 
 ## Operating mode (right now)
 
-Live alpha at trysparkz.com. On main: migrations 0001 to 0007 (supabase/migrations/), the
+Live alpha at trysparkz.com. On main: migrations 0001 to 0008 (supabase/migrations/), the
 Hearth, backing, the Meme Engine loop, Farcaster and wallet sign-in (src/app/api/auth/), and
 the iOS shell (ios/).
 Work is PR-only from the lane's backlog. For a schema change, a new product surface or a

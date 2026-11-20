@@ -40,7 +40,7 @@ export default function YourSparks({ fid }: { fid: number }) {
       <div className="mt-5 border-t border-border pt-5">
         <h2 className="mb-2 text-sm font-semibold">Your sparks</h2>
         <p className="mb-3 text-xs text-muted">
-          Nothing here yet. Light one above - it takes seconds. Here is a live one to see
+          Nothing here yet. Hearths open by invitation during the alpha. Here is a live one to see
           what yours becomes:
         </p>
         <Link

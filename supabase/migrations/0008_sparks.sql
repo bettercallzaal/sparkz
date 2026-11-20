@@ -39,3 +39,12 @@ create table if not exists sparks (
 create index if not exists sparks_hearth_created_idx on sparks(hearth_id, created_at desc);
 
 alter table sparks enable row level security;
+
+-- updated_at follows every change, through the same set_updated_at() as the other tables (0001).
+drop trigger if exists sparks_set_updated_at on sparks;
+create trigger sparks_set_updated_at before update on sparks
+  for each row execute function set_updated_at();
+
+-- Tell the Supabase API layer (PostgREST) to reload its schema cache so the new table is
+-- visible at once, as 0005 does. On Neon nothing listens and the notify is a no-op.
+notify pgrst, 'reload schema';

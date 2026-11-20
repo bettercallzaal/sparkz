@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import type { Spark } from "@/lib/supabase/types";
+import { httpsHref } from "@/lib/safe-href";
 
 type Counts = { backers: number; boosts: number; receipts: number };
 
@@ -95,8 +96,8 @@ export default function SparksPanel({
             ) : null}
             <div className="mt-2 flex flex-wrap gap-3 text-xs text-muted">
               {s.ends_at && <span>Ends {new Date(s.ends_at).toLocaleDateString()}</span>}
-              {s.link && (
-                <a href={s.link} target="_blank" rel="noreferrer" className="text-accent hover:underline">
+              {httpsHref(s.link) && (
+                <a href={httpsHref(s.link) ?? undefined} target="_blank" rel="noreferrer" className="text-accent hover:underline">
                   Open link
                 </a>
               )}

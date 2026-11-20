@@ -32,8 +32,9 @@ public repo.)
 
 ## Operating mode (right now)
 
-Live alpha at trysparkz.com (Milestone 1 shipped: migrations 0001 to 0007, the Hearth,
-backing, the Meme Engine loop, Farcaster and wallet sign-in, an iOS TestFlight shell).
+Live alpha at trysparkz.com. On main: migrations 0001 to 0007 (supabase/migrations/), the
+Hearth, backing, the Meme Engine loop, Farcaster and wallet sign-in (src/app/api/auth/), and
+the iOS shell (ios/).
 Work is PR-only from the lane's backlog. For a schema change, a new product surface or a
 money/token decision, plan it with Zaal first (one round of questions, then confirm).
 

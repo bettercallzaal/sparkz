@@ -191,7 +191,7 @@ The Hearth type lives in `hearths.type` (`creator | culture | oss | meme`); type
 
 > **TL;DR** Server-first Next.js; secrets never reach the browser; every external system is a swappable adapter.
 
-Server-first Next.js App Router. All privileged work runs server-side with the Supabase service-role key; the browser never sees a secret. Every external system sits behind an adapter or a thin client so it can be swapped without touching the UI.
+Server-first Next.js App Router. All privileged work runs server-side with the database's service credentials (Neon in production, Supabase's service-role key on the older backend); the browser never sees a secret. Every external system sits behind an adapter or a thin client so it can be swapped without touching the UI.
 
 > [View the interactive architecture](https://trysparkz.com/architecture) - step through the Meme Engine loop, the system map, the data model, and the adapter seams.
 
@@ -432,7 +432,7 @@ Routes validate request data with Zod `safeParse`, wrap handlers in try/catch, l
 
 ## Tech stack
 
-> **TL;DR** Next.js 16 + Supabase (RLS) + Tailwind + Base/Farcaster; a cheap LLM tier drafts the memes.
+> **TL;DR** Next.js 16 + Neon Postgres and Vercel Blob (RLS on every table) + Tailwind + Base/Farcaster; a cheap LLM tier drafts the memes.
 
 - **Next.js 16** (App Router, Turbopack), **React 19**, **TypeScript** (strict).
 - **Neon Postgres + Vercel Blob** in production (`SPARKZ_DB=neon`, `src/lib/db/`). Supabase (Postgres + RLS + Storage) is the older backend, used when `SPARKZ_DB` is unset. Service credentials are server-only.

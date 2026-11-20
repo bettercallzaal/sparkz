@@ -1,0 +1,8 @@
+# squawk (https://squawkhq.com): lint for unsafe Postgres migrations. CI runs it only on the
+# migrations a PR adds or changes (.github/workflows/ci.yml), so 0001 to 0007 are not re-judged.
+# scripts/db-migrate.sh runs each migration in one transaction.
+assume_in_transaction = true
+# Off on purpose: timeouts are the runner's job, and our integer columns are small and capped
+# by validation. Every other rule (table rewrites, NOT NULL without a default, dropped columns
+# still in use, renames) stays on.
+excluded_rules = ["require-lock-timeout", "require-statement-timeout", "prefer-bigint-over-int"]

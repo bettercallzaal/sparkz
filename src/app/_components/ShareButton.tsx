@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { nativeShare } from "@/lib/native";
 
 // Share to Farcaster (FEF) + X. No SDK - Farcaster's compose intent and X's tweet
 // intent are plain deeplinks. `path` is resolved to an absolute URL client-side so
@@ -70,7 +71,12 @@ export default function ShareButton({
   return (
     <div className={`relative ${className}`}>
       <button
-        onClick={() => setOpen((v) => !v)}
+        onClick={async () => {
+          // In the iPhone app, the system share sheet (Messages, Farcaster, X, copy)
+          // replaces this menu. On the web, or a build without the plugin, the menu opens.
+          if (!open && (await nativeShare({ title: "Sparkz", text, url: url() }))) return;
+          setOpen((v) => !v);
+        }}
         className="min-h-11 rounded-md border border-border bg-card px-4 py-2 text-sm hover:border-accent active:bg-white/10 sm:min-h-0 sm:px-3 sm:py-1.5"
       >
         Share

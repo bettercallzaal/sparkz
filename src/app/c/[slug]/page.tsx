@@ -23,6 +23,8 @@ import { connectorIntegrations } from "@/lib/hearth-connectors";
 import { hearthLogo } from "@/lib/hearth-logo";
 import HearthContextPanel from "@/app/_components/HearthContextPanel";
 import { readContext } from "@/lib/hearth-context";
+import SparksPanel from "@/app/_components/SparksPanel";
+import { hearthStatusLabel } from "@/lib/hearth-status";
 
 export const dynamic = "force-dynamic";
 
@@ -241,7 +243,7 @@ export default async function HearthPage({
                 {hearth.type}
               </span>
               <span className="rounded-md bg-accent/20 px-2 py-0.5 text-[10px] uppercase tracking-wide text-accent">
-                {hearth.status}
+                {hearthStatusLabel(hearth.status)}
               </span>
               <OwnerBadge ownerFid={hearth.owner_fid} />
             </div>
@@ -416,6 +418,17 @@ export default async function HearthPage({
                   );
                 })()}
               </>
+            ),
+          },
+          {
+            id: "sparks",
+            label: "Sparks",
+            content: (
+              <SparksPanel
+                slug={hearth.slug}
+                hearthId={hearth.id}
+                counts={{ backers: backers.length, boosts: boostCount }}
+              />
             ),
           },
           {

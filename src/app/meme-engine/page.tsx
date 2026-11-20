@@ -145,9 +145,9 @@ export default function MemeEnginePage() {
           <div className="mb-1 text-xs font-medium uppercase tracking-widest text-accent">
             Live example
           </div>
-          <h3 className="mb-2 text-base font-semibold">Zoostr - the first Meme Engine deployment</h3>
+          <h3 className="mb-2 text-base font-semibold">Zoostr - the first Hearth on the Meme Engine</h3>
           <p className="mb-3 text-sm text-muted">
-            ZABAL runs ZOL to track the Zoostr empire: milestone detection from live Boostr stats, three-variant drafting for Farcaster casts, human approval via the /zol panel, 24h remix scoring, weekly snapshot → receipt. The full loop runs on one human click.
+            A moment on Zoostr is flagged, the Meme Engine drafts three variants, and a human approves one. The approved draft becomes a Meme Receipt on Zoostr&apos;s Hearth.
           </p>
           <Link href="/c/zoostr" className="inline-block text-sm text-accent hover:underline">
             See Zoostr&apos;s receipts on its Hearth →

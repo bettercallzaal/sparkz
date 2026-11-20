@@ -69,7 +69,7 @@ const FACTS = [
   { label: "Auto-payout", value: "No - pull, not push" },
   { label: "Eligibility metric", value: "Leaderboard points (contribution-weighted)" },
   { label: "Update cadence", value: "Weekly snapshot → 0xSplits weight update" },
-  { label: "Zoostr pool size", value: "50% (community-first Hearth)" },
+  { label: "Community-first pool size", value: "Up to the creator, e.g. 50%" },
 ];
 
 const GUARDRAILS = [
@@ -142,7 +142,7 @@ export default function CommunityPoolPage() {
           </span>
         </div>
         <p className="text-xs text-muted mt-4 leading-relaxed">
-          Creator can raise the community pool - e.g. Zoostr chose 50%. Floor is 1% and
+          Creator can raise the community pool - e.g. to 50%. Floor is 1% and
           cannot be removed. All percentages must sum to 100.
         </p>
       </section>
@@ -203,10 +203,10 @@ export default function CommunityPoolPage() {
         </div>
       </section>
 
-      {/* Zoostr live example */}
+      {/* Example community-first split (illustration, not a live Hearth's numbers) */}
       <section className="card-solid border border-border rounded-2xl p-6">
         <div className="text-xs font-semibold text-muted uppercase tracking-wider mb-3">
-          Live example - Zoostr community pool
+          Example - a community-first split
         </div>
         <div className="flex h-5 w-full overflow-hidden rounded-full border border-border mb-4">
           <div className="bg-foreground/40" style={{ width: "50%" }} title="Community pool - 50%" />
@@ -228,9 +228,10 @@ export default function CommunityPoolPage() {
           </span>
         </div>
         <p className="text-sm text-foreground/80 leading-relaxed mb-3">
-          Zoostr chose a community-first split: 50% of all $ZOOSTR trading fees go to the
-          community pool. Boosters earn points by liking ZABAL casts via Boostr. Weekly
-          snapshot → 0xSplits update → claim at splits.org.
+          A community-first Hearth can send 50% of its token&apos;s trading fees to the
+          community pool, once it has a token. Boosters earn points on the leaderboard. Weekly
+          snapshot → 0xSplits update → claim at splits.org. Zoostr, the first Hearth, shows its
+          leaderboard on its Hearth and has no token yet.
         </p>
         <Link href="/c/zoostr" className="text-accent text-sm hover:underline">
           Zoostr leaderboard, on its Hearth →

@@ -224,13 +224,12 @@ export default function GraduationPage() {
       {/* Zoostr example */}
       <section className="card-solid border border-border rounded-2xl p-6">
         <div className="text-xs font-semibold text-muted uppercase tracking-wider mb-3">
-          Live example - Zoostr graduation
+          First on the path - Zoostr
         </div>
         <p className="text-sm text-foreground/80 leading-relaxed mb-3">
-          Zoostr graduated after 50+ boosters had built a real leaderboard over several weeks.
-          The community was pulling for economic participation before the token was even announced.
-          0xSplits was deployed first; Clanker came second. The 50/25/25 split was locked before
-          launch day.
+          Zoostr is the first Hearth on this path. The leaderboard comes first. The token
+          waits until 30+ consistent contributors have built a real points history, the same
+          rule as above. Zoostr has no token yet.
         </p>
         <Link href="/c/zoostr" className="text-accent text-sm hover:underline">
           Zoostr&apos;s Hearth on Sparkz →

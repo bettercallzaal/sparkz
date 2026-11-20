@@ -18,9 +18,11 @@ export function GET() {
       details: [
         {
           appIDs: [APP_ID],
-          // First match wins. API routes and other .well-known files stay on the web.
+          // First match wins. API routes, admin pages and other .well-known files stay
+          // on the web.
           components: [
             { "/": "/api/*", exclude: true },
+            { "/": "/admin/*", exclude: true },
             { "/": "/.well-known/*", exclude: true },
             { "/": "/*" },
           ],

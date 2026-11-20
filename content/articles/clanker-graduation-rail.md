@@ -6,7 +6,7 @@ tags: [clanker, tokens, base, graduation]
 author: Sparkz
 ---
 
-Sparkz is tokenless by default. A Hearth accumulates backing, receipts, and momentum
+Sparkz is tokenless by default. A Hearth accumulates backing, Sparks, and momentum
 long before anyone asks whether it should have a coin. But when a Hearth does earn
 that moment - real community, real funds, real status - the graduation has to be
 clean: no migration, no fragmented liquidity, no starting over. That is exactly what
@@ -51,9 +51,9 @@ launching onto a rail that structurally cannot rug your backers is the point.
 Clanker's default reward split favors the deployer, and with an interface partner in
 the mix the split becomes creator / partner / protocol. That lines up with the Sparkz
 creator-first stance (our 1/1/98 default) rather than fighting it. Every trade then
-does double duty: it pays the creator and their contributors, and it writes more data
-into the Hearth - who bought, when, at what price. The token becomes another stream
-into the moat, not a replacement for it.
+does double duty: it pays the creator and their contributors, and it adds to the
+Hearth's record - who bought, when, at what price. The token becomes another stream
+into the Hearth, not a replacement for it.
 
 ## What this means for Sparkz today
 

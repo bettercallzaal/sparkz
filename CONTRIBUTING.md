@@ -10,7 +10,7 @@ nothing to do with the codebase:
 
 - **Creators and artists** - open a Hearth, use it, and tell us what is missing or
   confusing. File a [feedback issue](https://github.com/bettercallzaal/sparkz/issues/new?template=feedback.yml).
-  Design a flame sticker, a Hearth icon, or a Meme Receipt look.
+  Design a flame sticker or a Hearth icon.
 - **Community** - welcome new people and answer questions in
   [Discussions](https://github.com/bettercallzaal/sparkz/discussions). Suggest a
   real project that should become a Spark.
@@ -50,8 +50,6 @@ exempt):
 - **Ask before:** any DB migration, new dependency, or env-var change.
 - **Secrets:** never expose `SUPABASE_SERVICE_ROLE_KEY` or any secret to the browser.
   Service role is server-only. Never commit `.env`.
-- **LLM work:** any drafting/generation uses a cheap tier (OpenRouter), never a
-  metered path.
 
 ## Add a spoke (connect your tool)
 
@@ -72,7 +70,6 @@ server-only, no DB access, fail soft, declare permissions, pin `minSparkzVersion
 ## Before you open a PR
 
 - `npm run build` is green and `npx tsc --noEmit` is clean.
-- The agent's tests pass if you touched `agent/` (`cd agent && npm test`).
 - Use the PR template. Say how you verified it.
 
 ## Local setup

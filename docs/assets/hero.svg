@@ -44,7 +44,7 @@
     <rect x="0"   y="0" width="132" height="38" rx="19" fill="#ffffff" fill-opacity="0.05" stroke="#c084fc" stroke-opacity="0.4"/>
     <text x="66"  y="25" class="chip" font-size="14" fill="#d8b4fe" text-anchor="middle">CAPSULES</text>
     <rect x="148" y="0" width="168" height="38" rx="19" fill="#ffffff" fill-opacity="0.05" stroke="#f472b6" stroke-opacity="0.4"/>
-    <text x="232" y="25" class="chip" font-size="14" fill="#f9a8d4" text-anchor="middle">MEME ENGINE</text>
+    <text x="232" y="25" class="chip" font-size="14" fill="#f9a8d4" text-anchor="middle">SPARKS</text>
     <rect x="332" y="0" width="210" height="38" rx="19" fill="#ffffff" fill-opacity="0.05" stroke="#fbbf24" stroke-opacity="0.4"/>
     <text x="437" y="25" class="chip" font-size="14" fill="#fcd34d" text-anchor="middle">FARCASTER-NATIVE</text>
   </g>

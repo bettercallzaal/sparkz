@@ -1,6 +1,6 @@
 // Boot the adapter seams by registering the built-in plugins. Each plugin fans its
-// components into the existing signal-source / backing-provider / approval-channel
-// registries, so every call site (getSignalSource, routeApproval, ...) is unchanged.
+// components into the existing backing-provider / connector registries, so every
+// call site (getBackingProvider, ...) is unchanged.
 //
 // Exposed as an idempotent function AND run on import: routes that do
 // `import "@/lib/adapters/bootstrap"` still get registration on module load, while

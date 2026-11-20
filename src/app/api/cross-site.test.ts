@@ -23,9 +23,6 @@ const ROUTES: Record<string, () => Promise<{ POST: (req: NextRequest) => Promise
   "capsules/media-kit": () => import("./capsules/media-kit/route"),
   "capsules/plugins": () => import("./capsules/plugins/route"),
   capsules: () => import("./capsules/route"),
-  "signals/approve": () => import("./signals/approve/route"),
-  "signals/detect": () => import("./signals/detect/route"),
-  signals: () => import("./signals/route"),
   upload: () => import("./upload/route"),
   boost: () => import("./boost/route"),
   team: () => import("./team/route"),
@@ -53,6 +50,6 @@ for (const [path, load] of Object.entries(ROUTES)) {
   });
 }
 
-test("the table covers the 17 gated routes listed in issue #381 plus boost, team and waitlist", () => {
-  assert.equal(Object.keys(ROUTES).length, 20);
+test("the table covers the 14 gated routes still in issue #381 plus boost, team and waitlist", () => {
+  assert.equal(Object.keys(ROUTES).length, 17);
 });

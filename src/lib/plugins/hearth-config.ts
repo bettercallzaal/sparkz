@@ -4,8 +4,8 @@
 // call before the migration is applied: if the table is missing, we return defaults.
 //
 // This is the CONTROL plane (store + read which plugins a Hearth has on + its config).
-// getHearthRuntime below is how the loop CONSUMES it: signal detection, approval
-// routing and the Hearth page's connector grid only use a Hearth's enabled spokes.
+// getHearthRuntime below is how the app CONSUMES it: the Hearth page's connector grid
+// only uses a Hearth's enabled spokes.
 
 import { getServiceClient } from "@/lib/supabase/server";
 import { BUILT_IN_PLUGINS } from "./built-in";
@@ -15,7 +15,7 @@ import { buildRuntime, type HearthRuntime } from "./runtime";
 
 // Listing available plugins derives from the static plugin lists directly - the
 // authoritative source - NOT the runtime registry Map. The Map is for component
-// resolution (getSignalSource etc) and can be a different instance per route bundle
+// resolution (getBackingProvider etc) and can be a different instance per route bundle
 // under the dev bundler; the static lists are always populated. Community spokes are
 // included so vendor-added integrations are toggleable per Hearth like any built-in.
 function builtinMeta(): PluginMeta[] {
@@ -25,9 +25,7 @@ function builtinMeta(): PluginMeta[] {
     name: p.name,
     description: p.description,
     provides: {
-      signalSources: (p.signalSources ?? []).map((s) => s.id),
       backingProviders: (p.backingProviders ?? []).map((b) => b.id),
-      approvalChannels: (p.approvalChannels ?? []).map((c) => c.id),
       connectors: (p.connectors ?? []).map((c) => c.id),
     },
     configSchema: p.configSchema ?? {},
@@ -124,7 +122,7 @@ export async function setHearthPlugin(
   if (error) throw error;
 }
 
-/** The per-Hearth runtime view: which components the loop may use for this Hearth. */
+/** The per-Hearth runtime view: which components the app may use for this Hearth. */
 export async function getHearthRuntime(hearthId: string): Promise<HearthRuntime> {
   const state = await getHearthPluginState(hearthId);
   return buildRuntime([...BUILT_IN_PLUGINS, ...COMMUNITY_SPOKES], state);

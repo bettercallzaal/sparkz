@@ -7,7 +7,6 @@ import type { ActivityResponse, ActivityEvent } from "@/app/api/activity/route";
 const DOT: Record<ActivityEvent["kind"], string> = {
   spark: "bg-accent",
   boost: "bg-accent-3",
-  receipt: "bg-accent-2",
 };
 
 function ago(iso: string): string {
@@ -47,10 +46,7 @@ export default function ActivityStrip() {
   }, []);
 
   if (!data || data.events.length === 0) return null;
-  const { stats } = data;
-  // The feed API still emits receipt rows until it is retired; they are not shown.
-  const events = data.events.filter((e) => e.kind !== "receipt");
-  if (events.length === 0) return null;
+  const { stats, events } = data;
 
   return (
     <section className="py-8">

@@ -22,43 +22,33 @@ option, not the entry fee.
 ## The Hearth, not the coin
 
 The unit in Sparkz is a **Hearth**, not a coin. A Hearth accumulates the things
-that actually compound: identity, contributors, history, content, receipts,
-reputation, backing, and Meme Engine memory. The coin, if it ever comes, is an
+that actually compound: identity, contributors, history, content, backing, and
+economic config. A **Spark** is an event on a Hearth - a moment, a token, an NFT
+drop, a bounty, an event - ideally something onchain you can point to. The coin, if it ever comes, is an
 optional output of all that - never the thing you lead with.
 
-This matters because it changes what the moat is. The moat is not the token contract
-(anyone can deploy one in sixty seconds). It is not image generation (a commodity).
-The moat is the **accumulating data**: who backed what and when, which cultural
-moments landed, what the community remixed, what earned. The longer a Hearth runs,
-the smarter it gets and the harder it is to copy. A price pump with a dead community
-is not health. A small project with growing contributors and repeat backers is -
-even with no token at all.
+This matters because it changes what the value is. It is not the token contract
+(anyone can deploy one in sixty seconds). It is the **Hearth**: who backed what and
+when, which Sparks brought people in, what the community did together. The longer a
+Hearth runs, the more real it is. A price pump with a dead community is not health. A
+small project with growing contributors and repeat backers is - even with no token at
+all.
 
-## The loop that compounds
+## Grow it with Sparks
 
-Sparkz runs one core loop, the Meme Engine:
+A Hearth grows through Sparks. Light one when something is happening: a show, a drop,
+a release, a bounty, a collab. Supporters boost it for free, show up, and do something
+onchain together - wear a hat, back the work, attend. Every Spark leaves a record of
+who showed up and what they did.
 
-1. Flag a cultural moment that fits the Hearth.
-2. Draft three grounded responses on a cheap model tier.
-3. A human approves one.
-4. It publishes - cast to Farcaster first.
-5. A Meme Receipt records why it matched and what it earned.
-6. Reach, referrals, and backing feed back onto the receipt.
+## Three entry points, one schema
 
-Every run leaves a permanent record and makes the next run smarter. The two drafts
-you passed on, and why, are kept too - that is training signal, not waste. Do this
-every day and you have built something no competitor can clone: a proprietary map of
-what creates value for your specific audience.
-
-## Four entry points, one schema
-
-A Hearth is not just for a solo creator. The same schema supports four entry points
+A Hearth is not just for a solo creator. The same schema supports three entry points
 from day one, so growth is additive, not a rewrite:
 
 - **Creator** - an artist, musician, or builder (the first proof: Zoostr).
 - **Culture** - a scene or movement that backs its own.
-- **Open-source repo** - a repo plus its contributors, audit, and receipts.
-- **Meme Engine** - a lineage-native Hearth where the memes are the point.
+- **Open-source repo** - a repo plus its contributors and audit.
 
 The type is a value in the row, not a fork in the codebase. That is deliberate: every
 audited project in an ecosystem becomes a Hearth candidate, and wrapping one is a
@@ -70,5 +60,5 @@ Wherever there is a coin, there is speculation. So Sparkz leads with the work, n
 the coin: **back the album.** Perks are what backers enjoy today, not promises. If a
 token ever comes, it is plumbing - never the pitch.
 
-Start with a spark. Build the backing, the receipts, the momentum. Let the coin be
+Start with a spark. Build the backing, the Sparks, the momentum. Let the coin be
 the thing you earn the right to launch, not the thing you launch to earn attention.

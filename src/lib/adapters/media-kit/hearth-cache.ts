@@ -8,8 +8,8 @@ import type { BarazaAnchor, SegmentJob } from "./types";
 //   1. Cheaper: a completed segment is returned free on a repeat request; an
 //      in-flight ("queued") segment is reused so a retry during a ~30s render does
 //      not kick off (and pay for) a second job.
-//   2. The Hearth accumulates its own media - which is the point, the Sparkz moat
-//      is accumulating Hearth data (CLAUDE.md).
+//   2. The Hearth accumulates its own media - which is the point: the Hearth is
+//      the thing that accumulates.
 // Pure functions over a metadata object; the route owns persistence.
 
 /** How long an in-flight (queued) render is reused before we re-render. */

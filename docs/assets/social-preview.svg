@@ -42,7 +42,7 @@
     <rect x="0"   y="0" width="150" height="46" rx="23" fill="#ffffff" fill-opacity="0.05" stroke="#c084fc" stroke-opacity="0.45"/>
     <text x="75"  y="30" class="chip" font-size="16" fill="#d8b4fe" text-anchor="middle">CAPSULES</text>
     <rect x="166" y="0" width="188" height="46" rx="23" fill="#ffffff" fill-opacity="0.05" stroke="#f472b6" stroke-opacity="0.45"/>
-    <text x="260" y="30" class="chip" font-size="16" fill="#f9a8d4" text-anchor="middle">MEME ENGINE</text>
+    <text x="260" y="30" class="chip" font-size="16" fill="#f9a8d4" text-anchor="middle">SPARKS</text>
     <rect x="372" y="0" width="234" height="46" rx="23" fill="#ffffff" fill-opacity="0.05" stroke="#fbbf24" stroke-opacity="0.45"/>
     <text x="489" y="30" class="chip" font-size="16" fill="#fcd34d" text-anchor="middle">FARCASTER-NATIVE</text>
   </g>

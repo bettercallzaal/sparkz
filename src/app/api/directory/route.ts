@@ -1,7 +1,7 @@
 import { getServiceClient } from "@/lib/supabase/server";
 import { ok, serverError } from "@/lib/http";
 import { PUBLIC_REVIEW_FILTER } from "@/lib/sanitize";
-import type { Hearth, HearthBacker, MemeReceipt } from "@/lib/supabase/types";
+import type { Hearth, HearthBacker } from "@/lib/supabase/types";
 import { hearthConnections } from "@/lib/hearth-connections";
 
 export const dynamic = "force-dynamic";
@@ -16,14 +16,13 @@ export interface DirectoryItem {
   backers: number;
   boosts: number;
   emails: number;
-  receipts: number;
   empire: boolean;
   token: boolean;
   agent: boolean;
   farcaster: string | null;
   stars: number | null;
   contributors: number | null;
-  newThisWeek: number; // backers + receipts added in the last 7 days (momentum)
+  newThisWeek: number; // backers added in the last 7 days (momentum)
   connections: { id: string; label: string }[]; // which integrations this Spark is wired to
   created_at: string;
 }
@@ -33,7 +32,7 @@ export interface DirectoryItem {
 export async function GET() {
   try {
     const supabase = getServiceClient();
-    const [{ data: hearths }, { data: backers }, { data: receipts }] =
+    const [{ data: hearths }, { data: backers }] =
       await Promise.all([
         supabase
           .from("hearths")
@@ -41,12 +40,10 @@ export async function GET() {
           .or(PUBLIC_REVIEW_FILTER)
           .order("created_at", { ascending: false }),
         supabase.from("hearth_backers").select("hearth_id, kind, backer_id, created_at"),
-        supabase.from("meme_receipts").select("hearth_id, created_at"),
       ]);
 
     const b =
       (backers as Pick<HearthBacker, "hearth_id" | "kind" | "backer_id" | "created_at">[]) ?? [];
-    const r = (receipts as Pick<MemeReceipt, "hearth_id" | "created_at">[]) ?? [];
     const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
     const items: DirectoryItem[] = ((hearths as Hearth[]) ?? []).map((c) => {
@@ -67,10 +64,7 @@ export async function GET() {
         boosts: mine.filter((x) => x.kind === "boost").length,
         emails: new Set(mine.filter((x) => x.backer_id.includes("@")).map((x) => x.backer_id))
           .size,
-        receipts: r.filter((x) => x.hearth_id === c.id).length,
-        newThisWeek:
-          mine.filter((x) => x.created_at >= weekAgo).length +
-          r.filter((x) => x.hearth_id === c.id && x.created_at >= weekAgo).length,
+        newThisWeek: mine.filter((x) => x.created_at >= weekAgo).length,
         empire: Boolean(econ.empire_address || econ.empire_id || econ.empire),
         token: Boolean(econ.token_address),
         agent: Boolean(econ.agent),

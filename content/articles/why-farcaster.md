@@ -18,8 +18,8 @@ first" is a design principle, not a slogan.
 
 Farcaster channels work like topic feeds - `/base`, `/memes`, a creator's own channel
 - and anyone can create one. For Sparkz this is a clean mapping: **a Hearth maps to
-a channel**, and the channel's followers are the Hearth's supporters. The Meme
-Engine publishes cast-first into that channel, where a crypto-native audience already
+a channel**, and the channel's followers are the Hearth's supporters. Sparks are
+cast first into that channel, where a crypto-native audience already
 lives, instead of shouting into an ad-driven feed and paying for reach. Discovery is
 organic and the surface is proven - a polished Mini App plus a relationship with a
 channel's moderators can reach a large, high-intent audience for a few weekends of
@@ -41,38 +41,23 @@ Mini Apps (the evolution of Frames) are sandboxed web apps that run inside the f
 with a real wallet connection. They can sign a user in, mint, swap, send notifications
 through a webhook, and take USDC payments on Base - settling in seconds for cents of
 gas. For Sparkz this is exactly the "back the album" mechanic: a supporter backs a
-Hearth with USDC without ever leaving the feed, and the receipt is written the moment
-it happens. Sparkz already publishes a Mini App manifest (`/.well-known/farcaster.json`)
+Hearth with USDC without ever leaving the feed. Sparkz already publishes a Mini App manifest (`/.well-known/farcaster.json`)
 so a link to a Hearth opens as a launch card in-feed.
 
-## The infrastructure: Neynar
+## How it maps onto Sparkz
 
-Neynar is the indexing and signer layer that makes all of this practical. It provides
-REST APIs for casts, users, and channels; webhooks for real-time events
-(`cast.created`, `reaction.created`, `follow.created`); and managed signers so an app
-can cast on behalf of an account without running its own key infrastructure. This is
-what lets the Sparkz agent cast autonomously, and it is the natural home for the next
-SignalSource adapter: today the Meme Engine's signals are flagged by a human; wiring
-a Neynar webhook into the same adapter interface turns Farcaster activity itself into
-the signal source - no rebuild.
+Every part of Sparkz has a native Farcaster home:
 
-## How it maps onto the loop
-
-Every step of the Sparkz loop has a native Farcaster home:
-
-- **Flag** - a human today; a Neynar webhook (mentions, reactions, follows) next.
-- **Publish** - a cast into the Hearth's channel.
+- **Announce** - a cast into the Hearth's channel.
 - **Back** - USDC in a Mini App, in-feed.
-- **Measure** - reach, reactions, and referrals read straight back from Neynar.
-- **Receipt** - stored in Supabase now, mintable on Base later.
+- **Identity** - one `fid`, portable across Hearths.
 
 Because identity, distribution, and payments are already solved, the only thing
-Sparkz has to build is the part that is genuinely ours: the Hearth schema, the Meme
-Engine, and the receipts that compound into the moat. That is the difference between a
-three-month product and an eighteen-month one.
+Sparkz has to build is the part that is genuinely ours: the Hearth and its Sparks.
+That is the difference between a three-month product and an eighteen-month one.
 
 ---
 
 *Note on figures: Farcaster's public metrics and the exact ownership of its
 infrastructure shift over time; the architectural facts above (channels, SIWF/AuthKit,
-Mini Apps, Neynar's APIs, USDC on Base) are the durable ones this design relies on.*
+Mini Apps, USDC on Base) are the durable ones this design relies on.*

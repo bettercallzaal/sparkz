@@ -7,7 +7,7 @@ import type { Hearth } from "@/lib/supabase/types";
 
 // POST /api/capsules/link-farcaster - attach a Farcaster identity (fid / username
 // / channel) to a Hearth. Stored in metadata.farcaster; used for share-to-channel
-// casts and (later) auto-casting receipts + collabs. Admin-gated.
+// casts and (later) auto-casting Sparks + collabs. Admin-gated.
 export async function POST(req: NextRequest) {
   // Defence in depth (issue #381): refuse a cross-site POST with 403 before anything else.
   const crossSite = forbidCrossSite(req);

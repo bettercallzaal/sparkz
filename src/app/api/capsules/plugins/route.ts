@@ -12,9 +12,9 @@ import { requireAdmin } from "@/lib/auth";
 // POST /api/capsules/plugins - toggle a plugin on/off and/or set its per-Hearth config.
 //   Body: { hearth_id, plugin_id, enabled?, config? }. Admin-gated.
 //
-// This is how a Hearth connects to ITS OWN communities - e.g. set the approval-discord
-// plugin's config to the Hearth's own webhook, or turn on signal-farcaster for its
-// channel. Secrets in config are server-only and never returned to a public path.
+// This is how a Hearth connects to ITS OWN communities - e.g. turn on a connector spoke
+// and set its per-Hearth config. Secrets in config are server-only and never returned
+// to a public path.
 
 export async function GET(req: NextRequest) {
   try {

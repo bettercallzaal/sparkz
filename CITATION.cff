@@ -8,14 +8,13 @@ authors:
 repository-code: "https://github.com/bettercallzaal/sparkz"
 url: "https://trysparkz.com"
 abstract: >-
-  Sparkz is a Farcaster-native creator platform where every project is a Capsule -
-  identity, backing, receipts, and Meme Engine memory that compounds - not a coin.
-  The token is an optional output; the moat is the accumulating data.
+  Sparkz is a Farcaster-native creator platform where every project is a Hearth -
+  identity, backers, and free boosts, grown through Sparks - not a coin.
+  The token is an optional output.
 keywords:
   - farcaster
   - base
   - creator-economy
-  - capsules
-  - meme-engine
+  - hearths
   - clanker
 license: Apache-2.0

@@ -1,8 +1,7 @@
 # Sparkz - local setup (Milestone 1: the Hearth foundation)
 
-Next.js (App Router) + Supabase + Tailwind + TypeScript. The moat is the data:
-Hearths + Meme Receipts. This milestone ships the Hearth schema, the three
-adapter seams, the flag -> 3-drafts -> approve loop, and the Zoostr Hearth.
+Next.js (App Router) + Supabase + Tailwind + TypeScript. This milestone ships the
+Hearth schema, the adapter seams, free boosts, Sparks, and the Zoostr Hearth.
 
 ## 1. Install
 
@@ -21,16 +20,9 @@ cowork/ZAOOS):
 
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY` (server-only; never sent to the browser)
-- `SPARKZ_ADMIN_TOKEN` - gates the write routes (the service client bypasses RLS,
-  so the routes authz against this). Generate: `openssl rand -hex 24`. Fails closed
-  if unset (no writes allowed). In `/admin`, click Unlock and paste it once.
-
-Optional:
-
-- `OPENROUTER_API_KEY` (+ `OPENROUTER_MODEL`) - the cheap tier for the 3 drafts.
-  Without it the Meme Engine returns clearly-labelled `[fallback]` drafts so the
-  loop is still testable end-to-end.
-- `DISCORD_WEBHOOK_URL` - turns the Discord approval channel on (dark until set).
+- `SPARKZ_SESSION_SECRET` - signs the session cookie minted after a verified
+  sign-in (the service client bypasses RLS, so routes authz against that session).
+  Generate: `openssl rand -hex 32`. Fails closed if unset (no sign-in, no writes).
 
 ## 3. Apply the migrations
 
@@ -64,15 +56,12 @@ npm run dev
 ```
 
 - `/` - Hearth list.
-- `/admin` - the Meme Engine loop: flag a moment -> 3 Hearth-grounded drafts ->
-  approve one -> a Meme Receipt is written. Deep-linkable: `/admin?hearth=<id>`.
+- `/admin` - the operator console (admin sign-in required).
 
-## The three adapter seams (why this doesn't need a rebuild later)
+## The adapter seams (why this doesn't need a rebuild later)
 
-- **SignalSource** (`src/lib/adapters/signal-source`) - trend source. m1: `human`.
-  Later: farcaster, alpha_radar - same `detectSignals(hearthId)` contract.
 - **BackingProvider** (`src/lib/adapters/backing-provider`) - where value settles.
   m1: `ledger` (off-chain). Later: eliza, bankr (on-chain), clanker / empire
-  (tokenization) - same table, unified moat.
-- **ApprovalChannel** (`src/lib/adapters/approval-channel`) - where the human
-  approves. m1: `in_app` + `discord`. Router fans out to all; first-approve-wins.
+  (tokenization) - same table.
+- **Connector** (`src/lib/adapters/connector`) - the generic spoke any vendor tool
+  plugs into.

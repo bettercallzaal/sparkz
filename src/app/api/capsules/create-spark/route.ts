@@ -113,7 +113,7 @@ export async function POST(req: NextRequest) {
     if (error) throw error;
     const created = hearth as Pick<Hearth, "id" | "slug">;
 
-    // A fresh spark starts with real, honest counts: 0 backers, 0 boosts, 0 receipts.
+    // A fresh spark starts with real, honest counts: 0 backers, 0 boosts.
     // We do NOT seed a self-boost from the owner - that reads as "a supporter backed
     // this" on the Hearth and in the activity feed when nobody actually has. The
     // empty state ("No backers yet. Be the first") carries the moment instead.

@@ -31,13 +31,10 @@ commercial numbers.
 
 1. **The anti-speculation spine** - "start with a spark, not a token," "back the album,
    not buy a coin." This is core ZAO. It is the strongest part of the brand.
-2. **Meme Receipts.** A receipt of what a moment *earned* is literally the ZAO ethos
-   ("receipts over claims," "TX hash, not press release"). The most on-brand primitive in
-   the product - lean into it harder.
-3. **OSS-first, public, Farcaster-native.** Matches ZAO exactly.
-4. **Honest empty states.** The recent cleanup to real `0 / 0 / 0` counts (no fabricated
+2. **OSS-first, public, Farcaster-native.** Matches ZAO exactly.
+3. **Honest empty states.** The recent cleanup to real `0 / 0 / 0` counts (no fabricated
    "a supporter") is authentically ZAO - "admit what's unproven," numbers you can trust.
-5. **Base palette.** Sparkz's `#0a0a0a` background *is* ZAO Black.
+4. **Base palette.** Sparkz's `#0a0a0a` background *is* ZAO Black.
 
 ## Where it drifts (the rebrand targets)
 
@@ -85,7 +82,7 @@ jargon to avoid**. Prefer "Part of The ZAO."
   `#FFD700`** as the on-chain/CTA accent; add **"Part of The ZAO"** with a link to the
   estate; reframe graduation as **"to independence."** Low effort, high signal.
 - **P1 - voice:** tighten the homepage + README toward receipts-over-claims; once real
-  numbers exist, make a **real Meme Receipt the hero** instead of the explainer.
+  numbers exist, make a **real count the hero** instead of the explainer.
 - **P2 - ownership:** surface the **member-owned / contributors-earn / transparent**
   story on the page (straight from `positioning.md`), so the anti-SaaS contract is visible.
 - **P3 - gradient:** evolve the flame gradient toward a **ZAO-sanctioned spark variant**

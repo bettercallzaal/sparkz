@@ -1,15 +1,13 @@
 // Plugin registry - the one place a HearthPlugin is registered. Registering a plugin
 // (a) records its metadata for listing, and (b) fans each of its components into the
-// EXISTING adapter registries, so every current call site (getSignalSource,
-// getBackingProvider, listApprovalChannels, routeApproval) keeps working unchanged.
+// EXISTING adapter registries, so every current call site (getBackingProvider,
+// getConnectors) keeps working unchanged.
 //
 // This is deliberately additive: the plugin layer is a bundling/metadata wrapper over
-// the four seams, not a replacement. Per-Hearth enable/disable + config is layered on
+// the adapter seams, not a replacement. Per-Hearth enable/disable + config is layered on
 // top later via the hearth_plugins table + a HearthRuntime.
 
-import { registerSignalSource } from "@/lib/adapters/signal-source";
 import { registerBackingProvider } from "@/lib/adapters/backing-provider";
-import { registerApprovalChannel } from "@/lib/adapters/approval-channel";
 import { registerConnector } from "@/lib/adapters/connector";
 import type { HearthPlugin, PluginMeta } from "./types";
 
@@ -22,9 +20,7 @@ const plugins = new Map<string, HearthPlugin>();
  */
 export function registerPlugin(plugin: HearthPlugin): void {
   plugins.set(plugin.id, plugin);
-  plugin.signalSources?.forEach(registerSignalSource);
   plugin.backingProviders?.forEach(registerBackingProvider);
-  plugin.approvalChannels?.forEach(registerApprovalChannel);
   plugin.connectors?.forEach(registerConnector);
 }
 
@@ -44,9 +40,7 @@ export function listPluginMeta(): PluginMeta[] {
     name: p.name,
     description: p.description,
     provides: {
-      signalSources: (p.signalSources ?? []).map((s) => s.id),
       backingProviders: (p.backingProviders ?? []).map((b) => b.id),
-      approvalChannels: (p.approvalChannels ?? []).map((c) => c.id),
       connectors: (p.connectors ?? []).map((c) => c.id),
     },
     configSchema: p.configSchema ?? {},

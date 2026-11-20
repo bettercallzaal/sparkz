@@ -45,23 +45,6 @@ export const createHearthSchema = z.object({
   metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
-export const flagSignalSchema = z.object({
-  hearth_id: z.string().uuid(),
-  text: z.string().min(1).max(1000),
-  why_it_matched: z.string().max(1000).optional(),
-  flagged_by: z.string().max(120).optional(),
-  source: z.string().max(60).optional(), // defaults to 'human'
-  source_meta: z.record(z.string(), z.unknown()).optional(),
-});
-
-export const approveDraftSchema = z.object({
-  signal_id: z.string().uuid(),
-  draft_id: z.string().uuid(),
-  approver: z.string().max(120).optional(),
-  approved_via: z.string().max(60).optional(), // discord | in_app | telegram
-  lessons: z.string().max(2000).optional(),
-});
-
 // Owner or admin edits a Hearth's public details (POST /api/capsules/update). Only
 // these fields can change; review status, ownership and economics are not editable
 // here. Every URL must be https: the public page renders links as href and the picture

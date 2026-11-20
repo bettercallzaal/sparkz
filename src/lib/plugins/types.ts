@@ -1,18 +1,14 @@
 // Hearth Plugin system (Upgrade: unified adapter toggling), modeled on elizaOS.
 //
 // A HearthPlugin bundles one or more of Sparkz's existing adapter components -
-// signal sources, backing providers, approval channels - behind a single id +
-// metadata + config contract. This is the ADDITIVE layer over the four seams that
-// already exist (src/lib/adapters/*): registering a plugin just fans its components
-// into those registries, so the flag -> draft -> approve loop is untouched. Per-Hearth
-// enable/disable + config lands next (the hearth_plugins table).
+// backing providers and connectors - behind a single id + metadata + config contract.
+// This is the ADDITIVE layer over the seams that already exist (src/lib/adapters/*):
+// registering a plugin just fans its components into those registries.
 //
 // elizaOS parallel: Plugin -> HearthPlugin, character.plugins[] -> hearth_plugins
 // rows, AgentRuntime.registerPlugin -> registerPlugin below.
 
-import type { SignalSource } from "@/lib/adapters/signal-source";
 import type { BackingProvider } from "@/lib/adapters/backing-provider";
-import type { ApprovalChannel } from "@/lib/adapters/approval-channel";
 import type { Connector } from "@/lib/adapters/connector";
 
 // One declared config key for a plugin (mirrors elizaOS pluginParameters). `secret`
@@ -27,16 +23,14 @@ export interface PluginConfigField {
 // A vendor adds their tool as a Connector spoke - no bespoke seam needed. Modeled on
 // elizaOS's Plugin (id + bundled components + optional lifecycle + declared config).
 export interface HearthPlugin {
-  /** Stable unique id, e.g. "signal-human", "backing-ledger", "connector-audius". */
+  /** Stable unique id, e.g. "backing-ledger", "connector-audius". */
   readonly id: string;
   readonly version: string;
   readonly name: string;
   readonly description?: string;
 
-  /** Component arrays - a plugin provides any subset of the four seams. */
-  readonly signalSources?: SignalSource[];
+  /** Component arrays - a plugin provides any subset of the seams. */
   readonly backingProviders?: BackingProvider[];
-  readonly approvalChannels?: ApprovalChannel[];
   /** The generic spoke: any vendor tool wired to the Hearth. */
   readonly connectors?: Connector[];
 
@@ -60,9 +54,7 @@ export interface PluginMeta {
   name: string;
   description?: string;
   provides: {
-    signalSources: string[];
     backingProviders: string[];
-    approvalChannels: string[];
     connectors: string[];
   };
   configSchema: Record<string, PluginConfigField>;

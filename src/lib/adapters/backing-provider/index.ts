@@ -1,7 +1,7 @@
 // BackingProvider seam. Pre-token "spark" backing is provider-agnostic: value can
 // settle off-chain (LedgerProvider, the m1 default) OR on-chain via permissionless
 // rails (ElizaOS, Bankr) and tokenization rails (Clanker, Empire Builder) - all
-// writing the SAME hearth_backers table so the moat stays unified no matter where
+// writing the SAME hearth_backers table so the record stays unified no matter where
 // value lands. Adding a provider = a new file + register(), no migration.
 //
 // Rail notes (m1 = ledger only; the rest are seam-only):

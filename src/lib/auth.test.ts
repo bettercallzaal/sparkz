@@ -4,10 +4,8 @@ import { NextRequest } from "next/server";
 import {
   ADMIN_TOKEN_HEADER,
   isAdmin,
-  isAdminOrAgent,
   isAdminSession,
   requireAdmin,
-  requireAdminOrAgent,
   requireHearthOwner,
 } from "./auth";
 import { SESSION_COOKIE, mintAddressSession, mintSession } from "./session";
@@ -21,8 +19,6 @@ const TESTER_FID = 424242; // a signed-in non-admin (IMan, 1057869, is an admin 
 
 const saved = {
   secret: process.env.SPARKZ_SESSION_SECRET,
-  token: process.env.SPARKZ_ADMIN_TOKEN,
-  agentToken: process.env.SPARKZ_AGENT_TOKEN,
   url: process.env.NEXT_PUBLIC_SUPABASE_URL,
   key: process.env.SUPABASE_SERVICE_ROLE_KEY,
 };
@@ -65,41 +61,13 @@ test("no session and no token: not admin, requireAdmin answers 401", async () =>
   });
 });
 
-test("the agent token opens the agent routes only when configured and exactly equal", async () => {
-  // Either name works: SPARKZ_AGENT_TOKEN going forward, SPARKZ_ADMIN_TOKEN for the running agent.
-  for (const name of ["SPARKZ_AGENT_TOKEN", "SPARKZ_ADMIN_TOKEN"]) {
-    await env({ SPARKZ_AGENT_TOKEN: undefined, SPARKZ_ADMIN_TOKEN: undefined, [name]: AGENT }, () => {
-      assert.equal(isAdminOrAgent(req({ [ADMIN_TOKEN_HEADER]: AGENT })), true, name);
-      assert.equal(requireAdminOrAgent(req({ [ADMIN_TOKEN_HEADER]: AGENT })), null, name);
-      for (const wrong of ["", AGENT.slice(0, -1), `${AGENT}x`, AGENT.toUpperCase()]) {
-        assert.equal(isAdminOrAgent(req({ [ADMIN_TOKEN_HEADER]: wrong })), false, `${name} accepted ${JSON.stringify(wrong)}`);
-      }
-    });
-  }
-  // Unset or empty token: a missing or empty header must not match an empty expected value.
-  for (const token of [undefined, ""]) {
-    await env({ SPARKZ_ADMIN_TOKEN: token, SPARKZ_AGENT_TOKEN: token }, () => {
-      assert.equal(isAdminOrAgent(req()), false, `token ${JSON.stringify(token)}, no header`);
-      assert.equal(isAdminOrAgent(req({ [ADMIN_TOKEN_HEADER]: "" })), false, `token ${JSON.stringify(token)}, empty header`);
-      assert.equal(isAdminOrAgent(req({ [ADMIN_TOKEN_HEADER]: AGENT })), false);
-    });
-  }
-});
-
-test("the agent token is not admin: admin routes and Hearth-owner routes refuse it", async () => {
-  await env({ ...NO_DB, SPARKZ_SESSION_SECRET: KEY, SPARKZ_ADMIN_TOKEN: AGENT, SPARKZ_AGENT_TOKEN: AGENT }, async () => {
+test("the retired admin-token header is not admin: admin routes and Hearth-owner routes refuse it", async () => {
+  await env({ ...NO_DB, SPARKZ_SESSION_SECRET: KEY, SPARKZ_ADMIN_TOKEN: AGENT }, async () => {
     const r = () => req({ [ADMIN_TOKEN_HEADER]: AGENT });
     assert.equal(isAdmin(r()), false);
     assert.equal(requireAdmin(r())?.status, 401);
     // No session, so the owner gate answers 401 before any database call.
     assert.equal((await requireHearthOwner(r(), "any-id"))?.status, 401);
-  });
-});
-
-test("an admin session passes the agent routes too", async () => {
-  await env({ SPARKZ_SESSION_SECRET: KEY, SPARKZ_ADMIN_TOKEN: undefined, SPARKZ_AGENT_TOKEN: undefined }, () => {
-    assert.equal(isAdminOrAgent(req({}, mintSession(ADMIN_FID))), true);
-    assert.equal(requireAdminOrAgent(req({}, mintSession(TESTER_FID)))?.status, 401);
   });
 });
 
@@ -137,8 +105,6 @@ test("requireHearthOwner refuses a missing or cross-site session with 401 before
 
 test("restores the environment it changed", async () => {
   assert.equal(process.env.SPARKZ_SESSION_SECRET, saved.secret);
-  assert.equal(process.env.SPARKZ_ADMIN_TOKEN, saved.token);
-  assert.equal(process.env.SPARKZ_AGENT_TOKEN, saved.agentToken);
   assert.equal(process.env.NEXT_PUBLIC_SUPABASE_URL, saved.url);
   assert.equal(process.env.SUPABASE_SERVICE_ROLE_KEY, saved.key);
 });

@@ -1,69 +1,45 @@
-# Sparkz Architecture - the two-track strategy
+# Sparkz Architecture
 
-> V1 is the floor, not the ceiling. Keep the build focused enough to ship, while continuously upgrading the architecture so Sparkz never becomes a basic token launcher with a meme button. The shippable slice lives in [V1-SCOPE.md](./V1-SCOPE.md); this is the full vision it's derived from.
+> V1 is the floor, not the ceiling. Keep the build focused enough to ship, while continuously upgrading the architecture so Sparkz never becomes a basic token launcher. The shippable slice lives in [V1-SCOPE.md](./V1-SCOPE.md); this is the fuller picture it is derived from.
 
 ## Two parallel tracks
 
-- **SHIP TRACK** - build and prove one complete economic loop.
+- **SHIP TRACK** - build and prove one complete loop.
 - **INNOVATION TRACK** - continuously design, prototype, and test the larger Sparkz system.
 
-Prevents both failure modes: endless architecture that never reaches users; shipping something small that's obsolete immediately.
+Prevents both failure modes: endless architecture that never reaches users; shipping something small that is obsolete immediately.
 
-## The Sparkz system - four connected entry points
+## Entry points, one Hearth
 
-- **Creator Coin** - monetize a person, their work, audience, and collaborators.
-- **Culture Coin** - monetize + coordinate a community, movement, scene, event, or shared identity.
-- **Open-Source Project** - monetize repositories, contributors, maintainers, dependencies, and project communities.
-- **Meme Engine** - the cultural intelligence, distribution, and community-mobilization system powering all three.
+- **Creator** - a person, their work, audience, and collaborators.
+- **Culture** - a community, movement, scene, or shared identity.
+- **Open-Source Project** - a repository, its contributors, maintainers, and project community.
 
 ```
 Creator ────────┐
-Culture ────────┼──→ SPARKZ CAPSULE ──→ Economy
-Open-source repo┘           │
-                            ↓
-                       MEME ENGINE
-             Detect → Create → Mobilize
-              Track → Reward → Learn
+Culture ────────┼──→ HEARTH ──→ Sparks (events)
+Open-source repo┘
 ```
 
-## Central innovation: every launch is a living Hearth
+## Central idea: every project is a Hearth
 
-Every Sparkz project begins as a **Hearth**, not immediately a coin. The Hearth accumulates: identity; creators/maintainers; project history; cultural lore; content and code; contribution records; supporters; collaborators; financial activity; community signals; rights/permissions; reputation; governance; economic config; Meme Engine memory; receipts. **The coin is an optional economic output of the Hearth.** This lets Sparkz support projects that are pre-token, tokenized, permanently tokenless, sponsored, membership-based, bounty-funded, event-based, commercially licensed, or community-owned - so the business isn't a bet on speculative coins.
+Every Sparkz project begins as a **Hearth**, not immediately a coin. The Hearth accumulates: identity; creators and maintainers; project history; content and code; supporters and free boosts; collaborators; financial activity; economic config. A **Spark** is an event on a Hearth: a moment, a token, an NFT drop, a bounty, or an event, ideally something onchain we can point to. Back the album, not a coin. A coin is an optional output, never the starting point.
 
-## The 9 upgrades (amend V1, don't explode it)
+## Upgrades (amend V1, do not explode it)
 
-1. **Thin Meme Engine, not dumb.** Keep the v1 loop (human flags moment -> Sparkz drafts 3 responses -> human approves -> publish -> community remixes -> contributors rewarded), but build every component as a replaceable adapter. `interface SignalSource { detectSignals(hearthId): Promise<CulturalSignal[]> }`. Sources grow from human submission to Farcaster activity to Alpha Radar to predictive intelligence - no rebuild.
-
-   > **Shipped (2026-08):** the adapter seams are unified behind a **Hearth plugin system** modeled on elizaOS (`src/lib/plugins`). A `HearthPlugin` (a **spoke**) bundles components; `registerPlugin()` fans them into the seams; the `hearth_spokes` table (migration 0004, renamed in 0005) holds per-Hearth enable/disable + config so each Spark connects to its own communities and tools (control plane shipped; the runtime loop consuming per-Hearth state is the next increment - as of 2026-08-17 approval routing + signal detection still use the global registries). There are now four fan-in seams: **signal-source, backing-provider, approval-channel, and Connector** - the generic "any vendor tool" spoke (`src/lib/adapters/connector`), so a vendor adds their integration without a bespoke seam. **Vendors self-serve**: drop a folder in `src/lib/plugins/community/` (a `spoke.json` manifest + `index.ts`) and open a PR (see `community/README.md`); a working `audius-catalog` example ships in-repo. Draft generation is also memory-grounded - it trains on the Hearth's approved winners + passed-on drafts (`meme-engine/draft.ts`), closing the moat feedback loop. Capabilities already shipping AS spokes: a Farcaster signal source (`/api/signals/detect`), a Telegram approval channel, and the example Audius connector.
-2. **Meme Receipts immediately.** Every meme/campaign gets a traceable record (original signal, why it matched the Hearth, creator, approver, source assets, parent meme, versions, remixes, contributors, reach, referrals, backing generated, rewards, lessons). The data moat: others generate images; Sparkz learns which person/idea/format/community/moment created measurable value.
-3. **Community Swarm is the real v1 product.** Don't just publish from the official account - activate supporters (detect opportunity -> approved campaign material -> Swarm mission -> members make variations -> track attribution/performance -> reward useful contributors). Rewards need not be a token: points, reputation, leaderboard, collectables, access, perks, tickets, merch, launch-allocation eligibility, sponsor-funded rewards.
-4. **Project Contribution Graphs.** For repos, recognize more than commits: code, reviews, testing, docs, issue discovery, community support, design, security, distribution, partnerships, research, memes/education, revenue, dependencies. Each with evidence, weighting, review status, provenance. Then propose sponsorship splits, contributor rewards, bounties, launch allocations, treasury grants, reputation, governance eligibility. Build ABOVE Drips, don't recreate it.
-5. **FEF (Farcaster Eats First) as a protocol rule.** First announcement, participation round, quest, backing window, collectable, and contributor rewards all go to Farcaster first; distribute outward later. Farcaster Mini Apps provide the feed discovery, notifications, identity, and wallet transactions to make the loop real.
-6. **Alpha Radar, progressively.** V1 Human Radar -> V1.5 Community Radar -> V2 Connected Radar -> V2.5 Velocity Radar -> V3 Predictive. Start storing clean historical signal data now (detected when/by whom, size then, peak, did we enter, outcome, was the fit score right) so V3 ML has something proprietary to learn from.
-7. **Experiment Engine.** Per-Hearth controlled experiments (meme styles, backing tiers, CTAs, holder vs non-holder, posting windows, individual vs community, financial vs cultural rewards), each producing a receipt (hypothesis, variants, audience, duration, result, conversion, cultural response, decision). Learn per-Hearth, not generic best practices.
-8. **Culture Health Dashboard** independent of token price: active contributors, retention, independent content, remix depth, supporter conversion, returning supporters, response time, collaboration, revenue diversity, founder dependence, bot concentration, treasury health, real usage. A price pump with collapsing participation isn't healthy; a small project with growing contributors + repeat engagement is - even pre-token.
-9. **Hard anti-failure gates.** Every feature must pass all four or stay in the lab: (a) helps someone earn/participate/distribute? (b) measurable? (c) strengthens the Hearth's proprietary data? (d) testable with a real project in 30 days?
+1. **Replaceable adapters.** Every external system sits behind a seam: `BackingProvider` and `Connector`. A **Hearth plugin system** (`src/lib/plugins`) bundles components into **spokes**; `registerPlugin()` fans them into the seams; the `hearth_spokes` table holds per-Hearth enable/disable and config. **Vendors self-serve**: drop a folder in `src/lib/plugins/community/` (a `spoke.json` manifest plus `index.ts`) and open a PR (see `community/README.md`); a working `audius-catalog` example ships in-repo.
+2. **Project Contribution Graphs.** For repos, recognize more than commits: code, reviews, testing, docs, issue discovery, community support, design, security, distribution, partnerships, research, education, revenue, dependencies. Each with evidence, weighting, review status, and provenance. Build ABOVE Drips, do not recreate it.
+3. **FEF (Farcaster Eats First) as a protocol rule.** First announcement, participation round, quest, backing window, and collectable go to Farcaster first; distribute outward later. Farcaster Mini Apps provide feed discovery, notifications, identity, and wallet transactions.
+4. **Culture Health Dashboard** independent of token price: active contributors, retention, supporter conversion, returning supporters, response time, collaboration, revenue diversity, founder dependence, bot concentration, treasury health, real usage. A price pump with collapsing participation is not healthy; a small project with growing contributors and repeat backers is, even pre-token.
+5. **Hard anti-failure gates.** Every feature must pass all four or stay in the lab: (a) helps someone earn, participate, or distribute? (b) measurable? (c) strengthens the Hearth's data? (d) testable with a real project in 30 days?
 
 ## Product gates (the proof sequence)
 
 1. Can Zoostr create active backers?
-2. Can the Community Swarm generate independent distribution?
-3. Can Sparkz correctly attribute + reward contribution?
-4. Can the same machinery work for ZAOstock?
-5. Can it work for an open-source repository?
-6. Can trend detection outperform human-only discovery?
-7. Can the system operate safely with increasing autonomy?
-
-## The moat
-
-Not the token contract, not image generation, not AI recommendations. It's the combined system: persistent Hearths + contribution graphs + cultural memory + trend history + meme lineage + community mobilization + economic routing + cross-platform attribution + verification receipts + accumulated performance data. The more Sparkz operates, the smarter every Hearth and recommendation becomes.
-
-## The immediate upgraded V1
-
-Amend Claude's scope, don't explode it: Zoostr Creator Hearth; pre-token backing; human-triggered Meme Engine; three Hearth-grounded response options; approval workflow; Community Swarm mission; remix submission; attribution records; measurable links; contributor leaderboard; reward receipt; post-campaign learning report; architecture prepared for interchangeable trend sources; Culture Coin + repository templates preserved in the schema.
-
-**The first proof is not "we launched Zoostr's coin." It is: Sparkz turned Zoostr's supporters into an attributable cultural distribution network, measured what they created, rewarded the useful contributors, and learned how to improve the next campaign.** That foundation lets us add Culture Coins, repo monetization, ZAOstock, Alpha Radar, and increasingly autonomous Meme Engine operations without guessing.
+2. Can Sparks bring people in and give them something to do onchain?
+3. Can the same machinery work for ZAOstock?
+4. Can it work for an open-source repository?
 
 ---
 
-Source: Sparkz two-track strategy, co-developed by Zaal + Brandon Ducar (DreamNet), 2026-07-17. Builds on Brandon's "Culture Coins and Meme Engines" white paper. The shippable v1 floor: [V1-SCOPE.md](./V1-SCOPE.md).
+Source: Sparkz two-track strategy, co-developed by Zaal + Brandon Ducar (DreamNet), 2026-07-17. The shippable v1 floor: [V1-SCOPE.md](./V1-SCOPE.md).

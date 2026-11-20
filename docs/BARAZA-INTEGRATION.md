@@ -16,8 +16,8 @@ ships the render API, set the env and it flips to live with zero code change.
 - Offline stub: `src/lib/adapters/media-kit/stub.ts`
 - Test surface: `POST|GET /api/capsules/media-kit` (`src/app/api/capsules/media-kit/route.ts`)
 
-Same ports-and-adapters shape as the other Sparkz seams (approval-channel,
-signal-source, backing-provider): one interface, swappable implementations, env
+Same ports-and-adapters shape as the other Sparkz seams (backing-provider,
+connector): one interface, swappable implementations, env
 selects.
 
 ## The model: render is a job
@@ -67,25 +67,24 @@ queued; `failed|error|errored` -> failed; anything else -> keep polling.
 ## Testing from the Sparkz side (now, stub mode)
 
 ```bash
-# The agent token no longer opens media-kit (2026-11-19: it is scoped to the agent's
-# routes). Sign in as an admin in the browser and send that session cookie instead:
+# Media-kit needs an admin. Sign in as an admin in the browser and send that session
+# cookie with each call:
 #   -H "cookie: <the sparkz session cookie from your signed-in browser>"
-# The header lines below are kept for history and now answer 401.
 # 1. render an ad-hoc script
 curl -sX POST http://localhost:3000/api/capsules/media-kit \
   -H 'content-type: application/json' \
-  -H "x-sparkz-admin-token: $SPARKZ_ADMIN_TOKEN" \
+  -H "cookie: $SPARKZ_SESSION_COOKIE" \
   -d '{"script":"Zoostr just lit a spark on Sparkz.","anchor":"jabari","brand":"Zoostr"}'
 # -> { ok:true, data:{ mode:"stub", job:{ status:"ready", videoUrl:"https://stub.baraza.local/...", ... } } }
 
 # 2. render from a Hearth (derives the anchor read from name + bio)
 curl -sX POST http://localhost:3000/api/capsules/media-kit \
-  -H "x-sparkz-admin-token: $SPARKZ_ADMIN_TOKEN" \
+  -H "cookie: $SPARKZ_SESSION_COOKIE" \
   -d '{"hearthId":"<uuid>","anchor":"amina"}'
 
 # 3. poll a job
 curl -s "http://localhost:3000/api/capsules/media-kit?jobId=<jobId>" \
-  -H "x-sparkz-admin-token: $SPARKZ_ADMIN_TOKEN"
+  -H "cookie: $SPARKZ_SESSION_COOKIE"
 ```
 
 Unit tests: `node --test src/lib/adapters/media-kit/media-kit.test.ts`.

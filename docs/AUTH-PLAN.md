@@ -56,7 +56,5 @@ Status 2026-10-18: steps 1-5 built on branch `ws/owner-fid-auth`. Step 6 needs
 
 ## Afterward (in order)
 
-Runtime spoke gating (make `hearth_spokes` actually gate the loop; call
-`Connector.status()` on the Hearth page) -> receipts engine (publish-on-approve via
-Neynar managed signers; measure with `GET /v2/farcaster/cast` - engagement is bundled,
-1 compute unit per lookup, 200K/month free tier) -> per-Hearth contributor leaderboards.
+Runtime spoke gating (call `Connector.status()` on the Hearth page) -> per-Hearth
+contributor leaderboards.

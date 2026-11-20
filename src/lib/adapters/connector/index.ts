@@ -1,7 +1,6 @@
 // Connector seam - the generic "spoke" any vendor can add to a Hearth.
 //
-// The other three seams are specific (a signal SOURCE, a backing PROVIDER, an approval
-// CHANNEL). A Connector is the open-ended fourth: it represents ANY external tool a
+// The other seam is specific (a backing PROVIDER). A Connector is the open-ended one: it represents ANY external tool a
 // community wires to their Hearth - a token rail, a Discord, an Audius catalog, a
 // treasury, a bounty board. This is what lets a vendor add THEIR tool without Sparkz
 // needing a bespoke seam for it. The Hearth is the hub; each Connector is a spoke.

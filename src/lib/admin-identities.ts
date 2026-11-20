@@ -1,6 +1,5 @@
 // Who is a Sparkz admin (Zaal's ruling, 2026-10-18). Humans sign in to /admin as one
-// of these identities; nobody types SPARKZ_ADMIN_TOKEN any more (it stays only as
-// the background agent's machine credential, sent as a header - see lib/auth.ts).
+// of these identities. There is no admin token (see lib/auth.ts).
 //
 // Server-side allowlist. A FID or address is only ever checked here AFTER it has been
 // proven by a verified sign-in (Farcaster SIWF / Quick Auth, or SIWE) - never taken

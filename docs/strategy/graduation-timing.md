@@ -19,8 +19,8 @@ tier: DEEP
 Both failure modes are real: **a coin dropped with no foundation dumps to zero; a coin
 dropped too late moons and crashes to a microcap.** The right time is not a date - it is
 a *readiness state*, and Sparkz is what measures it. This is not a token launcher bolted
-onto a creator tool. **Sparkz's accumulating Hearth data (identity -> receipts -> backers
--> momentum) IS the graduation signal, and its Meme Engine + leaderboard ARE the
+onto a creator tool. **Sparkz's accumulating Hearth data (identity -> backers -> boosts
+-> momentum) IS the graduation signal, and its Sparks + leaderboard ARE the
 post-launch support engine** that Clanker, Kickstarter, and a bare token launch cannot give you.
 
 ## Why this matters now (primary source: the Farcaster thread, 2026-08-02)
@@ -38,9 +38,9 @@ Builders debated this in the open and named the exact problems Sparkz answers:
 Three creator blockers, three Sparkz answers:
 | Blocker (their words) | Sparkz answer |
 |---|---|
-| "shilling feels like being a creep" | You never shill - the **Meme Engine drafts, you approve**. Distribution without the cringe. |
+| "shilling feels like being a creep" | You never shill - **Sparks give people something real to show up for**. Distribution without the cringe. |
 | "you need initial backers who promote for you" | The **back-the-album + Empire leaderboard** IS the promotion army; backers compete to boost. |
-| "you must support the token immediately" | The Meme Engine keeps producing + the leaderboard keeps engagement - **ongoing support, not a one-day event**. |
+| "you must support the token immediately" | New Sparks keep producing + the leaderboard keeps engagement - **ongoing support, not a one-day event**. |
 
 ## The two failure modes (with real numbers)
 
@@ -63,11 +63,11 @@ readiness from real data instead of vibes.**
 
 | Gate | The bar (research) | What Sparkz already tracks = the signal |
 |------|--------------------|------------------------------------------|
-| 1. Product/traction | working MVP; 100-500 DAU (creator) | Hearth identity + `meme_receipts` (proof moments landed) |
+| 1. Product/traction | working MVP; 100-500 DAU (creator) | Hearth identity + Sparks lit (proof of activity) |
 | 2. Community | 500-1K community, 20%+ weekly active; 10-20 advocates | `hearth_backers` + boosts + the Empire leaderboard (advocates, ranked) |
 | 3. Tokenomics clarity | published allocation + vesting | `economic_config` + 0xSplits/Empire treasury already modeled |
 | 4. Runway | 6+ mo runway; token is NOT the funding round | backing ledger (off-chain support before any coin) |
-| 5. Narrative/brand | clear positioning; a single narrative hub | the Meme Engine's draft history = the Hearth's proven voice |
+| 5. Narrative/brand | clear positioning; a single narrative hub | the Hearth's Spark history = its proven voice |
 | 6. Liquidity/launch mechanics | DEX + fair-launch, no steep private rounds | the Clanker/Empire graduation rail |
 
 **The product move:** a "graduation readiness meter" on a Hearth - green when the data
@@ -82,9 +82,9 @@ what Sparkz supplies:
 
 | Post-launch need (first 90 days) | Sparkz surface |
 |---|---|
-| Daily content / founder visibility (the killer of "too late") | Meme Engine keeps drafting moments - the creator approves, never grovels |
+| Daily content / founder visibility (the killer of "too late") | New Sparks keep the Hearth moving - the creator lights them, never grovels |
 | Community defense + engagement | Empire leaderboard keeps backers competing/participating |
-| Ongoing proof the thing is alive | Meme Receipts keep accruing publicly |
+| Ongoing proof the thing is alive | Sparks and boosts keep accruing publicly |
 | "Never go silent" | the loop runs whether or not the creator has energy that week |
 
 The "too late" crash happens because teams optimized for product and had nothing to say
@@ -106,14 +106,10 @@ converts a live crowd - and the same engine carries the first 90 days.
 skip its purpose and vocabulary. But its discipline transfers directly and reinforces the
 graduation thesis (readiness is provable, not asserted):
 - **Evidence on every fact.** Every claim carries a source URL + observed date + confidence.
-  Sparkz: every backer/receipt fact carries provenance -> the readiness meter is *auditable*.
-- **Formalized approval state machine + hash-chained audit.** draft -> approved -> sent, immutable.
-  Sparkz: the Meme Receipt ledger becomes a tamper-evident record of what was approved and earned.
+  Sparkz: every backer fact carries provenance -> the readiness meter is *auditable*.
 - **Disciplined 1:1 outreach (one message per person, human-approved, anti-spam).** This is the
   *how you get the "initial backers who promote"* accountless asked for - a creator-to-backer
   outreach pipeline, minus the cold-email creepiness.
-- **Agent as constrained collaborator (proposes, can't send).** Sparkz already does this via the
-  Meme Engine - independent validation from the elizaOS founder that the architecture is right.
 
 Do NOT copy: local-first desktop, cold-email emphasis, investor/equity language.
 
@@ -124,7 +120,7 @@ Do NOT copy: local-first desktop, cold-email emphasis, investor/equity language.
 2. **Build the graduation readiness meter** on a Hearth (score the 6 gates from live data).
 3. **Build the backer-outreach pipeline** (outreachr-pattern, opt-in, human-approved) so a
    creator can recruit the initial backers who promote.
-4. **Position the Meme Engine + leaderboard explicitly as the post-launch support engine** -
+4. **Position Sparks + the leaderboard explicitly as the post-launch support engine** -
    that is the differentiator no launchpad has.
 
 ## Next Actions
@@ -132,7 +128,7 @@ Do NOT copy: local-first desktop, cold-email emphasis, investor/equity language.
 | Action | Owner | Type | By When |
 |--------|-------|------|---------|
 | Ship a "graduation readiness" score on the Hearth page (6 gates from live data), PR merged | @Zaal | PR | 2026-08-24 |
-| Add provenance fields (source + observed_at) to backer/receipt records, PR merged | @Zaal | PR | 2026-08-31 |
+| Add provenance fields (source + observed_at) to backer records, PR merged | @Zaal | PR | 2026-08-31 |
 | Spec the backer-outreach pipeline (opt-in, human-approved, anti-spam) as a doc | @Zaal | Doc | 2026-08-17 |
 | Hold Sparkz's own protocol-token launch until 3+ Hearths show real value | @Zaal | Decision | wontfix (revisit 2027) |
 
@@ -144,4 +140,4 @@ Do NOT copy: local-first desktop, cold-email emphasis, investor/equity language.
 - Dan Romero on Farcaster token timing, Jan 2026 [FULL]
 - Post-launch attention decay + support playbook (Variant / Kraken TGE readiness) [FULL]
 - `lalalune/outreachr` (README, PRODUCT.md, DESIGN.md, docs/architecture.md) [FULL]
-- Codebase: `docs/strategy/positioning.md`, `src/lib/adapters/backing-provider`, `meme_receipts` schema, `src/lib/empire` [FULL]
+- Codebase: `docs/strategy/positioning.md`, `src/lib/adapters/backing-provider`, `src/lib/empire` [FULL]

@@ -6,21 +6,20 @@ three design docs before writing code.
 ## What Sparkz is
 
 Every Sparkz project is a **Hearth**, not a coin. The Hearth accumulates identity,
-contributors, history, content, receipts, reputation, backing, economic config, and
-Meme Engine memory. The coin is an *optional output*. The moat is the accumulating
-data - NOT the token contract, NOT image generation. V1 proves ONE loop with Zoostr
-(a Creator Hearth); the schema supports all four entry points (Creator / Culture /
-Open-Source repo / Meme Engine) so v1.5 is additive.
+contributors, history, content, backers, free boosts, and economic config. A **Spark**
+is an event on a Hearth (a moment, a token, an NFT drop, a bounty, an event), ideally
+onchain things we can point to. The coin is an *optional output*. Back the album, not a
+coin. V1 proves ONE loop with Zoostr (a Creator Hearth); the schema supports every entry
+point (Creator / Culture / Open-Source repo) so v1.5 is additive.
 
 ## Positioning (non-negotiable framing)
 
 Sparkz monetizes like an **OSS protocol + data network, not a per-seat SaaS**: it earns
 on value that flows through the rails it enables (graduations, backing/boost/bounty
-flows) and on the compounding Meme Receipt graph - not on subscriptions. Managed-pilot
+flows) - not on subscriptions. Managed-pilot
 services are how we *bootstrap the network*, not the identity. Never position or price
 Sparkz as SaaS. Hard rule: **back the album, not buy a coin** - no "raise" language,
-token is optional/opt-in/later, distribution is human-approved, token upside is option
-value only. Full frame + provenance: `docs/strategy/positioning.md`. (Commercial
+token is optional/opt-in/later, token upside is option value only. Full frame + provenance: `docs/strategy/positioning.md`. (Commercial
 specifics - pricing, financial model, targets - stay in the private lab, never this
 public repo.)
 
@@ -32,7 +31,7 @@ public repo.)
 
 ## Operating mode (right now)
 
-Milestone 1. **Brainstorm the Hearth + Meme Receipts schema with Zaal first** (one
+Milestone 1. **Brainstorm the Hearth schema with Zaal first** (one
 round of questions, then confirm) BEFORE writing code. Plan, then build.
 
 ## Stack + conventions
@@ -50,9 +49,6 @@ round of questions, then confirm) BEFORE writing code. Plan, then build.
 - **Never** commit secrets or `.env`. Stub keys on disk; real keys at runtime only.
 - **PR-only to main.** Branch `ws/<slug>`. Never push direct.
 - **Ask before** any DB migration, new dependency, or env-var change.
-- **Cheap model tier for LLM work.** Any drafting/generation (the Meme Engine's 3
-  responses, etc.) uses OpenRouter/Ollama, not a metered Claude path. Reserve the
-  agent's turns for grounded code.
 
 ## Every feature passes the 4 anti-failure gates or it stays in the lab
 
@@ -65,7 +61,7 @@ round of questions, then confirm) BEFORE writing code. Plan, then build.
 
 Each audited ZAO project is a **Hearth candidate** - the audit is the
 Spark-readiness pass. The OSS-repo Hearth type should be able to wrap an existing
-repo (repo + contributors + audit result + receipts). CoCConcertZ is slated to
+repo (repo + contributors + audit result). CoCConcertZ is slated to
 become a Spark. Build the schema with that in mind.
 
 ## Provenance

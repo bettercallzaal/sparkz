@@ -23,11 +23,9 @@ on top, human sentence below. Never make a newcomer guess.
 
 | Coined (headline) | Plain (subline) |
 | --- | --- |
-| Start with a spark, not a token. | Open a project's home - identity, backers, receipts. The coin comes later, if ever. |
+| Start with a spark, not a token. | Open a project's home - identity, backers, free boosts. The coin comes later, if ever. |
 | It's a Hearth, not a coin. | Your project's home base - everything that makes it real, in one place. |
 | A spark. | A project before it's a coin. |
-| The Meme Engine. | Turns a moment into a post, and a post into a permanent record. |
-| Meme Receipts. | The proof - what landed, why it landed, and what it earned. |
 | Boost it. | Back a creator you believe in. No wallet, no coin required. |
 | Graduate. | Launch a token later, only if the momentum is real. |
 

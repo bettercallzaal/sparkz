@@ -29,7 +29,7 @@ In scope: this repository's application code (`src/`), API routes, database
 migrations, and deployment configuration.
 
 Out of scope: third-party services Sparkz depends on (Supabase, Vercel, Base,
-Farcaster, OpenRouter) - report those to the respective vendor.
+Farcaster) - report those to the respective vendor.
 
 ## Our security posture
 

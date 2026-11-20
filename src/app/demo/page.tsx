@@ -60,17 +60,17 @@ export default function DemoPage() {
         </h2>
         <div className="card-solid p-5">
           <p className="text-sm leading-relaxed">
-            <span className="font-semibold">CoCConcertZ</span> throws live concerts in
+            <span className="font-semibold">COC Concertz</span> throws live concerts in
             the metaverse. On Sparkz it&apos;s a <span className="spark-text font-semibold">Hearth</span> -
             not a coin. It has an identity, a Farcaster home (
             <span className="font-mono text-accent">/zao</span>), supporters who back
             the work, and a growing trail of receipts. When a show packs the venue,
-            the Meme Engine turns that moment into content, publishes it to Farcaster,
-            and logs a receipt. No token required - and if the energy&apos;s ever
+            the Meme Engine drafts that moment into content, a human picks the draft,
+            and a receipt is logged. No token required - and if the energy&apos;s ever
             there, it can graduate to a treasury or a coin. That&apos;s a spark.
           </p>
           <Link
-            href="/c/cocconcertz"
+            href="/c/coc-concertz"
             className="mt-4 inline-block btn-spark rounded-md px-4 py-2 text-sm"
           >
             See the live Hearth
@@ -144,10 +144,6 @@ export default function DemoPage() {
           <span className="text-lg">-&gt;</span>
         </Link>
         <div className="grid gap-2 sm:grid-cols-2">
-          <Link href="/c/testing-spark" className="glass glass-hover p-3">
-            <div className="font-medium">A Spark, end to end</div>
-            <div className="text-xs text-muted">/c/testing-spark - boost, receipts, integrations</div>
-          </Link>
           <Link href="/explore" className="glass glass-hover p-3">
             <div className="font-medium">The directory</div>
             <div className="text-xs text-muted">every Spark + its parameters, filterable</div>
@@ -156,10 +152,6 @@ export default function DemoPage() {
             <div className="font-medium">The architecture</div>
             <div className="text-xs text-muted">interactive - the loop, system map, data model</div>
           </a>
-          <Link href="/admin/empire" className="glass glass-hover p-3">
-            <div className="font-medium">Launch a tokenless empire</div>
-            <div className="text-xs text-muted">create2 treasury on Base</div>
-          </Link>
           <Link href="/profile" className="glass glass-hover p-3">
             <div className="font-medium">Sign in with Farcaster</div>
             <div className="text-xs text-muted">your identity across Sparkz</div>

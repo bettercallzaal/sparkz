@@ -46,7 +46,7 @@ const PROJECTS = [
   { slug: "zao-devz", name: "ZAO DEVZ", body: "The builders. Open-source tools for artists." },
   { slug: "iman-afrikah", name: "IMan Afrikah", body: "Zambian artist and DJ. Back the music, catch the next set." },
   { slug: "zabal", name: "ZABAL", body: "The ZABAL community. Boost, climb, share the pool." },
-  { slug: "coc-concertz", name: "CoC ConcertZ", body: "The concert series. Back the next show before the lineup drops." },
+  { slug: "coc-concertz", name: "COC Concertz", body: "The concert series. Back the next show before the lineup drops." },
   { slug: "zao-festivals", name: "ZAO Festivals", body: "ZAOstock and every festival The ZAO throws. Back the festival, be there." },
 ];
 

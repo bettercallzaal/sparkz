@@ -1,6 +1,6 @@
 # Sparkz - security posture
 
-Sparkz is a public, forkable OSS product on a live Supabase/Postgres DB. This is
+Sparkz is a public, forkable OSS product on a live Postgres DB (Neon in production since 14 Nov 2026; Supabase before that, and still supported when `SPARKZ_DB` is unset). The Supabase-specific rows below were checked on the Supabase project. This is
 the DB + data-access checklist every change is held to. Status is for Milestone 1.
 
 | # | Control | Status | Where |

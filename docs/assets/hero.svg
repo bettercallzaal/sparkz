@@ -37,12 +37,12 @@
   <!-- wordmark + copy -->
   <text x="330" y="150" class="wm" font-size="94" fill="url(#spark)">Sparkz</text>
   <text x="332" y="212" class="body" font-size="34" fill="#e7e5e4">Start with a spark, not a token.</text>
-  <text x="332" y="256" class="body" font-size="21" fill="#a8a29e">Every project is a Capsule - identity, backing, receipts. The coin is optional, later, if ever.</text>
+  <text x="332" y="256" class="body" font-size="21" fill="#a8a29e">Every project is a Hearth - identity, backing, receipts. The coin is optional, later, if ever.</text>
 
   <!-- chips -->
   <g transform="translate(332 300)">
     <rect x="0"   y="0" width="132" height="38" rx="19" fill="#ffffff" fill-opacity="0.05" stroke="#c084fc" stroke-opacity="0.4"/>
-    <text x="66"  y="25" class="chip" font-size="14" fill="#d8b4fe" text-anchor="middle">CAPSULES</text>
+    <text x="66"  y="25" class="chip" font-size="14" fill="#d8b4fe" text-anchor="middle">HEARTHS</text>
     <rect x="148" y="0" width="168" height="38" rx="19" fill="#ffffff" fill-opacity="0.05" stroke="#f472b6" stroke-opacity="0.4"/>
     <text x="232" y="25" class="chip" font-size="14" fill="#f9a8d4" text-anchor="middle">MEME ENGINE</text>
     <rect x="332" y="0" width="210" height="38" rx="19" fill="#ffffff" fill-opacity="0.05" stroke="#fbbf24" stroke-opacity="0.4"/>

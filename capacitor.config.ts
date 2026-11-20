@@ -2,7 +2,7 @@ import type { CapacitorConfig } from "@capacitor/cli";
 
 // Sparkz iPhone shell for TestFlight.
 //
-// Sparkz is a server-rendered Next.js app (API routes, middleware, Supabase), so it
+// Sparkz is a server-rendered Next.js app (API routes, middleware, a Postgres database), so it
 // cannot be exported to static files and bundled into the app. The native shell is a
 // thin WebView that loads the live site. Every deploy to Vercel updates the app with
 // no new TestFlight build. `cap-www/` holds only the loading screen shown for the

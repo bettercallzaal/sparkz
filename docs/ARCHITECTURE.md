@@ -18,7 +18,7 @@ Prevents both failure modes: endless architecture that never reaches users; ship
 
 ```
 Creator ────────┐
-Culture ────────┼──→ SPARKZ CAPSULE ──→ Economy
+Culture ────────┼──→ SPARKZ HEARTH ──→ Economy
 Open-source repo┘           │
                             ↓
                        MEME ENGINE

@@ -36,11 +36,11 @@
   <text x="96" y="320" class="wm" font-size="92" fill="url(#spark)">Start with a spark,</text>
   <text x="96" y="410" class="wm" font-size="92" fill="#ece9e6">not a token.</text>
 
-  <text x="98" y="474" class="body" font-size="30" fill="#a8a29e">Every project is a Capsule, not a coin. The moat is the accumulating data.</text>
+  <text x="98" y="474" class="body" font-size="30" fill="#a8a29e">Every project is a Hearth, not a coin. The moat is the accumulating data.</text>
 
   <g transform="translate(98 528)">
     <rect x="0"   y="0" width="150" height="46" rx="23" fill="#ffffff" fill-opacity="0.05" stroke="#c084fc" stroke-opacity="0.45"/>
-    <text x="75"  y="30" class="chip" font-size="16" fill="#d8b4fe" text-anchor="middle">CAPSULES</text>
+    <text x="75"  y="30" class="chip" font-size="16" fill="#d8b4fe" text-anchor="middle">HEARTHS</text>
     <rect x="166" y="0" width="188" height="46" rx="23" fill="#ffffff" fill-opacity="0.05" stroke="#f472b6" stroke-opacity="0.45"/>
     <text x="260" y="30" class="chip" font-size="16" fill="#f9a8d4" text-anchor="middle">MEME ENGINE</text>
     <rect x="372" y="0" width="234" height="46" rx="23" fill="#ffffff" fill-opacity="0.05" stroke="#fbbf24" stroke-opacity="0.45"/>

@@ -204,7 +204,7 @@ flowchart TB
   subgraph Next["Next.js (App Router, server-first)"]
     Pages["Server components<br/>(read via service role)"]
     API["API routes<br/>(Zod safeParse -> try/catch -> JSON)"]
-    Auth["requireAdmin<br/>(admin sign-in session, or agent token header)"]
+    Auth["requireAdmin<br/>(admin sign-in session only;<br/>agent token on agent routes only)"]
   end
 
   subgraph Data["Postgres: Neon in production (RLS on every table)"]
@@ -263,7 +263,7 @@ Both unchosen drafts and their rejection reason are stored on purpose - what the
 
 > **TL;DR** Five core Hearth tables plus a waitlist, with RLS on all six. Backing settles into one provider-agnostic table; the receipts are the moat.
 
-Sparkz has five core Hearth tables plus `waitlist`. RLS is ON everywhere with no anon policies - every read and write goes through the server on the service-role key, which bypasses RLS. Types are CHECK constraints, not Postgres enums, so a new type/status/provider is a plain migration.
+Sparkz has five core Hearth tables plus `waitlist`. RLS is ON everywhere (each `create table` in `supabase/migrations/` is followed by `enable row level security`; `scripts/db-migrate.sh` applies them to Neon or Supabase) with no anon policies - every read and write goes through the server on the service-role key, which bypasses RLS. Types are CHECK constraints, not Postgres enums, so a new type/status/provider is a plain migration.
 
 ```mermaid
 erDiagram

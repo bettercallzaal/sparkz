@@ -96,6 +96,11 @@ export default function SparksPanel({
             ) : null}
             <div className="mt-2 flex flex-wrap gap-3 text-xs text-muted">
               {s.ends_at && <span>Ends {new Date(s.ends_at).toLocaleDateString()}</span>}
+              {onchainHref(s.chain_ref) && (
+                <a href={onchainHref(s.chain_ref) ?? undefined} target="_blank" rel="noreferrer" className="text-accent hover:underline">
+                  Onchain
+                </a>
+              )}
               {httpsHref(s.link) && (
                 <a href={httpsHref(s.link) ?? undefined} target="_blank" rel="noreferrer" className="text-accent hover:underline">
                   Open link
@@ -124,6 +129,15 @@ export default function SparksPanel({
   );
 }
 
+// "Ideally onchain things we can point to" (Zaal, 19 Nov 2026): a Spark with a contract or
+// a transaction on Base links to it on the block explorer. Optional; most Sparks have none.
+function onchainHref(ref: Spark["chain_ref"] | null | undefined): string | null {
+  if (!ref) return null;
+  if (ref.tx && /^0x[0-9a-fA-F]{64}$/.test(ref.tx)) return `https://basescan.org/tx/${ref.tx}`;
+  if (ref.contract && /^0x[0-9a-fA-F]{40}$/.test(ref.contract)) return `https://basescan.org/address/${ref.contract}`;
+  return null;
+}
+
 // Live progress toward a Spark's goal, from the Hearth's own counts. Shown only where those
 // counts are known (the Hearth page); the settings page shows the target alone.
 function GoalBar({ metric, target, counts }: { metric: string; target: number; counts?: Counts }) {
@@ -149,6 +163,7 @@ function LightSparkForm({ hearthId, onDone }: { hearthId: string; onDone: () => 
   const [title, setTitle] = useState("");
   const [link, setLink] = useState("");
   const [goal, setGoal] = useState("");
+  const [onchain, setOnchain] = useState("");
   const [live, setLive] = useState(true);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
@@ -159,6 +174,17 @@ function LightSparkForm({ hearthId, onDone }: { hearthId: string; onDone: () => 
     setBusy(true);
     setMsg(null);
     const target = goal.trim() ? Number(goal) : null;
+    const pointer = onchain.trim();
+    const chain_ref = /^0x[0-9a-fA-F]{64}$/.test(pointer)
+      ? { chain_id: 8453, tx: pointer }
+      : /^0x[0-9a-fA-F]{40}$/.test(pointer)
+        ? { chain_id: 8453, contract: pointer }
+        : undefined;
+    if (pointer && !chain_ref) {
+      setBusy(false);
+      setMsg("Onchain must be a 0x contract address or transaction hash on Base.");
+      return;
+    }
     const res = await fetch("/api/sparks", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -170,6 +196,7 @@ function LightSparkForm({ hearthId, onDone }: { hearthId: string; onDone: () => 
         link: link.trim() || null,
         goal_metric: target ? "backers" : null,
         goal_target: target,
+        ...(chain_ref ? { chain_ref } : {}),
       }),
     });
     const json = await res.json().catch(() => ({}));
@@ -178,6 +205,7 @@ function LightSparkForm({ hearthId, onDone }: { hearthId: string; onDone: () => 
       setTitle("");
       setLink("");
       setGoal("");
+      setOnchain("");
       onDone();
     } else setMsg(json.error ?? `Could not light it (${res.status}).`);
   };
@@ -203,6 +231,10 @@ function LightSparkForm({ hearthId, onDone }: { hearthId: string; onDone: () => 
         <label className="flex flex-col gap-1 text-xs text-muted">
           Link (https, optional)
           <input value={link} onChange={(e) => setLink(e.target.value)} placeholder="https://" className={input} />
+        </label>
+        <label className="flex flex-col gap-1 text-xs text-muted sm:col-span-2">
+          Onchain, if any: a contract address or transaction on Base (optional)
+          <input value={onchain} onChange={(e) => setOnchain(e.target.value)} placeholder="0x..." spellCheck={false} className={input} />
         </label>
         <label className="flex flex-col gap-1 text-xs text-muted">
           Backer goal (optional)

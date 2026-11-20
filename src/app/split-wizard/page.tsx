@@ -147,7 +147,7 @@ export default function SplitWizardPage() {
         </label>
         <input
           className="w-full rounded-lg border border-border bg-card px-3 py-2 text-sm focus:border-accent focus:outline-none"
-          placeholder="e.g. CoCConcertZ collab single"
+          placeholder="e.g. COC Concertz collab single"
           value={projectName}
           onChange={(e) => setProjectName(e.target.value)}
         />
@@ -296,10 +296,6 @@ export default function SplitWizardPage() {
             {exported === "md" && (
               <p className="text-xs text-muted">
                 Upload to IPFS (e.g.{" "}
-                <a href="https://web3.storage" target="_blank" rel="noreferrer" className="text-accent hover:underline">
-                  web3.storage
-                </a>
-                {" "}or{" "}
                 <a href="https://pinata.cloud" target="_blank" rel="noreferrer" className="text-accent hover:underline">
                   pinata.cloud
                 </a>

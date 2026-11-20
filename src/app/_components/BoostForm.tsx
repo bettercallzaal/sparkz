@@ -6,6 +6,7 @@ import { useViewer, useViewerProfile } from "@/lib/view-as";
 import JoinForm from "./JoinForm";
 import Flame from "./Flame";
 import { useToast } from "./toast";
+import { haptic } from "@/lib/native";
 
 // Boost a Hearth. Signed in with Farcaster: one tap, as you (the server reads the
 // session). Signed out, or if the server has no session for you: an email or handle.
@@ -38,6 +39,7 @@ export default function BoostForm({ hearthId }: { hearthId: string }) {
       const json = await res.json();
       if (json.ok) {
         setState("done");
+        void haptic("success");
         toast("Boost sent - you're backing the work now.");
         router.refresh();
       } else if (oneTap && res.status === 400 && String(json.error ?? "").startsWith("backer required")) {

@@ -1,5 +1,6 @@
 "use client";
 
+import { hearthStatusLabel } from "@/lib/hearth-status";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Avatar from "./Avatar";
@@ -40,7 +41,7 @@ export default function YourSparks({ fid }: { fid: number }) {
       <div className="mt-5 border-t border-border pt-5">
         <h2 className="mb-2 text-sm font-semibold">Your sparks</h2>
         <p className="mb-3 text-xs text-muted">
-          Nothing here yet. Light one above - it takes seconds. Here is a live one to see
+          Nothing here yet. Hearths open by invitation during the alpha. Here is a live one to see
           what yours becomes:
         </p>
         <Link
@@ -80,7 +81,7 @@ export default function YourSparks({ fid }: { fid: number }) {
                 </span>
               ) : (
                 <span className="shrink-0 text-[10px] uppercase tracking-wide text-muted">
-                  {r.status}
+                  {hearthStatusLabel(r.status)}
                 </span>
               )}
             </Link>

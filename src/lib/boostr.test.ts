@@ -25,6 +25,23 @@ test("the crew is ranked by likes given, not followers, and idle members are lef
   assert.equal(s.activeContributors, 76);
 });
 
+test("one bad row (a null username) is skipped; the totals and the other rows still show", () => {
+  const withBadRow = {
+    ...body,
+    stats: {
+      ...body.stats,
+      zabalUsers: [
+        ...body.stats.zabalUsers,
+        { fid: 9, username: null, followers_count: null, pfp_url: null, zabalLikesCount: 16, zabalEnabled: false },
+      ],
+    },
+  };
+  const s = parseBoostrStats(withBadRow);
+  assert.ok(s);
+  assert.equal(s.totalLikesGenerated, 22554);
+  assert.deepEqual(s.crew.map((c) => c.username), ["regular", "big"]);
+});
+
 test("an unexpected body is null, so the page hides numbers instead of showing 0", () => {
   assert.equal(parseBoostrStats(null), null);
   assert.equal(parseBoostrStats({ success: false }), null);

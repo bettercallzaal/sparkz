@@ -24,7 +24,9 @@ const statsSchema = z.object({
     totalCastsLiked: z.number(),
     activeContributorsCount: z.number(),
     totalLikesGenerated: z.number(),
-    zabalUsers: z.array(userSchema),
+    // Rows are checked one by one below: one odd row (for example a null username) must
+    // not hide the whole block.
+    zabalUsers: z.array(z.unknown()),
   }),
 });
 
@@ -42,7 +44,11 @@ export function parseBoostrStats(body: unknown, crewSize = 10): BoostrStats | nu
   const parsed = statsSchema.safeParse(body);
   if (!parsed.success) return null;
   const s = parsed.data.stats;
-  const crew = [...s.zabalUsers]
+  const users = s.zabalUsers.flatMap((row) => {
+    const u = userSchema.safeParse(row);
+    return u.success ? [u.data] : [];
+  });
+  const crew = users
     .filter((u) => u.zabalLikesCount > 0)
     .sort((a, b) => b.zabalLikesCount - a.zabalLikesCount)
     .slice(0, crewSize)

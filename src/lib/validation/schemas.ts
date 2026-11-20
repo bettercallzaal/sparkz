@@ -195,3 +195,64 @@ export const approveHearthSchema = z.object({
   id: z.string().uuid(),
   decision: z.enum(["approve", "reject"]).optional(),
 });
+
+// Sparks: an event on a Hearth (migration 0008). The database checks the same rules; these
+// give the caller a readable 400 instead of a constraint error.
+export const SPARK_KINDS = ["moment", "token", "nft", "bounty", "event"] as const;
+export const SPARK_STATUSES = ["planned", "live", "ended", "cancelled"] as const;
+export const SPARK_GOAL_METRICS = ["backers", "boosts"] as const;
+
+const sparkFields = {
+  title: z.string().trim().min(1).max(120),
+  body: z.string().trim().max(2000).nullable().optional(),
+  status: z.enum(SPARK_STATUSES).optional(),
+  goal_metric: z.enum(SPARK_GOAL_METRICS).nullable().optional(),
+  goal_target: z.number().int().positive().max(1_000_000).nullable().optional(),
+  starts_at: z.string().datetime({ offset: true }).nullable().optional(),
+  ends_at: z.string().datetime({ offset: true }).nullable().optional(),
+  link: httpsUrl.nullable().optional(),
+  chain_ref: z
+    .object({
+      chain_id: z.number().int().positive().optional(),
+      contract: z.string().regex(/^0x[0-9a-fA-F]{40}$/).optional(),
+      tx: z.string().regex(/^0x[0-9a-fA-F]{64}$/).optional(),
+    })
+    .strict()
+    .optional(),
+};
+
+type SparkShape = {
+  goal_metric?: string | null;
+  goal_target?: number | null;
+  starts_at?: string | null;
+  ends_at?: string | null;
+};
+
+// A goal is a metric and a target together, or neither; an end date comes after the start.
+function sparkRulesOk(v: SparkShape): boolean {
+  const hasMetric = v.goal_metric != null;
+  const hasTarget = v.goal_target != null;
+  if (hasMetric !== hasTarget) return false;
+  if (v.starts_at && v.ends_at && Date.parse(v.ends_at) <= Date.parse(v.starts_at)) return false;
+  return true;
+}
+const SPARK_RULES_MESSAGE = "a goal needs both a metric and a target, and ends_at must be after starts_at";
+
+export const lightSparkSchema = z
+  .object({
+    hearth_id: z.string().uuid(),
+    kind: z.enum(SPARK_KINDS),
+    ...sparkFields,
+  })
+  .strict()
+  .refine(sparkRulesOk, SPARK_RULES_MESSAGE);
+
+export const editSparkSchema = z
+  .object({
+    id: z.string().uuid(),
+    kind: z.enum(SPARK_KINDS).optional(),
+    ...sparkFields,
+    title: sparkFields.title.optional(),
+  })
+  .strict()
+  .refine(sparkRulesOk, SPARK_RULES_MESSAGE);

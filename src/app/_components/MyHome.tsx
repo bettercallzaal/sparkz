@@ -1,5 +1,6 @@
 "use client";
 
+import { hearthStatusLabel } from "@/lib/hearth-status";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useViewerProfile } from "@/lib/view-as";
@@ -148,7 +149,7 @@ export default function MyHome() {
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-medium">{r.name}</span>
                   <span className="block truncate text-xs text-muted">
-                    {r.type} - {r.status}
+                    {r.type} - {hearthStatusLabel(r.status)}
                     {typeof r.boosts === "number" ? ` - ${r.boosts} boosts` : ""}
                     {typeof r.backers === "number" ? ` - ${r.backers} backers` : ""}
                   </span>

@@ -20,6 +20,12 @@ export function dbBackend(): "neon" | "supabase" {
 
 let cached: SupabaseClient | null = null;
 
+// Tests only: swap in an in-memory client (src/lib/db/fake-client.ts) so route tests can
+// exercise auth and ownership without a database. Pass null to go back to the real one.
+export function setServiceClientForTests(client: unknown): void {
+  cached = client as SupabaseClient | null;
+}
+
 export function getServiceClient(): SupabaseClient {
   if (cached) return cached;
 

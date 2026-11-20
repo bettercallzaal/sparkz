@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "knip": "knip --include files,dependencies,devDependencies,unlisted,binaries",
     "test": "node --experimental-strip-types --no-warnings=ExperimentalWarning --import ./scripts/test/register.mjs --test \"src/**/*.test.ts\"",
     "seed:zoostr": "node --env-file=.env.local scripts/seed-zoostr.mjs",
     "seed:zao": "node --env-file=.env.local scripts/seed-zao-projects.mjs",
@@ -46,6 +47,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.6",
+    "knip": "^5.88.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

@@ -23,6 +23,10 @@ jobs:
         run: npx tsc --noEmit
       - name: Lint
         run: npm run lint
+      # Unused files and dependencies (knip.json). Exports are not checked yet: there are
+      # about 90 unused ones, mostly types, and they are cleaned up separately.
+      - name: Unused files and dependencies
+        run: npm run knip
       - name: Build
         run: npm run build
 

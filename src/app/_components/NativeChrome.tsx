@@ -19,18 +19,15 @@ import { Capacitor } from "@capacitor/core";
 
 type Tab = { id: string; title: string; href: string; symbol: string; selected: string };
 
+// Two tabs, Home and Me (redesign decision Q1, option a). Explore and Hearth pages sit
+// under Home, so Home stays selected there.
 const TABS: Tab[] = [
   { id: "home", title: "Home", href: "/", symbol: "house", selected: "house.fill" },
-  { id: "explore", title: "Explore", href: "/explore", symbol: "magnifyingglass", selected: "sparkle.magnifyingglass" },
-  { id: "new", title: "New", href: "/start", symbol: "plus.circle", selected: "plus.circle.fill" },
   { id: "me", title: "Me", href: "/profile", symbol: "person.crop.circle", selected: "person.crop.circle.fill" },
 ];
 
 function tabFor(pathname: string): Tab {
-  if (pathname.startsWith("/explore") || pathname.startsWith("/c/")) return TABS[1];
-  if (pathname.startsWith("/start")) return TABS[2];
-  if (pathname.startsWith("/profile")) return TABS[3];
-  return TABS[0];
+  return pathname.startsWith("/profile") ? TABS[1] : TABS[0];
 }
 
 function cssColor(name: string, fallback: string): string {

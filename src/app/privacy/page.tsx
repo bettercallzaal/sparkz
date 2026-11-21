@@ -57,7 +57,8 @@ const SECTIONS: { heading: string; body: string[] }[] = [
   {
     heading: "Removing your data",
     body: [
-      "Ask us to delete your waitlist entry, your account details or a Hearth you own, and we will. Open an issue on our GitHub, or message us on Farcaster.",
+      "Delete your account yourself on the Me page: Delete account removes your boosts, backings, team sign-ups and your name on Sparks you lit. Give any Hearth you own to someone, or put it to sleep, first.",
+      "For anything else, such as your waitlist entry or a Hearth you own, ask us and we will delete it. Open an issue on our GitHub, or message us on Farcaster.",
     ],
   },
   {

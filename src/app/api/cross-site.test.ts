@@ -10,6 +10,7 @@ import { SESSION_COOKIE, mintSession } from "@/lib/session";
 // reach its handler instead of answering 403.
 
 const ROUTES: Record<string, () => Promise<{ POST: (req: NextRequest) => Promise<Response> }>> = {
+  "account/delete": () => import("./account/delete/route"),
   "admin/claim-hearth": () => import("./admin/claim-hearth/route"),
   "admin/seed-zao": () => import("./admin/seed-zao/route"),
   audit: () => import("./audit/route"),
@@ -53,6 +54,6 @@ for (const [path, load] of Object.entries(ROUTES)) {
   });
 }
 
-test("the table covers the 17 gated routes listed in issue #381 plus boost, team and waitlist", () => {
-  assert.equal(Object.keys(ROUTES).length, 20);
+test("the table covers the 17 gated routes listed in issue #381 plus boost, team, waitlist and account delete", () => {
+  assert.equal(Object.keys(ROUTES).length, 21);
 });

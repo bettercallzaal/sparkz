@@ -65,7 +65,7 @@ const PRINCIPLES = [
   {
     n: "VI",
     headline: "Capability is not authority.",
-    body: "ZOL can draft casts, propose splits, detect cultural moments, and generate receipts. ZOL cannot post, sign, or spend without a human. The AI advisor advises. The human decides. This is not a limitation - it is the only way to build a system that communities can trust.",
+    body: "ZOL can draft casts, propose splits, and detect cultural moments. ZOL cannot post, sign, or spend without a human. The AI advisor advises. The human decides. This is not a limitation - it is the only way to build a system that communities can trust.",
   },
   {
     n: "VII",
@@ -201,18 +201,6 @@ export default function ManifestoPage() {
           className="btn-spark px-5 py-2.5 text-sm font-semibold rounded-lg"
         >
           Start a Hearth
-        </Link>
-        <Link
-          href="/hearth"
-          className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
-        >
-          What is a Hearth?
-        </Link>
-        <Link
-          href="/community-pool"
-          className="px-5 py-2.5 text-sm border border-border rounded-lg text-muted hover:text-foreground hover:border-border/80 transition-colors"
-        >
-          Community pool
         </Link>
         <Link
           href="/zao"

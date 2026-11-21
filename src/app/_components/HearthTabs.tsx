@@ -9,7 +9,7 @@ import { useSyncExternalStore, type ReactNode } from "react";
 //
 // Every pane is rendered on the server and the inactive ones only get `hidden`, so
 // the content is still in the HTML. The chosen tab lives in the URL hash
-// (#tab-receipts), which survives a reload and can be linked to. The hash names do
+// (#tab-backers), which survives a reload and can be linked to. The hash names do
 // not match any element id, so choosing a tab never scrolls the page.
 export type HearthPane = { id: string; label: string; count?: number; content: ReactNode };
 

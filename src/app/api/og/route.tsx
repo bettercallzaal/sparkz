@@ -124,10 +124,9 @@ export async function GET(req: Request) {
 
       if (data) {
         const c = data as Pick<Hearth, "id" | "name" | "type" | "status" | "bio" | "metadata">;
-        const [{ count: backers }, { data: boostRows }, { count: receipts }] = await Promise.all([
+        const [{ count: backers }, { data: boostRows }] = await Promise.all([
           supabase.from("hearth_backers").select("id", { count: "exact", head: true }).eq("hearth_id", c.id),
           supabase.from("hearth_backers").select("id").eq("hearth_id", c.id).eq("kind", "boost"),
-          supabase.from("meme_receipts").select("id", { count: "exact", head: true }).eq("hearth_id", c.id),
         ]);
         const meta = (c.metadata ?? {}) as Record<string, unknown>;
         const fc = meta.farcaster as { channel?: string; username?: string } | undefined;
@@ -147,7 +146,6 @@ export async function GET(req: Request) {
               stats={[
                 { n: backers ?? 0, label: "backers" },
                 { n: boostRows?.length ?? 0, label: "boosts" },
-                { n: receipts ?? 0, label: "receipts" },
               ]}
             />
           ),

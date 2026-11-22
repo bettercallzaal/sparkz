@@ -12,7 +12,7 @@ import { createHash, timingSafeEqual } from "node:crypto";
 // address nobody holds a key for, so it can never be a real person's account. It is not
 // an admin and not on the Hearth allowlist, so it can browse, back, boost, report and
 // block, but cannot open a Hearth (HEARTH_CREATE_LOCK in src/lib/alpha-access.ts).
-export const REVIEW_ADDRESS = "0x0000000000000000000000000000000000000001";
+export { REVIEW_ADDRESS } from "@/lib/review-address";
 const MIN_CODE_LENGTH = 16;
 
 function configuredCode(): string | null {

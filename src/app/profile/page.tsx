@@ -12,12 +12,16 @@ import HypersnapSigner from "@/app/_components/HypersnapSigner";
 import DeleteAccount from "@/app/_components/DeleteAccount";
 import BlockedList from "@/app/_components/BlockedList";
 import TermsNote from "@/app/_components/TermsNote";
+import ReviewCodeBox from "@/app/_components/ReviewCodeBox";
+import { REVIEW_ADDRESS } from "@/lib/review-address";
 import {
+  currentAddress,
   currentFid,
   exchangeSiwf,
   fetchNonce,
   inMiniApp,
   miniAppSignIn,
+  reviewSignInOn,
   signOut,
 } from "@/lib/auth-session-client";
 
@@ -39,10 +43,17 @@ export default function ProfilePage() {
   const serverFid = viewer.viewAs === "guest" ? null : realServerFid;
   const [miniApp, setMiniApp] = useState(false);
   const [signInError, setSignInError] = useState<string | null>(null);
+  // A wallet session with no FID: the SIWE admin door, or the App Review sign-in.
+  const [realServerAddress, setServerAddress] = useState<string | null>(null);
+  const serverAddress = viewer.viewAs === "guest" ? null : realServerAddress;
+  // The App Review code box shows only while the server has SPARKZ_REVIEW_CODE set.
+  const [reviewOn, setReviewOn] = useState(false);
 
   useEffect(() => {
     currentFid().then(setServerFid).catch(() => setServerFid(null));
+    currentAddress().then(setServerAddress).catch(() => setServerAddress(null));
     inMiniApp().then(setMiniApp);
+    reviewSignInOn().then(setReviewOn);
   }, []);
 
   // Zaal, 19 Nov 2026 (screenshot): reopened, this page showed "fid 19640" twice and no
@@ -84,6 +95,9 @@ export default function ProfilePage() {
 
   // Signed in through the mini-app door: no auth-kit profile, but a verified FID.
   const miniAppSession = !isAuthenticated && serverFid !== null;
+  // Signed in with a wallet only (no Farcaster identity).
+  const walletSession = !isAuthenticated && serverFid === null && serverAddress !== null;
+  const signedIn = isAuthenticated || serverFid !== null || walletSession;
 
   return (
     <main className="mx-auto w-full max-w-md flex-1 px-4 py-10">
@@ -100,10 +114,10 @@ export default function ProfilePage() {
           {/* Design brief G1: this page is "Me" in the tab bar, so it says Me once you
               are signed in, and plainly asks you to sign in when you are not. */}
           <h1 className="text-2xl font-semibold tracking-tight">
-            {isAuthenticated || serverFid !== null ? "Me" : "Sign in"}
+            {signedIn ? "Me" : "Sign in"}
           </h1>
           <p className="text-sm text-muted">
-            {isAuthenticated || serverFid !== null
+            {signedIn
               ? "Your Hearths and your Farcaster identity."
               : "Sign in with Farcaster - your identity across Sparkz."}
           </p>
@@ -129,6 +143,24 @@ export default function ProfilePage() {
           <BlockedList />
           <SignOutLink onDone={() => setServerFid(null)} />
           <DeleteAccount />
+        </section>
+      ) : walletSession ? (
+        <section className="glass p-5">
+          <div className="text-lg font-semibold">
+            {serverAddress?.toLowerCase() === REVIEW_ADDRESS ? "App Review account" : "Wallet"}
+          </div>
+          <div className="mt-1 font-mono text-xs text-muted">
+            {serverAddress?.slice(0, 6)}...{serverAddress?.slice(-4)}
+          </div>
+          <p className="mt-4 text-sm text-muted">
+            You can browse and boost Hearths. Opening a Hearth needs a Farcaster account.
+          </p>
+          <SignOutLink
+            onDone={() => {
+              setServerAddress(null);
+              setServerFid(null);
+            }}
+          />
         </section>
       ) : !isAuthenticated ? (
         <section className="glass p-5">
@@ -158,6 +190,13 @@ export default function ProfilePage() {
           )}
           {signInError && <p className="mt-3 text-sm text-red-400">{signInError}</p>}
           <TermsNote action="signing in" />
+          {reviewOn && (
+            <ReviewCodeBox
+              onSignedIn={() => {
+                currentAddress().then(setServerAddress).catch(() => setServerAddress(null));
+              }}
+            />
+          )}
         </section>
       ) : (
         <section className="glass p-5">

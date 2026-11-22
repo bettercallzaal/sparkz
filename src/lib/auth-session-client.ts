@@ -19,6 +19,31 @@ export async function currentFid(): Promise<number | null> {
   return j.ok ? (j.data?.fid ?? null) : null;
 }
 
+// The verified session's wallet address (SIWE admin door, or the App Review sign-in),
+// or null when there is none or the session is a Farcaster one.
+export async function currentAddress(): Promise<string | null> {
+  const j = await call("/api/auth/me");
+  return j.ok ? (j.data?.address ?? null) : null;
+}
+
+// Is the App Review sign-in on (SPARKZ_REVIEW_CODE set on the server)? Off almost always.
+export async function reviewSignInOn(): Promise<boolean> {
+  const r = await fetch("/api/auth/review", { credentials: "include" }).catch(() => null);
+  const j = (await r?.json().catch(() => null)) as { ok?: boolean; data?: { enabled?: boolean } } | null;
+  return Boolean(j?.ok && j.data?.enabled);
+}
+
+// App Review door: exchange the review code for the server session. Returns null on
+// success, or the server's error message.
+export async function reviewSignIn(code: string): Promise<string | null> {
+  const j = await call("/api/auth/review", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ code }),
+  });
+  return j.ok ? null : (j.error ?? "Sign-in failed");
+}
+
 // The verified session's admin status (Farcaster FID or SIWE address on the allowlist).
 export async function currentAdmin(): Promise<boolean> {
   const j = await call("/api/auth/me");

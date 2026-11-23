@@ -14,8 +14,11 @@ export const dynamic = "force-dynamic";
 // Sparkz has no users table: a person is a verified session (an FID or a wallet), and
 // what Sparkz holds about them is the rows keyed by that identity. Deleting the account
 // removes those rows and ends the session:
-//   - hearth_backers rows whose backer_id is the identity ("fid:<n>" or the address): their
-//     boosts and backings;
+//   - hearth_backers boost rows whose backer_id is the identity ("fid:<n>" or the address).
+//     Paid, on-chain or collectable rows (kind backing or collectable: amount_or_qty,
+//     provider, provider_ref txhash, migration 0001) are the Hearth's record of money and
+//     stay, anonymised: backer_id becomes "deleted" and backer_kind "user", so nothing
+//     links them to the person while the amount, provider and txhash remain;
 //   - team_signups rows whose wallet is the session address;
 //   - content_reports they filed and user_blocks they made (migration 0009). Blocks other
 //     people made of them stay: those are the other person's choice;
@@ -31,6 +34,10 @@ export const dynamic = "force-dynamic";
 const bodySchema = z.object({ confirm: z.literal("delete") });
 
 const IDENTITY_REQUIRED = "Sign in to delete your account";
+// What a kept backing row says instead of the person (backer_id is not null in 0001).
+// The public pages already show anything that is not an @handle or a wallet as
+// "a supporter" (maskBacker in src/lib/sanitize.ts).
+const ANONYMOUS_BACKER = "deleted";
 
 type OwnedHearth = { id: string; slug: string; name: string; status: string };
 
@@ -85,14 +92,22 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Boosts and backings.
-    if (fid) {
-      const { error } = await supabase.from("hearth_backers").delete().eq("backer_id", `fid:${fid}`);
+    // Boosts go; backing and collectable rows stay, unlinked from the person.
+    const backerIds = [fid ? `fid:${fid}` : null, address].filter((v): v is string => v !== null);
+    for (const backerId of backerIds) {
+      const { error } = await supabase
+        .from("hearth_backers")
+        .delete()
+        .eq("backer_id", backerId)
+        .eq("kind", "boost");
       if (error) throw error;
+      const { error: anonErr } = await supabase
+        .from("hearth_backers")
+        .update({ backer_id: ANONYMOUS_BACKER, backer_kind: "user" })
+        .eq("backer_id", backerId);
+      if (anonErr) throw anonErr;
     }
     if (address) {
-      const { error } = await supabase.from("hearth_backers").delete().eq("backer_id", address);
-      if (error) throw error;
       const { error: teamErr } = await supabase.from("team_signups").delete().eq("wallet", address);
       if (teamErr) throw teamErr;
     }

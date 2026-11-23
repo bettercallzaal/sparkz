@@ -57,7 +57,7 @@ const SECTIONS: { heading: string; body: string[] }[] = [
   {
     heading: "Removing your data",
     body: [
-      "Delete your account yourself on the Me page: Delete account removes your boosts, backings, team sign-ups, the reports you filed, the people you blocked and your name on Sparks you lit. Give any Hearth you own to someone, or put it to sleep, first.",
+      "Delete your account yourself on the Me page: Delete account removes your boosts, team sign-ups, the reports you filed, the people you blocked and your name on Sparks you lit. A paid or onchain backing stays on the Hearth's record (amount, provider and transaction) with your name taken off it. Give any Hearth you own to someone, or put it to sleep, first.",
       "For anything else, such as your waitlist entry or a Hearth you own, ask us and we will delete it. Open an issue on our GitHub, or message us on Farcaster.",
     ],
   },

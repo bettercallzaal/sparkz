@@ -14,12 +14,16 @@ export const dynamic = "force-dynamic";
 // Sparkz has no users table: a person is a verified session (an FID or a wallet), and
 // what Sparkz holds about them is the rows keyed by that identity. Deleting the account
 // removes those rows and ends the session:
-//   - hearth_backers boost rows whose backer_id is the identity ("fid:<n>" or the address).
-//     Paid, on-chain or collectable rows (kind backing or collectable: amount_or_qty,
-//     provider, provider_ref txhash, migration 0001) are the Hearth's record of money and
-//     stay, anonymised: backer_id becomes "deleted", backer_kind "user", and personal
-//     metadata keys (ip_hash, email...) go, so nothing links them to the person while the
-//     amount, provider and txhash remain;
+//   - hearth_backers rows are never deleted, boosts included (Zaal, 23 Nov: "all records
+//     stay ... Remove their name and any link on Sparkz between them and that wallet and
+//     account. The wallet stays."). Every row keyed by the identity is anonymised:
+//       - a row keyed by "fid:<n>" gets backer_id "deleted:<row id>" and backer_kind
+//         "user". The row id keeps the boost unique index (hearth_id, backer_id, 0007)
+//         satisfied when two deleted people boosted the same Hearth;
+//       - a row keyed by the wallet keeps the wallet, as on-chain records do;
+//       - on every one of those rows, personal metadata keys (ip_hash, email, fid,
+//         fc_username...) go, so no row links the account to the wallet. Amount, unit,
+//         provider, provider_ref (txhash) and chain are untouched;
 //   - team_signups rows whose wallet is the session address;
 //   - content_reports they filed and user_blocks they made (migration 0009). Blocks other
 //     people made of them stay: those are the other person's choice;
@@ -35,13 +39,21 @@ export const dynamic = "force-dynamic";
 const bodySchema = z.object({ confirm: z.literal("delete") });
 
 const IDENTITY_REQUIRED = "Sign in to delete your account";
-// What a kept backing row says instead of the person (backer_id is not null in 0001).
-// The public pages already show anything that is not an @handle or a wallet as
-// "a supporter" (maskBacker in src/lib/sanitize.ts).
-const ANONYMOUS_BACKER = "deleted";
+// What an anonymised FID row says instead of the person (backer_id is not null in 0001),
+// followed by the row's own id. The public pages show anything that is not an @handle or
+// a wallet as "a supporter" (maskBacker in src/lib/sanitize.ts).
+const ANONYMOUS_PREFIX = "deleted:";
 // Metadata keys on a backing row that can point back to a person (boost and the ledger
 // adapter can write them).
-const PERSONAL_META_KEYS = ["ip_hash", "owner_email", "email", "fid", "username", "wallet"] as const;
+const PERSONAL_META_KEYS = [
+  "ip_hash",
+  "owner_email",
+  "email",
+  "fid",
+  "username",
+  "fc_username",
+  "wallet",
+] as const;
 
 type OwnedHearth = { id: string; slug: string; name: string; status: string };
 
@@ -96,29 +108,24 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Boosts go; backing and collectable rows stay, unlinked from the person.
+    // Nothing is deleted from hearth_backers; every row tied to the person is anonymised.
     const backerIds = [fid ? `fid:${fid}` : null, address].filter((v): v is string => v !== null);
     for (const backerId of backerIds) {
-      const { error } = await supabase
-        .from("hearth_backers")
-        .delete()
-        .eq("backer_id", backerId)
-        .eq("kind", "boost");
-      if (error) throw error;
+      const keepsWallet = backerId === address;
       // Row by row, so each row's metadata loses the keys that can point back to a person
-      // (ip_hash, owner_email) and keeps the rest.
-      const { data: kept, error: keptErr } = await supabase
+      // and keeps the rest.
+      const { data: rows, error: rowsErr } = await supabase
         .from("hearth_backers")
         .select("id, metadata")
         .eq("backer_id", backerId);
-      if (keptErr) throw keptErr;
-      for (const row of (kept as { id: string; metadata: Record<string, unknown> | null }[]) ?? []) {
+      if (rowsErr) throw rowsErr;
+      for (const row of (rows as { id: string; metadata: Record<string, unknown> | null }[]) ?? []) {
         const metadata = { ...(row.metadata ?? {}) };
         for (const k of PERSONAL_META_KEYS) delete metadata[k];
-        const { error: anonErr } = await supabase
-          .from("hearth_backers")
-          .update({ backer_id: ANONYMOUS_BACKER, backer_kind: "user", metadata })
-          .eq("id", row.id);
+        const patch = keepsWallet
+          ? { metadata }
+          : { backer_id: `${ANONYMOUS_PREFIX}${row.id}`, backer_kind: "user", metadata };
+        const { error: anonErr } = await supabase.from("hearth_backers").update(patch).eq("id", row.id);
         if (anonErr) throw anonErr;
       }
     }

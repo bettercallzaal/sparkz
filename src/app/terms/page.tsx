@@ -54,9 +54,9 @@ const SECTIONS: { heading: string; body: string[] }[] = [
     ],
   },
   {
-    heading: "Your account",
+    heading: "Your data",
     body: [
-      "You can delete your account at any time on the Me page. See the Privacy page for what that removes.",
+      "Sparkz keeps no account. You can delete what Sparkz stores about you at any time with Delete your Sparkz data on the Me page. Your on-chain records and your wallet stay as they are. See the Privacy page for what it removes.",
     ],
   },
   {

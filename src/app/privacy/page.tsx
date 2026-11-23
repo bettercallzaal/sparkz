@@ -57,7 +57,7 @@ const SECTIONS: { heading: string; body: string[] }[] = [
   {
     heading: "Removing your data",
     body: [
-      "Delete your account yourself on the Me page: Delete account removes your team sign-ups, the reports you filed, the people you blocked and your name on Sparks you lit. Your boosts and backings stay on each Hearth's record (amount, provider and transaction) with your name, and anything linking them to your account, taken off. A wallet address stays on its own records, as it does on chain. Give any Hearth you own to someone, or put it to sleep, first.",
+      "Sparkz keeps no account. To remove what Sparkz stores about you, use Delete your Sparkz data on the Me page. It removes your team sign-ups, the reports you filed, the people you blocked, your name on Sparks you lit, and anything on Sparkz that links your boosts and backings (amount, provider and transaction) to you. Your on-chain records and your wallet stay as they are. Give any Hearth you own to someone, or put it to sleep, first.",
       "For anything else, such as your waitlist entry or a Hearth you own, ask us and we will delete it. Open an issue on our GitHub, or message us on Farcaster.",
     ],
   },

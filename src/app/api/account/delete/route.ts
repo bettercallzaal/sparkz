@@ -38,7 +38,7 @@ export const dynamic = "force-dynamic";
 
 const bodySchema = z.object({ confirm: z.literal("delete") });
 
-const IDENTITY_REQUIRED = "Sign in to delete your account";
+const IDENTITY_REQUIRED = "Sign in to delete your Sparkz data";
 // What an anonymised FID row says instead of the person (backer_id is not null in 0001),
 // followed by the row's own id. The public pages show anything that is not an @handle or
 // a wallet as "a supporter" (maskBacker in src/lib/sanitize.ts).
@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           ok: false,
-          error: "Give each Hearth you own to someone, or put it to sleep, before deleting your account.",
+          error: "Give each Hearth you own to someone, or put it to sleep, before deleting your Sparkz data.",
           hearths: awake.map((h) => ({ slug: h.slug, name: h.name })),
         },
         { status: 409 },

@@ -34,6 +34,16 @@ beforeEach(() => {
       { id: "s1", hearth_id: THEIRS, created_by_fid: ME, title: "lit by me" },
       { id: "s2", hearth_id: THEIRS, created_by_fid: OTHER, title: "lit by them" },
     ],
+    content_reports: [
+      { id: "r1", reporter_id: `fid:${ME}`, target_type: "hearth", target_id: THEIRS, hearth_id: THEIRS },
+      { id: "r2", reporter_id: `fid:${OTHER}`, target_type: "hearth", target_id: THEIRS, hearth_id: THEIRS },
+      { id: "r3", reporter_id: WALLET, target_type: "hearth", target_id: THEIRS, hearth_id: THEIRS },
+    ],
+    user_blocks: [
+      { id: "k1", blocker_id: `fid:${ME}`, blocked_id: `fid:${OTHER}` },
+      { id: "k2", blocker_id: `fid:${OTHER}`, blocked_id: `fid:${ME}` },
+      { id: "k3", blocker_id: WALLET, blocked_id: `fid:${OTHER}` },
+    ],
   };
   setServiceClientForTests(fakeClient(tables));
 });
@@ -104,4 +114,20 @@ test("a wallet session: its boosts and team sign-ups go, FID rows untouched", as
   assert.equal(res.status, 200);
   assert.deepEqual(tables.hearth_backers.map((b) => b.id), ["b1", "b2"]);
   assert.equal(tables.team_signups.length, 0);
+});
+
+test("an FID session: its reports and blocks go; blocks others made of it stay", async () => {
+  const { POST } = await import("./route");
+  const res = await POST(req({ fid: ME }));
+  assert.equal(res.status, 200);
+  assert.deepEqual(tables.content_reports.map((r) => r.id), ["r2", "r3"]);
+  assert.deepEqual(tables.user_blocks.map((b) => b.id), ["k2", "k3"]);
+});
+
+test("a wallet session: its reports and blocks go", async () => {
+  const { POST } = await import("./route");
+  const res = await POST(req({ address: WALLET }));
+  assert.equal(res.status, 200);
+  assert.deepEqual(tables.content_reports.map((r) => r.id), ["r1", "r2"]);
+  assert.deepEqual(tables.user_blocks.map((b) => b.id), ["k1", "k2"]);
 });

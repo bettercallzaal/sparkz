@@ -4,6 +4,7 @@ import { z } from "zod";
 import { getServiceClient } from "@/lib/supabase/server";
 import { ok, serverError, forbidCrossSite, zodError } from "@/lib/http";
 import { sessionClaims, clearSessionCookie } from "@/lib/session";
+import { viewerIdentity } from "@/lib/moderation";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +17,8 @@ export const dynamic = "force-dynamic";
 //   - hearth_backers rows whose backer_id is the identity ("fid:<n>" or the address): their
 //     boosts and backings;
 //   - team_signups rows whose wallet is the session address;
+//   - content_reports they filed and user_blocks they made (migration 0009). Blocks other
+//     people made of them stay: those are the other person's choice;
 //   - sparks.created_by_fid is cleared (the Spark belongs to its Hearth and stays);
 //   - owner_fid / owner_wallet is cleared on Hearths they own that are asleep (dormant).
 // A Hearth they own that is still awake blocks the delete (Zaal, D5: give it away or put
@@ -92,6 +95,15 @@ export async function POST(req: NextRequest) {
       if (error) throw error;
       const { error: teamErr } = await supabase.from("team_signups").delete().eq("wallet", address);
       if (teamErr) throw teamErr;
+    }
+
+    // Reports they filed and blocks they made.
+    const identity = viewerIdentity(claims);
+    if (identity) {
+      const { error: repErr } = await supabase.from("content_reports").delete().eq("reporter_id", identity);
+      if (repErr) throw repErr;
+      const { error: blockErr } = await supabase.from("user_blocks").delete().eq("blocker_id", identity);
+      if (blockErr) throw blockErr;
     }
 
     // Sparks they lit stay on their Hearth; only the link to the person goes.

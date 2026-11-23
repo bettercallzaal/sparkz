@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { REPORT_REASONS, REPORT_STATUSES, REPORT_TARGETS } from "@/lib/moderation";
 import { STAGES, MAX_ITEMS, MAX_ITEM_LENGTH } from "@/lib/hearth-context";
 
 // Zod schemas for every API input (safeParse in the routes). Keep the enums in
@@ -256,3 +257,29 @@ export const editSparkSchema = z
   })
   .strict()
   .refine(sparkRulesOk, SPARK_RULES_MESSAGE);
+
+// Report and block (migration 0009). The reporter or blocker is always the session
+// identity, so no body carries one.
+export const IDENTITY_PATTERN = /^(fid:[1-9][0-9]{0,19}|0x[0-9a-f]{40})$/;
+
+export const reportSchema = z
+  .object({
+    target_type: z.enum(REPORT_TARGETS),
+    target_id: z.string().uuid(),
+    reason: z.enum(REPORT_REASONS),
+    note: z.string().trim().max(500).optional(),
+  })
+  .strict();
+
+export const reviewReportSchema = z
+  .object({
+    id: z.string().uuid(),
+    status: z.enum(REPORT_STATUSES),
+  })
+  .strict();
+
+export const blockSchema = z.object({ hearth_id: z.string().uuid() }).strict();
+
+export const unblockSchema = z
+  .object({ blocked_id: z.string().regex(IDENTITY_PATTERN, "not a Sparkz identity") })
+  .strict();

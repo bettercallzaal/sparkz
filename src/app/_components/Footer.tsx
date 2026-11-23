@@ -2,8 +2,7 @@ import Link from "next/link";
 import Flame from "./Flame";
 
 // Global footer - on every page via the root layout, so no page is a dead end. Kept to one
-// row (design pass, Zaal 14 Nov 2026). Pages it no longer links (split wizard, community
-// pool, architecture and the rest) are still live at their addresses.
+// row (design pass, Zaal 14 Nov 2026).
 export default function Footer() {
   return (
     <footer className="web-only mt-auto border-t border-border">

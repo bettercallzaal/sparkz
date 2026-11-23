@@ -34,7 +34,7 @@ export default function SparkLit() {
       <div>
         <div className="font-semibold">Your spark is lit.</div>
         <p className="text-sm text-muted">
-          It is live now - share it, boost it, and run the Meme Engine when a moment lands.
+          It is live now - share it and invite people to boost it.
         </p>
       </div>
       <button

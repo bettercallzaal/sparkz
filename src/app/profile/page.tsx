@@ -297,7 +297,6 @@ const ABOUT = [
   { href: "/demo", label: "How it works" },
   { href: "/manifesto", label: "Manifesto" },
   { href: "/blog", label: "Blog" },
-  { href: "/architecture", label: "Architecture" },
 ];
 
 type PublicProfile = {

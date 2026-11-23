@@ -31,7 +31,7 @@ export function GET() {
       splashBackgroundColor: "#0a0a0a",
       subtitle: "Light a Hearth, grow it with sparks",
       description:
-        "Every Sparkz project is a Hearth. Every show, drop and launch is a Spark that grows it, with backers and receipts.",
+        "Every Sparkz project is a Hearth. Every show, drop and launch is a Spark that grows it, with backers and free boosts.",
       primaryCategory: "social",
       tags: ["creators", "base", "farcaster", "backing", "hearth"],
       heroImageUrl: `${ORIGIN}/api/og`,

@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-// Bottom tab bar for the iPhone app: Home, Explore, a center create button, Me.
-// Rendered on every page but only visible under html[data-shell="ios"] (see
-// NativeShell.tsx and the .tab-bar rules in globals.css), so the website is unchanged.
-// Follows Apple's tab bar guidance (prefer a tab bar for navigation, single-word
-// labels, never hide tabs) with a raised center "+" as the one action slot.
+// Bottom tab bar for the iPhone app: two tabs, Home and Me (redesign decision Q1, option
+// a). Explore and Hearth pages sit under Home, so Home stays selected there. Rendered on
+// every page but only visible under html[data-shell="ios"] (see NativeShell.tsx and the
+// .tab-bar rules in globals.css), so the website is unchanged. Follows Apple's tab bar
+// guidance: prefer a tab bar for navigation, single-word labels, never hide tabs.
 type Tab = { href: string; label: string; icon: React.ReactNode; match: (p: string) => boolean };
 
 const stroke = {
@@ -18,11 +18,13 @@ const stroke = {
   strokeLinejoin: "round" as const,
 };
 
+const isMe = (p: string) => p.startsWith("/profile");
+
 const TABS: Tab[] = [
   {
     href: "/",
     label: "Home",
-    match: (p) => p === "/",
+    match: (p) => !isMe(p),
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" {...stroke}>
         <path d="M3 10.5 12 3l9 7.5" />
@@ -31,31 +33,9 @@ const TABS: Tab[] = [
     ),
   },
   {
-    href: "/explore",
-    label: "Explore",
-    match: (p) => p.startsWith("/explore") || p.startsWith("/c/"),
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" {...stroke}>
-        <circle cx="11" cy="11" r="7" />
-        <path d="m20 20-3.5-3.5" />
-      </svg>
-    ),
-  },
-  {
-    href: "/start",
-    label: "New",
-    match: (p) => p.startsWith("/start"),
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" {...stroke}>
-        <path d="M12 5v14" />
-        <path d="M5 12h14" />
-      </svg>
-    ),
-  },
-  {
     href: "/profile",
     label: "Me",
-    match: (p) => p.startsWith("/profile"),
+    match: isMe,
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" {...stroke}>
         <circle cx="12" cy="8" r="4" />
@@ -72,7 +52,6 @@ export default function TabBar() {
       <ul className="mx-auto flex max-w-lg items-stretch justify-around">
         {TABS.map((t) => {
           const active = t.match(pathname);
-          const isNew = t.href === "/start";
           return (
             <li key={t.href} className="flex-1">
               <Link
@@ -82,14 +61,8 @@ export default function TabBar() {
                   active ? "text-foreground" : "text-muted"
                 }`}
               >
-                {isNew ? (
-                  <span className="btn-spark flex h-9 w-12 items-center justify-center rounded-xl">
-                    {t.icon}
-                  </span>
-                ) : (
-                  t.icon
-                )}
-                <span className={isNew ? "sr-only" : ""}>{t.label}</span>
+                {t.icon}
+                <span>{t.label}</span>
               </Link>
             </li>
           );

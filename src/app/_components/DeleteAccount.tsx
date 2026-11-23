@@ -68,10 +68,11 @@ export default function DeleteAccount() {
               Delete your Sparkz account?
             </h2>
             <p className="mt-2 text-sm text-muted">
-              This removes your boosts, your team sign-ups, the reports you filed, the people you
-              blocked, and your name on any Spark you lit. Paid backings stay on the Hearth&apos;s
-              record without your name. Hearths you own must be given to someone or put to
-              sleep first.
+              This removes your team sign-ups, the reports you filed, the people you blocked, and
+              your name on any Spark you lit. Your boosts and backings stay on each Hearth&apos;s
+              record with your name and account taken off them; a wallet stays on its own
+              records, as on chain. Hearths you own must be given to someone or put to sleep
+              first.
               Your Farcaster account is not touched. This cannot be undone.
             </p>
 

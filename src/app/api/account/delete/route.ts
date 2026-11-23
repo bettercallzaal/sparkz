@@ -17,8 +17,9 @@ export const dynamic = "force-dynamic";
 //   - hearth_backers boost rows whose backer_id is the identity ("fid:<n>" or the address).
 //     Paid, on-chain or collectable rows (kind backing or collectable: amount_or_qty,
 //     provider, provider_ref txhash, migration 0001) are the Hearth's record of money and
-//     stay, anonymised: backer_id becomes "deleted" and backer_kind "user", so nothing
-//     links them to the person while the amount, provider and txhash remain;
+//     stay, anonymised: backer_id becomes "deleted", backer_kind "user", and personal
+//     metadata keys (ip_hash, email...) go, so nothing links them to the person while the
+//     amount, provider and txhash remain;
 //   - team_signups rows whose wallet is the session address;
 //   - content_reports they filed and user_blocks they made (migration 0009). Blocks other
 //     people made of them stay: those are the other person's choice;
@@ -38,6 +39,9 @@ const IDENTITY_REQUIRED = "Sign in to delete your account";
 // The public pages already show anything that is not an @handle or a wallet as
 // "a supporter" (maskBacker in src/lib/sanitize.ts).
 const ANONYMOUS_BACKER = "deleted";
+// Metadata keys on a backing row that can point back to a person (boost and the ledger
+// adapter can write them).
+const PERSONAL_META_KEYS = ["ip_hash", "owner_email", "email", "fid", "username", "wallet"] as const;
 
 type OwnedHearth = { id: string; slug: string; name: string; status: string };
 
@@ -101,11 +105,22 @@ export async function POST(req: NextRequest) {
         .eq("backer_id", backerId)
         .eq("kind", "boost");
       if (error) throw error;
-      const { error: anonErr } = await supabase
+      // Row by row, so each row's metadata loses the keys that can point back to a person
+      // (ip_hash, owner_email) and keeps the rest.
+      const { data: kept, error: keptErr } = await supabase
         .from("hearth_backers")
-        .update({ backer_id: ANONYMOUS_BACKER, backer_kind: "user" })
+        .select("id, metadata")
         .eq("backer_id", backerId);
-      if (anonErr) throw anonErr;
+      if (keptErr) throw keptErr;
+      for (const row of (kept as { id: string; metadata: Record<string, unknown> | null }[]) ?? []) {
+        const metadata = { ...(row.metadata ?? {}) };
+        for (const k of PERSONAL_META_KEYS) delete metadata[k];
+        const { error: anonErr } = await supabase
+          .from("hearth_backers")
+          .update({ backer_id: ANONYMOUS_BACKER, backer_kind: "user", metadata })
+          .eq("id", row.id);
+        if (anonErr) throw anonErr;
+      }
     }
     if (address) {
       const { error: teamErr } = await supabase.from("team_signups").delete().eq("wallet", address);

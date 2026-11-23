@@ -29,7 +29,7 @@ beforeEach(() => {
       { id: "b2", hearth_id: THEIRS, backer_id: `fid:${OTHER}`, kind: "boost" },
       { id: "b3", hearth_id: THEIRS, backer_id: WALLET, kind: "boost" },
       // Paid and on-chain rows: the Hearth's money record, kept and anonymised.
-      { id: "p1", hearth_id: THEIRS, backer_kind: "fid", backer_id: `fid:${ME}`, kind: "backing", amount_or_qty: 25, unit: "USD", provider: "ledger", provider_ref: "inv-1", chain: null },
+      { id: "p1", hearth_id: THEIRS, backer_kind: "fid", backer_id: `fid:${ME}`, kind: "backing", amount_or_qty: 25, unit: "USD", provider: "ledger", provider_ref: "inv-1", chain: null, metadata: { ip_hash: "h", email: "a@b.c", tier: "gold" } },
       { id: "p2", hearth_id: THEIRS, backer_kind: "wallet", backer_id: WALLET, kind: "collectable", amount_or_qty: 1, unit: "ZAO", provider: "clanker", provider_ref: "0x" + "ef".repeat(32), chain: "base" },
     ],
     team_signups: [{ id: "t1", hearth_id: THEIRS, wallet: WALLET, name: "x" }],
@@ -150,5 +150,6 @@ test("paid and on-chain backing rows survive, keep amount, provider and txhash, 
     }
   }
   assert.equal(tables.hearth_backers.some((b) => b.backer_id === `fid:${ME}` || b.backer_id === WALLET), false);
+  assert.deepEqual(tables.hearth_backers.find((b) => b.id === "p1")?.metadata, { tier: "gold" });
   assert.deepEqual(tables.hearth_backers.filter((b) => b.kind === "boost").map((b) => b.id), ["b2"]);
 });

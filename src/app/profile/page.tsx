@@ -10,6 +10,8 @@ import Flame from "@/app/_components/Flame";
 import YourSparks from "@/app/_components/YourSparks";
 import HypersnapSigner from "@/app/_components/HypersnapSigner";
 import DeleteAccount from "@/app/_components/DeleteAccount";
+import BlockedList from "@/app/_components/BlockedList";
+import TermsNote from "@/app/_components/TermsNote";
 import {
   currentFid,
   exchangeSiwf,
@@ -124,6 +126,7 @@ export default function ProfilePage() {
           >
             New Hearth
           </Link>
+          <BlockedList />
           <SignOutLink onDone={() => setServerFid(null)} />
           <DeleteAccount />
         </section>
@@ -154,6 +157,7 @@ export default function ProfilePage() {
             />
           )}
           {signInError && <p className="mt-3 text-sm text-red-400">{signInError}</p>}
+          <TermsNote action="signing in" />
         </section>
       ) : (
         <section className="glass p-5">
@@ -202,6 +206,7 @@ export default function ProfilePage() {
               {signInError ?? "Verifying your sign-in with the server..."}
             </p>
           )}
+          <BlockedList />
           <SignOutLink onDone={() => setServerFid(null)} />
           <DeleteAccount />
         </section>
@@ -295,6 +300,7 @@ const ADMIN_LINKS = [
 
 const ABOUT = [
   { href: "/demo", label: "How it works" },
+  { href: "/terms", label: "Terms of Use" },
   { href: "/manifesto", label: "Manifesto" },
   { href: "/blog", label: "Blog" },
 ];

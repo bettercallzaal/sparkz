@@ -32,6 +32,9 @@ export default function Footer() {
           <Link href="/profile" className="hover:text-foreground">
             Account
           </Link>
+          <Link href="/terms" className="hover:text-foreground">
+            Terms
+          </Link>
           <Link href="/privacy" className="hover:text-foreground">
             Privacy
           </Link>

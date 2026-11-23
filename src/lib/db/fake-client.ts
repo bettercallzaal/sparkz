@@ -31,6 +31,9 @@ class FakeQuery implements PromiseLike<{ data: unknown; error: null | { message:
   delete(): this { this.mode = "delete"; return this; }
   eq(col: string, v: unknown): this { this.filters.push({ col, op: "eq", v }); return this; }
   in(col: string, v: unknown[]): this { this.filters.push({ col, op: "in", v }); return this; }
+  // .or() (the public-review filter) is not modelled: every row passes. Tests that need it
+  // filtered seed only rows that pass.
+  or(): this { return this; }
   order(col: string, opts?: { ascending?: boolean }): this { this.orderCol = col; this.asc = opts?.ascending ?? true; return this; }
   limit(n: number): this { this.limitN = n; return this; }
   single(): this { this.one = "single"; return this; }

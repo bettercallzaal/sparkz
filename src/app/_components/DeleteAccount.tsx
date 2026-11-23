@@ -4,7 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { signOut } from "@/lib/auth-session-client";
 
-// "Delete account" on Me, with one confirm step in a bottom sheet (App Store guideline
+// "Delete your Sparkz data" on Me (Zaal, 23 Nov, ORD-376: Sparkz keeps no account, so
+// the feature is named for what it removes), with one confirm step in a bottom sheet (App Store guideline
 // 5.1.1(v): deletion inside the app). POST /api/account/delete does the work; when the
 // person still owns an awake Hearth it answers 409 with those Hearths, and the sheet
 // links each one to its Manage page so they can give it away or put it to sleep.
@@ -36,7 +37,7 @@ export default function DeleteAccount() {
         window.location.reload();
         return;
       }
-      setError(json?.error ?? "Could not delete your account. Try again.");
+      setError(json?.error ?? "Could not delete your Sparkz data. Try again.");
       if (Array.isArray(json?.hearths)) setBlocking(json.hearths);
     } catch {
       setError("Could not reach Sparkz. Check your connection and try again.");
@@ -52,7 +53,7 @@ export default function DeleteAccount() {
         onClick={() => setOpen(true)}
         className="mt-3 inline-flex min-h-11 w-full items-center justify-center rounded-lg px-4 text-sm text-red-400 hover:text-red-300 active:bg-white/10"
       >
-        Delete account
+        Delete your Sparkz data
       </button>
 
       {open && (
@@ -65,15 +66,15 @@ export default function DeleteAccount() {
           />
           <div className="relative w-full max-w-lg rounded-t-2xl border-t border-border bg-card p-5 pb-[calc(1.5rem+env(safe-area-inset-bottom))]">
             <h2 id="delete-account-title" className="text-base font-semibold">
-              Delete your Sparkz account?
+              Delete your Sparkz data?
             </h2>
             <p className="mt-2 text-sm text-muted">
-              This removes your team sign-ups, the reports you filed, the people you blocked, and
-              your name on any Spark you lit. Your boosts and backings stay on each Hearth&apos;s
-              record with your name and account taken off them; a wallet stays on its own
-              records, as on chain. Hearths you own must be given to someone or put to sleep
-              first.
-              Your Farcaster account is not touched. This cannot be undone.
+              Sparkz keeps no account. This removes what Sparkz stores about you: your team
+              sign-ups, the reports you filed, the people you blocked, your name on any Spark you
+              lit, and anything on Sparkz that links your boosts and backings to you. Your
+              on-chain records and your wallet stay as they are. Hearths you own must be given to
+              someone or put to sleep first. Your Farcaster account is not touched. This cannot
+              be undone.
             </p>
 
             {error && (
@@ -99,7 +100,7 @@ export default function DeleteAccount() {
               onClick={confirm}
               className="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-lg border border-red-400 bg-red-950/60 px-4 text-sm font-medium text-red-200 disabled:opacity-60"
             >
-              {busy ? "Deleting..." : "Delete account"}
+              {busy ? "Deleting..." : "Delete my Sparkz data"}
             </button>
             <button
               type="button"

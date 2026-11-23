@@ -146,7 +146,7 @@ export default function EmpirePage() {
     <main className="mx-auto w-full max-w-md flex-1 px-4 py-8">
       <div className="mb-6 flex items-center justify-between">
         <Link href="/admin" className="text-sm text-muted hover:text-foreground">
-          &larr; Meme Engine
+          &larr; Admin
         </Link>
         <span className="flex items-center gap-1.5 text-xs text-muted">
           <span className="h-1.5 w-1.5 rounded-full bg-green-500" /> Base mainnet

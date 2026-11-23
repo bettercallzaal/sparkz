@@ -59,7 +59,7 @@ export default function AddRepo() {
     <main className="mx-auto w-full max-w-lg flex-1 px-4 py-8">
       <div className="mb-6 flex items-center justify-between">
         <Link href="/admin" className="text-sm text-muted hover:text-foreground">
-          &larr; Meme Engine
+          &larr; Admin
         </Link>
         <span className="text-sm font-medium">Add a project</span>
       </div>

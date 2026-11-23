@@ -11,7 +11,7 @@ import { iosBetaUrl } from "@/lib/ios-beta";
 export const dynamic = "force-dynamic";
 
 // What Sparkz is for, in three lines. Plain ZAO voice, from docs/strategy/positioning.md:
-// back the album, not buy a coin; receipts over claims; member-owned, not SaaS.
+// back the album, not buy a coin; member-owned, not SaaS.
 const GOALS = [
   {
     h: "Back the work",
@@ -19,7 +19,7 @@ const GOALS = [
   },
   {
     h: "Keep the record",
-    p: "Every backer, helper and show leaves a receipt. The Hearth grows on that record, and it stays in the open.",
+    p: "Every backer, helper and show is part of the record. The Hearth grows on it, and it stays in the open.",
   },
   {
     h: "Owned by its people",

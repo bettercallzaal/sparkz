@@ -34,10 +34,6 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  // Clean URL for the static interactive architecture page (public/architecture.html).
-  async rewrites() {
-    return [{ source: "/architecture", destination: "/architecture.html" }];
-  },
 };
 
 export default nextConfig;

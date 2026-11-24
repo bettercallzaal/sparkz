@@ -5,6 +5,7 @@ import { getServiceClient } from "@/lib/supabase/server";
 import { ok, serverError, forbidCrossSite, zodError } from "@/lib/http";
 import { sessionClaims, clearSessionCookie } from "@/lib/session";
 import { viewerIdentity } from "@/lib/moderation";
+import { getProfile } from "@/lib/hypersnap";
 
 export const dynamic = "force-dynamic";
 
@@ -24,11 +25,17 @@ export const dynamic = "force-dynamic";
 //       - on every one of those rows, personal metadata keys (ip_hash, email, fid,
 //         fc_username...) go, so no row links the account to the wallet. Amount, unit,
 //         provider, provider_ref (txhash) and chain are untouched;
-//   - team_signups rows whose wallet is the session address;
+//   - team_signups rows whose wallet is the session address. team_signups has no fid
+//     column, so for an FID session the rows are matched through the account's own
+//     Farcaster record (the Hypersnap node): the handle it signed up with equal to its
+//     username, or the wallet equal to its primary address. A node that is down matches
+//     nothing there; the rest of the delete still runs;
 //   - content_reports they filed and user_blocks they made (migration 0009). Blocks other
 //     people made of them stay: those are the other person's choice;
 //   - sparks.created_by_fid is cleared (the Spark belongs to its Hearth and stays);
-//   - owner_fid / owner_wallet is cleared on Hearths they own that are asleep (dormant).
+//   - owner_fid / owner_wallet is cleared on Hearths they own that are asleep (dormant),
+//     and those Hearths lose the email and IP hash saved when they were opened
+//     (metadata.owner_email, metadata.ip_hash, from /api/capsules/create-spark).
 // A Hearth they own that is still awake blocks the delete (Zaal, D5: give it away or put
 // it to sleep first), so no live Hearth is left without an owner. The response names
 // those Hearths so the app can say which. Their Farcaster account is never touched.
@@ -55,7 +62,15 @@ const PERSONAL_META_KEYS = [
   "wallet",
 ] as const;
 
-type OwnedHearth = { id: string; slug: string; name: string; status: string };
+// Keys on a Hearth's metadata saved about the person who opened it (create-spark).
+const HEARTH_PERSONAL_KEYS = ["owner_email", "ip_hash"] as const;
+
+type OwnedHearth = { id: string; slug: string; name: string; status: string; metadata?: Record<string, unknown> | null };
+
+// Escape LIKE wildcards so a username matches only itself (case-insensitively).
+function likeExact(v: string): string {
+  return v.replace(/[\\%_]/g, (c) => `\\${c}`);
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -80,7 +95,7 @@ export async function POST(req: NextRequest) {
     if (fid) {
       const { data, error } = await supabase
         .from("hearths")
-        .select("id, slug, name, status")
+        .select("id, slug, name, status, metadata")
         .eq("owner_fid", fid);
       if (error) throw error;
       owned.push(...((data as OwnedHearth[]) ?? []));
@@ -88,7 +103,7 @@ export async function POST(req: NextRequest) {
     if (address) {
       const { data, error } = await supabase
         .from("hearths")
-        .select("id, slug, name, status")
+        .select("id, slug, name, status, metadata")
         .eq("owner_wallet", address);
       if (error) throw error;
       for (const h of (data as OwnedHearth[]) ?? []) {
@@ -133,6 +148,19 @@ export async function POST(req: NextRequest) {
       const { error: teamErr } = await supabase.from("team_signups").delete().eq("wallet", address);
       if (teamErr) throw teamErr;
     }
+    if (fid) {
+      const profile = await getProfile(fid);
+      const username = profile?.username?.replace(/^@/, "").trim();
+      if (username) {
+        const { error } = await supabase.from("team_signups").delete().ilike("handle", likeExact(username));
+        if (error) throw error;
+      }
+      const primary = profile?.address?.trim().toLowerCase();
+      if (primary && /^0x[0-9a-f]{40}$/.test(primary)) {
+        const { error } = await supabase.from("team_signups").delete().eq("wallet", primary);
+        if (error) throw error;
+      }
+    }
 
     // Reports they filed and blocks they made.
     const identity = viewerIdentity(claims);
@@ -149,11 +177,14 @@ export async function POST(req: NextRequest) {
       if (error) throw error;
     }
 
-    // Asleep Hearths they owned lose the owner link.
+    // Asleep Hearths they owned lose the owner link and what was saved about the person
+    // who opened them; the rest of the metadata (review state, Farcaster link) stays.
     for (const h of owned) {
+      const metadata = { ...(h.metadata ?? {}) };
+      for (const k of HEARTH_PERSONAL_KEYS) delete metadata[k];
       const { error } = await supabase
         .from("hearths")
-        .update({ owner_fid: null, owner_wallet: null })
+        .update({ owner_fid: null, owner_wallet: null, metadata })
         .eq("id", h.id);
       if (error) throw error;
     }

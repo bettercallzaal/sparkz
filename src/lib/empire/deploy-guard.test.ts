@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { ownerDeployRefusal, tokenLaunchRefusal } from "./deploy-guard";
+import { ownerDeployRefusal, pendingDeployTx, tokenLaunchRefusal } from "./deploy-guard";
 
 const approved = { metadata: { self_serve: true, review: "approved" }, economic_config: {} };
 
@@ -63,4 +63,12 @@ test("token launch: refused when the linked empire is a token empire", () => {
 test("token launch: owner of a self-serve Hearth still in review is refused", () => {
   const h = { metadata: { self_serve: true, review: "pending" }, economic_config: {} };
   assert.equal(tokenLaunchRefusal(h, false)?.status, 403);
+});
+
+test("a sent but unregistered deploy is pending; a registered one is not", () => {
+  const tx = "0x" + "a".repeat(64);
+  assert.equal(pendingDeployTx({ economic_config: { pending_deploy_tx: tx } }), tx);
+  assert.equal(pendingDeployTx({ economic_config: { pending_deploy_tx: tx, token_address: "0xabc" } }), null);
+  assert.equal(pendingDeployTx({ economic_config: { pending_deploy_tx: "nope" } }), null);
+  assert.equal(pendingDeployTx({}), null);
 });

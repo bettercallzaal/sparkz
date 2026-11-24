@@ -5,7 +5,7 @@ import { empireTokenConfigSchema } from "@/lib/validation/schemas";
 import { ok, badRequest, serverError, zodError, forbidCrossSite } from "@/lib/http";
 import { isAdmin, requireHearthOwner } from "@/lib/auth";
 import { getTokenConfig } from "@/lib/empire/client";
-import { tokenLaunchRefusal } from "@/lib/empire/deploy-guard";
+import { pendingDeployTx, tokenLaunchRefusal } from "@/lib/empire/deploy-guard";
 import type { Hearth } from "@/lib/supabase/types";
 
 // Step 1 of a token launch (graduation): Empire builds the Clanker v4 tokenConfig with
@@ -33,6 +33,15 @@ export async function POST(req: NextRequest) {
     const refusal = tokenLaunchRefusal(hearth as Hearth, isAdmin(req));
     if (refusal) {
       return NextResponse.json({ ok: false, error: refusal.error }, { status: refusal.status });
+    }
+
+    // A deploy was already sent for this Hearth: never hand out a second config.
+    const pending = pendingDeployTx(hearth as Hearth);
+    if (pending) {
+      return NextResponse.json(
+        { ok: false, error: "A launch was already sent for this Hearth. Finish it instead of launching again.", pending_tx: pending },
+        { status: 409 },
+      );
     }
 
     const d = parsed.data;

@@ -50,3 +50,14 @@ export function tokenLaunchRefusal(
   }
   return null;
 }
+
+// A deploy tx already sent for this Hearth and not yet registered. While it is set, no
+// new token config is handed out, so a retry finishes THAT coin instead of making a
+// second one. Cleared when register-token records the token.
+export function pendingDeployTx(hearth: { economic_config?: unknown }): string | null {
+  const econ = (hearth.economic_config ?? {}) as { pending_deploy_tx?: unknown; token_address?: unknown };
+  if (econ.token_address) return null;
+  return typeof econ.pending_deploy_tx === "string" && /^0x[0-9a-fA-F]{64}$/.test(econ.pending_deploy_tx)
+    ? econ.pending_deploy_tx
+    : null;
+}

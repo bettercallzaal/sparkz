@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
         empire_id: d.base_token, empire_address: empireAddress,
         empire_mode: "token", empire_owner: d.owner, empire_token_type: "clanker",
         previous_empire_id: econBefore.empire_id ?? null, previous_empire_address: econBefore.empire_address ?? null,
-        token_address: d.base_token, token_symbol: d.symbol, deploy_tx: d.tx_hash,
+        token_address: d.base_token, token_symbol: d.symbol, deploy_tx: d.tx_hash, pending_deploy_tx: null,
       },
     }).eq("id", d.hearth_id).select("*").single();
     if (error) throw error;

@@ -1,6 +1,10 @@
+import type { NextRequest } from "next/server";
 import { getServiceClient } from "@/lib/supabase/server";
 import { ok, serverError } from "@/lib/http";
 import { PUBLIC_REVIEW_FILTER } from "@/lib/sanitize";
+import { sessionClaims } from "@/lib/session";
+import { blockedOwners } from "@/lib/blocks-server";
+import { isBlockedHearth } from "@/lib/moderation";
 import type { Hearth, HearthBacker, MemeReceipt } from "@/lib/supabase/types";
 
 export const dynamic = "force-dynamic";
@@ -28,18 +32,22 @@ function backerLabel(id: string): string {
 // across public Hearths, plus headline counts. Value, not price - no numbers a
 // speculator would trade on. Only approved/unreviewed Hearths are included, and
 // backer identities are sanitized.
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     const supabase = getServiceClient();
+    const blocked = await blockedOwners(sessionClaims(req));
 
     const { data: hearthRows, error: hearthErr } = await supabase
       .from("hearths")
-      .select("id, name, slug, created_at")
+      .select("id, name, slug, created_at, owner_fid, owner_wallet")
       .or(PUBLIC_REVIEW_FILTER)
       .order("created_at", { ascending: false });
     // A database failure answers 500, not an empty feed that reads as "nothing happened".
     if (hearthErr) throw hearthErr;
-    const hearths = (hearthRows as Pick<Hearth, "id" | "name" | "slug" | "created_at">[]) ?? [];
+    // Hearths owned by someone the viewer blocked are left out (migration 0009).
+    const hearths = (
+      (hearthRows as Pick<Hearth, "id" | "name" | "slug" | "created_at" | "owner_fid" | "owner_wallet">[]) ?? []
+    ).filter((c) => !isBlockedHearth(c, blocked));
     const byId = new Map(hearths.map((c) => [c.id, c]));
     const publicIds = new Set(hearths.map((c) => c.id));
 

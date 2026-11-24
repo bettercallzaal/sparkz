@@ -12,7 +12,8 @@ export const dynamic = "force-dynamic";
 // Reports on user content (migration 0009; App Store guideline 1.2; Zaal D2 and D4).
 //   POST  /api/reports  signed in: report a Hearth or a Spark (spam, abuse, ip, other).
 //                       One report per person per thing; a repeat answers deduped.
-//   GET   /api/reports  admin: open reports, newest first, for /admin/pending.
+//   GET   /api/reports  admin: open reports, newest first, for /admin/pending. Each row
+//                       carries its Hearth's slug and name, and a Spark's title.
 //   PATCH /api/reports  admin: mark a report reviewed or dismissed.
 // Reports stay inside Sparkz: nothing is sent to anyone (D4).
 const SIGN_IN_TO_REPORT = "Sign in to report";
@@ -74,7 +75,29 @@ export async function GET(req: NextRequest) {
       .limit(LIST_LIMIT);
     // Fail closed: a failed read must never show as "no reports".
     if (error) throw error;
-    return ok(data ?? []);
+    const rows = (data as { hearth_id: string; target_type: string; target_id: string }[]) ?? [];
+    if (rows.length === 0) return ok([]);
+
+    const hearthIds = [...new Set(rows.map((r) => r.hearth_id))];
+    const sparkIds = [...new Set(rows.filter((r) => r.target_type === "spark").map((r) => r.target_id))];
+    const [{ data: hearths, error: hErr }, sparkRead] = await Promise.all([
+      supabase.from("hearths").select("id, slug, name").in("id", hearthIds),
+      sparkIds.length
+        ? supabase.from("sparks").select("id, title").in("id", sparkIds)
+        : Promise.resolve({ data: [], error: null }),
+    ]);
+    if (hErr) throw hErr;
+    if (sparkRead.error) throw sparkRead.error;
+    const hearthById = new Map(((hearths as { id: string; slug: string; name: string }[]) ?? []).map((h) => [h.id, h]));
+    const sparkById = new Map(((sparkRead.data as { id: string; title: string }[]) ?? []).map((s) => [s.id, s]));
+    return ok(
+      rows.map((r) => ({
+        ...r,
+        hearth_slug: hearthById.get(r.hearth_id)?.slug ?? null,
+        hearth_name: hearthById.get(r.hearth_id)?.name ?? null,
+        spark_title: r.target_type === "spark" ? (sparkById.get(r.target_id)?.title ?? null) : null,
+      })),
+    );
   } catch (err) {
     return serverError(err, "reports.GET");
   }

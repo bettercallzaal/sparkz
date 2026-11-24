@@ -32,11 +32,24 @@ public repo.)
 
 ## Operating mode (right now)
 
-Live alpha at trysparkz.com. On main: migrations 0001 to 0008 (supabase/migrations/), the
-Hearth (src/app/c/[slug]/, src/app/api/capsules/), backing (src/app/api/boost/,
-src/lib/adapters/backing-provider/), the Meme Engine loop (src/lib/meme-engine/,
-src/app/api/signals/), Farcaster and wallet sign-in (src/app/api/auth/), and
-the iOS shell (ios/).
+Live alpha at trysparkz.com. On main: migrations 0001 to 0009 (supabase/migrations/), the
+Hearth (src/app/c/[slug]/, src/app/api/capsules/), Sparks (src/app/api/sparks/), backing
+(src/app/api/boost/, src/lib/adapters/backing-provider/), report and block
+(src/app/api/reports/, src/app/api/blocks/), account deletion (src/app/api/account/delete/),
+Farcaster and wallet sign-in plus the App Review sign-in (src/app/api/auth/), and the iOS
+shell (ios/).
+
+The Meme Engine is deprecated: its pages and the Receipts tab are gone from the product
+(#424). Its code (src/lib/meme-engine/, src/app/api/signals/, src/app/api/receipts/) is
+still on main until removal PR 2 (branch ws/remove-meme-engine-code) merges. Do not build
+on it. Its tables (meme_receipts, signals, signal_drafts) stay; dropping them is a
+migration for Zaal's yes.
+
+**Migrations: merging is the Production apply.** .github/workflows/db.yml runs
+scripts/db-migrate.sh against Production on every push to main that touches
+supabase/migrations/. So a PR that adds a migration puts a HOLD line first in its body,
+carries the `hold` label, and cites a run on a scratch database (a Neon branch) before
+Zaal merges it. Migrations are additive and idempotent (`if not exists`), with RLS on.
 Work is PR-only from the lane's backlog. For a schema change, a new product surface or a
 money/token decision, plan it with Zaal first (one round of questions, then confirm).
 

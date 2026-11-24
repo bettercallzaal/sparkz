@@ -1,4 +1,8 @@
+import type { NextRequest } from "next/server";
 import { getServiceClient } from "@/lib/supabase/server";
+import { sessionClaims } from "@/lib/session";
+import { blockedOwners } from "@/lib/blocks-server";
+import { isBlockedHearth } from "@/lib/moderation";
 import { ok, serverError } from "@/lib/http";
 import { PUBLIC_REVIEW_FILTER } from "@/lib/sanitize";
 import type { Hearth, HearthBacker, MemeReceipt } from "@/lib/supabase/types";
@@ -29,11 +33,12 @@ export interface DirectoryItem {
 }
 
 // GET /api/directory - every Hearth with its live parameters (counts + integration
-// flags) in one call, so the explorer can filter/sort client-side. Public read.
-export async function GET() {
+// flags) in one call, so the explorer can filter/sort client-side. Public read. Hearths
+// owned by someone the viewer blocked are left out (migration 0009).
+export async function GET(req: NextRequest) {
   try {
     const supabase = getServiceClient();
-    const [{ data: hearths }, { data: backers }, { data: receipts }] =
+    const [{ data: hearths }, { data: backers }, { data: receipts }, blocked] =
       await Promise.all([
         supabase
           .from("hearths")
@@ -42,6 +47,7 @@ export async function GET() {
           .order("created_at", { ascending: false }),
         supabase.from("hearth_backers").select("hearth_id, kind, backer_id, created_at"),
         supabase.from("meme_receipts").select("hearth_id, created_at"),
+        blockedOwners(sessionClaims(req)),
       ]);
 
     const b =
@@ -49,7 +55,8 @@ export async function GET() {
     const r = (receipts as Pick<MemeReceipt, "hearth_id" | "created_at">[]) ?? [];
     const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
-    const items: DirectoryItem[] = ((hearths as Hearth[]) ?? []).map((c) => {
+    const visible = ((hearths as Hearth[]) ?? []).filter((c) => !isBlockedHearth(c, blocked));
+    const items: DirectoryItem[] = visible.map((c) => {
       const mine = b.filter((x) => x.hearth_id === c.id);
       const econ = (c.economic_config ?? {}) as Record<string, unknown>;
       const meta = (c.metadata ?? {}) as Record<string, unknown>;

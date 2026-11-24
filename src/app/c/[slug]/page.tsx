@@ -29,6 +29,10 @@ import SparksPanel from "@/app/_components/SparksPanel";
 import TokenSparkPanel from "@/app/_components/TokenSparkPanel";
 import { readTokenSpark } from "@/lib/token-spark";
 import { hearthStatusLabel } from "@/lib/hearth-status";
+import ReportMenu from "@/app/_components/ReportMenu";
+import UnblockButton from "@/app/_components/UnblockButton";
+import { viewerBlockedOwners } from "@/lib/blocks-viewer";
+import { hearthOwnerIdentity, isBlockedHearth } from "@/lib/moderation";
 
 export const dynamic = "force-dynamic";
 
@@ -170,6 +174,28 @@ export default async function HearthPage({
   if (!view) notFound();
 
   const { hearth, backers, boostCount } = view;
+  const ownerIdentity = hearthOwnerIdentity(hearth);
+
+  // The viewer blocked this Hearth's owner (migration 0009): show nothing of theirs, only
+  // a way to unblock.
+  if (isBlockedHearth(hearth, await viewerBlockedOwners()) && ownerIdentity) {
+    return (
+      <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-8">
+        <Link href="/explore" className="text-sm text-muted hover:text-foreground">
+          &larr; Explore
+        </Link>
+        <section className="glass mt-6 p-5 text-sm">
+          <h1 className="text-lg font-semibold">You blocked this creator</h1>
+          <p className="mt-1 text-muted">
+            Their Hearths and Sparks are hidden from you. Unblock to see this Hearth again.
+          </p>
+          <div className="mt-4">
+            <UnblockButton blockedId={ownerIdentity} />
+          </div>
+        </section>
+      </main>
+    );
+  }
   const oss = hearth.type === "oss" ? (hearth.metadata as OssHearthMetadata) : null;
   const fc = (hearth.metadata as { farcaster?: { fid?: number | null; username?: string | null; channel?: string | null } }).farcaster;
   const econ = (hearth.economic_config ?? {}) as {
@@ -258,6 +284,13 @@ export default async function HearthPage({
               value={`${canonicalOrigin()}/c/${hearth.slug}`}
               label="Hearth link copied"
               className="h-8 w-8"
+            />
+            <ReportMenu
+              targetType="hearth"
+              targetId={hearth.id}
+              hearthId={hearth.id}
+              ownerFid={hearth.owner_fid}
+              hasOwner={ownerIdentity !== null}
             />
           </div>
         </div>
@@ -437,6 +470,8 @@ export default async function HearthPage({
                 slug={hearth.slug}
                 hearthId={hearth.id}
                 counts={{ backers: backers.length, boosts: boostCount }}
+                ownerFid={hearth.owner_fid}
+                hasOwner={ownerIdentity !== null}
               />
             ),
           },

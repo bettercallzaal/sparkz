@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useViewer, useViewerProfile } from "@/lib/view-as";
 import { useToast } from "./toast";
 import JoinForm from "./JoinForm";
+import TermsNote from "./TermsNote";
 import { HEARTH_CREATE_CLOSED_MESSAGE } from "@/lib/alpha-access";
 
 // The one "New Hearth" form (used on /start, reached from the app's + tab and from
@@ -211,6 +212,7 @@ export default function StartForm() {
       >
         {state === "busy" ? "Creating..." : "Create Hearth"}
       </button>
+      <TermsNote action="creating a Hearth" className="text-xs text-muted" />
       {state === "error" && <p className="text-xs text-red-400">{err}</p>}
     </div>
   );

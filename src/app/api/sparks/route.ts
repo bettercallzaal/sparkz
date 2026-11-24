@@ -3,14 +3,17 @@ import { getServiceClient } from "@/lib/supabase/server";
 import { lightSparkSchema, editSparkSchema } from "@/lib/validation/schemas";
 import { badRequest, ok, serverError, zodError, forbidCrossSite } from "@/lib/http";
 import { isAdmin, requireHearthOwner } from "@/lib/auth";
-import { sessionFid } from "@/lib/session";
+import { sessionClaims, sessionFid } from "@/lib/session";
+import { blockedOwners } from "@/lib/blocks-server";
+import { isBlockedHearth } from "@/lib/moderation";
 import type { Spark } from "@/lib/supabase/types";
 
 // Sparks: an event on a Hearth (migration 0008; plan in vault
 // notes/sparkz-sparks-table-plan-2026-11-19.md).
 //   GET   /api/sparks?slug=<hearth>  public, newest first. Visitors see live and ended
 //                                    Sparks; the owner and admins also see planned and
-//                                    cancelled ones.
+//                                    cancelled ones. Empty for a viewer who blocked the
+//                                    Hearth's owner (migration 0009).
 //   POST  /api/sparks                owner or admin: light a Spark on a Hearth.
 //   PATCH /api/sparks                owner or admin: change a Spark (status, goal, link...).
 const SLUG = /^[a-z0-9][a-z0-9-]{0,63}$/;
@@ -25,12 +28,13 @@ export async function GET(req: NextRequest) {
     const supabase = getServiceClient();
     const { data: hearth, error: hearthError } = await supabase
       .from("hearths")
-      .select("id, owner_fid")
+      .select("id, owner_fid, owner_wallet")
       .eq("slug", slug)
       .maybeSingle();
     if (hearthError) throw hearthError;
     if (!hearth) return badRequest("No Hearth with that slug.");
-    const h = hearth as { id: string; owner_fid: number | null };
+    const h = hearth as { id: string; owner_fid: number | null; owner_wallet: string | null };
+    if (isBlockedHearth(h, await blockedOwners(sessionClaims(req)))) return ok([] as Spark[]);
 
     const fid = sessionFid(req);
     const manager = isAdmin(req) || (fid !== null && h.owner_fid !== null && fid === h.owner_fid);

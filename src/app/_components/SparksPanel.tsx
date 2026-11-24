@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useState } from "react";
 import type { Spark } from "@/lib/supabase/types";
 import { httpsHref } from "@/lib/safe-href";
+import ReportMenu from "./ReportMenu";
+import TermsNote from "./TermsNote";
 
 type Counts = { backers: number; boosts: number };
 
@@ -23,11 +25,16 @@ export default function SparksPanel({
   hearthId,
   counts,
   manage = false,
+  ownerFid = null,
+  hasOwner = false,
 }: {
   slug: string;
   hearthId: string;
   counts?: Counts;
   manage?: boolean;
+  // For the report and block menu on each Spark (visitors only, not on settings).
+  ownerFid?: number | null;
+  hasOwner?: boolean;
 }) {
   const [list, setList] = useState<Spark[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -89,6 +96,17 @@ export default function SparksPanel({
               <span className="rounded bg-accent/15 px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-accent">
                 {s.status}
               </span>
+              {!manage && (
+                <span className="ml-auto">
+                  <ReportMenu
+                    targetType="spark"
+                    targetId={s.id}
+                    hearthId={hearthId}
+                    ownerFid={ownerFid}
+                    hasOwner={hasOwner}
+                  />
+                </span>
+              )}
             </div>
             {s.body && <p className="mt-2 text-muted">{s.body}</p>}
             {s.goal_metric && s.goal_target ? (
@@ -255,6 +273,7 @@ function LightSparkForm({ hearthId, onDone }: { hearthId: string; onDone: () => 
         </button>
         {msg && <span className="text-xs text-red-400">{msg}</span>}
       </div>
+      <TermsNote action="lighting a Spark" className="text-xs text-muted" />
     </div>
   );
 }

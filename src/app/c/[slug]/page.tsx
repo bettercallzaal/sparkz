@@ -32,7 +32,7 @@ import { hearthStatusLabel } from "@/lib/hearth-status";
 import ReportMenu from "@/app/_components/ReportMenu";
 import UnblockButton from "@/app/_components/UnblockButton";
 import { viewerBlockedOwners } from "@/lib/blocks-viewer";
-import { hearthOwnerIdentity, isBlockedHearth } from "@/lib/moderation";
+import { blockedOwnerOf, hearthOwnerIdentity } from "@/lib/moderation";
 
 export const dynamic = "force-dynamic";
 
@@ -175,10 +175,10 @@ export default async function HearthPage({
 
   const { hearth, backers, boostCount } = view;
   const ownerIdentity = hearthOwnerIdentity(hearth);
-
   // The viewer blocked this Hearth's owner (migration 0009): show nothing of theirs, only
   // a way to unblock.
-  if (isBlockedHearth(hearth, await viewerBlockedOwners()) && ownerIdentity) {
+  const blockedOwner = blockedOwnerOf(hearth, await viewerBlockedOwners());
+  if (blockedOwner) {
     return (
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-8">
         <Link href="/explore" className="text-sm text-muted hover:text-foreground">
@@ -190,7 +190,7 @@ export default async function HearthPage({
             Their Hearths and Sparks are hidden from you. Unblock to see this Hearth again.
           </p>
           <div className="mt-4">
-            <UnblockButton blockedId={ownerIdentity} />
+            <UnblockButton blockedId={blockedOwner} />
           </div>
         </section>
       </main>

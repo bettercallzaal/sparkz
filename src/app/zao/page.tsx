@@ -8,7 +8,7 @@ const BASE = canonicalOrigin();
 const OG = `${BASE}/api/og?title=${encodeURIComponent("The ZAO")}&subtitle=${encodeURIComponent("Music first · Community second · Technology third")}`;
 
 const DESCRIPTION =
-  "Sparkz is part of The ZAO - ZTalent Artist Organization - a decentralized impact network bringing profit margin, data, and IP rights back to artists. Music first.";
+  "Sparkz is part of The ZAO - ZTalent Artist Organization - a decentralized impact network bringing revenue share, data, and IP rights back to artists. Music first.";
 
 export const metadata: Metadata = {
   title: "The ZAO - Sparkz",
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   },
 };
 
-const RETURNS = ["Profit margin", "Data", "IP rights"];
+const RETURNS = ["Revenue share", "Data", "IP rights"];
 
 // The ZAO's Hearths (scripts/seed-zao-projects.mjs creates them).
 const PROJECTS = [
@@ -90,7 +90,7 @@ export default function ZaoPage() {
         <h1 className="text-4xl font-bold mb-4">The ZAO</h1>
         <p className="text-muted text-lg leading-relaxed">
           Sparkz is part of The ZAO, the creator collective behind it. The ZAO is a
-          decentralized impact network that brings profit margin, data, and IP rights
+          decentralized impact network that brings revenue share, data, and IP rights
           back to artists. Music is its first domain.
         </p>
         <p className="text-muted text-sm mt-3">
@@ -127,9 +127,9 @@ export default function ZaoPage() {
         </div>
       </section>
 
-      {/* What The ZAO returns to artists */}
+      {/* What artists keep with The ZAO */}
       <section>
-        <h2 className="text-xl font-bold mb-5">What it returns to artists</h2>
+        <h2 className="text-xl font-bold mb-5">What artists keep</h2>
         <div className="grid sm:grid-cols-3 gap-4">
           {RETURNS.map((r) => (
             <div key={r} className="card-solid border border-border rounded-xl p-5">

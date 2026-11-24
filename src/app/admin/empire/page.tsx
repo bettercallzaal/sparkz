@@ -384,6 +384,11 @@ export default function EmpirePage() {
             <p className="text-center text-xs text-muted">
               Live on Base mainnet - no gas to sign - 2 launches / wallet / 24h.
             </p>
+            <p className="text-center text-xs">
+              <Link href="/admin/empire/coin" className="text-accent hover:underline">
+                Ready to graduate? Launch a coin instead
+              </Link>
+            </p>
           </div>
         </>
       )}

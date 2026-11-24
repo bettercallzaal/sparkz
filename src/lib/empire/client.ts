@@ -144,3 +144,92 @@ export async function deployTokenlessCustom(
   const data = (await res.json()) as { baseToken?: string };
   return { baseToken: data.baseToken ?? "", raw: data };
 }
+
+// --- Token launch path (Clanker v4 via Empire Builder). MAINNET-LIVE on Base. ---
+// 1. getTokenConfig: Empire builds the Clanker v4 tokenConfig server-side (API key, no signature).
+// 2. The owner's wallet deploys it with the Clanker SDK in the browser (pays gas, signs).
+// 3. registerTokenEmpire: Empire checks the deploy tx and creates the empire treasury for the token.
+
+export interface TokenConfigInput {
+  name: string;
+  symbol: string;
+  imageUrl: string;
+  creatorAddress: string;
+  vaultPercentage?: number; // share of supply locked in the Clanker vault
+  vaultDays?: number;
+  feeType?: "static" | "dynamic";
+  enableSniperFees?: boolean;
+  tokenDescription?: string;
+  socialTwitter?: string;
+  socialFarcaster?: string;
+  socialWebsite?: string;
+  socialTelegram?: string;
+}
+
+// POST /api/get-token-config - returns { tokenConfig } for Clanker.deploy(). Requires EMPIRE_API_KEY.
+export async function getTokenConfig(input: TokenConfigInput): Promise<{ tokenConfig: unknown; raw: unknown }> {
+  const apiKey = process.env.EMPIRE_API_KEY;
+  if (!apiKey) throw new Error("EMPIRE_API_KEY not set - token launch is disabled");
+  const res = await fetch(`${BASE}/get-token-config`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "x-api-key": apiKey },
+    body: JSON.stringify({ ...input, enableDevBuy: false, enableAirdrop: false }),
+  });
+  const data = (await res.json().catch(() => ({}))) as { tokenConfig?: unknown; error?: string };
+  if (!res.ok || !data.tokenConfig) {
+    throw new Error(`get-token-config ${res.status}: ${data.error ?? "failed"}`);
+  }
+  return { tokenConfig: data.tokenConfig, raw: data };
+}
+
+export interface RegisterTokenEmpireInput {
+  baseToken: string; // the deployed token address
+  name: string;
+  owner: string; // the wallet that sent the deploy tx
+  txHash: string;
+  symbol: string;
+  logoUri?: string;
+  bio?: string;
+  website_url?: string;
+  twitter_url?: string;
+  warpcast_url?: string;
+  telegram_url?: string;
+}
+
+// POST /api/deploy-empire (Clanker fresh-deploy flow). Empire validates the tx receipt
+// (owner = tx.from, LP rewards to the empire wallet, token address = baseToken).
+// Never send tokenType. Rate limit: 2 empires per wallet per 24h.
+export async function registerTokenEmpire(
+  input: RegisterTokenEmpireInput,
+): Promise<{ empireAddress: string | null; raw: unknown }> {
+  const apiKey = process.env.EMPIRE_API_KEY;
+  if (!apiKey) throw new Error("EMPIRE_API_KEY not set - token launch is disabled");
+  const res = await fetch(`${BASE}/deploy-empire`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "x-api-key": apiKey },
+    body: JSON.stringify({
+      baseToken: input.baseToken,
+      name: input.name.trim(),
+      owner: input.owner,
+      txHash: input.txHash,
+      chainId: 8453,
+      clankerVersion: "clanker_v4",
+      tokenInfo: { symbol: input.symbol, name: input.name.trim(), logoURI: input.logoUri },
+      empireMetadata: {
+        bio: input.bio,
+        website_url: input.website_url,
+        twitter_url: input.twitter_url,
+        warpcast_url: input.warpcast_url,
+        telegram_url: input.telegram_url,
+      },
+    }),
+  });
+  const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+  if (!res.ok) {
+    throw new Error(`deploy-empire ${res.status}: ${(data.error as string) ?? "failed"}`);
+  }
+  return {
+    empireAddress: (data.empireAddress as string) ?? (data.treasuryAddress as string) ?? null,
+    raw: data,
+  };
+}

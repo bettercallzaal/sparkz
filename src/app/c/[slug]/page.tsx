@@ -26,6 +26,8 @@ import BoostrPanel from "@/app/_components/BoostrPanel";
 import { BOOSTR_HEARTHS, fetchBoostrStats } from "@/lib/boostr";
 import { readContext } from "@/lib/hearth-context";
 import SparksPanel from "@/app/_components/SparksPanel";
+import TokenSparkPanel from "@/app/_components/TokenSparkPanel";
+import { readTokenSpark } from "@/lib/token-spark";
 import { hearthStatusLabel } from "@/lib/hearth-status";
 
 export const dynamic = "force-dynamic";
@@ -198,6 +200,7 @@ export default async function HearthPage({
   };
   const image = hearthLogo(hearth);
   const pending = meta.review === "pending";
+  const tokenSpark = readTokenSpark(hearth.slug, hearth.metadata);
   const isCreator = hearth.type === "creator";
   const tags = Array.isArray(meta.tags) ? meta.tags : [];
   const links = meta.links ?? {};
@@ -364,6 +367,8 @@ export default async function HearthPage({
             label: "About",
             content: (
               <>
+                {tokenSpark && <TokenSparkPanel meta={tokenSpark} />}
+
                 {econ.empire_id && (
                   <section className="mb-8">
                     <h2 className="mb-3 text-sm font-medium">Empire leaderboard</h2>

@@ -10,6 +10,7 @@ import type { Hearth } from "@/lib/supabase/types";
 import AdminSignIn from "@/app/_components/AdminSignIn";
 import {
   BASE_CHAIN_ID,
+  EMPIRE_FEE_WALLET,
   summarizeTokenConfig,
   tokenFromReceipt,
   type LaunchSummary,
@@ -271,7 +272,16 @@ export default function EmpireCoinPage() {
       const p = { tx: sent.txHash, name: name.trim(), symbol: symbol.trim(), logo: logoUri };
       localStorage.setItem(pendingKey(hearthId), JSON.stringify(p));
       setSent(p);
-      await post("/api/empire/token-pending", { hearth_id: hearthId, tx_hash: sent.txHash }).catch(() => null);
+      // The Hearth must record this tx before we wait (round 2 bug fix). If that save fails,
+      // stop here: the coin may still land, and Finish launch picks it up from this tab's
+      // saved tx instead of a retry making a second coin.
+      try {
+        await post("/api/empire/token-pending", { hearth_id: hearthId, tx_hash: sent.txHash });
+      } catch {
+        throw new Error(
+          `Your launch was sent (${sent.txHash.slice(0, 10)}...) but Sparkz could not record it. Do not launch again. Keep this tab open and press Finish launch in a minute.`,
+        );
+      }
 
       setStep("confirm");
       const mined = await sent.waitForTransaction();
@@ -468,7 +478,7 @@ export default function EmpireCoinPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className={label}>Vault % of supply</label>
+              <label className={label}>Community vault % of supply</label>
               <input
                 type="number"
                 min={0}
@@ -479,7 +489,7 @@ export default function EmpireCoinPage() {
               />
             </div>
             <div>
-              <label className={label}>Vault lock (days)</label>
+              <label className={label}>Community vault lock (days)</label>
               <input
                 type="number"
                 min={7}
@@ -491,8 +501,8 @@ export default function EmpireCoinPage() {
             </div>
           </div>
           <p className="-mt-2 text-xs text-muted">
-            The vault holds this share of supply for the creator, locked for these days.
-            Coins in the vault cannot go into a pool until the lock ends.
+            The community vault holds this share of supply in the launching wallet (yours),
+            locked for these days. Coins in the vault cannot go into a pool until the lock ends.
           </p>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -561,9 +571,9 @@ function LaunchReview({ p, owner }: { p: Preview; owner: string }) {
   const s = p.summary;
   const me = owner.toLowerCase();
   const who = (addr: string, bps: number) =>
-    addr.toLowerCase() === me ? "You" : bps === 2000 ? "Empire Builder" : "Unknown";
+    addr.toLowerCase() === me ? "You" : addr.toLowerCase() === EMPIRE_FEE_WALLET.toLowerCase() && bps === 2000 ? "Empire Builder" : "Unknown";
   const vault = s.vaultPct
-    ? `${s.vaultPct}% of supply to you, locked ${s.vaultLockDays} days${s.vaultVestDays ? `, then vests over ${s.vaultVestDays} days` : ""}`
+    ? `${s.vaultPct}% of supply, held in your launching wallet, locked ${s.vaultLockDays} days${s.vaultVestDays ? `, then vests over ${s.vaultVestDays} days` : ""}`
     : "None";
   return (
     <section className="rounded-xl border border-border bg-card p-4 text-sm">
@@ -576,7 +586,7 @@ function LaunchReview({ p, owner }: { p: Preview; owner: string }) {
       <Row k="Name and symbol" v={`${s.name} (${s.symbol})`} />
       <Row k="Supply" v={`${s.supply.toLocaleString("en-US")}, fixed, minted once`} />
       <Row k="Coin admin" v={short(s.tokenAdmin)} mono />
-      <Row k="Vault" v={vault} />
+      <Row k="Community vault" v={vault} />
       <Row k="Rest of supply" v={`${100 - s.vaultPct}% into the Uniswap v4 pool`} />
       <Row k="Swap fee" v={s.feeText} />
       <Row k="Sniper fee at launch" v={s.sniperFees ? "On: high for the first seconds, then it drops" : "Off"} />

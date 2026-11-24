@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 // Turns the Clanker v4 tokenConfig that Empire returns into plain facts the owner reads
 // BEFORE signing: who gets which share of trading fees, the vault, the supply. Nothing
 // here is hardcoded from marketing copy; every number comes from the config itself, plus
@@ -11,6 +13,14 @@ export const CLANKER_V4_SUPPLY = 100_000_000_000;
 // Clanker v4 factory on Base (clanker-sdk 4.2.16, CLANKERS.clanker_v4.address).
 export const CLANKER_V4_FACTORY_BASE = "0xE85A59c628F7d27878ACeB4bf3b35733630083a9";
 export const BASE_CHAIN_ID = 8453;
+// Empire Builder's own fee wallet. Empire's deploy-empire check requires 2000 bps of the
+// reward pool paid to it (Empire API docs, POST /api/deploy-empire). Read on Base from the
+// Clanker v4 LP locker (tokenRewards) of Empire launches on 24 Nov 2026: every one since at
+// least Aug 2026 pays 2000 bps to this address (AI SPORK, Orlo Wallet, Grok bot,
+// EvolutionStyle, Test2 Oct30, Free), so 2000 of the 8000 bps left after Clanker = 16% of
+// all trading fees. Any other wallet in that slot blocks the launch.
+export const EMPIRE_FEE_WALLET = "0xa22434c246217E2a1ea0Eab8e5a510eE3caF8b66";
+export const EMPIRE_FEE_BPS = 2000;
 
 export interface FeeRecipient {
   recipient: string;
@@ -57,6 +67,8 @@ export function summarizeTokenConfig(
   config: unknown,
   expect: { creator: string; empireWallet?: string },
 ): LaunchSummary {
+  // Always checked against Empire's real wallet unless a caller names another (tests).
+  const empireWallet = (expect.empireWallet ?? EMPIRE_FEE_WALLET).toLowerCase();
   const c = obj(config);
   const fees = obj(c.fees);
   const vault = obj(c.vault);
@@ -89,12 +101,14 @@ export function summarizeTokenConfig(
     problems.push("Your wallet is not one of the fee recipients");
   }
   const unknown = recipients.filter(
-    (r) =>
-      r.recipient.toLowerCase() !== creator &&
-      (!expect.empireWallet || r.recipient.toLowerCase() !== expect.empireWallet.toLowerCase()),
+    (r) => r.recipient.toLowerCase() !== creator && r.recipient.toLowerCase() !== empireWallet,
   );
-  if (expect.empireWallet && unknown.length > 0) {
+  if (unknown.length > 0) {
     problems.push(`${unknown.length} fee recipient(s) are neither you nor Empire`);
+  }
+  const empireShares = recipients.filter((r) => r.recipient.toLowerCase() === empireWallet);
+  if (empireShares.length !== 1 || empireShares[0].bps !== EMPIRE_FEE_BPS) {
+    problems.push("Empire's fee share is missing or not exactly 20% of the reward pool");
   }
   // Empire's deploy-empire check requires exactly 2000 bps to its own wallet. Any other
   // non-creator share is unexplained, so it blocks the launch.
@@ -141,4 +155,30 @@ const ZERO_TOPIC = "0x" + "0".repeat(64);
 export function tokenFromReceipt(logs: { address: string; topics: readonly string[] }[]): string | null {
   const mint = logs.find((l) => l.topics[0] === TRANSFER && l.topics[1] === ZERO_TOPIC);
   return mint ? mint.address : null;
+}
+
+// The shape Sparkz accepts from Empire's /get-token-config before anything reaches the
+// browser (review round 2, item 2). Extra fields pass through untouched; these must exist.
+const addr = z.string().regex(/^0x[0-9a-fA-F]{40}$/);
+const bps = z.union([z.number().int(), z.string().regex(/^\d+$/)]);
+export const clankerTokenConfigSchema = z
+  .object({
+    name: z.string().min(1),
+    symbol: z.string().min(1),
+    image: z.string(),
+    tokenAdmin: addr,
+    rewards: z
+      .object({
+        recipients: z.array(z.object({ recipient: addr, admin: addr, bps }).passthrough()).min(1),
+      })
+      .passthrough(),
+  })
+  .passthrough();
+
+// Server-side gate on Empire's answer: the schema, then every check the preview shows.
+// Returns the reasons to refuse (empty = safe to hand to the owner's wallet).
+export function tokenConfigRefusals(config: unknown, creator: string): string[] {
+  const parsed = clankerTokenConfigSchema.safeParse(config);
+  if (!parsed.success) return ["Empire's launch config is not in the expected shape"];
+  return summarizeTokenConfig(config, { creator }).problems;
 }

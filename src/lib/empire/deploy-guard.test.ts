@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { ownerDeployRefusal, pendingDeployTx, tokenLaunchRefusal } from "./deploy-guard";
+import { launchLockRefusal, ownerDeployRefusal, pendingDeployTx, tokenLaunchRefusal } from "./deploy-guard";
 
 const approved = { metadata: { self_serve: true, review: "approved" }, economic_config: {} };
 
@@ -71,4 +71,13 @@ test("a sent but unregistered deploy is pending; a registered one is not", () =>
   assert.equal(pendingDeployTx({ economic_config: { pending_deploy_tx: tx, token_address: "0xabc" } }), null);
   assert.equal(pendingDeployTx({ economic_config: { pending_deploy_tx: "nope" } }), null);
   assert.equal(pendingDeployTx({}), null);
+});
+
+test("launch lock: free, stale, or held by the same wallet lets a config through; another wallet waits", () => {
+  const now = Date.parse("2026-11-25T00:00:00Z");
+  const held = (at: string, by: string) => ({ economic_config: { token_launch_lock_at: at, token_launch_lock_by: by } });
+  assert.equal(launchLockRefusal({ economic_config: {} }, "0xAA", now), null);
+  assert.equal(launchLockRefusal(held("2026-11-24T23:00:00Z", "0xbb"), "0xaa", now), null);
+  assert.equal(launchLockRefusal(held("2026-11-24T23:58:00Z", "0xaa"), "0xAA", now), null);
+  assert.equal(launchLockRefusal(held("2026-11-24T23:58:00Z", "0xbb"), "0xaa", now)?.status, 409);
 });

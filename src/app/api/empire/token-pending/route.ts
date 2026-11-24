@@ -1,10 +1,9 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { getServiceClient } from "@/lib/supabase/server";
 import { ok, badRequest, serverError, zodError, forbidCrossSite } from "@/lib/http";
-import { isAdmin, requireHearthOwner } from "@/lib/auth";
 import { pendingDeployTx, tokenLaunchRefusal } from "@/lib/empire/deploy-guard";
+import { launchDeps as deps } from "@/lib/empire/launch-deps";
 import type { Hearth } from "@/lib/supabase/types";
 
 // Step 2b of a token launch: the owner's wallet has just SENT the deploy tx. Record its hash
@@ -24,16 +23,16 @@ export async function POST(req: NextRequest) {
     const parsed = schema.safeParse(body);
     if (!parsed.success) return zodError(parsed.error);
 
-    const denied = await requireHearthOwner(req, parsed.data.hearth_id);
+    const denied = await deps.requireHearthOwner(req, parsed.data.hearth_id);
     if (denied) return denied;
 
-    const supabase = getServiceClient();
+    const supabase = deps.getServiceClient();
     const { data: hearth, error } = await supabase
       .from("hearths").select("*").eq("id", parsed.data.hearth_id).maybeSingle();
     if (error) throw error;
     if (!hearth) return badRequest("hearth not found");
 
-    const refusal = tokenLaunchRefusal(hearth as Hearth, isAdmin(req));
+    const refusal = tokenLaunchRefusal(hearth as Hearth, deps.isAdmin(req));
     if (refusal) {
       return NextResponse.json({ ok: false, error: refusal.error }, { status: refusal.status });
     }
@@ -48,6 +47,10 @@ export async function POST(req: NextRequest) {
     }
 
     const econ = ((hearth as Hearth).economic_config ?? {}) as Record<string, unknown>;
+    // A tx can only be recorded for a launch whose config was handed out (the lock).
+    if (typeof econ.token_launch_lock_at !== "string") {
+      return NextResponse.json({ ok: false, error: "No launch was prepared for this Hearth" }, { status: 409 });
+    }
     const { data: saved, error: upErr } = await supabase
       .from("hearths")
       .update({ economic_config: { ...econ, pending_deploy_tx: parsed.data.tx_hash } })

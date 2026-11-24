@@ -61,3 +61,19 @@ export function pendingDeployTx(hearth: { economic_config?: unknown }): string |
     ? econ.pending_deploy_tx
     : null;
 }
+
+// One-launch lock, taken when the config is requested (review round 2, item 3), not only
+// once a tx is sent. Held by the wallet that asked; the same wallet may refresh its
+// preview, another wallet waits until the lock is stale. Pure, so it is unit-tested.
+export const LAUNCH_LOCK_MS = 10 * 60 * 1000;
+export function launchLockRefusal(
+  hearth: { economic_config?: unknown },
+  wallet: string,
+  now: number,
+): DeployRefusal {
+  const econ = (hearth.economic_config ?? {}) as { token_launch_lock_at?: unknown; token_launch_lock_by?: unknown };
+  const at = typeof econ.token_launch_lock_at === "string" ? Date.parse(econ.token_launch_lock_at) : NaN;
+  const by = typeof econ.token_launch_lock_by === "string" ? econ.token_launch_lock_by.toLowerCase() : "";
+  if (!Number.isFinite(at) || now - at >= LAUNCH_LOCK_MS || by === wallet.toLowerCase()) return null;
+  return { status: 409, error: "Another wallet is preparing a launch for this Hearth. Try again in 10 minutes." };
+}

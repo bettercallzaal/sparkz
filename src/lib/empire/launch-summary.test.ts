@@ -1,9 +1,10 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { summarizeTokenConfig, tokenFromReceipt } from "./launch-summary";
+import { EMPIRE_FEE_WALLET, summarizeTokenConfig, tokenFromReceipt } from "./launch-summary";
 
 const me = "0x1111111111111111111111111111111111111111";
-const empire = "0x2222222222222222222222222222222222222222";
+const empire = EMPIRE_FEE_WALLET;
+const stranger = "0x2222222222222222222222222222222222222222";
 
 const config = {
   name: "Zoostr",
@@ -48,6 +49,51 @@ test("an unexplained third recipient blocks the launch", () => {
   };
   const s = summarizeTokenConfig(extra, { creator: me });
   assert.ok(s.problems.some((p) => p.includes("somewhere other")));
+});
+
+test("Empire's real split, creator 6000 + 2000 and Empire 2000, passes", () => {
+  const real = {
+    ...config,
+    rewards: {
+      recipients: [
+        { admin: me, recipient: me, bps: 6000 },
+        { admin: me, recipient: me, bps: 2000 },
+        { admin: empire, recipient: empire, bps: 2000 },
+      ],
+    },
+  };
+  const s = summarizeTokenConfig(real, { creator: me });
+  assert.deepEqual(s.problems, []);
+  assert.deepEqual(s.recipients.map((r) => r.pctOfTradingFees), [48, 16, 16]);
+});
+
+test("a stranger at 2000 bps instead of Empire is refused, with no wallet passed in (review round 2, item 1)", () => {
+  const swapped = {
+    ...config,
+    rewards: {
+      recipients: [
+        { admin: me, recipient: me, bps: 8000 },
+        { admin: stranger, recipient: stranger, bps: 2000 },
+      ],
+    },
+  };
+  const s = summarizeTokenConfig(swapped, { creator: me });
+  assert.ok(s.problems.some((p) => p.includes("neither you nor Empire")));
+  assert.ok(s.problems.some((p) => p.includes("Empire's fee share")));
+});
+
+test("a second recipient at 2000 bps next to Empire is refused", () => {
+  const extra = {
+    ...config,
+    rewards: {
+      recipients: [
+        { admin: me, recipient: me, bps: 6000 },
+        { admin: empire, recipient: empire, bps: 2000 },
+        { admin: stranger, recipient: stranger, bps: 2000 },
+      ],
+    },
+  };
+  assert.ok(summarizeTokenConfig(extra, { creator: me }).problems.length > 0);
 });
 
 test("shares that do not add to 10000 bps block the launch", () => {

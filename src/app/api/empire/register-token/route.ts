@@ -1,11 +1,10 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { getServiceClient } from "@/lib/supabase/server";
 import { empireRegisterTokenSchema } from "@/lib/validation/schemas";
 import { ok, badRequest, serverError, zodError, forbidCrossSite } from "@/lib/http";
-import { isAdmin, requireHearthOwner } from "@/lib/auth";
-import { registerTokenEmpire } from "@/lib/empire/client";
-import { tokenLaunchRefusal } from "@/lib/empire/deploy-guard";
+import { pendingDeployTx, tokenLaunchRefusal } from "@/lib/empire/deploy-guard";
+import { deployTxProblem } from "@/lib/empire/verify-deploy";
+import { launchDeps as deps } from "@/lib/empire/launch-deps";
 import type { Hearth } from "@/lib/supabase/types";
 
 // Step 3 of a token launch: the owner's wallet has deployed the Clanker token (step 2,
@@ -20,25 +19,40 @@ export async function POST(req: NextRequest) {
     const parsed = empireRegisterTokenSchema.safeParse(body);
     if (!parsed.success) return zodError(parsed.error);
 
-    const denied = await requireHearthOwner(req, parsed.data.hearth_id);
+    const denied = await deps.requireHearthOwner(req, parsed.data.hearth_id);
     if (denied) return denied;
 
-    const supabase = getServiceClient();
+    const supabase = deps.getServiceClient();
     const { data: hearth, error: hErr } = await supabase
       .from("hearths").select("*").eq("id", parsed.data.hearth_id).maybeSingle();
     if (hErr) throw hErr;
     if (!hearth) return badRequest("hearth not found");
 
-    const operator = isAdmin(req);
-    const refusal = tokenLaunchRefusal(hearth as Hearth, operator);
+    const refusal = tokenLaunchRefusal(hearth as Hearth, deps.isAdmin(req));
     if (refusal) {
       return NextResponse.json({ ok: false, error: refusal.error }, { status: refusal.status });
     }
 
-    // Single-launch claim, so two calls cannot both register a token. A tokenless empire
-    // may already be linked (graduation), so the claim keys on the token, not the empire.
+    const d = parsed.data;
     const econBefore = ((hearth as Hearth).economic_config ?? {}) as Record<string, unknown>;
-    if (!operator) {
+
+    // Only the launch this Hearth recorded, from the wallet that prepared it.
+    const pending = pendingDeployTx(hearth as Hearth);
+    if (pending && pending.toLowerCase() !== d.tx_hash.toLowerCase()) {
+      return NextResponse.json({ ok: false, error: "That is not the launch recorded for this Hearth" }, { status: 409 });
+    }
+    const lockBy = typeof econBefore.token_launch_lock_by === "string" ? econBefore.token_launch_lock_by : null;
+    if (lockBy && lockBy.toLowerCase() !== d.owner.toLowerCase()) {
+      return NextResponse.json({ ok: false, error: "That wallet did not prepare this launch" }, { status: 409 });
+    }
+
+    // Read the tx on Base here instead of trusting the browser (round 2, item 4).
+    const problem = deployTxProblem(await deps.readDeployTx(d.tx_hash), { owner: d.owner, baseToken: d.base_token });
+    if (problem) return NextResponse.json({ ok: false, error: problem }, { status: 409 });
+
+    // Single-launch claim for everyone, operator included (round 2, item 3), so two calls
+    // cannot both register a token. Keys on the token, not the empire (graduation).
+    {
       const { data: claimed, error: claimErr } = await supabase
         .from("hearths")
         .update({ economic_config: { ...econBefore, token_launch_claimed_at: new Date().toISOString() } })
@@ -55,10 +69,9 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const d = parsed.data;
     let empireAddress: string | null;
     try {
-      ({ empireAddress } = await registerTokenEmpire({
+      ({ empireAddress } = await deps.registerTokenEmpire({
         baseToken: d.base_token,
         name: d.name,
         owner: d.owner,
@@ -72,12 +85,13 @@ export async function POST(req: NextRequest) {
         telegram_url: d.telegram_url,
       }));
     } catch (empireErr) {
-      const msg = empireErr instanceof Error ? empireErr.message : "empire register failed";
-      console.error("[sparkz:empire.register-token] upstream:", msg);
-      if (!operator) {
-        await supabase.from("hearths").update({ economic_config: econBefore }).eq("id", d.hearth_id);
-      }
-      return badRequest(msg);
+      // Empire's own error text stays in the server log (round 2, item 5).
+      console.error("[sparkz:empire.register-token] upstream:", empireErr instanceof Error ? empireErr.message : empireErr);
+      await supabase.from("hearths").update({ economic_config: econBefore }).eq("id", d.hearth_id);
+      return NextResponse.json(
+        { ok: false, error: "Empire could not register the coin yet. The coin is on Base; press Finish launch to try again." },
+        { status: 502 },
+      );
     }
 
     const { data, error } = await supabase.from("hearths").update({

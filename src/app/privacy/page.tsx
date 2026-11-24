@@ -3,7 +3,7 @@ import Link from "next/link";
 import { canonicalOrigin } from "@/lib/origin";
 
 const BASE = canonicalOrigin();
-const UPDATED = "19 November 2026";
+const UPDATED = "24 November 2026";
 
 export const metadata: Metadata = {
   title: "Privacy - Sparkz",
@@ -21,7 +21,7 @@ const SECTIONS: { heading: string; body: string[] }[] = [
       "Email address, if you join the waitlist or start a Hearth with an email.",
       "Your Farcaster ID (FID) and public profile details such as username and avatar, if you sign in with Farcaster.",
       "Your wallet address, if you sign in with a wallet. We never see or store private keys.",
-      "What you put into a Hearth: its name, bio, links, tags, images you upload, and boosts or backing you record. Hearth pages are public, so treat this as public content.",
+      "What you put into a Hearth: its name, bio, links, tags, images you upload, and boosts or backing you record. Hearth pages are public, so treat this as public content. Anyone can look around Sparkz without signing in; boosting needs sign-in.",
       "A one-way hash of your IP address, used only to rate-limit actions like boosting. We do not store the IP itself.",
     ],
   },
@@ -57,8 +57,8 @@ const SECTIONS: { heading: string; body: string[] }[] = [
   {
     heading: "Removing your data",
     body: [
-      "Sparkz keeps no account. To remove what Sparkz stores about you, use Delete your Sparkz data on the Me page. It removes your team sign-ups, the reports you filed, the people you blocked, your name on Sparks you lit, and anything on Sparkz that links your boosts and backings (amount, provider and transaction) to you. Your on-chain records and your wallet stay as they are. Give any Hearth you own to someone, or put it to sleep, first.",
-      "For anything else, such as your waitlist entry or a Hearth you own, ask us and we will delete it. Open an issue on our GitHub, or message us on Farcaster.",
+      "Sparkz keeps no account. To remove what Sparkz stores about you, use Delete your Sparkz data on the Me page. It removes your team sign-ups, the reports you filed, the people you blocked, your name on Sparks you lit, the email and IP hash saved when you opened a Hearth, and anything on Sparkz that links your boosts and backings (amount, provider and transaction) to you. Your on-chain records and your wallet stay as they are. Give any Hearth you own to someone, or put it to sleep, first.",
+      "Some things are not tied to a sign-in, so the button cannot find them: your waitlist email, and boosts made before Sparkz asked you to sign in, where you typed a name or email instead. Send us a direct message on Farcaster with the email or name you used (and the Hearth, for a boost) and we will delete them. Please do not post your email in a public GitHub issue. The same goes for a Hearth you own: message us and we will remove it.",
     ],
   },
   {

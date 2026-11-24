@@ -148,6 +148,7 @@ export class Query<T = unknown> implements PromiseLike<DbResult<T>> {
   lt(col: string, v: unknown) { return this.cmp(col, "lt", v); }
   lte(col: string, v: unknown) { return this.cmp(col, "lte", v); }
   like(col: string, pattern: string) { return this.cmp(col, "like", pattern); }
+  ilike(col: string, pattern: string) { return this.cmp(col, "ilike", pattern); }
 
   is(col: string, v: null | boolean): this {
     const lit = v === null ? "NULL" : v ? "TRUE" : "FALSE";

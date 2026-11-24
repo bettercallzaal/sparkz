@@ -6,15 +6,16 @@ import { clientIpHash, boostCountInWindow, BOOST_LIMIT, BOOST_WINDOW_MS } from "
 import { isAdmin } from "@/lib/auth";
 import { sessionClaims } from "@/lib/session";
 import { ALPHA_CLOSED_MESSAGE, ALPHA_LOCK } from "@/lib/alpha-access";
-import { looksLikeVerifiedIdentity, SIGN_IN_FOR_IDENTITY } from "@/lib/backer-identity";
 
 // POST /api/boost - public "Boost this Hearth" (the boost engine): a free support
 // signal, not a payment. A signed-in backer boosts in one tap: the identity comes from
 // the session cookie (FID, or address for a wallet session), never from the body. Records a ledger backing of kind='boost', qty 1. Public
 // (not admin-gated). One boost per backer per Hearth (deduped). Dollar backing
 // comes later with the fiat/BYOK payment rails.
-// Exact error text the client matches to fall back to the email-or-handle input.
-const BACKER_REQUIRED = "backer required (sign in, or give an email or handle)";
+// Boosting needs sign-in (Zaal, ORD-465: anyone can view, boosting needs sign-in). A
+// signed-out boost used to store a typed name or email as the backer; that path is gone,
+// so no new backer_id is ever a name or an email.
+const SIGN_IN_TO_BOOST = "Sign in to boost";
 
 export async function POST(req: NextRequest) {
   const crossSite = forbidCrossSite(req);
@@ -38,15 +39,8 @@ export async function POST(req: NextRequest) {
       backerId = `fid:${claims.fid}`;
     } else if (claims?.address) {
       backerId = claims.address;
-    } else if (parsed.data.backer?.trim()) {
-      const typed = parsed.data.backer.trim().toLowerCase();
-      // Without a session a typed backer is a free-text name or email. It may not take the
-      // shape of a verified identity (fid:<n> or a wallet address), or anyone could boost as
-      // someone else and pre-empt that person's own boost through the dedupe.
-      if (looksLikeVerifiedIdentity(typed)) return badRequest(SIGN_IN_FOR_IDENTITY);
-      backerId = typed;
     } else {
-      return badRequest(BACKER_REQUIRED);
+      return NextResponse.json({ ok: false, error: SIGN_IN_TO_BOOST }, { status: 401 });
     }
     const supabase = getServiceClient();
 

@@ -1,4 +1,4 @@
-import { test, beforeEach } from "node:test";
+import { test, beforeEach, afterEach } from "node:test";
 import assert from "node:assert/strict";
 import { NextRequest } from "next/server";
 import { SESSION_COOKIE, mintSession, mintAddressSession } from "@/lib/session";
@@ -11,6 +11,10 @@ const ME = 7000;
 const OTHER = 8000;
 const THIRD = 9000;
 const WALLET = "0x" + "ab".repeat(20);
+// ME's own Farcaster record on the Hypersnap node (stubbed fetch below): its username and
+// the primary address it set. team_signups has no fid, so the delete matches through these.
+const MY_USERNAME = "me-name";
+const MY_PRIMARY = "0x" + "cd".repeat(20);
 const AWAKE = "11111111-1111-4111-8111-111111111111";
 const ASLEEP = "22222222-2222-4222-8222-222222222222";
 const THEIRS = "33333333-3333-4333-8333-333333333333";
@@ -19,13 +23,20 @@ const ROWS = 6; // hearth_backers rows in the fixture
 const PERSONAL = ["ip_hash", "owner_email", "email", "fid", "username", "fc_username", "wallet"];
 
 let tables: FakeTables;
+const realFetch = globalThis.fetch;
+let nodeDown = false;
+
+afterEach(() => {
+  globalThis.fetch = realFetch;
+  nodeDown = false;
+});
 
 beforeEach(() => {
   process.env.SPARKZ_SESSION_SECRET = KEY;
   tables = {
     hearths: [
       { id: AWAKE, slug: "mine-awake", name: "Mine awake", status: "spark", owner_fid: OTHER },
-      { id: ASLEEP, slug: "mine-asleep", name: "Mine asleep", status: "dormant", owner_fid: ME },
+      { id: ASLEEP, slug: "mine-asleep", name: "Mine asleep", status: "dormant", owner_fid: ME, metadata: { owner_email: "me@x.y", ip_hash: "hh", review: "approved", farcaster: { username: "mine" } } },
       { id: THEIRS, slug: "theirs", name: "Theirs", status: "spark", owner_fid: OTHER },
     ],
     hearth_backers: [
@@ -37,7 +48,15 @@ beforeEach(() => {
       { id: "p1", hearth_id: THEIRS, backer_kind: "fid", backer_id: `fid:${ME}`, kind: "backing", amount_or_qty: 25, unit: "USD", provider: "ledger", provider_ref: "inv-1", chain: null, metadata: { ip_hash: "h", email: "a@b.c", tier: "gold" } },
       { id: "p2", hearth_id: THEIRS, backer_kind: "wallet", backer_id: WALLET, kind: "collectable", amount_or_qty: 1, unit: "ZAO", provider: "clanker", provider_ref: "0x" + "ef".repeat(32), chain: "base", metadata: { fid: ME, edition: 3 } },
     ],
-    team_signups: [{ id: "t1", hearth_id: THEIRS, wallet: WALLET, name: "x" }],
+    team_signups: [
+      { id: "t1", hearth_id: THEIRS, wallet: WALLET, name: "x" },
+      // ME signed up with only a Farcaster session: by handle (typed in another case) and
+      // by its primary address.
+      { id: "t2", hearth_id: THEIRS, wallet: "0x" + "11".repeat(20), name: "me", handle: "Me-Name" },
+      { id: "t3", hearth_id: AWAKE, wallet: MY_PRIMARY, name: "me", handle: null },
+      // Someone else, whose handle only starts like ME's.
+      { id: "t4", hearth_id: THEIRS, wallet: "0x" + "22".repeat(20), name: "them", handle: "me-name-2" },
+    ],
     sparks: [
       { id: "s1", hearth_id: THEIRS, created_by_fid: ME, title: "lit by me" },
       { id: "s2", hearth_id: THEIRS, created_by_fid: OTHER, title: "lit by them" },
@@ -54,6 +73,19 @@ beforeEach(() => {
     ],
   };
   setServiceClientForTests(fakeClient(tables));
+  globalThis.fetch = (async (input: string | URL | Request) => {
+    if (nodeDown) throw new Error("node down");
+    const u = new URL(String(input instanceof Request ? input.url : input));
+    const fid = Number(u.searchParams.get("fid"));
+    const messages =
+      u.pathname.endsWith("/v1/userDataByFid") && fid === ME
+        ? [
+            { hash: "0x1", data: { type: "MESSAGE_TYPE_USER_DATA_ADD", fid, timestamp: 1, network: "x", userDataBody: { type: "USER_DATA_TYPE_USERNAME", value: MY_USERNAME } } },
+            { hash: "0x2", data: { type: "MESSAGE_TYPE_USER_DATA_ADD", fid, timestamp: 1, network: "x", userDataBody: { type: "USER_DATA_PRIMARY_ADDRESS_ETHEREUM", value: MY_PRIMARY.toUpperCase().replace("0X", "0x") } } },
+          ]
+        : [];
+    return new Response(JSON.stringify({ messages }), { status: 200, headers: { "content-type": "application/json" } });
+  }) as typeof fetch;
 });
 
 function req(opts: { fid?: number; address?: string; body?: unknown; crossSite?: boolean } = {}) {
@@ -134,7 +166,31 @@ test("a wallet session: its rows keep the wallet and lose personal metadata; tea
   assert.equal(p2?.backer_kind, "wallet");
   assert.deepEqual(p2?.metadata, { edition: 3 });
   assert.equal(tables.hearth_backers.find((b) => b.id === "b1")?.backer_id, `fid:${ME}`);
-  assert.equal(tables.team_signups.length, 0);
+  assert.deepEqual(tables.team_signups.map((t) => t.id), ["t2", "t3", "t4"]);
+});
+
+test("an FID session: Hearths it opened lose the email and IP hash saved at creation; the rest of the metadata stays", async () => {
+  const { POST } = await import("./route");
+  const res = await POST(req({ fid: ME }));
+  assert.equal(res.status, 200);
+  const asleep = tables.hearths.find((h) => h.id === ASLEEP);
+  assert.deepEqual(asleep?.metadata, { review: "approved", farcaster: { username: "mine" } });
+});
+
+test("an FID session (no wallet): team sign-ups matched by its Farcaster username and primary address go", async () => {
+  const { POST } = await import("./route");
+  const res = await POST(req({ fid: ME }));
+  assert.equal(res.status, 200);
+  assert.deepEqual(tables.team_signups.map((t) => t.id), ["t1", "t4"]);
+});
+
+test("an FID session with the Farcaster node down: the rest of the delete still runs", async () => {
+  nodeDown = true;
+  const { POST } = await import("./route");
+  const res = await POST(req({ fid: ME }));
+  assert.equal(res.status, 200);
+  assert.equal(tables.team_signups.length, 4);
+  assert.equal(tables.hearth_backers.find((b) => b.id === "b1")?.backer_id, "deleted:b1");
 });
 
 test("an FID session: its reports and blocks go; blocks others made of it stay", async () => {

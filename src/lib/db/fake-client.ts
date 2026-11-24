@@ -1,12 +1,27 @@
 // An in-memory stand-in for the service client, for route tests only (never imported by
 // app code). It answers the small supabase-js surface Sparkz routes use: from().select()
-// .eq().in().order().limit().single().maybeSingle(), insert(...).select().single(),
+// .eq().in().ilike().order().limit().single().maybeSingle(), insert(...).select().single(),
 // update(...).eq().select().single() and delete().eq(). Results are { data, error } like
 // the real client.
 type Row = Record<string, unknown>;
-type Filter = { col: string; op: "eq" | "in"; v: unknown };
+type Filter = { col: string; op: "eq" | "in" | "ilike"; v: unknown };
 
 export type FakeTables = Record<string, Row[]>;
+
+// A Postgres ILIKE pattern as a case-insensitive RegExp: % and _ are wildcards, and a
+// backslash makes the next character literal.
+function likeRegex(pattern: string): RegExp {
+  const lit = (ch: string) => ch.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  let out = "";
+  for (let i = 0; i < pattern.length; i++) {
+    const c = pattern[i];
+    if (c === "\\" && i + 1 < pattern.length) out += lit(pattern[++i]);
+    else if (c === "%") out += ".*";
+    else if (c === "_") out += ".";
+    else out += lit(c);
+  }
+  return new RegExp(`^${out}$`, "is");
+}
 
 class FakeQuery implements PromiseLike<{ data: unknown; error: null | { message: string } }> {
   private filters: Filter[] = [];
@@ -31,6 +46,7 @@ class FakeQuery implements PromiseLike<{ data: unknown; error: null | { message:
   delete(): this { this.mode = "delete"; return this; }
   eq(col: string, v: unknown): this { this.filters.push({ col, op: "eq", v }); return this; }
   in(col: string, v: unknown[]): this { this.filters.push({ col, op: "in", v }); return this; }
+  ilike(col: string, pattern: string): this { this.filters.push({ col, op: "ilike", v: likeRegex(pattern) }); return this; }
   order(col: string, opts?: { ascending?: boolean }): this { this.orderCol = col; this.asc = opts?.ascending ?? true; return this; }
   limit(n: number): this { this.limitN = n; return this; }
   single(): this { this.one = "single"; return this; }
@@ -38,7 +54,11 @@ class FakeQuery implements PromiseLike<{ data: unknown; error: null | { message:
 
   private match(r: Row): boolean {
     return this.filters.every((f) =>
-      f.op === "eq" ? r[f.col] === f.v : (f.v as unknown[]).includes(r[f.col]),
+      f.op === "eq"
+        ? r[f.col] === f.v
+        : f.op === "ilike"
+          ? typeof r[f.col] === "string" && (f.v as RegExp).test(r[f.col] as string)
+          : (f.v as unknown[]).includes(r[f.col]),
     );
   }
 

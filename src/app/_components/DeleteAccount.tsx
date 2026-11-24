@@ -71,7 +71,8 @@ export default function DeleteAccount() {
             <p className="mt-2 text-sm text-muted">
               Sparkz keeps no account. This removes what Sparkz stores about you: your team
               sign-ups, the reports you filed, the people you blocked, your name on any Spark you
-              lit, and anything on Sparkz that links your boosts and backings to you. Your
+              lit, the email and IP hash saved when you opened a Hearth, and anything on Sparkz
+              that links your boosts and backings to you. Your
               on-chain records and your wallet stay as they are. Hearths you own must be given to
               someone or put to sleep first. Your Farcaster account is not touched. This cannot
               be undone.

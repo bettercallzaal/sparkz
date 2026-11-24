@@ -119,8 +119,7 @@ export const linkEmpireSchema = z.object({
 
 export const boostSchema = z.object({
   hearth_id: z.string().uuid(),
-  // Email or handle. Optional: a signed-in backer is identified by the session instead.
-  backer: z.string().min(1).max(200).optional(),
+  // No backer field: boosting needs sign-in, and the session is the backer.
   // Unverified display hint for a signed-in Farcaster backer, stored in metadata
   // only; the session FID is the backer id and the dedupe key.
   fc_username: z

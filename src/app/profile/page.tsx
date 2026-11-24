@@ -9,6 +9,7 @@ import { SetupZaoButton } from "@/app/_components/AdminSetup";
 import Flame from "@/app/_components/Flame";
 import YourSparks from "@/app/_components/YourSparks";
 import HypersnapSigner from "@/app/_components/HypersnapSigner";
+import DeleteAccount from "@/app/_components/DeleteAccount";
 import {
   currentFid,
   exchangeSiwf,
@@ -124,6 +125,7 @@ export default function ProfilePage() {
             New Hearth
           </Link>
           <SignOutLink onDone={() => setServerFid(null)} />
+          <DeleteAccount />
         </section>
       ) : !isAuthenticated ? (
         <section className="glass p-5">
@@ -201,6 +203,7 @@ export default function ProfilePage() {
             </p>
           )}
           <SignOutLink onDone={() => setServerFid(null)} />
+          <DeleteAccount />
         </section>
       )}
 

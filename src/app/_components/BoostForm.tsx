@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useViewer, useViewerProfile } from "@/lib/view-as";
 import JoinForm from "./JoinForm";
@@ -8,29 +9,27 @@ import Flame from "./Flame";
 import { useToast } from "./toast";
 import { haptic } from "@/lib/native";
 
-// Boost a Hearth. Signed in with Farcaster: one tap, as you (the server reads the
-// session). Signed out, or if the server has no session for you: an email or handle.
+// Boost a Hearth. Signed in: one tap, as you (the server reads the session). Boosting
+// needs sign-in (Zaal, ORD-465), so signed out, or when the server has no session for
+// you, it asks you to sign in on the Me page.
 export default function BoostForm({ hearthId }: { hearthId: string }) {
   const router = useRouter();
   const toast = useToast();
   const { isAuthenticated, profile } = useViewerProfile();
-  const [backer, setBacker] = useState("");
-  const [needsBacker, setNeedsBacker] = useState(false);
+  const [needsSignIn, setNeedsSignIn] = useState(false);
   const [state, setState] = useState<"idle" | "busy" | "done" | "error">("idle");
 
   const { ready, writesOpen } = useViewer();
   // One tap for any signed-in backer: the server takes the identity from the session
   // cookie. On the session alone (app reopened, auth-kit empty) there is a FID but no
   // username yet (lib/session-profile.ts).
-  const oneTap = isAuthenticated && !!(profile?.username || profile?.fid) && !needsBacker;
+  const oneTap = isAuthenticated && !!(profile?.username || profile?.fid) && !needsSignIn;
 
   const boost = async () => {
-    if (!oneTap && !backer.trim()) return;
+    if (!oneTap) return;
     setState("busy");
     try {
-      const body = oneTap
-        ? { hearth_id: hearthId, ...(profile?.username ? { fc_username: profile.username } : {}) }
-        : { hearth_id: hearthId, backer: backer.trim() };
+      const body = { hearth_id: hearthId, ...(profile?.username ? { fc_username: profile.username } : {}) };
       const res = await fetch("/api/boost", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -42,9 +41,9 @@ export default function BoostForm({ hearthId }: { hearthId: string }) {
         void haptic("success");
         toast("Boost sent - you're backing the work now.");
         router.refresh();
-      } else if (oneTap && res.status === 400 && String(json.error ?? "").startsWith("backer required")) {
-        // Signed in on the client but no server session: ask the old way.
-        setNeedsBacker(true);
+      } else if (res.status === 401) {
+        // Signed in on the client but no server session: ask them to sign in again.
+        setNeedsSignIn(true);
         setState("idle");
       } else {
         setState("error");
@@ -95,24 +94,11 @@ export default function BoostForm({ hearthId }: { hearthId: string }) {
   }
 
   return (
-    <div className="flex flex-col gap-2 sm:flex-row">
-      <input
-        value={backer}
-        onChange={(e) => setBacker(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && backer.trim() && boost()}
-        placeholder="your email or handle"
-        className="min-h-11 flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-accent"
-      />
-      <button
-        onClick={boost}
-        disabled={state === "busy" || !backer.trim()}
-        className="btn-spark min-h-11 rounded-md px-5 py-2 text-sm disabled:opacity-40"
-      >
-        {state === "busy" ? "Boosting..." : "Boost"}
-      </button>
-      {state === "error" && (
-        <span className="self-center text-xs text-red-400">try again</span>
-      )}
-    </div>
+    <p className="text-sm text-muted">
+      <Link href="/profile" className="text-accent-3 hover:underline">
+        Sign in
+      </Link>{" "}
+      to boost this Hearth. Anyone can look around without signing in.
+    </p>
   );
 }

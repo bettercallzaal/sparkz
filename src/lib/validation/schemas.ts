@@ -283,4 +283,36 @@ export const unblockSchema = z
   .object({ blocked_id: z.string().regex(IDENTITY_PATTERN, "not a Sparkz identity") })
   .strict();
 
+// Token launch through Empire (Clanker v4). Step 1: ask Empire for the tokenConfig.
+export const empireTokenConfigSchema = z.object({
+  hearth_id: z.string().uuid(),
+  name: z.string().min(1).max(100),
+  symbol: z.string().regex(/^[A-Za-z0-9]{1,12}$/),
+  image_url: httpsUrl,
+  creator: z.string().regex(/^0x[a-fA-F0-9]{40}$/),
+  vault_percentage: z.number().int().min(0).max(90).optional(),
+  vault_days: z.number().int().min(7).max(3650).optional(),
+  description: z.string().max(2000).optional(),
+  twitter_url: httpsUrl.optional(),
+  farcaster_url: httpsUrl.optional(),
+  website_url: httpsUrl.optional(),
+  telegram_url: httpsUrl.optional(),
+});
+
+// Step 3: after the owner's wallet deployed the token, register its empire.
+export const empireRegisterTokenSchema = z.object({
+  hearth_id: z.string().uuid(),
+  base_token: z.string().regex(/^0x[a-fA-F0-9]{40}$/),
+  tx_hash: z.string().regex(/^0x[a-fA-F0-9]{64}$/),
+  owner: z.string().regex(/^0x[a-fA-F0-9]{40}$/),
+  name: z.string().min(1).max(100),
+  symbol: z.string().regex(/^[A-Za-z0-9]{1,12}$/),
+  logo_uri: httpsUrl.optional(),
+  bio: z.string().max(2000).optional(),
+  website_url: httpsUrl.optional(),
+  twitter_url: httpsUrl.optional(),
+  farcaster_url: httpsUrl.optional(),
+  telegram_url: httpsUrl.optional(),
+});
+
 export { recordBountySchema, hearthBountyQuery } from "@/lib/poidh/schemas";

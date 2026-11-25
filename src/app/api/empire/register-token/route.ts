@@ -36,9 +36,16 @@ export async function POST(req: NextRequest) {
     const d = parsed.data;
     const econBefore = ((hearth as Hearth).economic_config ?? {}) as Record<string, unknown>;
 
-    // Only the launch this Hearth recorded, from the wallet that prepared it.
+    // Only the launch this Hearth recorded in token-pending. No recorded tx means nothing
+    // to register, so it is refused rather than skipped (post-merge review of #430).
     const pending = pendingDeployTx(hearth as Hearth);
-    if (pending && pending.toLowerCase() !== d.tx_hash.toLowerCase()) {
+    if (!pending) {
+      return NextResponse.json(
+        { ok: false, error: "No launch is recorded for this Hearth. Send the launch from the coin page first." },
+        { status: 409 },
+      );
+    }
+    if (pending.toLowerCase() !== d.tx_hash.toLowerCase()) {
       return NextResponse.json({ ok: false, error: "That is not the launch recorded for this Hearth" }, { status: 409 });
     }
     // The wallet named here must be the one that took the launch lock in token-config
@@ -52,8 +59,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: false, error: "That wallet did not prepare this launch" }, { status: 409 });
     }
 
-    // Read the tx on Base here instead of trusting the browser (round 2, item 4).
-    const problem = deployTxProblem(await deps.readDeployTx(d.tx_hash), { owner: d.owner, baseToken: d.base_token });
+    // Read the tx on Base here instead of trusting the browser (round 2, item 4). tx.from must
+    // be the wallet that holds the launch lock (the wallet recorded for this launch; the
+    // pending tx itself stores only the hash), not the browser's word for it.
+    const problem = deployTxProblem(await deps.readDeployTx(d.tx_hash), { owner: lockBy, baseToken: d.base_token });
     if (problem) return NextResponse.json({ ok: false, error: problem }, { status: 409 });
 
     // Single-launch claim for everyone, operator included (round 2, item 3), so two calls

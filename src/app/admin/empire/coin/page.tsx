@@ -605,8 +605,8 @@ function LaunchReview({ p, owner }: { p: Preview; owner: string }) {
       <div className="mt-2 space-y-1 text-xs text-muted">
         <p>Where these numbers come from:</p>
         <p>
-          Clanker {s.clankerPct}%: the protocolFee() setting on the Clanker v4 fee hooks, read on Base
-          mainnet on 24 Nov 2026.
+          Clanker {s.clankerPct}%: a configured value in Sparkz (CLANKER_PROTOCOL_BPS in
+          launch-summary.ts), not a live read from Base.
         </p>
         <p>
           The recipient shares: the coin setup Empire Builder returned for this launch, read{" "}

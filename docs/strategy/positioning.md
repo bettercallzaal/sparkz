@@ -5,7 +5,7 @@
 Sparkz is an experiment with **open-source builders, humans and agents**. The question:
 what is the best way to tokenize a pull request, for an agent or a human, and allocate
 contribution credit properly? The first answer we test is **the Respect Game** (ZAO
-Fractal): contributors are peer-ranked in a fractal and earn Respect, and Respect is the
+Fractal): contributors are peer-ranked in a fractal and receive Respect, and Respect is the
 record of who built what.
 
 Sparkz is public and open source (Apache-2.0). The infra is meant to stay free or close
@@ -17,7 +17,7 @@ the code (anyone can fork the code).
 Sparkz is The ZAO's home for ZAO projects. It is not a platform for projects outside The
 ZAO. Any other collective can fork the code and make their own. To add a ZAO project
 here: join The ZAO, then propose it. Joining The ZAO means coming to a fractal,
-introducing yourself, and earning Respect. Zaal approves every Hearth owner for now; a
+introducing yourself, and receiving Respect. Zaal approves every Hearth owner for now; a
 council will be elected to take this over. Copy follows the plain pitch: every project
 gets a Hearth (its story, its people, a record of everyone who pitched in); fans back and
 boost; Sparks bring people in; every bit of help is recorded so early helpers get credit;
@@ -41,7 +41,7 @@ The first open-source Hearth is the Sparkz repo itself.
 
 ## What gets tokenized
 
-- **Respect first.** Respect is earned, peer-ranked and soulbound. It is never sold.
+- **Respect first.** Respect is given by peers, peer-ranked and soulbound. It is never sold.
 - A project token stays optional, opt-in and later. It is not the reward for a PR and not
   the pitch.
 - Bounties (poidh) fund issues. A bounty pays for work done; it is not a share in
@@ -63,11 +63,11 @@ specifics stay in the private lab, never this public repo.
 - No "community stake" language without legal review.
 - Token / stake upside is **option value only** - never counted as operating revenue,
   never the pitch.
-- Respect is earned, never bought or sold.
+- Respect is given by peers, never bought or sold.
 
 ## Receipts are the asset
 
-A receipt is proof of what a piece of work *earned* - not a log that something was
+A receipt is proof of what a piece of work *produced* - not a log that something was
 approved. For a PR that is the merge, the review grade, the issue closed and the Respect
 given. The compounding contribution record is the moat; the landing page is not.
 
@@ -79,8 +79,9 @@ The ZAO join through a fractal first.
 
 ## First experiment
 
-The Sparkz repo as its own open-source Hearth: merged PRs become contribution records,
-a poidh bounty can fund an issue, and contributors earn Respect through the Respect Game.
+Planned, not built yet. The Sparkz repo as its own open-source Hearth: merged PRs become
+contribution records, a poidh bounty can fund an issue, and contributors receive Respect
+through the Respect Game.
 Creator, Culture and Meme Engine Hearths stay supported but are not the target.
 
 ## Metrics that matter

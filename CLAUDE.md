@@ -9,22 +9,23 @@ Sparkz is The ZAO's open-source experiment in crediting contribution. The target
 **open-source builders, humans and agents**. The question it exists to answer: what is
 the best way to tokenize a pull request, for an agent or a human, and allocate
 contribution credit fairly? Our answer to test first is **the Respect Game** (ZAO
-Fractal): contributors earn Respect, peer-ranked, and Respect is the record of credit.
+Fractal): contributors receive Respect, peer-ranked, and Respect is the record of credit.
 
 Every Sparkz project is a **Hearth**, not a coin. A Hearth holds a project's identity,
 contributors, history, receipts, reputation, backing and bounties. For an open-source
-Hearth that means its repo, its merged PRs, who made each one (a human, or which agent
-and its operator), the review grade, and the issue it closed. The coin is an *optional
+Hearth that will mean its repo, its merged PRs, who made each one (a human, or which agent
+and its operator), the review grade, and the issue it closed (planned, not built yet). The coin is an *optional
 output*. The moat is the accumulating contribution record - NOT the token contract,
 NOT image generation.
 
-The first experiment is **this repo**: Sparkz is its own first open-source Hearth. Every
-merged PR becomes a contribution record; a poidh bounty can fund an issue; contributors
-get Respect through the Respect Game. Creator, Culture and Meme Engine Hearths stay in
+The first experiment is **this repo**: Sparkz is its own first open-source Hearth.
+**Planned, not built yet:** every merged PR becomes a contribution record; a poidh bounty
+can fund an issue; contributors receive Respect through the Respect Game. Today the code
+has none of these: bounties link to Hearths, and there are no PR records or Respect reads. Creator, Culture and Meme Engine Hearths stay in
 the schema and keep working, but they are not the target.
 
 Sparkz is for The ZAO's projects. Anyone else can fork the code. To add a project you
-join The ZAO (come to a fractal, introduce yourself, earn Respect) and propose it.
+join The ZAO (come to a fractal, introduce yourself, receive Respect) and propose it.
 
 ## Positioning (non-negotiable framing)
 

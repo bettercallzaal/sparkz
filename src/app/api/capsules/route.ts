@@ -3,6 +3,9 @@ import { getServiceClient } from "@/lib/supabase/server";
 import { createHearthSchema } from "@/lib/validation/schemas";
 import { ok, serverError, zodError, forbidCrossSite } from "@/lib/http";
 import { requireAdmin } from "@/lib/auth";
+import { sessionClaims } from "@/lib/session";
+import { blockedOwners } from "@/lib/blocks-server";
+import { withoutBlocked } from "@/lib/moderation";
 import { publicHearth, PUBLIC_REVIEW_FILTER } from "@/lib/sanitize";
 import type { Hearth } from "@/lib/supabase/types";
 
@@ -39,12 +42,13 @@ export async function GET(req: NextRequest) {
       return ok(data);
     }
 
-    // Public list: only unreviewed + approved (hides pending AND rejected), and
+    // Public list: only unreviewed + approved (hides pending AND rejected), without the
+    // Hearths of anyone the viewer blocked (migration 0009, as /api/directory), and
     // strip PII from metadata before it leaves the server.
     query = query.or(PUBLIC_REVIEW_FILTER);
-    const { data, error } = await query;
+    const [{ data, error }, blocked] = await Promise.all([query, blockedOwners(sessionClaims(req))]);
     if (error) throw error;
-    return ok(((data as Hearth[]) ?? []).map(publicHearth));
+    return ok(withoutBlocked((data as Hearth[]) ?? [], blocked).map(publicHearth));
   } catch (err) {
     return serverError(err, "hearths.GET");
   }

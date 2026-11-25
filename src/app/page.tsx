@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { loadPublicHearths } from "@/lib/public-hearths";
 import { viewerBlockedOwners } from "@/lib/blocks-viewer";
-import { isBlockedHearth } from "@/lib/moderation";
+import { withoutBlocked } from "@/lib/moderation";
 import { pickShowcase } from "@/lib/showcase";
 import JoinForm from "./_components/JoinForm";
 import JoinTeamForm from "./_components/JoinTeamForm";
@@ -34,7 +34,7 @@ const GOALS = [
 export default async function Home() {
   // Hearths owned by someone the viewer blocked are left out (migration 0009).
   const [hearths, blocked] = await Promise.all([loadPublicHearths(), viewerBlockedOwners()]);
-  const { featured, others } = pickShowcase(hearths.filter((h) => !isBlockedHearth(h, blocked)));
+  const { featured, others } = pickShowcase(withoutBlocked(hearths, blocked));
   const betaUrl = iosBetaUrl();
 
   return (

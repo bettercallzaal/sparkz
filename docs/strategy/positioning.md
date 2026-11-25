@@ -1,59 +1,58 @@
-# Sparkz positioning: OSS monetization, not SaaS
+# Sparkz positioning: crediting open-source contribution
 
-## The frame
+## The target
 
-Sparkz is public and OSS-first. The moat is the accumulating Hearth + Meme Receipt
-data - **not** the token, and **not** the code (anyone can fork the code). So Sparkz
-monetizes like a protocol and a data network, not like a per-seat SaaS: it earns on the
-value that flows through the rails it enables, and on the receipts graph that compounds
-with use. A managed-pilot service is how we *bootstrap the network*, not the business.
+Sparkz is an experiment with **open-source builders, humans and agents**. The question:
+what is the best way to tokenize a pull request, for an agent or a human, and allocate
+contribution credit properly? The first answer we test is **the Respect Game** (ZAO
+Fractal): contributors are peer-ranked in a fractal and earn Respect, and Respect is the
+record of who built what.
 
-Provenance: an external commercial audit (2026-07-22) recommended a NARROW, service-led
-validation wedge and scored the opportunity on SaaS metrics (ARPA, churn, CAC payback,
-retained paying Hearths). We take its near-term wedge as a bootstrap. The positioning
-below is the OSS-monetization thesis that lens under-weights. The commercial specifics
-it produced - pricing bands, the financial model, revenue targets - are kept in the
-private lab, not this public repo.
+Sparkz is public and open source (Apache-2.0). The infra is meant to stay free or close
+to it. The moat is the accumulating contribution record - **not** the token, and **not**
+the code (anyone can fork the code).
 
 ## Whose home it is
 
 Sparkz is The ZAO's home for ZAO projects. It is not a platform for projects outside The
-ZAO. The code is open source (Apache-2.0), so any other collective can fork it and make
-their own. To add a ZAO project here: join The ZAO, then propose it. Zaal approves every
-Hearth owner. Copy follows the plain pitch: every project gets a Hearth (its story, its
-people, a record of everyone who pitched in); fans back and boost; Sparks bring people in;
-every bit of help is recorded so early helpers get credit; crypto is optional rails.
+ZAO. Any other collective can fork the code and make their own. To add a ZAO project
+here: join The ZAO, then propose it. Joining The ZAO means coming to a fractal,
+introducing yourself, and earning Respect. Zaal approves every Hearth owner for now; a
+council will be elected to take this over. Copy follows the plain pitch: every project
+gets a Hearth (its story, its people, a record of everyone who pitched in); fans back and
+boost; Sparks bring people in; every bit of help is recorded so early helpers get credit;
+crypto is optional rails.
 
 ## What Sparkz is (one line)
 
-The open, Farcaster-native home where a project starts with a spark, not a coin - and the
-receipts of what its work earned compound into a proof layer the whole ecosystem can
-build on.
+The open home where The ZAO's projects start with a spark, not a coin - and every
+contribution, from a human or an agent, is recorded and credited through Respect.
 
-## How Sparkz monetizes (OSS-native)
+## What a contribution record is
 
-1. **Flow, not seats.** A small cut of value moving through the rails Sparkz enables -
-   graduations routed to token/treasury rails (Clanker / Empire interface-partner
-   economics), backing / boost / bounty flows. This scales with the *network*, not with
-   headcount. A SaaS charges for access; a protocol earns on the value it moves.
-2. **The receipts graph as infrastructure.** Meme Receipts measure *outcomes* (reach,
-   referrals, backing generated) and accumulate into a public, verifiable attribution +
-   reputation layer. Because it is open and network-owned, it is a moat that deepens with
-   use - and a service other apps query and build on, not a private CRM we rent out.
-3. **Open-core hosting.** The code is free to fork and self-host; value concentrates in
-   the hosted network - shared receipts, Meme Engine ops, the ZAO trust layer. Sparkz
-   wins by being the canonical hub everyone routes through, not by gating logins.
-4. **Aligned ownership.** OSS-native upside sharing (ZOLs, the ZAO estate) instead of
-   extracting subscriptions from creators - the social contract that actually fits "back
-   the album, not buy a coin."
+For an open-source Hearth, each merged pull request becomes a record:
 
-## The bootstrap (take this from the audit)
+- who made it: a human, or an agent and the human who runs it (its operator);
+- what review it passed (the evaluator's grade at the merged head);
+- which issue it closed, and whether a bounty funded that issue;
+- what Respect it led to, once the fractal has ranked it.
 
-Seed the network with done-with-you managed pilots: package a real project into a
-Hearth, run one human-approved Farcaster distribution loop, collect backers / boosts /
-receipts, and hand back a sponsor- and customer-ready **proof report**. This proves the
-loop and produces the first real receipts. It is the on-ramp, not the identity.
-(Pricing and the revenue model live in the private lab.)
+The first open-source Hearth is the Sparkz repo itself.
+
+## What gets tokenized
+
+- **Respect first.** Respect is earned, peer-ranked and soulbound. It is never sold.
+- A project token stays optional, opt-in and later. It is not the reward for a PR and not
+  the pitch.
+- Bounties (poidh) fund issues. A bounty pays for work done; it is not a share in
+  anything.
+
+## How Sparkz is sustained
+
+Sparkz is not a business on the rails. It does not take a cut of flows, and it is not
+priced per seat. It runs on near-free infra, and its value is the public, verifiable
+record of contribution that The ZAO and others can read and build on. Any commercial
+specifics stay in the private lab, never this public repo.
 
 ## Hard rules (legal-safe, non-negotiable)
 
@@ -64,40 +63,34 @@ loop and produces the first real receipts. It is the on-ramp, not the identity.
 - No "community stake" language without legal review.
 - Token / stake upside is **option value only** - never counted as operating revenue,
   never the pitch.
+- Respect is earned, never bought or sold.
 
-## Meme Receipts are the asset
+## Receipts are the asset
 
-A receipt is proof of what a moment *earned* - not a log that a post was approved.
-Measure outcomes. The compounding receipts graph is the moat; the landing page is not.
+A receipt is proof of what a piece of work *earned* - not a log that something was
+approved. For a PR that is the merge, the review grade, the issue closed and the Respect
+given. The compounding contribution record is the moat; the landing page is not.
 
-## ZABAL Gamez is the testbed + funnel
+## ZABAL Gamez is a testbed
 
-1. A builder submits a project or bounty claim.
-2. ZABAL highlights top projects weekly.
-3. Sparkz offers "turn this into a Hearth" for finalists / high-signal projects.
-4. The Hearth captures identity, backers, boosts, receipts, and the Farcaster link.
-5. A sponsor funds a bounty or boost pool.
-6. Sparkz produces a post-campaign receipt report.
-7. Repeat for the next cohort.
+A builder submits a project or bounty claim; top projects are highlighted; a ZAO project
+can become a Hearth; contributions are recorded and credited. Builders who are not yet in
+The ZAO join through a fractal first.
 
-## First projects (warm pool)
+## First experiment
 
-Zoostr, CoCConcertZ, wwbase (WaveWarZ Base), ZLANK, ZAOOS, a ZABAL Gamez finalist, a
-POIDH bounty-heavy creator, and a sponsor-funded ecosystem partner.
+The Sparkz repo as its own open-source Hearth: merged PRs become contribution records,
+a poidh bounty can fund an issue, and contributors earn Respect through the Respect Game.
+Creator, Culture and Meme Engine Hearths stay supported but are not the target.
 
-## Metrics that matter (network, not SaaS)
+## Metrics that matter
 
-Hearths created, receipts accumulated, value flowed through the rails, graduations
-routed, forks / integrations, repeat backers. Not ARPA and churn.
-
-## The one product gap to close first
-
-A production cheap-model path (`OPENROUTER_API_KEY` or equivalent) so the Meme Engine
-produces real drafts, not fallback stubs. This is the gate to running any real pilot loop.
+Merged PRs recorded, contributors credited (humans and agents), issues closed through
+bounties, Respect given for Sparkz work, new contributors who joined through a fractal,
+forks. Not subscriptions, and not value moved through the rails.
 
 ## What we do NOT do
 
-- No token-first business. No per-seat SaaS identity. No broad build before the loop is
-  proven with a real project.
-- No new architecture until a real pilot uses the current loop.
+- No token-first business. No per-seat SaaS. No cut of flows as the model.
+- No broad build before the contribution loop is proven on the Sparkz repo.
 - No pitch that depends on token upside.

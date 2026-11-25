@@ -1,6 +1,6 @@
--- DRAFT, kept as .sql.draft so scripts/db-migrate.sh (which globs *.sql) never applies it. To ship:
--- Zaal approves, run it on a scratch Neon branch, then rename to 0010_hearth_bounties.sql in its own
--- held PR (merging a .sql file IS the Production apply, .github/workflows/db.yml).
+-- hearth_bounties (poidh bounties on a Hearth). Applied by .github/workflows/db.yml when this
+-- file merged to main (it was held as a .sql.draft until then). Additive and safe to re-run:
+-- tested on a fresh local Postgres (0001 to 0010, then 0010 again as a no-op).
 --
 -- hearth_bounties: links a poidh bounty on Base to a Hearth (a bounty is a Spark
 -- opportunity on the Hearth). The money and the bounty text live on-chain in poidh's

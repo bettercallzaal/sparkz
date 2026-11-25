@@ -400,7 +400,11 @@ export default async function HearthPage({
             label: "About",
             content: (
               <>
-                {tokenSpark && <TokenSparkPanel meta={tokenSpark} />}
+                {tokenSpark && (
+                  <div className="web-only">
+                    <TokenSparkPanel meta={tokenSpark} />
+                  </div>
+                )}
 
                 {econ.empire_id && (
                   <section className="mb-8">

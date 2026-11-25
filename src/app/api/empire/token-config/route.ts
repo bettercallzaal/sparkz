@@ -50,11 +50,12 @@ export async function POST(req: NextRequest) {
     const locked = launchLockRefusal(hearth as Hearth, wallet, now);
     if (locked) return NextResponse.json({ ok: false, error: locked.error }, { status: locked.status });
     const econ = ((hearth as Hearth).economic_config ?? {}) as Record<string, unknown>;
+    const lockAt = new Date(now).toISOString();
     const prevAt = typeof econ.token_launch_lock_at === "string" ? econ.token_launch_lock_at : null;
     let claim = supabase
       .from("hearths")
       .update({
-        economic_config: { ...econ, token_launch_lock_at: new Date(now).toISOString(), token_launch_lock_by: wallet },
+        economic_config: { ...econ, token_launch_lock_at: lockAt, token_launch_lock_by: wallet },
       })
       .eq("id", d.hearth_id)
       .is("economic_config->>pending_deploy_tx", null);
@@ -68,6 +69,22 @@ export async function POST(req: NextRequest) {
         { status: 409 },
       );
     }
+
+    // Empire failed or its config was refused: nothing was handed out, so give the lock back
+    // (compare-and-set on the lock we just took) and a retry is not blocked for 10 minutes.
+    const releaseLock = async () => {
+      const rest = { ...econ };
+      delete rest.token_launch_lock_at;
+      delete rest.token_launch_lock_by;
+      const { error: relErr } = await supabase
+        .from("hearths")
+        .update({ economic_config: rest })
+        .eq("id", d.hearth_id)
+        .eq("economic_config->>token_launch_lock_at", lockAt)
+        .is("economic_config->>pending_deploy_tx", null)
+        .select("id");
+      if (relErr) console.error("[sparkz:empire.token-config] lock release failed:", relErr.message);
+    };
 
     let tokenConfig: unknown;
     try {
@@ -89,6 +106,7 @@ export async function POST(req: NextRequest) {
     } catch (empireErr) {
       // Empire's own error text stays in the server log (round 2, item 5).
       console.error("[sparkz:empire.token-config] upstream:", empireErr instanceof Error ? empireErr.message : empireErr);
+      await releaseLock();
       return NextResponse.json(
         { ok: false, error: "Empire could not build the launch right now. Nothing was sent. Try again in a minute." },
         { status: 502 },
@@ -100,6 +118,7 @@ export async function POST(req: NextRequest) {
     const problems = tokenConfigRefusals(tokenConfig, d.creator);
     if (problems.length > 0) {
       console.error("[sparkz:empire.token-config] refused config:", problems);
+      await releaseLock();
       return NextResponse.json(
         { ok: false, error: `Sparkz refused Empire's launch config: ${problems.join("; ")}` },
         { status: 502 },

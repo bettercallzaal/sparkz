@@ -1,8 +1,10 @@
 import { test, beforeEach, afterEach } from "node:test";
 import assert from "node:assert/strict";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { launchDeps } from "@/lib/empire/launch-deps";
 import { EMPIRE_FEE_WALLET } from "@/lib/empire/launch-summary";
+import { SESSION_COOKIE, mintSession } from "@/lib/session";
+import { setServiceClientForTests } from "@/lib/supabase/server";
 
 // Route tests for the token launch (review round 2, item 6): not the owner, refused
 // Hearth, bad input, Empire down, and a double launch. Outside calls are faked through
@@ -72,7 +74,9 @@ beforeEach(() => {
   empireCalls = 0;
   Object.assign(launchDeps, {
     requireHearthOwner: async () => null,
-    isAdmin: () => false,
+    // Token launch is operator-only for now, so the default caller here is the operator.
+    // The tests that call useRealAuth() use real sessions and the real admin check instead.
+    isAdmin: () => true,
     getServiceClient: () => db.client,
     getTokenConfig: async () => {
       empireCalls++;
@@ -94,10 +98,28 @@ beforeEach(() => {
 });
 afterEach(() => {
   Object.assign(launchDeps, saved);
+  setServiceClientForTests(null);
 });
 
 const req = (path: string, body: unknown) =>
   new NextRequest(`https://trysparkz.com${path}`, { method: "POST", body: JSON.stringify(body) });
+
+// Real sessions and the real auth checks: the owner gate and the admin check run as in
+// production, reading the fake database through setServiceClientForTests.
+const SESSION_KEY = "test-only-session-secret-0123456789abcdef"; // throwaway, never a real secret
+const OWNER_FID = 1; // owner_fid of the fake Hearth, not an admin fid
+const OPERATOR_FID = 19640; // in ADMIN_FIDS
+function useRealAuth() {
+  process.env.SPARKZ_SESSION_SECRET = SESSION_KEY;
+  setServiceClientForTests(db.client);
+  Object.assign(launchDeps, { requireHearthOwner: saved.requireHearthOwner, isAdmin: saved.isAdmin });
+}
+const sessionReq = (path: string, body: unknown, fid: number) =>
+  new NextRequest(`https://trysparkz.com${path}`, {
+    method: "POST",
+    body: JSON.stringify(body),
+    headers: { cookie: `${SESSION_COOKIE}=${mintSession(fid)}` },
+  });
 const configBody = (creator = ME) => ({
   hearth_id: HEARTH,
   name: "Zoostr",
@@ -287,13 +309,11 @@ test("register: tx.from that differs from the lock holder is refused", async () 
   assert.equal(econ().token_address, undefined);
 });
 
-// Round 3: a signed-in wallet that is not the Hearth's owner gets 403 from the owner gate, and the
-// route does nothing after it (no chain read, no Empire call, no claim). The gate is stubbed here
-// because requireHearthOwner reads the database through its own import, not through launchDeps;
-// the stub returns the gate's own non-owner answer.
-test("register: a signed-in non-owner gets 403 from the owner gate, before any chain or Empire call", async () => {
-  launchDeps.requireHearthOwner = async () =>
-    NextResponse.json({ ok: false, error: "Only this Hearth's owner can do that" }, { status: 403 });
+// Round 3: a signed-in user who is not the Hearth's owner gets 403 from the REAL owner gate
+// (requireHearthOwner and isAdmin from src/lib/auth.ts, a real session cookie for another fid,
+// the fake database injected with setServiceClientForTests), and the route does nothing after it.
+test("register: a signed-in non-owner gets 403 from the real owner gate, before any chain or Empire call", async () => {
+  useRealAuth();
   db.state.hearth.economic_config = { pending_deploy_tx: TX, token_launch_lock_by: ME.toLowerCase() };
   let reads = 0;
   launchDeps.readDeployTx = async () => {
@@ -301,8 +321,9 @@ test("register: a signed-in non-owner gets 403 from the owner gate, before any c
     return { found: true, status: "success", from: ME, to: FACTORY, logs: [] };
   };
   const { POST } = await import("./register-token/route");
-  const res = await POST(req("/api/empire/register-token", registerBody()));
+  const res = await POST(sessionReq("/api/empire/register-token", registerBody(), OWNER_FID + 1));
   assert.equal(res.status, 403);
+  assert.equal((await res.json()).error, "Only this Hearth's owner can do that");
   assert.equal(reads, 0);
   assert.equal(empireCalls, 0);
   assert.equal(econ().token_address, undefined);
@@ -364,3 +385,96 @@ for (const [name, path, body] of [
     assert.equal(empireCalls, 0);
   });
 }
+
+// Token launch is operator-only until the wallet is bound to the session. A signed-in owner
+// of an approved Hearth who is not the operator is refused at the FIRST step, whatever wallet
+// the browser names, and the later steps refuse too. Real session, real owner and admin checks.
+const V = "0x9999999999999999999999999999999999999999";
+const VTOKEN = "0x8888888888888888888888888888888888888b07";
+const VTX = "0x" + "cd".repeat(32);
+test("operator-only: a non-operator owner is refused on all three steps, nothing recorded", async () => {
+  useRealAuth();
+  db.state.hearth.metadata = { self_serve: true, review: "approved" };
+  launchDeps.readDeployTx = async (h: string) =>
+    h === VTX
+      ? { found: true, status: "success", from: V, to: FACTORY, logs: [{ address: VTOKEN, topics: [TRANSFER, "0x" + "0".repeat(64)] }] }
+      : { found: false };
+  const cfg = await (await import("./token-config/route")).POST(
+    sessionReq("/api/empire/token-config", { ...configBody(V), name: "X", symbol: "X" }, OWNER_FID),
+  );
+  assert.equal(cfg.status, 403);
+  assert.equal((await cfg.json()).error, "Token launch is operator-only for now.");
+  assert.equal(econ().token_launch_lock_by, undefined);
+  const pend = await (await import("./token-pending/route")).POST(
+    sessionReq("/api/empire/token-pending", { hearth_id: HEARTH, tx_hash: VTX }, OWNER_FID),
+  );
+  assert.equal(pend.status, 403);
+  assert.equal(econ().pending_deploy_tx, undefined);
+  const reg = await (await import("./register-token/route")).POST(
+    sessionReq(
+      "/api/empire/register-token",
+      { hearth_id: HEARTH, base_token: VTOKEN, tx_hash: VTX, owner: V, name: "X", symbol: "X" },
+      OWNER_FID,
+    ),
+  );
+  assert.equal(reg.status, 403);
+  assert.equal(econ().token_address, undefined);
+  assert.equal(empireCalls, 0);
+});
+
+test("operator-only: with a lock and a pending tx already set, a non-operator owner cannot record or register", async () => {
+  useRealAuth();
+  db.state.hearth.economic_config = { token_launch_lock_at: "2026-11-25T00:00:00Z", token_launch_lock_by: ME.toLowerCase() };
+  const pend = await (await import("./token-pending/route")).POST(
+    sessionReq("/api/empire/token-pending", { hearth_id: HEARTH, tx_hash: TX }, OWNER_FID),
+  );
+  assert.equal(pend.status, 403);
+  assert.equal(econ().pending_deploy_tx, undefined);
+  db.state.hearth.economic_config = { ...econ(), pending_deploy_tx: TX };
+  const reg = await (await import("./register-token/route")).POST(
+    sessionReq("/api/empire/register-token", registerBody(), OWNER_FID),
+  );
+  assert.equal(reg.status, 403);
+  assert.equal(econ().token_address, undefined);
+  assert.equal(empireCalls, 0);
+});
+
+test("operator happy path: a real operator session runs config, pending and register end to end", async () => {
+  useRealAuth();
+  const cfg = await (await import("./token-config/route")).POST(
+    sessionReq("/api/empire/token-config", configBody(), OPERATOR_FID),
+  );
+  assert.equal(cfg.status, 200);
+  assert.equal(econ().token_launch_lock_by, ME.toLowerCase());
+  const pend = await (await import("./token-pending/route")).POST(
+    sessionReq("/api/empire/token-pending", { hearth_id: HEARTH, tx_hash: TX }, OPERATOR_FID),
+  );
+  assert.equal(pend.status, 200);
+  assert.equal(econ().pending_deploy_tx, TX);
+  const reg = await (await import("./register-token/route")).POST(
+    sessionReq("/api/empire/register-token", registerBody(), OPERATOR_FID),
+  );
+  assert.equal(reg.status, 201);
+  assert.equal(econ().token_address, TOKEN);
+  assert.equal(empireCalls, 2);
+});
+
+test("Empire down at token-config: 502 and the launch lock is released, so a retry is not blocked", async () => {
+  const working = launchDeps.getTokenConfig;
+  launchDeps.getTokenConfig = async () => {
+    throw new Error("empire down");
+  };
+  const { POST } = await import("./token-config/route");
+  assert.equal((await POST(req("/api/empire/token-config", configBody(ME)))).status, 502);
+  assert.equal(econ().token_launch_lock_at, undefined);
+  assert.equal(econ().token_launch_lock_by, undefined);
+  launchDeps.getTokenConfig = working;
+  assert.equal((await POST(req("/api/empire/token-config", configBody(ME)))).status, 200);
+});
+
+test("refused Empire config at token-config: 502 and the launch lock is released", async () => {
+  launchDeps.getTokenConfig = async () => ({ tokenConfig: { ...goodConfig, tokenAdmin: OTHER, rewards: { recipients: [] } }, raw: {} });
+  const { POST } = await import("./token-config/route");
+  assert.equal((await POST(req("/api/empire/token-config", configBody(ME)))).status, 502);
+  assert.equal(econ().token_launch_lock_at, undefined);
+});

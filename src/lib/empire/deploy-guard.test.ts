@@ -38,13 +38,20 @@ const tokenless = {
   economic_config: { empire_id: "zoostr6071a1", empire_address: "0x74dc182017d698e5d262b6a87a3e35ac9125bbed", empire_token_type: "custom_tokenless" },
 };
 
-test("token launch: a Hearth with a tokenless empire may graduate (owner and operator)", () => {
-  assert.equal(tokenLaunchRefusal(tokenless, false), null);
+test("token launch: the operator may graduate a Hearth with a tokenless empire", () => {
   assert.equal(tokenLaunchRefusal(tokenless, true), null);
 });
 
-test("token launch: a Hearth with no empire may launch", () => {
-  assert.equal(tokenLaunchRefusal(approved, false), null);
+test("token launch: the operator may launch for a Hearth with no empire", () => {
+  assert.equal(tokenLaunchRefusal(approved, true), null);
+});
+
+test("token launch is operator-only: an owner is refused with 403, even for an approved Hearth", () => {
+  for (const h of [tokenless, approved, { metadata: {}, economic_config: {} }]) {
+    const r = tokenLaunchRefusal(h, false);
+    assert.equal(r?.status, 403);
+    assert.equal(r?.error, "Token launch is operator-only for now.");
+  }
 });
 
 test("token launch: refused once a token is recorded, even for the operator", () => {

@@ -21,10 +21,9 @@ export function ownerDeployRefusal(
   return null;
 }
 
-// Token launch (graduation). Same review rule as above, but a Hearth that already runs a
-// TOKENLESS empire may launch one token: that is the point of graduating. A Hearth that
-// already has a token is refused, operator or not, so a second token is never deployed
-// for it by mistake.
+// Token launch (graduation). A Hearth that already runs a TOKENLESS empire may launch one
+// token: that is the point of graduating. A Hearth that already has a token is refused,
+// operator or not, so a second token is never deployed for it by mistake.
 export function tokenLaunchRefusal(
   hearth: { metadata?: unknown; economic_config?: unknown },
   isOperator: boolean,
@@ -43,13 +42,14 @@ export function tokenLaunchRefusal(
   if (econ.token_address || econ.empire_mode === "token" || linkedIsToken) {
     return { status: 409, error: "This Hearth already has a token" };
   }
+  // Operator-only until the launching wallet is bound to the signed-in session. Until then
+  // a wallet named by the browser cannot be trusted, so owners cannot launch a token here.
+  // isOperator comes from the existing admin check (isAdmin in src/lib/auth.ts).
   if (isOperator) return null;
-  const meta = (hearth.metadata ?? {}) as { self_serve?: unknown; review?: unknown };
-  if (meta.self_serve === true && meta.review !== "approved") {
-    return { status: 403, error: "This Hearth is still in review" };
-  }
-  return null;
+  return { status: 403, error: TOKEN_LAUNCH_OPERATOR_ONLY };
 }
+
+export const TOKEN_LAUNCH_OPERATOR_ONLY = "Token launch is operator-only for now.";
 
 // A deploy tx already sent for this Hearth and not yet registered. While it is set, no
 // new token config is handed out, so a retry finishes THAT coin instead of making a

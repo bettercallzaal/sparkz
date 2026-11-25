@@ -4,7 +4,7 @@
 // built in the browser and signed by the user's own wallet (an EOA - the contract refuses
 // contract wallets with ContractsCannotCreateBounties).
 //
-// Base mainnet deployment; override with POIDH_CONTRACT_ADDRESS only if poidh redeploys.
+// Base mainnet deployment. If poidh redeploys, change this constant.
 export const POIDH_CONTRACT_ADDRESS = "0x5555Fa783936C260f77385b4E153B9725feF1719" as const;
 export const POIDH_CHAIN_ID = 8453; // Base
 export const POIDH_SITE = "https://poidh.xyz";

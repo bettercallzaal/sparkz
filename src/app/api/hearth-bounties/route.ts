@@ -31,6 +31,8 @@ export async function GET(req: NextRequest) {
 const recent = new Map<string, number[]>();
 function throttled(key: string): boolean {
   const now = Date.now();
+  // Evict keys with no hit in the last minute so the Map cannot grow without bound.
+  for (const [k, ts] of recent) if (ts.every((t) => now - t >= 60_000)) recent.delete(k);
   const hits = (recent.get(key) ?? []).filter((t) => now - t < 60_000);
   hits.push(now);
   recent.set(key, hits);

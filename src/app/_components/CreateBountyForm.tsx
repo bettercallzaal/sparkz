@@ -43,6 +43,8 @@ function Inner({ hearthId }: { hearthId: string }) {
   const [busy, setBusy] = useState<"check" | "sign" | "save" | null>(null);
   const [note, setNote] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // Set once the wallet has sent the transaction: a retry then only re-links, it never signs again.
+  const [sentHash, setSentHash] = useState<string | null>(null);
 
   function validated() {
     const wei = parseEthToWei(eth);
@@ -91,7 +93,38 @@ function Inner({ hearthId }: { hearthId: string }) {
     }
   }
 
+  async function link(hash: string) {
+    setBusy("save");
+    setError(null);
+    setNote("Sent. Waiting for Base to confirm...");
+    try {
+      await reader!.waitForTransactionReceipt({ hash: hash as `0x${string}` });
+      const res = await fetch("/api/hearth-bounties", {
+        method: "POST",
+        credentials: "include",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ hearth_id: hearthId, tx_hash: hash }),
+      });
+      const json = await res.json().catch(() => ({ ok: false }));
+      if (!res.ok || !json.ok) {
+        setNote(null);
+        setError(`The bounty is on Base (${hash}) but Sparkz could not link it: ${json.error ?? "try again"}. Use Retry linking; it will not send again.`);
+        return;
+      }
+      setNote("Bounty posted and linked to this Hearth.");
+      setSentHash(null);
+      setShow(false);
+      router.refresh();
+    } catch {
+      setNote(null);
+      setError(`The bounty may be on Base (${hash}) but linking failed. Use Retry linking; it will not send again.`);
+    } finally {
+      setBusy(null);
+    }
+  }
+
   async function post() {
+    if (sentHash) return link(sentHash);
     setError(null);
     setNote(null);
     const v = validated();
@@ -107,23 +140,10 @@ function Inner({ hearthId }: { hearthId: string }) {
         args: [v.name, v.description],
         value: v.wei,
       });
-      setBusy("save");
-      setNote("Sent. Waiting for Base to confirm...");
-      await reader!.waitForTransactionReceipt({ hash });
-      const res = await fetch("/api/hearth-bounties", {
-        method: "POST",
-        credentials: "include",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ hearth_id: hearthId, tx_hash: hash }),
-      });
-      const json = await res.json().catch(() => ({ ok: false }));
-      if (!res.ok || !json.ok) {
-        setError(`The bounty is on Base (${hash}) but Sparkz could not link it: ${json.error ?? "try again"}.`);
-        return;
-      }
-      setNote("Bounty posted and linked to this Hearth.");
-      setShow(false);
-      router.refresh();
+      setSentHash(hash);
+      setBusy(null);
+      await link(hash);
+      return;
     } catch (e) {
       setError(friendly(e));
     } finally {
@@ -175,7 +195,7 @@ function Inner({ hearthId }: { hearthId: string }) {
           {busy === "check" ? "Checking..." : "Check first (sends nothing)"}
         </button>
         <button type="button" disabled={busy !== null} onClick={post} className="rounded-lg bg-accent px-3 py-2 font-medium text-black disabled:opacity-50">
-          {busy === "sign" ? "Confirm in wallet..." : busy === "save" ? "Linking..." : address ? "Post bounty" : "Connect wallet"}
+          {busy === "sign" ? "Confirm in wallet..." : busy === "save" ? "Linking..." : sentHash ? "Retry linking" : address ? "Post bounty" : "Connect wallet"}
         </button>
         <button type="button" disabled={busy !== null} onClick={() => setShow(false)} className="ml-auto px-2 text-muted">
           Cancel

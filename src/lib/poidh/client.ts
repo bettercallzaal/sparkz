@@ -6,7 +6,7 @@ import { bountyState, type BountyState } from "./vote-state";
 // Read-only Base client. No private key exists anywhere in this module or this app: every
 // write is signed by the user's own wallet in the browser.
 const abi = parseAbi(poidhAbi);
-const make = () => createPublicClient({ chain: base, transport: http() });
+const make = () => createPublicClient({ chain: base, transport: http(undefined, { timeout: 8_000, retryCount: 1 }) });
 type PublicClient = ReturnType<typeof make>;
 let cached: PublicClient | null = null;
 
@@ -35,7 +35,7 @@ const addr = POIDH_CONTRACT_ADDRESS;
 
 // Everything about ONE bounty, read from Base. Claims and participants are capped at the
 // contract's own page size (10 claims, 150 participants) - enough for v1.
-export async function readBounty(id: bigint, client: PublicClient = baseClient()): Promise<ChainBounty | null> {
+async function readBountyUncached(id: bigint, client: PublicClient): Promise<ChainBounty | null> {
   const length = (await client.readContract({ address: addr, abi, functionName: "getBountiesLength" })) as bigint;
   if (id >= length) return null;
   const [b, cur, tracker, claims, parts] = await Promise.all([
@@ -63,4 +63,21 @@ export async function readBounty(id: bigint, client: PublicClient = baseClient()
     participants: addrs.map((a, i) => ({ address: a.toLowerCase(), amountWei: amts[i].toString() })),
     url: `https://poidh.xyz/base/bounty/${id.toString()}`,
   };
+}
+
+// A Hearth page view reads every linked bounty (about 6 RPC calls each). Cache each bounty's
+// read for 60 seconds per server instance so page views do not hit the public Base RPC every
+// time. Only successful reads are cached; a failure is retried on the next view.
+const TTL_MS = 60_000;
+const MAX_CACHED = 200;
+const readCache = new Map<string, { at: number; value: ChainBounty | null }>();
+
+export async function readBounty(id: bigint, client: PublicClient = baseClient()): Promise<ChainBounty | null> {
+  const key = id.toString();
+  const hit = readCache.get(key);
+  if (hit && Date.now() - hit.at < TTL_MS) return hit.value;
+  const value = await readBountyUncached(id, client);
+  if (readCache.size >= MAX_CACHED) readCache.delete(readCache.keys().next().value as string);
+  readCache.set(key, { at: Date.now(), value });
+  return value;
 }

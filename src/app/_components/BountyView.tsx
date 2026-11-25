@@ -41,10 +41,10 @@ export default function BountyView({ bounty, txHash }: { bounty: ChainBounty | n
       <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
         <span>Reward {formatEth(bounty.amountWei)} ETH on Base</span>
         <span>
-          {bounty.participants.length} funder{bounty.participants.length === 1 ? "" : "s"}
+          {bounty.participants.length >= 150 ? "150+" : bounty.participants.length} funder{bounty.participants.length === 1 ? "" : "s"}
         </span>
         <span>
-          {bounty.claims.length} claim{bounty.claims.length === 1 ? "" : "s"}
+          {bounty.claims.length >= 10 ? "10+" : bounty.claims.length} claim{bounty.claims.length === 1 ? "" : "s"}
         </span>
         <span>
           Posted by{" "}

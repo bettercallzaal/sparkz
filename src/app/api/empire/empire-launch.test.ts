@@ -1,6 +1,6 @@
 import { test, beforeEach, afterEach } from "node:test";
 import assert from "node:assert/strict";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { launchDeps } from "@/lib/empire/launch-deps";
 import { EMPIRE_FEE_WALLET } from "@/lib/empire/launch-summary";
 
@@ -256,6 +256,56 @@ test("register: a lock held by another wallet is refused", async () => {
   const { POST } = await import("./register-token/route");
   assert.equal((await POST(req("/api/empire/register-token", registerBody(OTHER)))).status, 409);
   assert.equal(empireCalls, 0);
+});
+
+// Post-merge review of #430: the recorded deploy tx is mandatory. No pending tx means refused
+// before the chain is read, even when the lock and the owner match.
+test("register: no recorded pending tx is refused before any chain or Empire call", async () => {
+  db.state.hearth.economic_config = { token_launch_lock_by: ME.toLowerCase() };
+  let reads = 0;
+  launchDeps.readDeployTx = async () => {
+    reads++;
+    return { found: true, status: "success", from: ME, to: FACTORY, logs: [] };
+  };
+  const { POST } = await import("./register-token/route");
+  const res = await POST(req("/api/empire/register-token", registerBody()));
+  assert.equal(res.status, 409);
+  assert.equal(reads, 0);
+  assert.equal(empireCalls, 0);
+  assert.equal(econ().token_address, undefined);
+});
+
+// The lock holder is the wallet the launch is tied to. A tx sent from any other wallet is refused,
+// even when the browser names that other wallet as owner.
+test("register: tx.from that differs from the lock holder is refused", async () => {
+  db.state.hearth.economic_config = { pending_deploy_tx: TX, token_launch_lock_by: OTHER.toLowerCase() };
+  launchDeps.readDeployTx = async () => ({ found: true, status: "success", from: ME, to: FACTORY, logs: [] });
+  const { POST } = await import("./register-token/route");
+  const res = await POST(req("/api/empire/register-token", registerBody(OTHER)));
+  assert.equal(res.status, 409);
+  assert.equal(empireCalls, 0);
+  assert.equal(econ().token_address, undefined);
+});
+
+// Round 3: a signed-in wallet that is not the Hearth's owner gets 403 from the owner gate, and the
+// route does nothing after it (no chain read, no Empire call, no claim). The gate is stubbed here
+// because requireHearthOwner reads the database through its own import, not through launchDeps;
+// the stub returns the gate's own non-owner answer.
+test("register: a signed-in non-owner gets 403 from the owner gate, before any chain or Empire call", async () => {
+  launchDeps.requireHearthOwner = async () =>
+    NextResponse.json({ ok: false, error: "Only this Hearth's owner can do that" }, { status: 403 });
+  db.state.hearth.economic_config = { pending_deploy_tx: TX, token_launch_lock_by: ME.toLowerCase() };
+  let reads = 0;
+  launchDeps.readDeployTx = async () => {
+    reads++;
+    return { found: true, status: "success", from: ME, to: FACTORY, logs: [] };
+  };
+  const { POST } = await import("./register-token/route");
+  const res = await POST(req("/api/empire/register-token", registerBody()));
+  assert.equal(res.status, 403);
+  assert.equal(reads, 0);
+  assert.equal(empireCalls, 0);
+  assert.equal(econ().token_address, undefined);
 });
 
 // Round 3, item 2: cross-site refusal on all three routes, before any database or Empire call.

@@ -31,3 +31,18 @@ export async function listHearthBounties(hearthId: string): Promise<HearthBounty
     }),
   );
 }
+
+// What the Bounties tab needs: the list, and whether bounties are switched on. If the
+// hearth_bounties read fails for any reason (migration 0010 not applied yet, DB down), the
+// create form must stay hidden: the owner's wallet would otherwise send the real on-chain
+// createOpenBounty and Sparkz could not link it. Fail closed.
+export async function loadBountiesTab(
+  hearthId: string,
+): Promise<{ enabled: boolean; items: HearthBountyView[] }> {
+  try {
+    return { enabled: true, items: await listHearthBounties(hearthId) };
+  } catch (err) {
+    console.error("[sparkz:hearth.bounties]", err);
+    return { enabled: false, items: [] };
+  }
+}

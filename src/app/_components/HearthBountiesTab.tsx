@@ -1,4 +1,4 @@
-import { listHearthBounties, type HearthBountyView } from "@/lib/poidh/hearth-bounties";
+import { loadBountiesTab } from "@/lib/poidh/hearth-bounties";
 import BountyView, { PoidhLink } from "./BountyView";
 import CreateBountyForm from "./CreateBountyForm";
 
@@ -15,14 +15,7 @@ export default async function HearthBountiesTab({
   hearthName: string;
   ownerFid: number | null;
 }) {
-  let items: HearthBountyView[] = [];
-  let failed = false;
-  try {
-    items = await listHearthBounties(hearthId);
-  } catch (err) {
-    console.error("[sparkz:hearth.bounties]", err);
-    failed = true;
-  }
+  const { enabled, items } = await loadBountiesTab(hearthId);
   return (
     <section>
       <h2 className="mb-1 text-sm font-medium">Bounties</h2>
@@ -30,10 +23,10 @@ export default async function HearthBountiesTab({
         Open a bounty for work {hearthName} needs done. The reward is held by poidh&apos;s contract on Base, not by
         Sparkz. Other bounties live on <PoidhLink />.
       </p>
-      <CreateBountyForm hearthId={hearthId} ownerFid={ownerFid} />
-      {failed ? (
+      {enabled && <CreateBountyForm hearthId={hearthId} ownerFid={ownerFid} />}
+      {!enabled ? (
         <p className="rounded-lg border border-dashed border-border p-5 text-sm text-muted">
-          Bounties could not be loaded right now. Try again in a moment.
+          Bounties open soon.
         </p>
       ) : items.length === 0 ? (
         <p className="rounded-lg border border-dashed border-border p-5 text-sm text-muted">No bounties yet.</p>

@@ -95,15 +95,17 @@ export default function DemoPage() {
             Sparks and updates cast to the Hearth&apos;s Farcaster channel. The
             game is internet traffic; Farcaster eats first.
           </Step>
-          <Step n="4" title="Graduate, only if it fits">
-            If the momentum&apos;s real: a tokenless empire (create2 treasury) or a
-            token on the Clanker rail. Some do, some never. Fine either way.
-          </Step>
+          <div className="web-only">
+            <Step n="4" title="Graduate, only if it fits">
+              If the momentum&apos;s real: a tokenless empire (create2 treasury) or a
+              token on the Clanker rail. Some do, some never. Fine either way.
+            </Step>
+          </div>
         </div>
       </section>
 
       {/* The moat */}
-      <section className="border-t border-border py-8">
+      <section className="web-only border-t border-border py-8">
         <h2 className="mb-2 text-sm font-medium uppercase tracking-wide text-muted">
           Why it&apos;s different
         </h2>

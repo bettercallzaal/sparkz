@@ -407,12 +407,14 @@ export default async function HearthPage({
                 )}
 
                 {econ.empire_id && (
-                  <section className="mb-8">
-                    <h2 className="mb-3 text-sm font-medium">Empire leaderboard</h2>
-                    <div className="card-solid p-4">
-                      <EmpireLeaderboard empireId={econ.empire_id} showHeader={false} />
-                    </div>
-                  </section>
+                  <div className="web-only">
+                    <section className="mb-8">
+                      <h2 className="mb-3 text-sm font-medium">Empire leaderboard</h2>
+                      <div className="card-solid p-4">
+                        <EmpireLeaderboard empireId={econ.empire_id} showHeader={false} />
+                      </div>
+                    </section>
+                  </div>
                 )}
 
                 {meta.about && (

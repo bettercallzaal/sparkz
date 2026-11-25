@@ -611,7 +611,7 @@ function LaunchReview({ p, owner }: { p: Preview; owner: string }) {
         <p>
           The recipient shares: the coin setup Empire Builder returned for this launch, read{" "}
           {new Date(p.readAt).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" })}. Empire
-          Builder's docs set its share at 2000 basis points of the recipients' part.
+          Builder&apos;s docs set its share at 2000 basis points of the recipients&apos; part.
         </p>
         <p>
           These are settings of the Clanker and Empire Builder protocols, and they can change them. Sparkz

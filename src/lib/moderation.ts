@@ -31,3 +31,16 @@ export function isBlockedHearth(
   const owner = hearthOwnerIdentity(h);
   return owner !== null && blocked.has(owner);
 }
+
+type Owned = { owner_fid?: number | null; owner_wallet?: string | null };
+
+// A list with the Hearths whose owner the viewer blocked left out (Home, /api/capsules).
+export function withoutBlocked<T extends Owned>(list: readonly T[], blocked: ReadonlySet<string>): T[] {
+  return list.filter((h) => !isBlockedHearth(h, blocked));
+}
+
+// The owner's identity when the viewer blocked this Hearth's owner, else null. The Hearth
+// page shows only "You blocked this creator" and an Unblock button for that identity.
+export function blockedOwnerOf(h: Owned, blocked: ReadonlySet<string>): string | null {
+  return isBlockedHearth(h, blocked) ? hearthOwnerIdentity(h) : null;
+}

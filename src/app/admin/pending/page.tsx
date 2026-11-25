@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import Avatar from "@/app/_components/Avatar";
 import AdminSignIn from "@/app/_components/AdminSignIn";
+import ReportsQueue from "@/app/_components/ReportsQueue";
 import type { Hearth } from "@/lib/supabase/types";
 import { hearthLogo } from "@/lib/hearth-logo";
 
@@ -130,6 +131,8 @@ export default function PendingReview() {
           );
         })}
       </ul>
+
+      {authed && <ReportsQueue />}
     </main>
   );
 }

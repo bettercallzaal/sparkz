@@ -147,7 +147,7 @@ export default function ManifestoPage() {
                 "Back the album, back the show",
                 "Back the work",
                 "Access, not speculation",
-                "Claim your share at splits.org",
+                "Fees are set when the Hearth launches. Nothing is promised.",
                 "Contribution → points → fee share",
                 "Generative, not extractive",
               ].map((s) => (

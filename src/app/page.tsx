@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { loadPublicHearths } from "@/lib/public-hearths";
+import { viewerBlockedOwners } from "@/lib/blocks-viewer";
+import { withoutBlocked } from "@/lib/moderation";
 import { pickShowcase } from "@/lib/showcase";
 import JoinForm from "./_components/JoinForm";
 import JoinTeamForm from "./_components/JoinTeamForm";
@@ -30,7 +32,9 @@ const GOALS = [
 // Design pass, Zaal 14 Nov 2026: simple, the goals visible, and the live ZAO Hearths up
 // front. The showcase list is in lib/showcase.ts.
 export default async function Home() {
-  const { featured, others } = pickShowcase(await loadPublicHearths());
+  // Hearths owned by someone the viewer blocked are left out (migration 0009).
+  const [hearths, blocked] = await Promise.all([loadPublicHearths(), viewerBlockedOwners()]);
+  const { featured, others } = pickShowcase(withoutBlocked(hearths, blocked));
   const betaUrl = iosBetaUrl();
 
   return (

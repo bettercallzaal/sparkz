@@ -17,6 +17,7 @@ import Flame from "@/app/_components/Flame";
 import SparkLit from "@/app/_components/SparkLit";
 import EmpireLeaderboard from "@/app/_components/EmpireLeaderboard";
 import HearthTabs from "@/app/_components/HearthTabs";
+import HearthBountiesTab from "@/app/_components/HearthBountiesTab";
 import { canonicalOrigin } from "@/lib/origin";
 import { hearthIntegrations, hiddenIntegrations } from "@/lib/hearth-integrations";
 import { connectorIntegrations } from "@/lib/hearth-connectors";
@@ -26,7 +27,13 @@ import BoostrPanel from "@/app/_components/BoostrPanel";
 import { BOOSTR_HEARTHS, fetchBoostrStats } from "@/lib/boostr";
 import { readContext } from "@/lib/hearth-context";
 import SparksPanel from "@/app/_components/SparksPanel";
+import TokenSparkPanel from "@/app/_components/TokenSparkPanel";
+import { readTokenSpark } from "@/lib/token-spark";
 import { hearthStatusLabel } from "@/lib/hearth-status";
+import ReportMenu from "@/app/_components/ReportMenu";
+import UnblockButton from "@/app/_components/UnblockButton";
+import { viewerBlockedOwners } from "@/lib/blocks-viewer";
+import { blockedOwnerOf, hearthOwnerIdentity } from "@/lib/moderation";
 
 export const dynamic = "force-dynamic";
 
@@ -168,6 +175,28 @@ export default async function HearthPage({
   if (!view) notFound();
 
   const { hearth, backers, boostCount } = view;
+  const ownerIdentity = hearthOwnerIdentity(hearth);
+  // The viewer blocked this Hearth's owner (migration 0009): show nothing of theirs, only
+  // a way to unblock.
+  const blockedOwner = blockedOwnerOf(hearth, await viewerBlockedOwners());
+  if (blockedOwner) {
+    return (
+      <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-8">
+        <Link href="/explore" className="text-sm text-muted hover:text-foreground">
+          &larr; Explore
+        </Link>
+        <section className="glass mt-6 p-5 text-sm">
+          <h1 className="text-lg font-semibold">You blocked this creator</h1>
+          <p className="mt-1 text-muted">
+            Their Hearths and Sparks are hidden from you. Unblock to see this Hearth again.
+          </p>
+          <div className="mt-4">
+            <UnblockButton blockedId={blockedOwner} />
+          </div>
+        </section>
+      </main>
+    );
+  }
   const oss = hearth.type === "oss" ? (hearth.metadata as OssHearthMetadata) : null;
   const fc = (hearth.metadata as { farcaster?: { fid?: number | null; username?: string | null; channel?: string | null } }).farcaster;
   const econ = (hearth.economic_config ?? {}) as {
@@ -198,6 +227,7 @@ export default async function HearthPage({
   };
   const image = hearthLogo(hearth);
   const pending = meta.review === "pending";
+  const tokenSpark = readTokenSpark(hearth.slug, hearth.metadata);
   const isCreator = hearth.type === "creator";
   const tags = Array.isArray(meta.tags) ? meta.tags : [];
   const links = meta.links ?? {};
@@ -255,6 +285,13 @@ export default async function HearthPage({
               value={`${canonicalOrigin()}/c/${hearth.slug}`}
               label="Hearth link copied"
               className="h-8 w-8"
+            />
+            <ReportMenu
+              targetType="hearth"
+              targetId={hearth.id}
+              hearthId={hearth.id}
+              ownerFid={hearth.owner_fid}
+              hasOwner={ownerIdentity !== null}
             />
           </div>
         </div>
@@ -364,6 +401,8 @@ export default async function HearthPage({
             label: "About",
             content: (
               <>
+                {tokenSpark && <TokenSparkPanel meta={tokenSpark} />}
+
                 {econ.empire_id && (
                   <section className="mb-8">
                     <h2 className="mb-3 text-sm font-medium">Empire leaderboard</h2>
@@ -432,6 +471,19 @@ export default async function HearthPage({
                 slug={hearth.slug}
                 hearthId={hearth.id}
                 counts={{ backers: backers.length, boosts: boostCount }}
+                ownerFid={hearth.owner_fid}
+                hasOwner={ownerIdentity !== null}
+              />
+            ),
+          },
+          {
+            id: "bounties",
+            label: "Bounties",
+            content: (
+              <HearthBountiesTab
+                hearthId={hearth.id}
+                hearthName={hearth.name}
+                ownerFid={hearth.owner_fid == null ? null : Number(hearth.owner_fid)}
               />
             ),
           },

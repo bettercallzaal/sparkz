@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { Hearth } from "@/lib/supabase/types";
 import { tokenlessCustomMessage, isDoubledName } from "@/lib/empire/client";
+import { deployCodeMessage } from "@/lib/empire/deploy-code-message";
 import { useAppKit } from "@reown/appkit/react";
 import { useAccount, useSignMessage } from "wagmi";
 import AdminSignIn from "@/app/_components/AdminSignIn";
@@ -105,6 +106,31 @@ export default function EmpirePage() {
     }
     setBusy(true);
     try {
+      // 1. A one-time code for this sign-in and this Hearth (5 minutes, single use).
+      const c = await fetch("/api/empire/deploy/code", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ hearth_id: hearthId }),
+      });
+      const cj = await c.json();
+      if (c.status === 401 || c.status === 503) {
+        setNeedsAuth(true);
+        return;
+      }
+      if (!cj.ok) {
+        setErr(cj.error);
+        return;
+      }
+      // 2. The wallet signs the Sparkz confirmation (code, Hearth, name, time), then
+      // Empire's own message, which Empire requires word for word.
+      const code_signature = await signMessageAsync({
+        message: deployCodeMessage({
+          hearthSlug: cj.data.hearth_slug,
+          name,
+          code: cj.data.code,
+          issuedAt: cj.data.issued_at,
+        }),
+      });
       const signature = await signMessageAsync({
         message: tokenlessCustomMessage(name),
       });
@@ -116,6 +142,8 @@ export default function EmpirePage() {
           name,
           owner,
           signature,
+          code: cj.data.code,
+          code_signature,
           logo_uri: logoUri || undefined,
           bio: bio.trim() || undefined,
           website_url: website.trim() || undefined,
@@ -365,7 +393,7 @@ export default function EmpirePage() {
             {owner && name && (
               <div className="rounded-md border border-border bg-background p-3">
                 <p className="mb-1 text-[10px] uppercase tracking-wide text-muted">
-                  You will sign
+                  You will sign twice: a Sparkz confirmation with a one-time code, then
                 </p>
                 <p className="break-all font-mono text-xs text-foreground">
                   {tokenlessCustomMessage(name)}

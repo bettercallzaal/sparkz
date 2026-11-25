@@ -6,6 +6,8 @@ import { ok, badRequest, serverError, zodError, forbidCrossSite } from "@/lib/ht
 import { isAdmin, requireHearthOwner } from "@/lib/auth";
 import { deployTokenlessCustom, resolveEmpire } from "@/lib/empire/client";
 import { ownerDeployRefusal } from "@/lib/empire/deploy-guard";
+import { checkDeployCode, deploySubject } from "@/lib/empire/deploy-code";
+import { sessionClaims } from "@/lib/session";
 import type { Hearth } from "@/lib/supabase/types";
 
 export async function POST(req: NextRequest) {
@@ -32,6 +34,26 @@ export async function POST(req: NextRequest) {
     const refusal = ownerDeployRefusal(hearth as Hearth, isAdmin(req));
     if (refusal) {
       return NextResponse.json({ ok: false, error: refusal.error }, { status: refusal.status });
+    }
+
+    // The one-time code: issued for this session and this Hearth, at most 5 minutes old,
+    // signed by the owner wallet together with the Hearth and the name, and spent here.
+    // Checked before the claim and before Empire is called (lib/empire/deploy-code.ts).
+    const subject = deploySubject(sessionClaims(req));
+    if (!subject) {
+      return NextResponse.json({ ok: false, error: "Sign in to deploy" }, { status: 401 });
+    }
+    const codeCheck = await checkDeployCode({
+      code: parsed.data.code,
+      codeSignature: parsed.data.code_signature as `0x${string}`,
+      subject,
+      hearthId: parsed.data.hearth_id,
+      hearthSlug: (hearth as Hearth).slug,
+      name: parsed.data.name,
+      owner: parsed.data.owner as `0x${string}`,
+    });
+    if (!codeCheck.ok) {
+      return NextResponse.json({ ok: false, error: codeCheck.error }, { status: 401 });
     }
 
     // Owners: claim the Hearth's single deploy atomically, so two concurrent calls

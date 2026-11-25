@@ -41,8 +41,14 @@ export async function POST(req: NextRequest) {
     if (pending && pending.toLowerCase() !== d.tx_hash.toLowerCase()) {
       return NextResponse.json({ ok: false, error: "That is not the launch recorded for this Hearth" }, { status: 409 });
     }
+    // The wallet named here must be the one that took the launch lock in token-config
+    // (round 3, item 1). No lock means no prepared launch, so nothing to register; this
+    // ties the recorded empire_owner to the wallet the signed-in owner prepared with.
     const lockBy = typeof econBefore.token_launch_lock_by === "string" ? econBefore.token_launch_lock_by : null;
-    if (lockBy && lockBy.toLowerCase() !== d.owner.toLowerCase()) {
+    if (!lockBy) {
+      return NextResponse.json({ ok: false, error: "This launch was never prepared. Start it again from the coin page." }, { status: 409 });
+    }
+    if (lockBy.toLowerCase() !== d.owner.toLowerCase()) {
       return NextResponse.json({ ok: false, error: "That wallet did not prepare this launch" }, { status: 409 });
     }
 

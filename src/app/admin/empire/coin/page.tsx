@@ -46,6 +46,7 @@ interface Preview {
   valueWei: string;
   expectedAddress: string | null;
   simulated: string | null; // null = the simulation passed
+  readAt: string; // when Empire's config was read for this review (ISO)
 }
 
 interface PendingLaunch {
@@ -225,6 +226,7 @@ export default function EmpireCoinPage() {
         valueWei: (tx.value ?? BigInt(0)).toString(),
         expectedAddress: tx.expectedAddress ?? null,
         simulated: sim.error ? sim.error.message : null,
+        readAt: new Date().toISOString(),
       });
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Preview failed");
@@ -600,6 +602,22 @@ function LaunchReview({ p, owner }: { p: Preview; owner: string }) {
       <p className="mt-2 text-xs text-muted">
         Shares of every swap fee. Clanker takes its {s.clankerPct}% first and the recipients above split the rest.
       </p>
+      <div className="mt-2 space-y-1 text-xs text-muted">
+        <p>Where these numbers come from:</p>
+        <p>
+          Clanker {s.clankerPct}%: the protocolFee() setting on the Clanker v4 fee hooks, read on Base
+          mainnet on 24 Nov 2026.
+        </p>
+        <p>
+          The recipient shares: the coin setup Empire Builder returned for this launch, read{" "}
+          {new Date(p.readAt).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" })}. Empire
+          Builder's docs set its share at 2000 basis points of the recipients' part.
+        </p>
+        <p>
+          These are settings of the Clanker and Empire Builder protocols, and they can change them. Sparkz
+          shows them as read and makes no promise about them.
+        </p>
+      </div>
 
       <p className="mb-1 mt-4 font-semibold">Can it be undone?</p>
       <p className="text-xs text-muted">

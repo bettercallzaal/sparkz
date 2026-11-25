@@ -197,7 +197,7 @@ test("token-pending refuses a tx for a launch that was never prepared", async ()
 });
 
 test("register: the server reads the tx and refuses one sent from another wallet", async () => {
-  db.state.hearth.economic_config = { pending_deploy_tx: TX };
+  db.state.hearth.economic_config = { pending_deploy_tx: TX, token_launch_lock_by: ME.toLowerCase() };
   launchDeps.readDeployTx = async () => ({ found: true, status: "success", from: OTHER, to: FACTORY, logs: [] });
   const { POST } = await import("./register-token/route");
   const res = await POST(req("/api/empire/register-token", registerBody()));
@@ -215,7 +215,7 @@ test("register: happy path records the token; a second register is refused", asy
 });
 
 test("register: Empire down gives a plain 502 and frees the claim", async () => {
-  db.state.hearth.economic_config = { pending_deploy_tx: TX };
+  db.state.hearth.economic_config = { pending_deploy_tx: TX, token_launch_lock_by: ME.toLowerCase() };
   launchDeps.registerTokenEmpire = async () => {
     throw new Error("upstream secret detail xyz789");
   };
@@ -228,9 +228,89 @@ test("register: Empire down gives a plain 502 and frees the claim", async () => 
 
 test("register: the operator gets no skip of the one-launch claim", async () => {
   launchDeps.isAdmin = () => true;
-  db.state.hearth.economic_config = { pending_deploy_tx: TX };
+  db.state.hearth.economic_config = { pending_deploy_tx: TX, token_launch_lock_by: ME.toLowerCase() };
   db.state.loseClaim = true;
   const { POST } = await import("./register-token/route");
   assert.equal((await POST(req("/api/empire/register-token", registerBody()))).status, 409);
   assert.equal(empireCalls, 0);
 });
+
+// Round 3, item 1: the registered owner is tied to the wallet that took the launch lock.
+test("register: no launch lock and a different owner is refused before any chain or Empire call", async () => {
+  db.state.hearth.economic_config = { pending_deploy_tx: TX };
+  let reads = 0;
+  launchDeps.readDeployTx = async () => {
+    reads++;
+    return { found: true, status: "success", from: OTHER, to: FACTORY, logs: [{ address: TOKEN, topics: [TRANSFER, "0x" + "0".repeat(64)] }] };
+  };
+  const { POST } = await import("./register-token/route");
+  const res = await POST(req("/api/empire/register-token", registerBody(OTHER)));
+  assert.equal(res.status, 409);
+  assert.equal(reads, 0);
+  assert.equal(empireCalls, 0);
+  assert.equal(econ().token_address, undefined);
+});
+
+test("register: a lock held by another wallet is refused", async () => {
+  db.state.hearth.economic_config = { pending_deploy_tx: TX, token_launch_lock_by: ME.toLowerCase() };
+  const { POST } = await import("./register-token/route");
+  assert.equal((await POST(req("/api/empire/register-token", registerBody(OTHER)))).status, 409);
+  assert.equal(empireCalls, 0);
+});
+
+// Round 3, item 2: cross-site refusal on all three routes, before any database or Empire call.
+const crossSiteReq = (path: string, body: unknown) =>
+  new NextRequest(`https://trysparkz.com${path}`, {
+    method: "POST",
+    body: JSON.stringify(body),
+    headers: { origin: "https://evil.example", "sec-fetch-site": "cross-site" },
+  });
+
+for (const [name, path, body] of [
+  ["token-config", "/api/empire/token-config", configBody()],
+  ["token-pending", "/api/empire/token-pending", { hearth_id: HEARTH, tx_hash: TX }],
+  ["register-token", "/api/empire/register-token", registerBody()],
+] as const) {
+  test(`${name}: a cross-site request is refused with 403 before any database or Empire call`, async () => {
+    let dbCalls = 0;
+    Object.assign(launchDeps, {
+      getServiceClient: () => {
+        dbCalls++;
+        return db.client;
+      },
+    });
+    let ownerChecks = 0;
+    launchDeps.requireHearthOwner = async () => {
+      ownerChecks++;
+      return null;
+    };
+    const { POST } = await import(`./${name}/route`);
+    const res = await POST(crossSiteReq(path, body));
+    assert.equal(res.status, 403);
+    assert.equal(dbCalls, 0);
+    assert.equal(ownerChecks, 0);
+    assert.equal(empireCalls, 0);
+  });
+}
+
+// Round 3, item 2: not the owner gets 401 on token-pending and register-token too.
+for (const [name, path, body] of [
+  ["token-pending", "/api/empire/token-pending", { hearth_id: HEARTH, tx_hash: TX }],
+  ["register-token", "/api/empire/register-token", registerBody()],
+] as const) {
+  test(`${name}: not the owner gets 401 before any database or Empire call`, async () => {
+    Object.assign(launchDeps, { requireHearthOwner: saved.requireHearthOwner }); // real check, no session
+    let dbCalls = 0;
+    Object.assign(launchDeps, {
+      getServiceClient: () => {
+        dbCalls++;
+        return db.client;
+      },
+    });
+    const { POST } = await import(`./${name}/route`);
+    const res = await POST(req(path, body));
+    assert.equal(res.status, 401);
+    assert.equal(dbCalls, 0);
+    assert.equal(empireCalls, 0);
+  });
+}

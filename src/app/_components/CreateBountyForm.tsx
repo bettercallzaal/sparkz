@@ -39,7 +39,7 @@ function Inner({ hearthId }: { hearthId: string }) {
   const [show, setShow] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [eth, setEth] = useState("0.006");
+  const [eth, setEth] = useState("0.002");
   const [busy, setBusy] = useState<"check" | "sign" | "save" | null>(null);
   const [note, setNote] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -49,7 +49,7 @@ function Inner({ hearthId }: { hearthId: string }) {
   function validated() {
     const wei = parseEthToWei(eth);
     if (wei === null) {
-      setError("Enter the reward in ETH, like 0.006.");
+      setError("Enter the reward in ETH, like 0.002.");
       return null;
     }
     const parsed = createBountyFormSchema.safeParse({ name, description, reward_wei: wei.toString() });

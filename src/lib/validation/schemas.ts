@@ -282,3 +282,5 @@ export const blockSchema = z.object({ hearth_id: z.string().uuid() }).strict();
 export const unblockSchema = z
   .object({ blocked_id: z.string().regex(IDENTITY_PATTERN, "not a Sparkz identity") })
   .strict();
+
+export { recordBountySchema, hearthBountyQuery } from "@/lib/poidh/schemas";

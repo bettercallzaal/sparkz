@@ -17,6 +17,7 @@ import Flame from "@/app/_components/Flame";
 import SparkLit from "@/app/_components/SparkLit";
 import EmpireLeaderboard from "@/app/_components/EmpireLeaderboard";
 import HearthTabs from "@/app/_components/HearthTabs";
+import HearthBountiesTab from "@/app/_components/HearthBountiesTab";
 import { canonicalOrigin } from "@/lib/origin";
 import { hearthIntegrations, hiddenIntegrations } from "@/lib/hearth-integrations";
 import { connectorIntegrations } from "@/lib/hearth-connectors";
@@ -472,6 +473,17 @@ export default async function HearthPage({
                 counts={{ backers: backers.length, boosts: boostCount }}
                 ownerFid={hearth.owner_fid}
                 hasOwner={ownerIdentity !== null}
+              />
+            ),
+          },
+          {
+            id: "bounties",
+            label: "Bounties",
+            content: (
+              <HearthBountiesTab
+                hearthId={hearth.id}
+                hearthName={hearth.name}
+                ownerFid={hearth.owner_fid == null ? null : Number(hearth.owner_fid)}
               />
             ),
           },

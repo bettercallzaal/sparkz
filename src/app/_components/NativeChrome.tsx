@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Capacitor } from "@capacitor/core";
+import { APP_TABS, tabFor } from "@/lib/app-tabs";
 
 // Native iOS chrome for the iPhone app: a real UITabBar drawn by the system
 // (@capgo/capacitor-native-navigation) instead of the HTML tab bar, plus native
@@ -17,18 +18,10 @@ import { Capacitor } from "@capacitor/core";
 // avatar and the menu, so a native title bar on top of it would be two headers.
 // Decide that after seeing this build on a phone.
 
-type Tab = { id: string; title: string; href: string; symbol: string; selected: string };
-
-// Two tabs, Home and Me (redesign decision Q1, option a). Explore and Hearth pages sit
-// under Home, so Home stays selected there.
-const TABS: Tab[] = [
-  { id: "home", title: "Home", href: "/", symbol: "house", selected: "house.fill" },
-  { id: "me", title: "Me", href: "/profile", symbol: "person.crop.circle", selected: "person.crop.circle.fill" },
-];
-
-function tabFor(pathname: string): Tab {
-  return pathname.startsWith("/profile") ? TABS[1] : TABS[0];
-}
+// The tab list lives in lib/app-tabs.ts, shared with the HTML TabBar so the two bars
+// always match: Home, My Hearths, My Sparkz, Me. Explore and Hearth pages sit under
+// Home, so Home stays selected there.
+const TABS = APP_TABS;
 
 function cssColor(name: string, fallback: string): string {
   try {

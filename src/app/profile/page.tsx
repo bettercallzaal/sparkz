@@ -14,6 +14,7 @@ import BlockedList from "@/app/_components/BlockedList";
 import TermsNote from "@/app/_components/TermsNote";
 import ReviewCodeBox from "@/app/_components/ReviewCodeBox";
 import { REVIEW_ADDRESS } from "@/lib/review-address";
+import pkg from "../../../package.json";
 import {
   currentAddress,
   currentFid,
@@ -140,9 +141,6 @@ export default function ProfilePage() {
           >
             New Hearth
           </Link>
-          <BlockedList />
-          <SignOutLink onDone={() => setServerFid(null)} />
-          <DeleteAccount />
         </section>
       ) : walletSession ? (
         <section className="glass p-5">
@@ -155,12 +153,6 @@ export default function ProfilePage() {
           <p className="mt-4 text-sm text-muted">
             You can browse and boost Hearths. Opening a Hearth needs a Farcaster account.
           </p>
-          <SignOutLink
-            onDone={() => {
-              setServerAddress(null);
-              setServerFid(null);
-            }}
-          />
         </section>
       ) : !isAuthenticated ? (
         <section className="glass p-5">
@@ -245,11 +237,53 @@ export default function ProfilePage() {
               {signInError ?? "Verifying your sign-in with the server..."}
             </p>
           )}
-          <BlockedList />
-          <SignOutLink onDone={() => setServerFid(null)} />
-          <DeleteAccount />
         </section>
       )}
+
+      {signedIn && (
+        <>
+          <SettingsSection title="Account">
+            <SettingsRow
+              label="Farcaster"
+              value={
+                shownUsername
+                  ? `@${shownUsername}`
+                  : (fid ?? serverFid)
+                    ? `fid ${fid ?? serverFid}`
+                    : "Not linked"
+              }
+            />
+            <SettingsRow
+              label="Wallet"
+              value={shortAddr(walletSession ? serverAddress : (verifications?.[0] ?? null)) ?? "None linked"}
+            />
+            <div className="px-3 pb-2">
+              <SignOutLink
+                onDone={() => {
+                  setServerAddress(null);
+                  setServerFid(null);
+                }}
+              />
+            </div>
+          </SettingsSection>
+
+          <SettingsSection title="Privacy and data">
+            <div className="px-3">
+              <BlockedList />
+            </div>
+            <SettingsLink href="/support" label="How reporting and blocking work" />
+            <div className="px-3 pb-2">
+              <DeleteAccount />
+            </div>
+          </SettingsSection>
+        </>
+      )}
+
+      <SettingsSection title="Support and legal">
+        <SettingsLink href="/support" label="Support" />
+        <SettingsLink href="/privacy" label="Privacy Policy" />
+        <SettingsLink href="/terms" label="Terms of Use" />
+      </SettingsSection>
 
       <ViewAsSwitcher />
 
@@ -288,11 +322,12 @@ export default function ProfilePage() {
           marketing pages live here under Me as one list (design brief A2; App Store
           guideline 4.2.2: an app should not be mainly marketing pages and links).
           On the website the header and footer already carry these, so it stays hidden. */}
-      <section className="glass mt-6 hidden p-2 [html[data-shell=ios]_&]:block">
+      <section className="glass mt-6 p-2">
         <h2 className="px-3 pt-2 pb-1 text-xs font-medium uppercase tracking-wide text-muted">
           About Sparkz
         </h2>
-        <ul>
+        <SettingsRow label="Version" value={appVersionLabel()} />
+        <ul className="hidden [html[data-shell=ios]_&]:block">
           {ABOUT.map((l) => (
             <li key={l.href}>
               <a
@@ -339,7 +374,6 @@ const ADMIN_LINKS = [
 
 const ABOUT = [
   { href: "/demo", label: "How it works" },
-  { href: "/terms", label: "Terms of Use" },
   { href: "/manifesto", label: "Manifesto" },
   { href: "/blog", label: "Blog" },
 ];
@@ -396,5 +430,50 @@ function SignOutLink({ onDone }: { onDone: () => void }) {
     >
       Sign out
     </button>
+  );
+}
+
+// The web app's version and, on a Vercel build, the commit it was built from. The iOS
+// shell's own build number is not readable from the page without the @capacitor/app
+// plugin, which build 6 does not carry.
+function appVersionLabel(): string {
+  const sha = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA;
+  return sha ? `${pkg.version} (${sha.slice(0, 7)})` : pkg.version;
+}
+
+function shortAddr(a: string | null | undefined): string | null {
+  return a ? `${a.slice(0, 6)}...${a.slice(-4)}` : null;
+}
+
+// Settings sections on Me (Zaal, 25 Nov 2026: "add way more to the profile for settings
+// etc"). Only things that exist: no notification settings (none exist yet), nothing that
+// moves money or connects a wallet.
+function SettingsSection({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section className="glass mt-6 p-2">
+      <h2 className="px-3 pt-2 pb-1 text-xs font-medium uppercase tracking-wide text-muted">{title}</h2>
+      {children}
+    </section>
+  );
+}
+
+function SettingsRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex min-h-11 items-center justify-between gap-3 px-3 text-sm">
+      <span>{label}</span>
+      <span className="truncate font-mono text-xs text-muted">{value}</span>
+    </div>
+  );
+}
+
+function SettingsLink({ href, label }: { href: string; label: string }) {
+  return (
+    <Link
+      href={href}
+      className="flex min-h-11 items-center justify-between rounded-md px-3 text-sm active:bg-white/10"
+    >
+      {label}
+      <span aria-hidden className="text-muted">&rsaquo;</span>
+    </Link>
   );
 }

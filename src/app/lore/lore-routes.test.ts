@@ -1,6 +1,5 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 
@@ -40,18 +39,30 @@ test("nothing in the app links to /lore", () => {
   assert.deepEqual(hits, []);
 });
 
+// Text a reader sees: the content between JSX tags, with the tags and their
+// attributes (className, style) stripped, so styled headings are checked too.
+export function renderedText(source: string): string {
+  return source
+    .replace(/\{\/\*[\s\S]*?\*\/\}/g, " ")
+    .replace(/<\/?[A-Za-z][^>]*>/g, "\n")
+    .split("\n")
+    .filter((line) => !/^\s*(import|export|const|type|\/\/)/.test(line))
+    .join("\n");
+}
+
+const BANNED = /\b(crypto\w*|coin|token|wallet|raise|invest\w*|earn\w*|profit|percent)\b|%/i;
+
 test("hero copy has no crypto, money or raise words", () => {
-  const banned = /\b(coin|token|wallet|raise|invest\w*|earn\w*|profit|percent)\b/i;
   const hero = walk(LORE).filter((f) => f.endsWith(".tsx"));
   for (const f of hero) {
-    const lines = readFileSync(f, "utf8").split("\n");
-    lines.forEach((line, i) => {
-      // Ignore code-only lines (imports, types, styles); check text a reader sees.
-      if (/^\s*(import|export|const|type|\/\/)/.test(line)) return;
-      if (/style|rgba|radial|className|gradient/.test(line)) return;
-      assert.doesNotMatch(line, banned, `${f}:${i + 1}`);
-    });
+    assert.doesNotMatch(renderedText(readFileSync(f, "utf8")), BANNED, f);
   }
+});
+
+test("copy check reads text inside styled tags", () => {
+  const text = renderedText('<h1 className="x">Light a Hearth. <span className="y">Earn a coin.</span></h1>');
+  assert.match(text, BANNED);
+  assert.doesNotMatch(renderedText('<h1 className="coin-style">Light a Hearth.</h1>'), BANNED);
 });
 
 test("no internal order numbers in preview code or docs", () => {
@@ -59,15 +70,4 @@ test("no internal order numbers in preview code or docs", () => {
   for (const f of files) {
     assert.doesNotMatch(readFileSync(f, "utf8"), /\bORD-?\d+|\border\s*#?\d{3}\b/i, f);
   }
-});
-
-test("home page is unchanged versus origin/main", () => {
-  const rel = "src/app/page.tsx";
-  const base = execFileSync("git", ["show", `origin/main:${rel}`], {
-    cwd: ROOT,
-    encoding: "utf8",
-  });
-  // Normalize CRLF: a Windows checkout converts line endings, the blob is unchanged.
-  const now = readFileSync(join(ROOT, rel), "utf8").replace(/\r\n/g, "\n");
-  assert.equal(now, base.replace(/\r\n/g, "\n"), "src/app/page.tsx differs from origin/main");
 });

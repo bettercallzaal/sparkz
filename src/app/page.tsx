@@ -70,8 +70,8 @@ export default async function Home() {
               Back the album, <span className="spark-text whitespace-nowrap">not a coin.</span>
             </h1>
             <p className="mt-4 max-w-xl text-lg leading-relaxed text-muted">
-              Sparkz gives every ZAO project a Hearth: one home for the people who back it,
-              help it and show up for it.
+              Sparkz is The ZAO&apos;s home for ZAO projects. Every project gets a Hearth: one home
+              for the people who back it, help it and show up for it.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <a href="#showcase" className="btn-spark rounded-lg px-5 py-2.5 text-sm">
@@ -125,9 +125,9 @@ export default async function Home() {
 
         <section className="border-t border-border">
           <div className="mx-auto max-w-5xl px-4 py-10">
-            <h2 className="text-lg font-semibold">Want a Hearth for your project?</h2>
+            <h2 className="text-lg font-semibold">Have a ZAO project?</h2>
             <p className="mt-1 mb-4 text-sm text-muted">
-              Sparkz is in alpha with The ZAO. Join the list and we will light yours next.
+              Hearths are for ZAO projects. Join The ZAO, then propose yours; Zaal approves who opens each Hearth. Join the list and we will be in touch.
             </p>
             <div className="max-w-md">
               <JoinForm interest="sparkz" />
@@ -142,8 +142,8 @@ export default async function Home() {
           <div className="mx-auto max-w-5xl px-4 py-10">
             <h2 className="text-lg font-semibold">Help build Sparkz</h2>
             <p className="mt-1 mb-4 text-sm text-muted">
-              Sparkz is open source and built in the open with The ZAO. Apply to the team
-              with a name and a wallet.
+              Sparkz is open source and built in the open with The ZAO. Any other collective can
+              fork it for their own. Apply to the team with a name and a wallet.
             </p>
             <div className="max-w-md">
               <JoinTeamForm sparks={[{ slug: "sparkz", name: "Sparkz" }]} source="apply" />

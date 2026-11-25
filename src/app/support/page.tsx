@@ -36,7 +36,7 @@ export default function SupportPage() {
       <header className="space-y-2">
         <h1 className="text-2xl font-medium">Support</h1>
         <p className="text-muted leading-relaxed">
-          Need help with Sparkz, or want to report something? Start here.
+          Sparkz is The ZAO&apos;s home for ZAO projects. Need help, or want to report something? Start here.
         </p>
       </header>
 

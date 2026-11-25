@@ -5,7 +5,7 @@ export const dynamic = "force-static";
 
 export const metadata = {
   title: "New Hearth",
-  description: "Hearths open by invitation while Sparkz is in alpha. Ask for one here. No wallet needed.",
+  description: "Hearths are for ZAO projects and open by invitation. Join The ZAO, then propose yours. No wallet needed.",
   openGraph: {
     title: "New Hearth",
     description: "Hearths open by invitation while Sparkz is in alpha. Ask for one here.",
@@ -31,9 +31,11 @@ export default function StartPage() {
       <p className="mt-4 text-center text-xs text-muted">
         {/* Zaal, 2026-11-19: opening a Hearth is allowlist-only for now (#408). Say so,
             instead of promising every visitor a Hearth in a minute. */}
-        Hearths open by invitation while Sparkz is in alpha. If you are on the list, the
-        form above opens yours; if not, join the waitlist and we will reach out. Every
-        show, drop or launch after that is a Spark that grows it.
+        Sparkz is The ZAO&apos;s home for ZAO projects. Hearths open by invitation: join The ZAO,
+        then propose your project, and Zaal approves who opens it. If you are on the list,
+        the form above opens yours; if not, join the waitlist and we will reach out. Every
+        show, drop or launch after that is a Spark that grows it. The code is open, so any
+        other collective can fork it for their own.
       </p>
     </main>
   );

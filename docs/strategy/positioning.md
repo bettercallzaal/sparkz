@@ -15,6 +15,15 @@ below is the OSS-monetization thesis that lens under-weights. The commercial spe
 it produced - pricing bands, the financial model, revenue targets - are kept in the
 private lab, not this public repo.
 
+## Whose home it is
+
+Sparkz is The ZAO's home for ZAO projects. It is not a platform for projects outside The
+ZAO. The code is open source (Apache-2.0), so any other collective can fork it and make
+their own. To add a ZAO project here: join The ZAO, then propose it. Zaal approves every
+Hearth owner. Copy follows the plain pitch: every project gets a Hearth (its story, its
+people, a record of everyone who pitched in); fans back and boost; Sparks bring people in;
+every bit of help is recorded so early helpers get credit; crypto is optional rails.
+
 ## What Sparkz is (one line)
 
 The open, Farcaster-native home where a project starts with a spark, not a coin - and the

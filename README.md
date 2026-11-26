@@ -3,12 +3,12 @@
 </p>
 
 <h1 align="center">Sparkz</h1>
-<p align="center"><em>Start with a Hearth. Grow it with Sparks.</em><br/>The ZAO's home for ZAO projects.</p>
+<p align="center"><em>Where The ZAO's projects live, and where everyone who helps, person or agent, gets fair credit.</em></p>
 
 <p align="center">
   <a href="https://trysparkz.com">trysparkz.com</a>
   -
-  <a href="#the-meme-engine-loop">The loop</a>
+  <a href="#what-we-are-testing">What we are testing</a>
   -
   <a href="#data-model--the-moat">The moat</a>
   -
@@ -35,19 +35,34 @@
 
 ---
 
-**Sparkz is where a project starts as a Hearth and grows through Sparks.** A Hearth is the project's home: its identity, the people backing it, and a record of everything it ships. A Spark is any event that grows the Hearth: a show, a drop, a release, a collab, a launch. A project can have many. Community grows through onchain actions people take together, not through buying in. Back the album.
+**Sparkz is where The ZAO's projects live, and where everyone who helps, person or agent, gets fair credit.**
 
-**Sparkz is The ZAO's home for ZAO projects.** The code is open source, so any other collective can fork it and run its own. To add a project here, join The ZAO and propose it; Zaal approves each Hearth owner.
+Every ZAO project gets a **Hearth**, its own page. It holds the project's story, the people behind it, and a record of everyone who pitched in. People can back it or boost it. The project adds **Sparks** to bring people in, like a bounty that pays someone to design the logo, a show, a release or a collab. Every bit of help is recorded, so early helpers always get credit. Back the album.
+
+**Sparkz is The ZAO's home for ZAO projects.** The code is open source, so any other collective can fork it and run its own. To add a project here, join The ZAO (come to a fractal, introduce yourself, earn Respect) and propose it. Zaal approves each Hearth owner for now; a ZAO council is being formed.
+
+## What we are testing
+
+> **TL;DR** An open experiment: the best way to credit work on open-source projects, by people and by agents, through the Respect Game. Parts of it are planned, not built yet.
+
+Projects run on help that nobody tracks fairly. Agents now do more of that work, which makes it harder to say who did what. Sparkz is The ZAO's open-source experiment in crediting contribution.
+
+- **The first experiment is this repo.** Sparkz is its own first open-source Hearth.
+- **Planned, not built yet:** every merged pull request becomes a contribution record that names who made it (a person, or which agent and the person who runs it), its review grade, and the issue it closed.
+- **Planned, not built yet:** contributors receive Respect through the Respect Game, The ZAO's weekly fractal, where people rank each other's work. Credit comes from peers judging the work, not from counting pull requests. Respect is never sold.
+- **Live today:** a Hearth owner can post a poidh bounty from the Hearth page (Bounties tab), on Base, signed by their own wallet. Sparkz never holds the funds.
+
+Sparkz is not a token launchpad and has no revenue goal. A token is an optional test for a project, never the point. Creator and Culture Hearths keep working; open-source builders are the target.
 
 > **TL;DR** Every section below opens with a one-line TL;DR, so you can skim the whole thing top to bottom in a minute. Read the bold lines; dive into any section that catches you.
 
 ## New here? Start with this
 
-> **TL;DR** Sparkz is for creators, no code needed. Open a Hearth, grow it with Sparks, and let the record of what you do together speak.
+> **TL;DR** Sparkz is for The ZAO's projects and the people who help them. Open a Hearth, grow it with Sparks, and let the record of what you do together speak.
 
-**Sparkz is for creators - artists, musicians, writers, builders - and the people around them. You do not need to code to use it, or to help.**
+**Sparkz is for The ZAO's builders, artists and musicians, and the people around them. You do not need to code to use it, or to help.**
 
-Here is the whole idea in plain words: you open a **Hearth** - a home for your project that holds your identity, the people backing you, and a record of everything you have made. Then you grow it with **Sparks**: events that bring people in, like a show, a drop, a release or a collab. Every action people take around your work adds to the record, and the record is what grows.
+Here is the whole idea in plain words: a ZAO project gets a **Hearth** - a home that holds its identity, the people backing it, and a record of everyone who helped. It grows with **Sparks**: ways to bring people in, like a bounty, a show, a drop, a release or a collab. Every action people take around the work adds to the record, and the record is what grows.
 
 <p align="center">
   <a href="https://trysparkz.com"><img src="https://img.shields.io/badge/Try%20Sparkz%20%E2%86%92-fbbf24?style=for-the-badge" alt="Try Sparkz" /></a>
@@ -57,10 +72,10 @@ Here is the whole idea in plain words: you open a **Hearth** - a home for your p
 
 - **Support** - people can boost your work for free, no wallet needed to start.
 - **Connect** - your project gets a Farcaster home and a community that shows up.
-- **Build** - turn a relevant moment into a publish-ready post and a permanent record.
+- **Build** - post a bounty for the help you need, and keep a permanent record of who did the work.
 
 <!-- DEMO GIF SLOT: record a 20-30s screen capture of the loop on trysparkz.com
-     (open a Hearth -> boost -> Meme Engine drafts -> approve -> receipt -> share), save it as
+     (open a Hearth -> boost -> post a bounty -> see who helped), save it as
      docs/assets/demo.gif, and replace this comment with:
      <p align="center"><img src="docs/assets/demo.gif" alt="Sparkz in 30 seconds" width="100%" /></p> -->
 
@@ -70,6 +85,7 @@ Not sure what a word means? Every coined term is defined in plain English in the
 
 > **TL;DR** Jump straight to the idea, the product, the implementation, or the open questions.
 
+- [What we are testing](#what-we-are-testing)
 - [New here? Start with this](#new-here-start-with-this)
 - [Glossary](#glossary)
 - [The idea](#the-idea)
@@ -108,8 +124,10 @@ Plain-language definitions. If a coined word shows up anywhere and you are not s
 | **Hearth** | Your project's home base on Sparkz - its identity, its backers, and a record of what it has made. The hub of the wheel. Every project starts here. |
 | **Spoke** | A tool you connect to your Hearth (a Discord, a treasury, an Audius catalog). The Hearth is the hub; each integration is a spoke. Vendors can add their own. |
 | **Back / Boost** | To support a creator you believe in. Free - no wallet required to start. |
-| **Meme Engine** | The part of Sparkz that turns a cultural moment into a post and a permanent record. |
-| **Meme Receipt** | The record - which moment, which response, why it matched, and the outcomes it can generate. |
+| **Meme Engine** | Deprecated. It turned a cultural moment into a post and a record. Its pages are gone from the product; do not build on it. |
+| **Meme Receipt** | Deprecated with the Meme Engine. The old campaign record. |
+| **Respect** | The ZAO's record of credit. People earn it at a weekly fractal, where they rank each other's work. It is never sold. |
+| **Bounty** | A reward for a piece of work, posted on poidh from a Hearth page. A kind of Spark. |
 | **Farcaster** | An open social network (like Twitter, but you own your identity). Sparkz shares there first. |
 | **Onchain action** | Something a person does around a project that is recorded onchain: wearing a hat, backing, attending, contributing.. Records live on Ethereum and its networks. |
 | **Empire** | A shared treasury a project can set up - a shared account for its money. |
@@ -224,7 +242,7 @@ flowchart TB
     OR["OpenRouter<br/>(cheap-tier drafts)"]
     EM["Empire + Base<br/>(create2 treasury)"]
     FC["Farcaster<br/>(SIWF, Mini App, share/cast)"]
-    PO["POIDH<br/>(planned)"]
+    PO["POIDH<br/>(bounties, Base)"]
   end
 
   UI --> Pages
@@ -242,6 +260,8 @@ flowchart TB
 ```
 
 ## The Meme Engine loop
+
+> **Deprecated.** The Meme Engine's pages and the Receipts tab are gone from the product. Its code is still on main until the removal PR merges. Do not build on it. This section is kept as a record of how it worked.
 
 > **TL;DR** Flag a moment -> draft 3 responses -> choose one -> write a receipt -> share it, or let a configured agent cast it.
 
@@ -355,7 +375,7 @@ Surfaced on each Hearth page (`/c/[slug]`) as an integrations panel - **the Hear
 | **0xSplits** | A candidate for adjustable revenue distribution | Modeled in economic config; not directly deployed by Sparkz yet |
 | **Farcaster** | Sign in with Farcaster (SIWF), Mini App manifest, share-to-cast | Live |
 | **Email list** | Off-chain backing / waitlist capture | Live |
-| **POIDH bounties** | Connect Hearth work to bounties | Planned; UI placeholder only |
+| **POIDH bounties** | Post an open bounty from a Hearth page; fund, claim and vote on poidh.xyz | Live: the Bounties tab on `/c/[slug]`, on Base, signed by the owner's own wallet |
 | **Agent** | Score drafts, apply an autonomy gate, and cast through Neynar | Runnable separate runtime; off until configured |
 
 ## Pages
@@ -416,6 +436,7 @@ Routes validate request data with Zod `safeParse`, wrap handlers in try/catch, l
 | `POST` | `/api/signals/approve` | Approve a draft -> write a Meme Receipt |
 | `GET/POST`  | `/api/backers` | List backers / record operator-gated ledger backing |
 | `POST` | `/api/boost` | Back / boost a Hearth (email, no wallet) |
+| `GET/POST` | `/api/hearth-bounties` | A Hearth's poidh bounties with live state from Base (public) / link a bounty the owner posted (owner or admin; the Base receipt is re-read before anything is saved) |
 | `GET`  | `/api/receipts` | Meme Receipts timeline |
 | `GET`  | `/api/activity` | Proof-of-life feed - recent sparks, boosts, and receipts across public Hearths (backers sanitized) |
 | `GET`  | `/api/audius` | An artist's public Audius catalog, by handle (fail-soft) |
@@ -472,7 +493,7 @@ src/
     rate-limit.ts, auth.ts, http.ts, validation/
 agent/                  the runnable Meme Engine agent (separate runtime)
 content/articles/       the blog source
-supabase/migrations/    0001 foundation, 0002 waitlist, 0003 receipt-unique, 0004 spokes, 0005 Hearth rename, 0006 team sign-ups, 0007 boost unique + indexes, 0008 sparks
+supabase/migrations/    0001 foundation, 0002 waitlist, 0003 receipt-unique, 0004 spokes, 0005 Hearth rename, 0006 team sign-ups, 0007 boost unique + indexes, 0008 sparks, 0009 reports and blocks, 0010 Hearth bounties
 docs/                   deep docs + assets
 ```
 

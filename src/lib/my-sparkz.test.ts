@@ -39,7 +39,8 @@ test("My Sparkz: each Spark comes with the Hearth it lives in, newest first", ()
     out.map((s) => [s.kind, s.role, s.title, s.hearth.name, s.hearth.href]),
     [
       ["boost", "boosted", "You boosted Beta", "Beta", "/c/beta"],
-      ["bounty", "posted", "poidh bounty #42", "Alpha", "/c/alpha"],
+      // on-chain id 42 is poidh.xyz bounty #1028 (42 + 986): the label uses the poidh URL id.
+      ["bounty", "posted", "poidh bounty #1028", "Alpha", "/c/alpha"],
       ["event", "started", "Launch night", "Alpha", "/c/alpha"],
       ["token", "launched", "ZABAL token", "ZABAL", "/c/zabal"],
     ],

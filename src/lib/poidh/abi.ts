@@ -9,6 +9,24 @@ export const POIDH_CONTRACT_ADDRESS = "0x5555Fa783936C260f77385b4E153B9725feF171
 export const POIDH_CHAIN_ID = 8453; // Base
 export const POIDH_SITE = "https://poidh.xyz";
 
+// poidh numbers its bounty PAGES differently from the contract. On Base, the v3 contract
+// (POIDH_CONTRACT_ADDRESS) restarted its on-chain ids at 0, and poidh.xyz shows a v3 bounty
+// at /base/bounty/<on-chain id + 986>.
+// Source: poidh-app src/utils/constants.ts line 24, BASE_LAST_PRE_V3_BOUNTY = 986; checked
+// against poidh.xyz/bounties/data, where on-chain id 582 is listed as id 1568.
+// If poidh moves this boundary, this constant must move with it.
+export const POIDH_BASE_LAST_PRE_V3_BOUNTY = 986;
+
+// The id poidh.xyz uses in its bounty URL for a bounty on the Base v3 contract. Only for
+// building links and labels: every stored id and every contract read uses the on-chain id.
+export function poidhUrlId(onChainId: bigint | number | string): string {
+  return (BigInt(onChainId) + BigInt(POIDH_BASE_LAST_PRE_V3_BOUNTY)).toString();
+}
+
+export function poidhBountyUrl(onChainId: bigint | number | string): string {
+  return `${POIDH_SITE}/base/bounty/${poidhUrlId(onChainId)}`;
+}
+
 export const poidhAbi = [
   // reads
   "function MIN_BOUNTY_AMOUNT() view returns (uint256)",

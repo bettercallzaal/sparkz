@@ -17,6 +17,7 @@
 // YourSparks.tsx). Here a Spark is always a thing that lives on a Hearth.
 
 import { readTokenSpark } from "@/lib/token-spark";
+import { poidhUrlId } from "@/lib/poidh/abi";
 
 export type HearthRow = {
   id: string;
@@ -130,7 +131,7 @@ export function assembleMySparkz(input: {
     const h = byId.get(b.hearth_id);
     if (!h || seenBounty.has(b.id)) continue;
     seenBounty.add(b.id);
-    out.push({ key: `bounty:${b.id}`, kind: "bounty", role: "posted", title: `poidh bounty #${b.bounty_id}`, hearth: ref(h), at: b.created_at });
+    out.push({ key: `bounty:${b.id}`, kind: "bounty", role: "posted", title: `poidh bounty #${poidhUrlId(b.bounty_id)}`, hearth: ref(h), at: b.created_at });
   }
 
   for (const h of input.owned) {

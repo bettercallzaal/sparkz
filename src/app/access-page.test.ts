@@ -2,6 +2,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { tokenLaunchRefusal } from "@/lib/empire/deploy-guard";
+import { canManageHearth } from "@/lib/can-manage";
 
 // The /access page ("What you can do") is a check-mark table of features by sign-in.
 // Its rows must stay true to the code; these tests pin the claims that would mislead
@@ -26,9 +28,27 @@ test("boosting needs a wallet or Farcaster sign-in, not just looking", () => {
   assert.match(r, /"farcaster"/);
 });
 
-test("only a wallet launches a coin, and opening a Hearth says invite-only", () => {
-  assert.equal(row("Launch your Hearth's coin").trim(), '"wallet"');
+test("coin launch is operator only: no tier is marked, and the code refuses non-operators", () => {
+  assert.equal(row("Launch your Hearth's coin").trim(), "");
+  assert.match(src, /note: "Operator only for now"/);
+  const refusal = tokenLaunchRefusal({ economic_config: {} }, false);
+  assert.equal(refusal?.status, 403);
+  assert.equal(tokenLaunchRefusal({ economic_config: {} }, true), null);
+});
+
+test("running a Hearth is Farcaster only, matching the fid-only owner check", () => {
+  assert.equal(row("Run your Hearth: Sparks, bounties, settings").trim(), '"farcaster"');
+  // A wallet-only session has no FID, so it can never manage a Hearth.
+  assert.equal(canManageHearth({ admin: false, fid: null }, 123), false);
+  assert.equal(canManageHearth({ admin: false, fid: 123 }, 123), true);
+});
+
+test("opening a Hearth says invite-only", () => {
   assert.match(src, /Invite-only during the beta/);
+});
+
+test("no check-mark or dot characters as marks", () => {
+  assert.doesNotMatch(src, /✓|·/);
 });
 
 test("Google sign-in is described as coming, not live", () => {

@@ -16,8 +16,12 @@ export const metadata: Metadata = {
 //   my activity  /api/me/*        session FID only
 //   team, list   /api/team, /api/waitlist   public, no sign-in
 //   hats         FirstHat         the visitor's own wallet signs the claim
-//   open Hearth  canCreateHearth  invite-only while HEARTH_CREATE_LOCK is on
-//   coin launch  /api/empire/*    the Hearth owner, signing with their own wallet on Base
+//   open Hearth  canCreateHearth  invite-only while HEARTH_CREATE_LOCK is on (FID or address)
+//   run Hearth   requireHearthOwner, canManageHearth   session FID equal to owner_fid only;
+//                create-spark sets owner_fid from the session FID, so a Hearth opened in a
+//                wallet session has no owner the app can match yet
+//   coin launch  tokenLaunchRefusal (lib/empire/deploy-guard.ts)   operator only for now:
+//                every non-operator gets 403 until the launching wallet is bound to the session
 export type Tier = "out" | "email" | "wallet" | "farcaster";
 
 export const TIERS: { key: Tier; name: string; how: string }[] = [
@@ -35,19 +39,20 @@ export const ROWS: { feature: string; tiers: Tier[]; note?: string }[] = [
   { feature: "Claim a free hat", tiers: ["wallet"], note: "Your wallet signs, you pay a little gas" },
   { feature: "See your activity and backings on Me", tiers: ["farcaster"] },
   { feature: "Open a Hearth", tiers: ["wallet", "farcaster"], note: "Invite-only during the beta" },
-  { feature: "Run your Hearth: Sparks, bounties, settings", tiers: ["wallet", "farcaster"], note: "Hearth owners" },
-  { feature: "Launch your Hearth's coin", tiers: ["wallet"], note: "Hearth owners, signed from your own wallet on Base" },
+  { feature: "Run your Hearth: Sparks, bounties, settings", tiers: ["farcaster"], note: "Hearth owners. Hearths opened with a wallet are run by the operator for now" },
+  { feature: "Launch your Hearth's coin", tiers: [], note: "Operator only for now" },
 ];
 
+// Drawn marks, not text symbols: an SVG tick for yes and a short line for no.
 function Mark({ on }: { on: boolean }) {
   return on ? (
-    <span aria-label="yes" className="text-accent-3">
-      ✓
-    </span>
+    <svg role="img" aria-label="yes" viewBox="0 0 16 16" className="inline-block h-4 w-4 text-accent-3">
+      <path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   ) : (
-    <span aria-label="no" className="text-muted">
-      ·
-    </span>
+    <svg role="img" aria-label="no" viewBox="0 0 16 16" className="inline-block h-4 w-4 text-muted">
+      <path d="M6 8h4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
   );
 }
 

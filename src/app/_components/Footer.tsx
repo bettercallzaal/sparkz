@@ -21,6 +21,9 @@ export default function Footer() {
           <Link href="/blog" className="hover:text-foreground">
             Blog
           </Link>
+          <Link href="/access" className="hover:text-foreground">
+            What you can do
+          </Link>
           <a
             href="https://github.com/bettercallzaal/sparkz"
             target="_blank"

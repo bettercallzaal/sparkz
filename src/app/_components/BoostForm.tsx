@@ -8,16 +8,26 @@ import JoinForm from "./JoinForm";
 import Flame from "./Flame";
 import { useToast } from "./toast";
 import { haptic } from "@/lib/native";
+import { boostOutcome } from "@/lib/boost-state";
 
 // Boost a Hearth. Signed in: one tap, as you (the server reads the session). Boosting
 // needs sign-in (Zaal, ORD-465), so signed out, or when the server has no session for
 // you, it asks you to sign in on the Me page.
-export default function BoostForm({ hearthId }: { hearthId: string }) {
+export default function BoostForm({
+  hearthId,
+  initialBoosted = false,
+  boostCount = 0,
+}: {
+  hearthId: string;
+  // The server saw that this viewer's session already has a boost on this Hearth.
+  initialBoosted?: boolean;
+  boostCount?: number;
+}) {
   const router = useRouter();
   const toast = useToast();
   const { isAuthenticated, profile } = useViewerProfile();
   const [needsSignIn, setNeedsSignIn] = useState(false);
-  const [state, setState] = useState<"idle" | "busy" | "done" | "error">("idle");
+  const [state, setState] = useState<"idle" | "busy" | "done" | "error">(initialBoosted ? "done" : "idle");
 
   const { ready, writesOpen } = useViewer();
   // One tap for any signed-in backer: the server takes the identity from the session
@@ -36,18 +46,19 @@ export default function BoostForm({ hearthId }: { hearthId: string }) {
         body: JSON.stringify(body),
       });
       const json = await res.json();
-      if (json.ok) {
+      const outcome = boostOutcome(res.status, json);
+      if (outcome.next === "done") {
         setState("done");
         void haptic("success");
-        toast("Boost sent - you're backing the work now.");
+        toast(outcome.message);
         router.refresh();
-      } else if (res.status === 401) {
+      } else if (outcome.next === "signin") {
         // Signed in on the client but no server session: ask them to sign in again.
         setNeedsSignIn(true);
         setState("idle");
       } else {
         setState("error");
-        toast(json.error ?? "Could not boost - try again.", "error");
+        toast(outcome.message, "error");
       }
     } catch {
       setState("error");
@@ -73,7 +84,10 @@ export default function BoostForm({ hearthId }: { hearthId: string }) {
     return (
       <div className="flex items-center gap-3 rounded-lg border border-accent/40 bg-accent/10 p-3 text-sm">
         <Flame className="h-7 w-7 shrink-0 flame-pop" />
-        <span>Boosted - you are in the data now. Thanks for backing the work.</span>
+        <span>
+          Boosted{boostCount > 0 ? ` (${boostCount})` : ""} - you are in the data now. Thanks for
+          backing the work.
+        </span>
       </div>
     );
   }

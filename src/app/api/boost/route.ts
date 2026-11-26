@@ -5,6 +5,7 @@ import { ok, badRequest, serverError, zodError, tooManyRequests, forbidCrossSite
 import { clientIpHash, boostCountInWindow, BOOST_LIMIT, BOOST_WINDOW_MS } from "@/lib/rate-limit";
 import { isAdmin } from "@/lib/auth";
 import { sessionClaims } from "@/lib/session";
+import { boosterId } from "@/lib/boost-state";
 import { ALPHA_CLOSED_MESSAGE, ALPHA_LOCK } from "@/lib/alpha-access";
 
 // POST /api/boost - public "Boost this Hearth" (the boost engine): a free support
@@ -32,14 +33,10 @@ export async function POST(req: NextRequest) {
     const parsed = boostSchema.safeParse(body);
     if (!parsed.success) return zodError(parsed.error);
 
-    let backerId: string;
-    if (claims?.fid) {
-      // The session FID is the identity and the dedupe key. fc_username is stored in
-      // metadata as an unverified display hint only.
-      backerId = `fid:${claims.fid}`;
-    } else if (claims?.address) {
-      backerId = claims.address;
-    } else {
+    // The session FID (or wallet address) is the identity and the dedupe key.
+    // fc_username is stored in metadata as an unverified display hint only.
+    const backerId = boosterId(claims);
+    if (!backerId) {
       return NextResponse.json({ ok: false, error: SIGN_IN_TO_BOOST }, { status: 401 });
     }
     const supabase = getServiceClient();

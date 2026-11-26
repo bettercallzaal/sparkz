@@ -200,10 +200,10 @@ export interface RegisterTokenEmpireInput {
 // POST /api/deploy-empire (Clanker fresh-deploy flow). Empire validates the tx receipt
 // (owner = tx.from, LP rewards to the empire wallet, token address = baseToken).
 // Never send tokenType. Rate limit: 2 empires per wallet per 24h.
-// How long Sparkz waits for Empire to register a coin. Without a limit a hung call held
-// the one-launch claim until the function was killed, and the Hearth stayed "already in
-// progress" with no way out (ORD-713, H1). On a timeout the route frees the claim, so
-// Finish launch can try again.
+// How long Sparkz waits for Empire. Without a limit a hung register call held the
+// one-launch claim until the function was killed (ORD-713, H1). On a register time-out the
+// route keeps the claim and says not to retry, because Empire may still be registering;
+// the operator finishes it. A get-token-config time-out just frees the launch lock.
 export const EMPIRE_REGISTER_TIMEOUT_MS = 25_000;
 
 export async function registerTokenEmpire(

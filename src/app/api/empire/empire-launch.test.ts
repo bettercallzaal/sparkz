@@ -500,8 +500,11 @@ test("H1: while Empire hangs, the claim is held and Finish launch gets 409 (no w
   assert.equal((await POST(req("/api/empire/register-token", registerBody()))).status, 409);
 });
 
-test("H1: the Empire call now has a time limit, so a hang becomes a 502 that frees the claim", async () => {
+test("H1: the Empire call now has a time limit, so a hang ends instead of holding the claim", async () => {
   const realFetch = globalThis.fetch;
+  // AbortSignal.timeout does not keep Node's event loop alive (Node 22 ends the test file
+  // early without this); a ref'd timer does, until the call settles.
+  const keepAlive = setInterval(() => {}, 1000);
   process.env.EMPIRE_API_KEY = "test-only-not-a-key";
   globalThis.fetch = ((_url: unknown, init?: RequestInit) =>
     new Promise((_res, rej) => init?.signal?.addEventListener("abort", () => rej(init.signal?.reason)))) as typeof fetch;
@@ -511,11 +514,25 @@ test("H1: the Empire call now has a time limit, so a hang becomes a 502 that fre
       registerTokenEmpire({ baseToken: TOKEN, name: "Zoostr", owner: ME, txHash: TX, symbol: "ZOOSTR" }, { timeoutMs: 20 }),
     );
   } finally {
+    clearInterval(keepAlive);
     globalThis.fetch = realFetch;
     delete process.env.EMPIRE_API_KEY;
   }
-  // The route's existing catch (Empire down) then frees the claim:
-  // see "register: Empire down gives a plain 502 and frees the claim".
+});
+
+test("H1: an Empire time-out keeps the claim and says not to retry (Empire may still be registering)", async () => {
+  db.state.hearth.economic_config = { pending_deploy_tx: TX, token_launch_lock_by: ME.toLowerCase() };
+  launchDeps.registerTokenEmpire = async () => {
+    empireCalls++;
+    throw new DOMException("The operation was aborted due to timeout", "TimeoutError");
+  };
+  const { POST } = await import("./register-token/route");
+  const res = await POST(req("/api/empire/register-token", registerBody()));
+  assert.equal(res.status, 504);
+  assert.match((await res.json()).error, /Do not press Finish launch again/);
+  assert.equal(typeof econ().token_launch_claimed_at, "string");
+  assert.equal((await POST(req("/api/empire/register-token", registerBody()))).status, 409);
+  assert.equal(empireCalls, 1);
 });
 
 test("H1: Empire says yes but the save fails: plain 500, Empire asked once, claim kept so it is never asked twice", async () => {

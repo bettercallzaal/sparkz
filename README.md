@@ -33,7 +33,7 @@
 
 **Sparkz is where The ZAO's projects live, and where everyone who helps, person or agent, gets fair credit.**
 
-Every ZAO project gets a **Hearth**, its own page. It holds the project's story, the people behind it, and a record of everyone who pitched in. People can back it or boost it. The project adds **Sparks** to bring people in, like a bounty that pays someone to design the logo, a show, a release or a collab. Every bit of help is recorded, so early helpers always get credit. Back the album.
+Every ZAO project gets a **Hearth**, its own page. It holds the project's story, the people behind it, and a record of everyone who pitched in. People can back it or boost it. The project adds **Sparks** to bring people in, like a bounty to design the logo, a show, a release or a collab. Every bit of help is recorded, so early helpers always get credit. Back the album.
 
 **Sparkz is The ZAO's home for ZAO projects.** The code is open source, so any other collective can fork it and run its own. To add a project here, join The ZAO (come to a fractal, introduce yourself, receive Respect) and propose it. Zaal approves each Hearth owner for now; a ZAO council is being formed.
 
@@ -139,7 +139,7 @@ Every project on Sparkz starts as a **Hearth**: a home where a community backs t
 
 > **TL;DR** Start with a Hearth, grow with Sparks, a visible boost signal, ZAO-backed quality - and the work is always the pitch.
 
-- **Start with a Hearth.** Identity, backing, receipts - a real record from day one.
+- **Start with a Hearth.** Identity, backing, bounties - a real record from day one. A contribution record for merged work is planned, not built yet.
 - **Grow with Sparks.** Events are how a Hearth grows, and every one leaves a record of who showed up and what they did.
 - **A boost signal.** Supporters can show up without a wallet or payment. Leaderboards and reward layers can build on that signal later.
 - **Collectables on the roadmap.** Backing a creator's work will come with collectables - a v2 layer, not live today.
@@ -153,8 +153,8 @@ Every project on Sparkz starts as a **Hearth**: a home where a community backs t
 
 Sparkz is built so a creator is never trapped - not in a vendor, not in a chain, not even in our own stack. The whole point is to give creators the least-friction way to build, while keeping every exit open.
 
-- **Your data is yours.** A Hearth is an open record - identity, backers, receipts - built on an open schema in an open-source codebase. The moat is the record that accumulates around your work.
-- **Swap any piece.** Every external system sits behind an adapter - [SignalSource, BackingProvider, ApprovalChannel](#adapter-seams). Today that means human signals, ledger backing, and in-app approval with optional Discord notification; new rails and channels can slot in without a UI rewrite.
+- **Your data is yours.** A Hearth is an open record - identity, backers, bounties - built on an open schema in an open-source codebase. The moat is the record that accumulates around your work.
+- **Swap any piece.** Every external system sits behind an adapter - [SignalSource, BackingProvider, ApprovalChannel](#adapter-seams-the-spokes). Today that means human signals, ledger backing, and in-app approval with optional Discord notification; new rails and channels can slot in without a UI rewrite.
 - **Bring the tools you already use.** Farcaster identity and sharing, GitHub imports, and Empire are wired today; POIDH, Hats, Lens, Bluesky and more can join through the same open approach. Sparkz is connective tissue, not a walled garden that replaces them.
 - **Decentralized where it counts.** An identity you own, onchain records on Ethereum and its networks, and treasury rails you control when configured. Members sign in with a wallet or a social account. Nothing goes onchain until you choose it.
 
@@ -175,7 +175,7 @@ Sparkz puts every partner's split and benefits next to every other compatible op
 
 |  | Typical launch flow | Sparkz |
 | --- | --- | --- |
-| **Starting point** | Something to buy on day one | Hearth: identity, backing, and receipts |
+| **Starting point** | Something to buy on day one | Hearth: identity, backing, and bounties |
 | **First community action** | Buy, sell, or hold | Back, boost, wear a hat, show up |
 | **How it grows** | Price | Sparks: events, and the onchain actions around them |
 | **Rail choice** | The launcher's supported stack | Compare compatible providers and terms |
@@ -185,9 +185,9 @@ Sparkz puts every partner's split and benefits next to every other compatible op
 
 ## The Hearth
 
-> **TL;DR** Every project is a Hearth (identity + backing + receipts). One schema, four entry points.
+> **TL;DR** Every project is a Hearth (identity + backing + bounties; a contribution record is planned). One schema, four entry points.
 
-Every Sparkz project is a **Hearth.** The Hearth is the unit that accumulates: identity, contributors, history, content, receipts, reputation, backing, economic config, and Meme Engine memory. Sparks - events - are how it grows. The moat is the accumulating data, not image generation.
+Every Sparkz project is a **Hearth.** The Hearth is the unit that accumulates: identity, contributors, history, content, bounties, reputation, backing and economic config. A contribution record for merged work is planned, not built yet. Sparks - events - are how it grows. The moat is the accumulating data, not image generation.
 
 One schema, four entry points (so v1.5 is additive, not a rewrite):
 
@@ -277,7 +277,7 @@ Both unchosen drafts and their rejection reason are stored on purpose - what the
 
 ## Data model / the moat
 
-> **TL;DR** Five core Hearth tables plus a waitlist, with RLS on all six. Backing settles into one provider-agnostic table; the receipts are the moat.
+> **TL;DR** Five core Hearth tables plus a waitlist, with RLS on all six. Backing settles into one provider-agnostic table; the accumulating record is the moat. (The `meme_receipts` table belongs to the deprecated Meme Engine.)
 
 Sparkz has five core Hearth tables plus `waitlist`. RLS is ON everywhere (each `create table` in `supabase/migrations/` is followed by `enable row level security`; `scripts/db-migrate.sh` applies them to Neon or Supabase) with no anon policies - every read and write goes through the server on the service-role key, which bypasses RLS. Types are CHECK constraints, not Postgres enums, so a new type/status/provider is a plain migration.
 
@@ -329,7 +329,7 @@ erDiagram
 ```mermaid
 stateDiagram-v2
   [*] --> spark: open a Hearth
-  spark --> spark: Sparks (events), backing, boosts, receipts accumulate
+  spark --> spark: Sparks (events), backing, boosts, bounties accumulate
   spark --> dormant: goes quiet
   dormant --> spark: revived by a new Spark
 ```
@@ -379,7 +379,7 @@ Surfaced on each Hearth page (`/c/[slug]`) as an integrations panel - **the Hear
 | Route | What it is |
 | --- | --- |
 | `/` | Landing - the pitch, join form, the ecosystem |
-| `/start` | Self-serve: light your own spark in under a minute |
+| `/start` | Ask to open a Hearth. Hearths open by invitation during alpha; Zaal approves each owner |
 | `/c/[slug]` | A Hearth: identity, stats, integrations, boost, bounties, backers |
 | `/explore` | Filterable directory of every Spark (type, status, integrations, sort) - each shows its connected-integration badges |
 | `/empire/[id]` | Live Empire panel - any empire's treasury, reward flow, and boost leaderboard (also embedded on a Spark's `/c/[slug]` page) |
@@ -387,7 +387,7 @@ Surfaced on each Hearth page (`/c/[slug]`) as an integrations panel - **the Hear
 | `/demo` | The idea in one page - live-stream explainer |
 | `/admin` | The operator console (operator-gated). Still holds the deprecated Meme Engine tools until the removal PR merges |
 | `/admin/new` | Create a Hearth manually (operator-gated) |
-| `/admin/pending` | Review queue for self-serve sparks (operator-gated) |
+| `/admin/pending` | Review queue for Hearth requests (operator-gated) |
 | `/admin/empire` | Tokenless empire launcher (wallet-connected) |
 | `/audit` | Brand audit - import an existing repo as an OSS Hearth |
 | `/profile` | Sign in with Farcaster |
@@ -424,7 +424,7 @@ Routes validate request data with Zod `safeParse`, wrap handlers in try/catch, l
 | `GET/POST`  | `/api/backers` | List backers / record operator-gated ledger backing |
 | `POST` | `/api/boost` | Back / boost a Hearth (email, no wallet) |
 | `GET/POST` | `/api/hearth-bounties` | A Hearth's poidh bounties with live state from Base (public) / link a bounty the owner posted (owner or admin; the Base receipt is re-read before anything is saved) |
-| `GET`  | `/api/receipts` | Meme Receipts timeline |
+| `GET`  | `/api/receipts` | Meme Receipts timeline (deprecated with the Meme Engine) |
 | `GET`  | `/api/activity` | Proof-of-life feed - recent sparks, boosts, and receipts across public Hearths (backers sanitized) |
 | `GET`  | `/api/audius` | An artist's public Audius catalog, by handle (fail-soft) |
 | `GET`  | `/api/empire/{id}` | Full public Empire read bundle (resolve + leaderboards + entries + rewards + boosters) |
@@ -516,7 +516,7 @@ Full posture: [SECURITY.md](docs/SECURITY.md).
 
 ## The four anti-failure gates
 
-> **TL;DR** Every feature must earn, be measurable, strengthen the data, and be testable with a real project in 30 days - or it stays in the lab.
+> **TL;DR** Every feature must help someone, be measurable, strengthen the data, and be testable with a real project in 30 days - or it stays in the lab.
 
 Every feature passes all four or it stays in the lab:
 
@@ -531,7 +531,7 @@ Every feature passes all four or it stays in the lab:
 
 **Working end to end (verified):**
 
-- Hearth creation - self-serve `/start` (rate-limited, held for review) and operator console.
+- Hearth creation - by invitation: a request through `/start` (rate-limited, held for review) and the operator console.
 - The Meme Engine loop (deprecated; pages removed in #424, do not build on it) - signal -> 3 drafts (OpenRouter, memory-grounded) -> human approve -> Meme Receipt. Idempotent, first-approve-wins.
 - Empire Builder - live reads (leaderboards, boosters) and a working tokenless deploy at `/admin/empire` (wallet-signed, operator-gated).
 - The Audius spoke - real catalog reads from the Audius public API, live demo on `/audius`.
@@ -544,7 +544,7 @@ Every feature passes all four or it stays in the lab:
 2. **Spoke toggles now gate the loop.** Each Hearth's `hearth_spokes` toggles decide which signal sources may flag or detect for it and which approval channels hear about its drafts, and its connector spokes report live status (`Connector.status()`, with the Hearth's own config) on `/c/[slug]`. Still open: per-Hearth approval destinations (each Hearth's own webhook) - channels still post to the server-wide destination.
 3. **Receipts have no measurement engine.** `reach` / `referrals` / `backing_generated` are written as 0, and approved drafts are not yet published to Farcaster. The plan: publish-on-approve via Neynar managed signers, then measure with cast lookups. (Note: Sign In With Neynar was deprecated 2026-08-14 - new work uses Neynar managed/sponsored signers, not SIWN.)
 
-**Build order:** owner-by-FID auth (built) -> owner-gated settings + Empire deploy/link -> runtime spoke gating -> the receipts engine (publish + measure) -> per-Hearth contributor leaderboards.
+**Build order:** owner-by-FID auth (built) -> owner-gated settings + Empire deploy/link -> runtime spoke gating -> the contribution record (planned; replaces the old receipts engine) (publish + measure) -> per-Hearth contributor leaderboards.
 
 **The convergence** - each audited ZAO project is a Hearth candidate; CoCConcertZ is slated to become a Spark.
 

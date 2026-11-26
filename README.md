@@ -29,17 +29,13 @@
   <img src="https://img.shields.io/badge/status-Milestone%201-fbbf24" alt="Milestone 1" />
 </p>
 
-<p align="center">
-  <a href="https://trysparkz.com/architecture"><img src="https://img.shields.io/badge/View%20the%20interactive%20architecture%20%E2%86%92-c084fc?style=for-the-badge" alt="Interactive architecture" /></a>
-</p>
-
 ---
 
 **Sparkz is where The ZAO's projects live, and where everyone who helps, person or agent, gets fair credit.**
 
 Every ZAO project gets a **Hearth**, its own page. It holds the project's story, the people behind it, and a record of everyone who pitched in. People can back it or boost it. The project adds **Sparks** to bring people in, like a bounty that pays someone to design the logo, a show, a release or a collab. Every bit of help is recorded, so early helpers always get credit. Back the album.
 
-**Sparkz is The ZAO's home for ZAO projects.** The code is open source, so any other collective can fork it and run its own. To add a project here, join The ZAO (come to a fractal, introduce yourself, earn Respect) and propose it. Zaal approves each Hearth owner for now; a ZAO council is being formed.
+**Sparkz is The ZAO's home for ZAO projects.** The code is open source, so any other collective can fork it and run its own. To add a project here, join The ZAO (come to a fractal, introduce yourself, receive Respect) and propose it. Zaal approves each Hearth owner for now; a ZAO council is being formed.
 
 ## What we are testing
 
@@ -96,8 +92,8 @@ Not sure what a word means? Every coined term is defined in plain English in the
 - [Architecture](#architecture)
 - [The Meme Engine loop](#the-meme-engine-loop)
 - [Data model / the moat](#data-model--the-moat)
-- [Adapter seams](#adapter-seams)
-- [Integrations](#integrations)
+- [Adapter seams](#adapter-seams-the-spokes)
+- [Integrations](#integrations-spokes-on-the-wheel)
 - [Pages](#pages)
 - [API reference](#api-reference)
 - [Tech stack](#tech-stack)
@@ -106,7 +102,7 @@ Not sure what a word means? Every coined term is defined in plain English in the
 - [Deploy](#deploy)
 - [Security](#security)
 - [The four anti-failure gates](#the-four-anti-failure-gates)
-- [Roadmap](#roadmap)
+- [Roadmap](#state-of-the-project--roadmap)
 - [Still fluid - help us decide](#still-fluid---help-us-decide)
 - [Documentation](#documentation)
 - [Principles](#principles)
@@ -126,7 +122,7 @@ Plain-language definitions. If a coined word shows up anywhere and you are not s
 | **Back / Boost** | To support a creator you believe in. Free - no wallet required to start. |
 | **Meme Engine** | Deprecated. It turned a cultural moment into a post and a record. Its pages are gone from the product; do not build on it. |
 | **Meme Receipt** | Deprecated with the Meme Engine. The old campaign record. |
-| **Respect** | The ZAO's record of credit. People earn it at a weekly fractal, where they rank each other's work. It is never sold. |
+| **Respect** | The ZAO's record of credit. People receive it at a weekly fractal, where they rank each other's work. It is never sold. |
 | **Bounty** | A reward for a piece of work, posted on poidh from a Hearth page. A kind of Spark. |
 | **Farcaster** | An open social network (like Twitter, but you own your identity). Sparkz shares there first. |
 | **Onchain action** | Something a person does around a project that is recorded onchain: wearing a hat, backing, attending, contributing.. Records live on Ethereum and its networks. |
@@ -146,7 +142,7 @@ Every project on Sparkz starts as a **Hearth**: a home where a community backs t
 - **Start with a Hearth.** Identity, backing, receipts - a real record from day one.
 - **Grow with Sparks.** Events are how a Hearth grows, and every one leaves a record of who showed up and what they did.
 - **A boost signal.** Supporters can show up without a wallet or payment. Leaderboards and reward layers can build on that signal later.
-- **Collectables on the roadmap.** Backing a creator's work will earn collectables - a v2 layer, not live today.
+- **Collectables on the roadmap.** Backing a creator's work will come with collectables - a v2 layer, not live today.
 - **Backed by ZAO.** Not a permissionless farm. ZAO stands behind who launches, so it stays quality over hype, and takes an aligned locked stake - never a fee slice.
 
 **The frame:** Sparkz leads with the work: **back the album.** Perks are what backers enjoy today, not promises. Community grows through onchain actions people take together.
@@ -200,7 +196,7 @@ flowchart LR
   Creator["Creator<br/>(Zoostr - v1 proof)"] --> Hearth
   Culture["Culture<br/>(a scene / movement)"] --> Hearth
   OSS["Open-Source repo<br/>(repo + contributors + audit)"] --> Hearth
-  Meme["Meme Engine<br/>(lineage-native)"] --> Hearth
+  Meme["Meme Engine<br/>(deprecated)"] --> Hearth
   Hearth(("Hearth")) --> Sparks["Sparks<br/>(events: shows, drops, launches)"]
   Sparks --> Record["Onchain record<br/>(who showed up, what they did)"]
 ```
@@ -213,12 +209,10 @@ The Hearth type lives in `hearths.type` (`creator | culture | oss | meme`); type
 
 Server-first Next.js App Router. All privileged work runs server-side with the database's service credentials (Neon in production, Supabase's service-role key on the older backend); the browser never sees a secret. Every external system sits behind an adapter or a thin client so it can be swapped without touching the UI.
 
-> [View the interactive architecture](https://trysparkz.com/architecture) - step through the Meme Engine loop, the system map, the data model, and the adapter seams.
-
 ```mermaid
 flowchart TB
   subgraph Browser
-    UI["Pages: /, /start, /c/[slug], /explore,<br/>/blog, /demo, /architecture, /admin, /profile"]
+    UI["Pages: /, /start, /c/[slug], /explore,<br/>/blog, /demo, /admin, /profile"]
   end
 
   subgraph Next["Next.js (App Router, server-first)"]
@@ -386,13 +380,12 @@ Surfaced on each Hearth page (`/c/[slug]`) as an integrations panel - **the Hear
 | --- | --- |
 | `/` | Landing - the pitch, join form, the ecosystem |
 | `/start` | Self-serve: light your own spark in under a minute |
-| `/c/[slug]` | A Hearth: identity, stats, integrations, boost, receipts, backers |
+| `/c/[slug]` | A Hearth: identity, stats, integrations, boost, bounties, backers |
 | `/explore` | Filterable directory of every Spark (type, status, integrations, sort) - each shows its connected-integration badges |
 | `/empire/[id]` | Live Empire panel - any empire's treasury, reward flow, and boost leaderboard (also embedded on a Spark's `/c/[slug]` page) |
 | `/blog` | Short pieces on the thesis and the stack |
 | `/demo` | The idea in one page - live-stream explainer |
-| `/architecture` | The interactive architecture explorer |
-| `/admin` | The Meme Engine console (operator-gated) |
+| `/admin` | The operator console (operator-gated). Still holds the deprecated Meme Engine tools until the removal PR merges |
 | `/admin/new` | Create a Hearth manually (operator-gated) |
 | `/admin/pending` | Review queue for self-serve sparks (operator-gated) |
 | `/admin/empire` | Tokenless empire launcher (wallet-connected) |
@@ -401,12 +394,6 @@ Surfaced on each Hearth page (`/c/[slug]`) as an integrations panel - **the Hear
 | `/c/[slug]/settings` | Owner settings - choose which integrations show on the public Hearth page (the Hearth's owner, signed in with Farcaster, or the operator) |
 | `/admin/add-repo` | Add a project from its GitHub repo - opens an OSS Hearth pre-filled with real repo data (operator-gated) |
 | `/blog/[slug]` | A single blog post |
-| `/hearth` | What a Hearth is - identity, backers, and receipts |
-| `/meme-engine` | How the Meme Engine loop works - drafts, human approval, receipts |
-| `/graduation` | How Sparks (events) grow a Hearth |
-| `/split-wizard` | Set a split sheet before launch - roles, shares, 0xSplits JSON export |
-| `/community-pool`, `/contribution`, `/examples` | Options creators can experiment with - contribution points, pool shares, Spark templates |
-| `/farcaster` | Why Sparkz is Farcaster-native |
 | `/manifesto` | The principles - generative, not extractive |
 | `/zao` | Sparkz as part of The ZAO |
 
@@ -455,13 +442,13 @@ Routes validate request data with Zod `safeParse`, wrap handlers in try/catch, l
 
 ## Tech stack
 
-> **TL;DR** Next.js 16 + Neon Postgres and Vercel Blob (RLS on every table) + Tailwind + Base/Farcaster; a cheap LLM tier drafts the memes.
+> **TL;DR** Next.js 16 + Neon Postgres and Vercel Blob (RLS on every table) + Tailwind + Base/Farcaster. Any LLM drafting uses a cheap tier, never a metered Claude path.
 
 - **Next.js 16** (App Router, Turbopack), **React 19**, **TypeScript** (strict).
 - **Neon Postgres + Vercel Blob** in production (`SPARKZ_DB=neon`, `src/lib/db/`). Supabase (Postgres + RLS + Storage) is the older backend, used when `SPARKZ_DB` is unset. Service credentials are server-only.
 - **Tailwind** (v4) - mobile-first, dark theme. Space Grotesk display, violet-to-amber gradient.
 - **Base / Farcaster** - viem + wagmi + Reown AppKit; Farcaster AuthKit + Mini App SDK.
-- **Meme Engine drafts** - OpenRouter cheap tier (deepseek-chat), never a metered Claude path.
+- **Meme Engine drafts (deprecated)** - OpenRouter cheap tier (deepseek-chat), never a metered Claude path. The code stays on main until the removal PR merges.
 - **Vercel** deploy; GitHub integration auto-deploys `main`.
 
 See [docs/STACK.md](docs/STACK.md) for the full file-by-file map.
@@ -545,7 +532,7 @@ Every feature passes all four or it stays in the lab:
 **Working end to end (verified):**
 
 - Hearth creation - self-serve `/start` (rate-limited, held for review) and operator console.
-- The Meme Engine loop - signal -> 3 drafts (OpenRouter, memory-grounded) -> human approve -> Meme Receipt. Idempotent, first-approve-wins.
+- The Meme Engine loop (deprecated; pages removed in #424, do not build on it) - signal -> 3 drafts (OpenRouter, memory-grounded) -> human approve -> Meme Receipt. Idempotent, first-approve-wins.
 - Empire Builder - live reads (leaderboards, boosters) and a working tokenless deploy at `/admin/empire` (wallet-signed, operator-gated).
 - The Audius spoke - real catalog reads from the Audius public API, live demo on `/audius`.
 - Owner visibility settings - `/c/[slug]/settings` toggles which integrations show on the public page (the owner, signed in with Farcaster, or the operator).
@@ -572,9 +559,9 @@ Sparkz is early and public on purpose. The things below are **not locked in**. I
 - **Backing rails** - `ledger` (off-chain) is live; Privy, Empire and other onchain rails are candidates behind the same adapter. Which do creators actually want first?
 - **Fees + splits** - the creator-first default is 1/1/98. Is that the right floor? Should Sparkz ever take a slice, or only an aligned, locked stake - never a fee?
 - **Sparks** - which events grow a Hearth best, and which onchain actions should every Spark record? A hat, an attendance proof, a contribution?
-- **Self-serve + moderation** - anyone can light a spark, held for review. The auth direction is decided (verified Sign-in-with-Farcaster, owner-by-FID); still open is how open creation should be: fully self-serve, invite-only, or FID-gated from day one?
-- **Agent autonomy** - the Meme Engine agent is human-in-the-loop by default. How much autonomy should a creator be able to hand it?
-- **Entry points** - Creator and OSS-repo flows are wired; Culture and Meme remain early. Which should we build out next?
+- **Self-serve + moderation** - today Hearth creation is invite-only: Zaal approves each owner. The auth direction is decided (verified Sign-in-with-Farcaster, owner-by-FID); still open is how open creation should be: fully self-serve, invite-only, or FID-gated from day one?
+- **Agent autonomy** - agents are human-in-the-loop by default. How much autonomy should an operator be able to hand one? (The Meme Engine agent this question started with is deprecated.)
+- **Entry points** - Creator and OSS-repo flows are wired; Culture remains early and Meme is deprecated. Which should we build out next?
 
 Bring a take with a concrete path (see [Contributing](CONTRIBUTING.md)) and it gets read and acted on.
 

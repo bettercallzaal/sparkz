@@ -170,6 +170,11 @@ export const deployEmpireSchema = z.object({
   // A personal_sign signature is 65 bytes (132 chars); 1000 leaves room for smart-wallet
   // signatures without accepting an unbounded string.
   signature: z.string().max(1000).regex(/^0x[a-fA-F0-9]+$/),
+  // The one-time code from POST /api/empire/deploy/code and the owner wallet's signature
+  // over deployCodeMessage (lib/empire/deploy-code.ts). Empire's own message is name-only,
+  // so this second signature is what stops a signature being replayed.
+  code: z.string().min(1).max(200).regex(/^[0-9a-f]{32}\.[0-9]{1,12}\.[A-Za-z0-9_-]{43}$/),
+  code_signature: z.string().max(1000).regex(/^0x[a-fA-F0-9]+$/),
   // https only, like the Hearth links: bare .url() accepts javascript: and data:.
   logo_uri: httpsUrl.optional(),
   bio: z.string().max(2000).optional(),

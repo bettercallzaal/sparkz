@@ -31,7 +31,7 @@ test("a bare Hearth shows every card as not connected, with the default wording"
   assert.equal(g.bounties.value, "none yet");
 });
 
-test("Bounties: an https poidh link under links turns the card live and links it", () => {
+test("Bounties: an https poidh link (poidh.xyz URL id 1536, not an on-chain id) under links turns the card live and links it", () => {
   const url = "https://poidh.xyz/base/bounty/1536";
   const b = byId(hearth({ metadata: { links: { bounties: url } } })).bounties;
   assert.equal(b.connected, true);

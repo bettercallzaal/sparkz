@@ -33,6 +33,9 @@ import { hearthStatusLabel } from "@/lib/hearth-status";
 import ReportMenu from "@/app/_components/ReportMenu";
 import UnblockButton from "@/app/_components/UnblockButton";
 import { viewerBlockedOwners } from "@/lib/blocks-viewer";
+import { cookies } from "next/headers";
+import { readSessionClaims, SESSION_COOKIE } from "@/lib/session";
+import { viewerBoosted } from "@/lib/boost-state";
 import { blockedOwnerOf, hearthOwnerIdentity } from "@/lib/moderation";
 
 export const dynamic = "force-dynamic";
@@ -176,6 +179,8 @@ export default async function HearthPage({
 
   const { hearth, backers, boostCount } = view;
   const ownerIdentity = hearthOwnerIdentity(hearth);
+  const jar = await cookies();
+  const alreadyBoosted = viewerBoosted(backers, readSessionClaims(jar.get(SESSION_COOKIE)?.value));
   // The viewer blocked this Hearth's owner (migration 0009): show nothing of theirs, only
   // a way to unblock.
   const blockedOwner = blockedOwnerOf(hearth, await viewerBlockedOwners());
@@ -387,7 +392,7 @@ export default async function HearthPage({
       <section id="boost" className="glass mb-8 scroll-mt-20 p-4">
         <h2 className="mb-1 text-sm font-medium">Boost {hearth.name}</h2>
         <p className="mb-3 text-xs text-muted">Back the work with a free boost.</p>
-        <BoostForm hearthId={hearth.id} />
+        <BoostForm hearthId={hearth.id} initialBoosted={alreadyBoosted} boostCount={boostCount} />
       </section>
 
       {BOOSTR_HEARTHS.has(hearth.slug) && <BoostrPanel stats={await fetchBoostrStats()} />}
@@ -401,15 +406,21 @@ export default async function HearthPage({
             label: "About",
             content: (
               <>
-                {tokenSpark && <TokenSparkPanel meta={tokenSpark} />}
+                {tokenSpark && (
+                  <div className="web-only">
+                    <TokenSparkPanel meta={tokenSpark} />
+                  </div>
+                )}
 
                 {econ.empire_id && (
-                  <section className="mb-8">
-                    <h2 className="mb-3 text-sm font-medium">Empire leaderboard</h2>
-                    <div className="card-solid p-4">
-                      <EmpireLeaderboard empireId={econ.empire_id} showHeader={false} />
-                    </div>
-                  </section>
+                  <div className="web-only">
+                    <section className="mb-8">
+                      <h2 className="mb-3 text-sm font-medium">Empire leaderboard</h2>
+                      <div className="card-solid p-4">
+                        <EmpireLeaderboard empireId={econ.empire_id} showHeader={false} />
+                      </div>
+                    </section>
+                  </div>
                 )}
 
                 {meta.about && (

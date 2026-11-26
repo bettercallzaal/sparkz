@@ -595,7 +595,7 @@ function LaunchReview({ p, owner }: { p: Preview; owner: string }) {
       <Row k="Coins bought at launch" v={s.devBuy ? "Yes" : "None"} />
 
       <p className="mb-1 mt-4 font-semibold">Who gets the trading fees</p>
-      <Row k="Clanker protocol (fixed on-chain)" v={`${s.clankerPct}%`} />
+      <Row k="Clanker protocol (a value set in Sparkz)" v={`${s.clankerPct}%`} />
       {s.recipients.map((r) => (
         <Row key={r.recipient + r.bps} k={`${who(r.recipient, r.bps)} ${short(r.recipient)}`} v={`${r.pctOfTradingFees}%`} />
       ))}
@@ -605,8 +605,8 @@ function LaunchReview({ p, owner }: { p: Preview; owner: string }) {
       <div className="mt-2 space-y-1 text-xs text-muted">
         <p>Where these numbers come from:</p>
         <p>
-          Clanker {s.clankerPct}%: the protocolFee() setting on the Clanker v4 fee hooks, read on Base
-          mainnet on 24 Nov 2026.
+          Clanker {s.clankerPct}%: a configured value in Sparkz (CLANKER_PROTOCOL_BPS in
+          launch-summary.ts), not a live read from Base.
         </p>
         <p>
           The recipient shares: the coin setup Empire Builder returned for this launch, read{" "}

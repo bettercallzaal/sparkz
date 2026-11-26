@@ -108,6 +108,16 @@ export default function MyHome() {
         </Link>
       </div>
 
+      {/* Explore is not a tab (bottom bar: Home, My Hearths, My Sparkz, Me), so Home
+          carries the way in. */}
+      <Link
+        href="/explore"
+        className="glass glass-hover mb-4 flex min-h-12 items-center justify-between px-4 text-sm"
+      >
+        <span>Explore all Hearths</span>
+        <span aria-hidden className="text-muted">&rsaquo;</span>
+      </Link>
+
       {pending.length > 0 && (
         <div className="mb-4 rounded-lg border border-accent-3/40 bg-accent-3/10 p-3 text-sm">
           <p className="mb-1 font-medium">Needs you</p>

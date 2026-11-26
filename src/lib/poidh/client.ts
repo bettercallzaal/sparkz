@@ -1,6 +1,6 @@
 import { createPublicClient, http, parseAbi } from "viem";
 import { base } from "viem/chains";
-import { poidhAbi, POIDH_CONTRACT_ADDRESS } from "./abi";
+import { poidhAbi, POIDH_CONTRACT_ADDRESS, poidhBountyUrl } from "./abi";
 import { bountyState, type BountyState } from "./vote-state";
 
 // Read-only Base client. No private key exists anywhere in this module or this app: every
@@ -61,7 +61,8 @@ async function readBountyUncached(id: bigint, client: PublicClient): Promise<Cha
       .filter((c) => c.issuer !== "0x0000000000000000000000000000000000000000")
       .map((c) => ({ id: c.id.toString(), issuer: c.issuer.toLowerCase(), name: c.name, description: c.description, createdAt: Number(c.createdAt), accepted: c.accepted })),
     participants: addrs.map((a, i) => ({ address: a.toLowerCase(), amountWei: amts[i].toString() })),
-    url: `https://poidh.xyz/base/bounty/${id.toString()}`,
+    // The poidh.xyz page id is NOT the on-chain id (see POIDH_BASE_LAST_PRE_V3_BOUNTY).
+    url: poidhBountyUrl(id),
   };
 }
 

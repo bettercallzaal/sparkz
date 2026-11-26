@@ -119,7 +119,23 @@ export async function POST(req: NextRequest) {
         token_address: d.base_token, token_symbol: d.symbol, deploy_tx: d.tx_hash, pending_deploy_tx: null,
       },
     }).eq("id", d.hearth_id).select("*").single();
-    if (error) throw error;
+    if (error) {
+      // Empire has registered the coin but the Hearth did not save it. The one-launch claim
+      // stays, so Finish launch cannot ask Empire a second time; the operator records it by
+      // hand from this log line (the FEF recovery run sheet, ORD-713).
+      console.error(
+        "[sparkz:empire.register-token] REGISTERED BUT NOT SAVED:",
+        JSON.stringify({ hearth_id: d.hearth_id, token: d.base_token, tx: d.tx_hash, owner: d.owner, empire_address: empireAddress }),
+        error.message,
+      );
+      return NextResponse.json(
+        {
+          ok: false,
+          error: "Empire registered the coin but Sparkz could not save it. Do not launch again; the operator will record it.",
+        },
+        { status: 500 },
+      );
+    }
 
     return ok({ empire_id: d.base_token, empire_address: empireAddress, hearth: data }, 201);
   } catch (err) {

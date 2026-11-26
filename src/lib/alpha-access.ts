@@ -16,8 +16,8 @@ export const ALPHA_LOCK = false;
 export const ALPHA_CLOSED_MESSAGE =
   "Sparkz is in private testing right now. Join the waitlist and we will let you know when it opens.";
 
-// IMan Afrikah's Farcaster FID. Admins (lib/admin-identities.ts) are always allowed.
-export const ALPHA_FIDS: ReadonlySet<number> = new Set([1057869]);
+// Farcaster FIDs: IMan Afrikah (1057869), thyrevolution (1110800, COC ConcertZ). Admins (lib/admin-identities.ts) are always allowed.
+export const ALPHA_FIDS: ReadonlySet<number> = new Set([1057869, 1110800]);
 
 // IMan Afrikah's wallet, lowercased.
 export const ALPHA_ADDRESSES: ReadonlySet<string> = new Set([

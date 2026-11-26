@@ -156,6 +156,42 @@ export async function getProfile(fid: number): Promise<HypersnapProfile | null> 
   return p.username || p.display || p.pfp ? p : null;
 }
 
+type VerificationBody = {
+  verificationAddAddressBody?: { address?: string; protocol?: string };
+  verificationAddEthAddressBody?: { address?: string };
+};
+
+// Ethereum addresses from a FID's verification messages (/v1/verificationsByFid). Solana
+// verifications and malformed addresses are skipped. Lowercased.
+export function parseEthVerifications(messages: NodeMessage<VerificationBody>[]): string[] {
+  const out: string[] = [];
+  for (const m of messages ?? []) {
+    const body = m?.data?.verificationAddAddressBody ?? m?.data?.verificationAddEthAddressBody;
+    const protocol = (m?.data?.verificationAddAddressBody?.protocol ?? "PROTOCOL_ETHEREUM") as string;
+    const addr = String(body?.address ?? "").trim();
+    if (protocol !== "PROTOCOL_ETHEREUM" || !/^0x[0-9a-fA-F]{40}$/.test(addr)) continue;
+    out.push(addr.toLowerCase());
+  }
+  return out;
+}
+
+// Every Ethereum address on a FID's Farcaster record: the primary address it set (read
+// straight from its user data, so a profile with no name or picture still counts) and each
+// verified address. Null when either read fails, so a caller can tell "none" from "could
+// not check".
+export async function getEthAddresses(fid: number): Promise<string[] | null> {
+  if (!Number.isInteger(fid) || fid <= 0) return null;
+  const [user, verifications] = await Promise.all([
+    nodeGet<{ messages: NodeMessage<UserDataBody>[] }>("/v1/userDataByFid", { fid }),
+    nodeGet<{ messages: NodeMessage<VerificationBody>[] }>("/v1/verificationsByFid", { fid }),
+  ]);
+  if (!user || !verifications) return null;
+  const set = new Set(parseEthVerifications(verifications.messages ?? []));
+  const primary = parseProfile(fid, user.messages ?? []).address?.trim().toLowerCase();
+  if (primary && /^0x[0-9a-f]{40}$/.test(primary)) set.add(primary);
+  return [...set];
+}
+
 export async function getFidByName(name: string): Promise<number | null> {
   const clean = name.replace(/^@/, "").trim().toLowerCase();
   if (!/^[a-z0-9][a-z0-9-]{0,15}$/.test(clean)) return null;

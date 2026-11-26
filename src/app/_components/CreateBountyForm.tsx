@@ -147,6 +147,16 @@ function Inner({ hearthId }: { hearthId: string }) {
     if (!v) return;
     try {
       if (!(await ensureWallet())) return;
+      // Ask before the wallet signs: a bounty from a wallet that is not on the owner's
+      // Farcaster account cannot be linked, and by then the reward is already paid.
+      const res = await fetch(
+        `/api/hearth-bounties/wallet-check?hearth_id=${encodeURIComponent(hearthId)}&wallet=${encodeURIComponent(address ?? "")}`,
+      );
+      const json = (await res.json().catch(() => ({}))) as { data?: { check?: string; error?: string }; error?: string };
+      if (json.data?.check !== "yes") {
+        setError(json.data?.error ?? json.error ?? "Sparkz could not check this wallet. Nothing was sent. Try again in a minute.");
+        return;
+      }
       setBusy("sign");
       const hash = await writeContractAsync({
         chainId: POIDH_CHAIN_ID,

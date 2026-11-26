@@ -1,4 +1,4 @@
-import { type NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { getServiceClient } from "@/lib/supabase/server";
 import { requireHearthOwner, isAdmin } from "@/lib/auth";
 import { ok, badRequest, serverError, zodError, tooManyRequests, forbidCrossSite } from "@/lib/http";
@@ -7,6 +7,7 @@ import { baseClient } from "@/lib/poidh/client";
 import { parseCreatedBounty } from "@/lib/poidh/receipt";
 import { listHearthBounties } from "@/lib/poidh/hearth-bounties";
 import { POIDH_CONTRACT_ADDRESS } from "@/lib/poidh/abi";
+import { checkOwnerWallet, WRONG_WALLET_MESSAGE, WALLETS_UNAVAILABLE_MESSAGE } from "@/lib/poidh/owner-wallets";
 import type { Hex } from "viem";
 
 // GET  /api/hearth-bounties?hearth_id=... - a Hearth's poidh bounties with live state read
@@ -14,8 +15,9 @@ import type { Hex } from "viem";
 // POST /api/hearth-bounties - record a bounty AFTER the owner's own wallet sent
 //      createOpenBounty on Base. Body { hearth_id, tx_hash }. Owner-or-operator only. The
 //      server re-reads the receipt and saves nothing unless it is a successful
-//      BountyCreated from the poidh contract. Sparkz never sends the transaction, holds
-//      funds or has a key.
+//      BountyCreated from the poidh contract, and only when the bounty came from a wallet
+//      the Hearth owner controls (lib/poidh/owner-wallets.ts). Sparkz never sends the transaction,
+//      holds funds or has a key.
 
 export async function GET(req: NextRequest) {
   try {
@@ -66,6 +68,16 @@ export async function POST(req: NextRequest) {
       logs: receipt.logs.map((l) => ({ address: l.address, data: l.data, topics: l.topics })),
     });
     if (!result.ok) return badRequest(`Not a poidh bounty: ${result.reason}`);
+
+    // The caller owning the Hearth is not enough: the bounty must come from one of the
+    // owner's wallets, or an owner could put someone else's bounty on their Hearth. The
+    // operator may record a bounty from any wallet. A Farcaster record that cannot be read
+    // is a 503 (try again), not a refusal.
+    if (!isAdmin(req)) {
+      const owns = await checkOwnerWallet(hearth_id, result.bounty.issuer);
+      if (owns === "unavailable") return NextResponse.json({ ok: false, error: WALLETS_UNAVAILABLE_MESSAGE }, { status: 503 });
+      if (owns === "no") return NextResponse.json({ ok: false, error: WRONG_WALLET_MESSAGE }, { status: 403 });
+    }
 
     const supabase = getServiceClient();
     const { data: existing, error: dupErr } = await supabase

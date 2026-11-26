@@ -52,9 +52,13 @@ export function browserStore(): KeyValueStore | null {
 }
 
 // A link failure that retrying can never fix: the transaction is not a poidh bounty from
-// this wallet (reverted, wrong contract) or it is already on another Hearth. The pending
-// hash is dropped so the owner is not stuck behind "Retry linking" forever.
+// this wallet (reverted, wrong contract), it is already on another Hearth, or it was sent
+// from a wallet that is not on the owner's Farcaster account (403). The pending hash is
+// dropped so the owner is not stuck behind "Retry linking" forever. A 503 (the owner's
+// wallets could not be read yet) stays retryable.
 export function isPermanentLinkError(status: number, error: unknown): boolean {
-  if (status !== 400 || typeof error !== "string") return false;
+  if (typeof error !== "string") return false;
+  if (status === 403) return /^That wallet is not on the Hearth owner's Farcaster account/.test(error);
+  if (status !== 400) return false;
   return /^Not a poidh bounty|already linked to another Hearth/.test(error);
 }

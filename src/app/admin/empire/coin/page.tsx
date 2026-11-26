@@ -595,7 +595,7 @@ function LaunchReview({ p, owner }: { p: Preview; owner: string }) {
       <Row k="Coins bought at launch" v={s.devBuy ? "Yes" : "None"} />
 
       <p className="mb-1 mt-4 font-semibold">Who gets the trading fees</p>
-      <Row k="Clanker protocol (fixed on-chain)" v={`${s.clankerPct}%`} />
+      <Row k="Clanker protocol (a value set in Sparkz)" v={`${s.clankerPct}%`} />
       {s.recipients.map((r) => (
         <Row key={r.recipient + r.bps} k={`${who(r.recipient, r.bps)} ${short(r.recipient)}`} v={`${r.pctOfTradingFees}%`} />
       ))}

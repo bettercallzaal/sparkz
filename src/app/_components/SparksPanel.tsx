@@ -115,7 +115,7 @@ export default function SparksPanel({
             <div className="mt-2 flex flex-wrap gap-3 text-xs text-muted">
               {s.ends_at && <span>Ends {new Date(s.ends_at).toLocaleDateString()}</span>}
               {onchainHref(s.chain_ref) && (
-                <a href={onchainHref(s.chain_ref) ?? undefined} target="_blank" rel="noreferrer" className="text-accent hover:underline">
+                <a href={onchainHref(s.chain_ref) ?? undefined} target="_blank" rel="noreferrer" className="web-only text-accent hover:underline">
                   Onchain
                 </a>
               )}

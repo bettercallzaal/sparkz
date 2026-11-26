@@ -406,15 +406,21 @@ export default async function HearthPage({
             label: "About",
             content: (
               <>
-                {tokenSpark && <TokenSparkPanel meta={tokenSpark} />}
+                {tokenSpark && (
+                  <div className="web-only">
+                    <TokenSparkPanel meta={tokenSpark} />
+                  </div>
+                )}
 
                 {econ.empire_id && (
-                  <section className="mb-8">
-                    <h2 className="mb-3 text-sm font-medium">Empire leaderboard</h2>
-                    <div className="card-solid p-4">
-                      <EmpireLeaderboard empireId={econ.empire_id} showHeader={false} />
-                    </div>
-                  </section>
+                  <div className="web-only">
+                    <section className="mb-8">
+                      <h2 className="mb-3 text-sm font-medium">Empire leaderboard</h2>
+                      <div className="card-solid p-4">
+                        <EmpireLeaderboard empireId={econ.empire_id} showHeader={false} />
+                      </div>
+                    </section>
+                  </div>
                 )}
 
                 {meta.about && (

@@ -93,10 +93,10 @@ test("rows: vault is 30% of supply, lock date from chain, wording rules hold", a
   const c = await readTokenSparkChain(meta, goodReader);
   const rows = buildTokenSparkRows(meta, c, 1_800_000_000);
   const byLabel = Object.fromEntries(rows.map((r) => [r.label, r]));
-  assert.match(byLabel["Community vault"].value, /30,000,000,000 ZABAL \(30% of supply\)/);
+  assert.match(byLabel["Community vault"].value, /^30,000,000,000 ZABAL$/);
   assert.match(byLabel["Vault lock"].value, /^ended 2026-03-02/);
-  assert.equal(byLabel["ZAO teammates, 1%"].source, "planned");
-  assert.equal(byLabel["Cashless man, 1%"].source, "planned");
+  assert.equal(byLabel["ZAO teammates"].source, "planned");
+  assert.equal(byLabel["Cashless man"].source, "planned");
   assert.equal(byLabel["Airdrop share"].source, "pending");
   const text = rows.map((r) => `${r.label} ${r.value}`).join(" ").toLowerCase();
   for (const banned of ["creator vault", "earn", "pays", "payout", "splits.org", "share fees"]) {
@@ -110,6 +110,13 @@ test("rows: a failed read says not read from chain yet and invents no number", (
     assert.equal(r.value.includes("0"), false, `${r.label} must carry no number: ${r.value}`);
     assert.equal(r.value, "not read from chain yet");
   }
+});
+
+test("rows show no percentages (Zaal ruling, ORD-568)", async () => {
+  const c = await readTokenSparkChain(meta, goodReader);
+  const rows = buildTokenSparkRows(meta, c, 1_800_000_000);
+  const withPercent = rows.filter((r) => r.value.includes("%") || r.label.includes("%"));
+  assert.deepEqual(withPercent.map((r) => r.label), []);
 });
 
 test("percentOf and the Clanker link", () => {

@@ -198,10 +198,6 @@ export function percentOf(part: bigint, whole: bigint): string | null {
   return `${hundredths}%`;
 }
 
-export function bpsToPercent(bps: number): string {
-  return `${bps / 100}%`;
-}
-
 export function shortAddress(a: string): string {
   return `${a.slice(0, 6)}...${a.slice(-4)}`;
 }
@@ -232,10 +228,9 @@ export function buildTokenSparkRows(meta: TokenSparkMeta, chain: TokenSparkChain
 
   const v = chain.vault;
   if (v && t) {
-    const share = percentOf(v.amountTotal, t.totalSupply);
     rows.push({
       label: "Community vault",
-      value: `${formatTokenAmount(v.amountTotal, t.decimals)} ${t.symbol}${share ? ` (${share} of supply)` : ""}`,
+      value: `${formatTokenAmount(v.amountTotal, t.decimals)} ${t.symbol}`,
       source: "chain",
     });
     const lockEnded = v.lockupEndTime <= nowSeconds;
@@ -256,7 +251,7 @@ export function buildTokenSparkRows(meta: TokenSparkMeta, chain: TokenSparkChain
 
   if (chain.rewards) {
     for (const r of chain.rewards) {
-      rows.push({ label: "Locker recipient", value: `${shortAddress(r.recipient)}, ${bpsToPercent(r.bps)}`, source: "chain", href: addrHref(r.recipient) });
+      rows.push({ label: "Locker recipient", value: shortAddress(r.recipient), source: "chain", href: addrHref(r.recipient) });
     }
   } else {
     rows.push({ label: "Locker recipients", value: "not read from chain yet", source: "pending" });
@@ -266,7 +261,7 @@ export function buildTokenSparkRows(meta: TokenSparkMeta, chain: TokenSparkChain
   rows.push({ label: "Airdrop share", value: "not read from chain yet", source: "pending" });
   rows.push({ label: "Liquidity share", value: "not read from chain yet", source: "pending" });
   // Zaal, 24 Nov 2026 (ruling item 3): planned until sent.
-  rows.push({ label: "ZAO teammates, 1%", value: "planned, not sent", source: "planned" });
-  rows.push({ label: "Cashless man, 1%", value: "planned, not sent", source: "planned" });
+  rows.push({ label: "ZAO teammates", value: "planned, not sent", source: "planned" });
+  rows.push({ label: "Cashless man", value: "planned, not sent", source: "planned" });
   return rows;
 }

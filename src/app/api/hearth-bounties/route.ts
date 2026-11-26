@@ -7,8 +7,7 @@ import { baseClient } from "@/lib/poidh/client";
 import { parseCreatedBounty } from "@/lib/poidh/receipt";
 import { listHearthBounties } from "@/lib/poidh/hearth-bounties";
 import { POIDH_CONTRACT_ADDRESS } from "@/lib/poidh/abi";
-import { sessionClaims } from "@/lib/session";
-import { getProfile } from "@/lib/hypersnap";
+import { checkOwnerWallet, WRONG_WALLET_MESSAGE, WALLETS_UNAVAILABLE_MESSAGE } from "@/lib/poidh/owner-wallets";
 import type { Hex } from "viem";
 
 // GET  /api/hearth-bounties?hearth_id=... - a Hearth's poidh bounties with live state read
@@ -17,7 +16,7 @@ import type { Hex } from "viem";
 //      createOpenBounty on Base. Body { hearth_id, tx_hash }. Owner-or-operator only. The
 //      server re-reads the receipt and saves nothing unless it is a successful
 //      BountyCreated from the poidh contract, and only when the bounty came from a wallet
-//      the Hearth owner controls (ownerWallets below). Sparkz never sends the transaction,
+//      the Hearth owner controls (lib/poidh/owner-wallets.ts). Sparkz never sends the transaction,
 //      holds funds or has a key.
 
 export async function GET(req: NextRequest) {
@@ -28,31 +27,6 @@ export async function GET(req: NextRequest) {
   } catch (err) {
     return serverError(err, "hearth-bounties.GET");
   }
-}
-
-// The wallets that count as the Hearth owner's: the Hearth's owner_wallet, the signed-in
-// wallet (a SIWE session), and the owner FID's primary Ethereum address on its Farcaster
-// record (Hypersnap). A node that is down adds nothing, so the check fails closed.
-async function ownerWallets(
-  req: NextRequest,
-  hearthId: string,
-): Promise<Set<string>> {
-  const wallets = new Set<string>();
-  const add = (v: unknown) => {
-    if (typeof v === "string" && /^0x[0-9a-fA-F]{40}$/.test(v.trim())) wallets.add(v.trim().toLowerCase());
-  };
-  const { data, error } = await getServiceClient()
-    .from("hearths")
-    .select("owner_fid, owner_wallet")
-    .eq("id", hearthId)
-    .maybeSingle();
-  if (error) throw error;
-  const hearth = data as { owner_fid: number | string | null; owner_wallet: string | null } | null;
-  add(hearth?.owner_wallet);
-  add(sessionClaims(req)?.address);
-  const ownerFid = hearth?.owner_fid == null ? null : Number(hearth.owner_fid);
-  if (ownerFid) add((await getProfile(ownerFid))?.address);
-  return wallets;
 }
 
 // Small in-process throttle for the RPC-backed POST (owner-only already; this stops loops).
@@ -95,14 +69,14 @@ export async function POST(req: NextRequest) {
     });
     if (!result.ok) return badRequest(`Not a poidh bounty: ${result.reason}`);
 
-    // The caller owning the Hearth is not enough: the bounty must come from the owner's own
-    // wallet, or an owner could put someone else's bounty on their Hearth. The operator
-    // may record a bounty from any wallet.
-    if (!isAdmin(req) && !(await ownerWallets(req, hearth_id)).has(result.bounty.issuer)) {
-      return NextResponse.json(
-        { ok: false, error: "That bounty was not created by the Hearth owner's wallet." },
-        { status: 403 },
-      );
+    // The caller owning the Hearth is not enough: the bounty must come from one of the
+    // owner's wallets, or an owner could put someone else's bounty on their Hearth. The
+    // operator may record a bounty from any wallet. A Farcaster record that cannot be read
+    // is a 503 (try again), not a refusal.
+    if (!isAdmin(req)) {
+      const owns = await checkOwnerWallet(hearth_id, result.bounty.issuer);
+      if (owns === "unavailable") return NextResponse.json({ ok: false, error: WALLETS_UNAVAILABLE_MESSAGE }, { status: 503 });
+      if (owns === "no") return NextResponse.json({ ok: false, error: WRONG_WALLET_MESSAGE }, { status: 403 });
     }
 
     const supabase = getServiceClient();

@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { parseProfile, parseCast, parseInfo, toIso, nodeUrl, getNodeInfo, getFidByName, DEFAULT_NODE_URL, NODE_TIMEOUT_MS } from "./hypersnap";
+import { parseProfile, parseEthVerifications, parseCast, parseInfo, toIso, nodeUrl, getNodeInfo, getFidByName, DEFAULT_NODE_URL, NODE_TIMEOUT_MS } from "./hypersnap";
 
 const msg = (type: string, value: string) => ({
   hash: "0x1",
@@ -105,4 +105,15 @@ test("a name resolves to a native fid sent as a string, an ordinary fid as a num
   await withFetch(answer("99999999999999999999"), async () => assert.equal(await getFidByName("huge"), null));
   await withFetch(answer(undefined), async () => assert.equal(await getFidByName("nobody"), null));
   assert.equal(await getFidByName("Not A Name!"), null, "a bad name never reaches the node");
+});
+
+test("parseEthVerifications keeps Ethereum addresses only, lowercased", () => {
+  const v = (body: Record<string, unknown>) => ({ hash: "0x", data: { type: "MESSAGE_TYPE_VERIFICATION_ADD_ETH_ADDRESS", fid: 1, timestamp: 1, network: "x", ...body } });
+  const out = parseEthVerifications([
+    v({ verificationAddAddressBody: { address: "0xAbCdEf0000000000000000000000000000000001", protocol: "PROTOCOL_ETHEREUM" } }),
+    v({ verificationAddAddressBody: { address: "So1anaAddressNotEth", protocol: "PROTOCOL_SOLANA" } }),
+    v({ verificationAddAddressBody: { address: "0x123", protocol: "PROTOCOL_ETHEREUM" } }),
+    v({ verificationAddEthAddressBody: { address: "0x00000000000000000000000000000000000000AA" } }),
+  ]);
+  assert.deepEqual(out, ["0xabcdef0000000000000000000000000000000001", "0x00000000000000000000000000000000000000aa"]);
 });

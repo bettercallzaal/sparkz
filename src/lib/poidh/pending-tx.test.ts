@@ -76,5 +76,8 @@ test("only unfixable link errors drop the pending hash", () => {
   assert.equal(isPermanentLinkError(400, "That bounty is already linked to another Hearth."), true);
   assert.equal(isPermanentLinkError(400, "That transaction is not confirmed on Base yet. Try again in a moment."), false);
   assert.equal(isPermanentLinkError(401, "Not a poidh bounty"), false);
+  assert.equal(isPermanentLinkError(403, "That wallet is not on the Hearth owner's Farcaster account. Send the bounty from your primary or a verified wallet."), true);
+  assert.equal(isPermanentLinkError(403, "Forbidden"), false);
+  assert.equal(isPermanentLinkError(503, "Sparkz could not check the owner's Farcaster wallets right now. Try again in a minute."), false);
   assert.equal(isPermanentLinkError(500, undefined), false);
 });

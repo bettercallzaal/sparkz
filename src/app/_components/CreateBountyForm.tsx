@@ -11,6 +11,7 @@ import { canManageHearth } from "@/lib/can-manage";
 import { poidhAbi, POIDH_CHAIN_ID, POIDH_CONTRACT_ADDRESS } from "@/lib/poidh/abi";
 import { parseEthToWei, formatEth } from "@/lib/poidh/vote-state";
 import { createBountyFormSchema } from "@/lib/poidh/schemas";
+import { browserStore, clearPendingTx, isPermanentLinkError, loadPendingTx, savePendingTx } from "@/lib/poidh/pending-tx";
 
 // Owner-only "New bounty" form. The OWNER'S OWN WALLET signs createOpenBounty on Base with
 // the reward as the value; Sparkz never holds funds and has no key. poidh refuses contract
@@ -36,15 +37,22 @@ function Inner({ hearthId }: { hearthId: string }) {
   const { switchChainAsync } = useSwitchChain();
   const { writeContractAsync } = useWriteContract();
   const reader = usePublicClient({ chainId: POIDH_CHAIN_ID });
-  const [show, setShow] = useState(false);
+  // A bounty sent earlier but never linked (the tab was reloaded or closed): read once from
+  // the browser. Safe here because this component only mounts in the browser, after the
+  // viewer is known (useViewer is never ready during the server render).
+  const [pending] = useState(() => loadPendingTx(browserStore(), hearthId));
+  const [show, setShow] = useState(pending !== null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [eth, setEth] = useState("0.002");
   const [busy, setBusy] = useState<"check" | "sign" | "save" | null>(null);
-  const [note, setNote] = useState<string | null>(null);
+  const [note, setNote] = useState<string | null>(() =>
+    pending ? `A bounty you sent (${pending}) is not linked to this Hearth yet. Press Retry linking; it will not send again.` : null,
+  );
   const [error, setError] = useState<string | null>(null);
   // Set once the wallet has sent the transaction: a retry then only re-links, it never signs again.
-  const [sentHash, setSentHash] = useState<string | null>(null);
+  // It is also kept in the browser, so a reload before linking can still link (see pending-tx.ts).
+  const [sentHash, setSentHash] = useState<string | null>(pending);
 
   function validated() {
     const wei = parseEthToWei(eth);
@@ -108,10 +116,18 @@ function Inner({ hearthId }: { hearthId: string }) {
       const json = await res.json().catch(() => ({ ok: false }));
       if (!res.ok || !json.ok) {
         setNote(null);
+        if (isPermanentLinkError(res.status, json.error)) {
+          // Retrying can never fix this one, so do not leave the owner behind Retry linking.
+          clearPendingTx(browserStore(), hearthId);
+          setSentHash(null);
+          setError(`Sparkz could not link ${hash}: ${json.error}`);
+          return;
+        }
         setError(`The bounty is on Base (${hash}) but Sparkz could not link it: ${json.error ?? "try again"}. Use Retry linking; it will not send again.`);
         return;
       }
       setNote("Bounty posted and linked to this Hearth.");
+      clearPendingTx(browserStore(), hearthId);
       setSentHash(null);
       setShow(false);
       router.refresh();
@@ -140,6 +156,7 @@ function Inner({ hearthId }: { hearthId: string }) {
         args: [v.name, v.description],
         value: v.wei,
       });
+      savePendingTx(browserStore(), hearthId, hash);
       setSentHash(hash);
       setBusy(null);
       await link(hash);
@@ -197,6 +214,23 @@ function Inner({ hearthId }: { hearthId: string }) {
         <button type="button" disabled={busy !== null} onClick={post} className="rounded-lg bg-accent px-3 py-2 font-medium text-black disabled:opacity-50">
           {busy === "sign" ? "Confirm in wallet..." : busy === "save" ? "Linking..." : sentHash ? "Retry linking" : address ? "Post bounty" : "Connect wallet"}
         </button>
+        {sentHash && (
+          <button
+            type="button"
+            disabled={busy !== null}
+            onClick={() => {
+              // For a transaction that never confirmed (dropped or replaced in the wallet).
+              // Forgetting only clears this browser's note; it changes nothing on Base.
+              clearPendingTx(browserStore(), hearthId);
+              setSentHash(null);
+              setNote(null);
+              setError(null);
+            }}
+            className="px-2 text-xs text-muted hover:underline"
+          >
+            Forget it
+          </button>
+        )}
         <button type="button" disabled={busy !== null} onClick={() => setShow(false)} className="ml-auto px-2 text-muted">
           Cancel
         </button>

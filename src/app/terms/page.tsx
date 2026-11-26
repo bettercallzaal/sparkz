@@ -3,7 +3,7 @@ import Link from "next/link";
 import { canonicalOrigin } from "@/lib/origin";
 
 const BASE = canonicalOrigin();
-const UPDATED = "23 November 2026";
+const UPDATED = "25 November 2026";
 
 export const metadata: Metadata = {
   title: "Terms of Use - Sparkz",
@@ -16,6 +16,20 @@ export const metadata: Metadata = {
 // or abusive users). People agree by signing in, opening a Hearth or lighting a Spark;
 // each of those says so with a link here. Zaal reviews this wording before it merges.
 const SECTIONS: { heading: string; body: string[] }[] = [
+  {
+    heading: "What Sparkz is",
+    body: [
+      "Sparkz is an open-source experiment from The ZAO, a place to start and back ZAO projects. Anyone can fork the code.",
+      "Sparkz is provided as is, while it is still being built. It may change, break, or go away.",
+    ],
+  },
+  {
+    heading: "Signing in",
+    body: [
+      "You can sign in with Farcaster or with a wallet. Other sign-in options may come later. You can look around Sparkz without signing in.",
+      "Keep your wallet and sign-in safe. You are responsible for what is done with your sign-in.",
+    ],
+  },
   {
     heading: "Agreeing to these terms",
     body: [
@@ -45,18 +59,39 @@ const SECTIONS: { heading: string; body: string[] }[] = [
     body: [
       "You keep ownership of what you post. You let Sparkz show it on trysparkz.com and in the Sparkz app so the Hearth works.",
       "Hearth pages are public. Do not post anything you want kept private.",
+      "When you upload an image or file, you confirm you have the right to share it.",
+      "A new Hearth or Spark may wait for an admin to approve it before it shows in Explore. The Sparkz team can edit, hide or remove any Hearth or Spark that breaks these terms.",
     ],
   },
   {
     heading: "Backing, not buying",
     body: [
-      "Boosting or backing a Hearth is support for the work. It is not an investment and does not promise any return.",
+      "Boosting or backing a Hearth is support for the work. It is not a purchase of anything and promises nothing back.",
+    ],
+  },
+  {
+    heading: "Other services (poidh, Clanker, Empire Builder)",
+    body: [
+      "Bounties run on poidh, on the Base network. Tokens are launched with Clanker and Empire Builder. These are separate services run by other people, with their own terms. Sparkz links to them and shows what they publish.",
+      "Sparkz does not hold, send or look after anyone's funds. Anything you fund, claim or launch happens through those services and your own wallet, and on-chain actions cannot be undone.",
+    ],
+  },
+  {
+    heading: "No promises",
+    body: [
+      "Nothing on Sparkz is financial, legal or tax advice. Sparkz makes no promise about what any project, bounty or token will be worth, or that it will do anything at all.",
+    ],
+  },
+  {
+    heading: "Open source",
+    body: [
+      "The Sparkz code is open source under the Apache License 2.0. You can read the licence in the code repository. It covers the code, not your content or the names and logos of other people's projects.",
     ],
   },
   {
     heading: "Your data",
     body: [
-      "Sparkz keeps no account. You can delete what Sparkz stores about you at any time with Delete your Sparkz data on the Me page. Your on-chain records and your wallet stay as they are. See the Privacy page for what it removes.",
+      "You can delete what Sparkz stores about you at any time with Delete your Sparkz data on the Me page. It is refused while you still own a live Hearth, so give it to someone or put it to sleep first. Your on-chain records and your wallet stay as they are. See the Privacy page for what it removes.",
     ],
   },
   {
@@ -94,7 +129,11 @@ export default function TermsPage() {
       ))}
 
       <section className="text-sm text-muted">
-        Contact:{" "}
+        Questions or problems? See the{" "}
+        <Link href="/support" className="text-accent-3 hover:underline">
+          Support
+        </Link>{" "}
+        page, or write to us at{" "}
         <a
           href="https://github.com/bettercallzaal/sparkz/issues"
           target="_blank"

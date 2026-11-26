@@ -3,7 +3,7 @@
 </p>
 
 <h1 align="center">Sparkz</h1>
-<p align="center"><em>Start with a Hearth. Grow it with Sparks.</em><br/>Part of The ZAO.</p>
+<p align="center"><em>Start with a Hearth. Grow it with Sparks.</em><br/>The ZAO's home for ZAO projects.</p>
 
 <p align="center">
   <a href="https://trysparkz.com">trysparkz.com</a>
@@ -36,6 +36,8 @@
 ---
 
 **Sparkz is where a project starts as a Hearth and grows through Sparks.** A Hearth is the project's home: its identity, the people backing it, and a record of everything it ships. A Spark is any event that grows the Hearth: a show, a drop, a release, a collab, a launch. A project can have many. Community grows through onchain actions people take together, not through buying in. Back the album.
+
+**Sparkz is The ZAO's home for ZAO projects.** The code is open source, so any other collective can fork it and run its own. To add a project here, join The ZAO and propose it; Zaal approves each Hearth owner.
 
 > **TL;DR** Every section below opens with a one-line TL;DR, so you can skim the whole thing top to bottom in a minute. Read the bold lines; dive into any section that catches you.
 

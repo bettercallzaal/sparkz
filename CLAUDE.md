@@ -5,24 +5,37 @@ three design docs before writing code.
 
 ## What Sparkz is
 
-Every Sparkz project is a **Hearth**, not a coin. The Hearth accumulates identity,
-contributors, history, content, receipts, reputation, backing, economic config, and
-Meme Engine memory. The coin is an *optional output*. The moat is the accumulating
-data - NOT the token contract, NOT image generation. V1 proves ONE loop with Zoostr
-(a Creator Hearth); the schema supports all four entry points (Creator / Culture /
-Open-Source repo / Meme Engine) so v1.5 is additive.
+Sparkz is The ZAO's open-source experiment in crediting contribution. The target is
+**open-source builders, humans and agents**. The question it exists to answer: what is
+the best way to tokenize a pull request, for an agent or a human, and allocate
+contribution credit fairly? Our answer to test first is **the Respect Game** (ZAO
+Fractal): contributors receive Respect, peer-ranked, and Respect is the record of credit.
+
+Every Sparkz project is a **Hearth**, not a coin. A Hearth holds a project's identity,
+contributors, history, receipts, reputation, backing and bounties. For an open-source
+Hearth that will mean its repo, its merged PRs, who made each one (a human, or which agent
+and its operator), the review grade, and the issue it closed (planned, not built yet). The coin is an *optional
+output*. The moat is the accumulating contribution record - NOT the token contract,
+NOT image generation.
+
+The first experiment is **this repo**: Sparkz is its own first open-source Hearth.
+**Planned, not built yet:** every merged PR becomes a contribution record; a poidh bounty
+can fund an issue; contributors receive Respect through the Respect Game. Today the code
+has none of these: bounties link to Hearths, and there are no PR records or Respect reads. Creator, Culture and Meme Engine Hearths stay in
+the schema and keep working, but they are not the target.
+
+Sparkz is for The ZAO's projects. Anyone else can fork the code. To add a project you
+join The ZAO (come to a fractal, introduce yourself, receive Respect) and propose it.
 
 ## Positioning (non-negotiable framing)
 
-Sparkz monetizes like an **OSS protocol + data network, not a per-seat SaaS**: it earns
-on value that flows through the rails it enables (graduations, backing/boost/bounty
-flows) and on the compounding Meme Receipt graph - not on subscriptions. Managed-pilot
-services are how we *bootstrap the network*, not the identity. Never position or price
-Sparkz as SaaS. Hard rule: **back the album, not buy a coin** - no "raise" language,
-token is optional/opt-in/later, distribution is human-approved, token upside is option
-value only. Full frame + provenance: `docs/strategy/positioning.md`. (Commercial
-specifics - pricing, financial model, targets - stay in the private lab, never this
-public repo.)
+Sparkz is **open-source infrastructure for crediting contribution, not a business on the
+rails and not SaaS**. It does not take a cut of flows and is not priced per seat. The
+infra is meant to stay free or close to it. What it produces is a public, verifiable
+record of who built what, credited through Respect. Hard rules: **back the album, not buy
+a coin** - no "raise" language, token is optional/opt-in/later, distribution is
+human-approved, token upside is option value only, and Respect is never sold. Full frame:
+`docs/strategy/positioning.md`.
 
 ## Read these before coding (in order)
 
@@ -91,5 +104,7 @@ become a Spark. Build the schema with that in mind.
 
 ## Provenance
 
-Sparkz two-track strategy, Zaal + Brandon Ducar (DreamNet), 2026-07-17. Part of the
+Sparkz two-track strategy, Zaal + Brandon Ducar (DreamNet), 2026-07-17. Re-aimed
+2026-11-25: the target is open-source builders and contribution credit through the
+Respect Game. Part of the
 ZAO estate (`bettercallzaal/ZAOOS` is the lab); Sparkz is public + OSS-first.

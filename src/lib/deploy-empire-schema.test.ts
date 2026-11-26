@@ -7,7 +7,20 @@ const base = {
   name: "Test Empire",
   owner: "0x" + "a".repeat(40),
   signature: "0x" + "b".repeat(130),
+  code: "c".repeat(32) + ".1764100000." + "d".repeat(43),
+  code_signature: "0x" + "e".repeat(130),
 };
+
+test("empire deploy needs the one-time code and its signature", () => {
+  const noCode: Record<string, unknown> = { ...base };
+  delete noCode.code;
+  const noCodeSig: Record<string, unknown> = { ...base };
+  delete noCodeSig.code_signature;
+  assert.equal(deployEmpireSchema.safeParse(noCode).success, false);
+  assert.equal(deployEmpireSchema.safeParse(noCodeSig).success, false);
+  assert.equal(deployEmpireSchema.safeParse({ ...base, code: "not-a-code" }).success, false);
+  assert.equal(deployEmpireSchema.safeParse(base).success, true);
+});
 
 test("empire deploy links must be https", () => {
   assert.equal(deployEmpireSchema.safeParse({ ...base, website_url: "https://thezao.com", logo_uri: "https://thezao.com/logo.png" }).success, true);

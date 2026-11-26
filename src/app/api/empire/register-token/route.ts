@@ -10,6 +10,10 @@ import type { Hearth } from "@/lib/supabase/types";
 // Step 3 of a token launch: the owner's wallet has deployed the Clanker token (step 2,
 // in the browser). Empire checks that tx and creates the token's empire treasury; the
 // Hearth records it and graduates to "tokenized".
+// The Empire call stops at 25 seconds (EMPIRE_REGISTER_TIMEOUT_MS); give the function room
+// to reach that limit and answer, so the platform does not cut it off first.
+export const maxDuration = 60;
+
 export async function POST(req: NextRequest) {
   try {
     const crossSite = forbidCrossSite(req);
@@ -100,6 +104,23 @@ export async function POST(req: NextRequest) {
         telegram_url: d.telegram_url,
       }));
     } catch (empireErr) {
+      // A time-out means Sparkz stopped waiting, not that Empire said no: Empire may still be
+      // registering the coin. Keep the claim, so Finish launch cannot ask Empire a second
+      // time, and leave it to the operator (the FEF recovery run sheet, ORD-713).
+      const name = empireErr instanceof Error ? empireErr.name : "";
+      if (name === "TimeoutError" || name === "AbortError") {
+        console.error(
+          "[sparkz:empire.register-token] OUTCOME UNKNOWN (Empire timed out):",
+          JSON.stringify({ hearth_id: d.hearth_id, token: d.base_token, tx: d.tx_hash, owner: d.owner }),
+        );
+        return NextResponse.json(
+          {
+            ok: false,
+            error: "Empire did not answer in time. The coin is on Base. Do not press Finish launch again; the operator will check and finish it.",
+          },
+          { status: 504 },
+        );
+      }
       // Empire's own error text stays in the server log (round 2, item 5).
       console.error("[sparkz:empire.register-token] upstream:", empireErr instanceof Error ? empireErr.message : empireErr);
       await supabase.from("hearths").update({ economic_config: econBefore }).eq("id", d.hearth_id);
@@ -119,7 +140,23 @@ export async function POST(req: NextRequest) {
         token_address: d.base_token, token_symbol: d.symbol, deploy_tx: d.tx_hash, pending_deploy_tx: null,
       },
     }).eq("id", d.hearth_id).select("*").single();
-    if (error) throw error;
+    if (error) {
+      // Empire has registered the coin but the Hearth did not save it. The one-launch claim
+      // stays, so Finish launch cannot ask Empire a second time; the operator records it by
+      // hand from this log line (the FEF recovery run sheet, ORD-713).
+      console.error(
+        "[sparkz:empire.register-token] REGISTERED BUT NOT SAVED:",
+        JSON.stringify({ hearth_id: d.hearth_id, token: d.base_token, tx: d.tx_hash, owner: d.owner, empire_address: empireAddress }),
+        error.message,
+      );
+      return NextResponse.json(
+        {
+          ok: false,
+          error: "Empire registered the coin but Sparkz could not save it. Do not launch again; the operator will record it.",
+        },
+        { status: 500 },
+      );
+    }
 
     return ok({ empire_id: d.base_token, empire_address: empireAddress, hearth: data }, 201);
   } catch (err) {

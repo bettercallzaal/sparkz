@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { base } from "viem/chains";
 import { useAppKit } from "@reown/appkit/react";
@@ -258,9 +258,14 @@ export default function EmpireCoinPage() {
   };
 
   // Signs exactly the config shown in the preview. No second fetch, so no second coin.
+  // A second click before React re-renders the disabled button would open a second
+  // wallet prompt (ORD-713, M4); the ref blocks it within the same frame.
+  const signing = useRef(false);
   const sign = async () => {
+    if (signing.current) return;
     setErr(null);
     if (!preview || preview.summary.problems.length > 0 || preview.simulated || dryRun || pending) return;
+    signing.current = true;
     try {
       if (!walletClient || !publicClient) throw new Error("Connect a wallet first");
       if (chainId !== base.id) await switchChainAsync({ chainId: base.id });
@@ -293,6 +298,7 @@ export default function EmpireCoinPage() {
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Launch failed");
     } finally {
+      signing.current = false;
       setStep("idle");
     }
   };
@@ -543,6 +549,9 @@ export default function EmpireCoinPage() {
                 <input type="checkbox" checked={understood} onChange={(e) => setUnderstood(e.target.checked)} className="mt-0.5" />
                 I checked every line above. This puts a real coin on Base mainnet and cannot be undone. No price or returns are promised to anyone.
               </label>
+              <p className="text-xs text-muted">
+                Use a plain wallet, not a smart wallet or a Safe. Sparkz can only record a launch sent from the connected wallet itself.
+              </p>
               <button
                 onClick={sign}
                 disabled={busy || !canSign}

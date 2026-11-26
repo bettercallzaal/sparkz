@@ -171,6 +171,7 @@ export async function getTokenConfig(input: TokenConfigInput): Promise<{ tokenCo
   const apiKey = process.env.EMPIRE_API_KEY;
   if (!apiKey) throw new Error("EMPIRE_API_KEY not set - token launch is disabled");
   const res = await fetch(`${BASE}/get-token-config`, {
+    signal: AbortSignal.timeout(EMPIRE_REGISTER_TIMEOUT_MS),
     method: "POST",
     headers: { "Content-Type": "application/json", "x-api-key": apiKey },
     body: JSON.stringify({ ...input, enableDevBuy: false, enableAirdrop: false }),
@@ -199,12 +200,20 @@ export interface RegisterTokenEmpireInput {
 // POST /api/deploy-empire (Clanker fresh-deploy flow). Empire validates the tx receipt
 // (owner = tx.from, LP rewards to the empire wallet, token address = baseToken).
 // Never send tokenType. Rate limit: 2 empires per wallet per 24h.
+// How long Sparkz waits for Empire. Without a limit a hung register call held the
+// one-launch claim until the function was killed (ORD-713, H1). On a register time-out the
+// route keeps the claim and says not to retry, because Empire may still be registering;
+// the operator finishes it. A get-token-config time-out just frees the launch lock.
+export const EMPIRE_REGISTER_TIMEOUT_MS = 25_000;
+
 export async function registerTokenEmpire(
   input: RegisterTokenEmpireInput,
+  opts: { timeoutMs?: number } = {},
 ): Promise<{ empireAddress: string | null; raw: unknown }> {
   const apiKey = process.env.EMPIRE_API_KEY;
   if (!apiKey) throw new Error("EMPIRE_API_KEY not set - token launch is disabled");
   const res = await fetch(`${BASE}/deploy-empire`, {
+    signal: AbortSignal.timeout(opts.timeoutMs ?? EMPIRE_REGISTER_TIMEOUT_MS),
     method: "POST",
     headers: { "Content-Type": "application/json", "x-api-key": apiKey },
     body: JSON.stringify({

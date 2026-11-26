@@ -36,7 +36,7 @@ type Row = Record<string, unknown>;
 // A tiny stand-in for the Supabase query builder: reads return the one Hearth, updates
 // merge into it (unless the test makes the compare-and-set lose).
 function fakeDb(hearth: Row) {
-  const state = { hearth: { ...hearth } as Row, loseClaim: false };
+  const state = { hearth: { ...hearth } as Row, loseClaim: false, failSave: false };
   const from = () => {
     let update: Row | null = null;
     const q = {
@@ -49,12 +49,20 @@ function fakeDb(hearth: Row) {
       },
       maybeSingle: async () => ({ data: state.hearth, error: null }),
       single: async () => {
+        if (state.failSave) return { data: null, error: { message: "db write failed" } };
         state.hearth = { ...state.hearth, ...(update ?? {}) };
         return { data: state.hearth, error: null };
       },
       then: (res: (v: unknown) => void) => {
         if (!update) return res({ data: [state.hearth], error: null });
         if (state.loseClaim) return res({ data: [], error: null });
+        // Like the real filter on register-token's claim: a claim already taken, or a coin
+        // already recorded, matches no row.
+        const cur = (state.hearth.economic_config ?? {}) as Row;
+        const next = ((update as Row).economic_config ?? {}) as Row;
+        if (next.token_launch_claimed_at && (cur.token_launch_claimed_at || cur.token_address)) {
+          return res({ data: [], error: null });
+        }
         state.hearth = { ...state.hearth, ...update };
         return res({ data: [{ id: HEARTH }], error: null });
       },
@@ -477,4 +485,97 @@ test("refused Empire config at token-config: 502 and the launch lock is released
   const { POST } = await import("./token-config/route");
   assert.equal((await POST(req("/api/empire/token-config", configBody(ME)))).status, 502);
   assert.equal(econ().token_launch_lock_at, undefined);
+});
+
+// ORD-713, H1: the stuck "already in progress" path before FEF launches.
+test("H1: while Empire hangs, the claim is held and Finish launch gets 409 (no way out)", async () => {
+  db.state.hearth.economic_config = { pending_deploy_tx: TX, token_launch_lock_by: ME.toLowerCase() };
+  launchDeps.registerTokenEmpire = () => new Promise(() => {}); // never answers
+  const { POST } = await import("./register-token/route");
+  void POST(req("/api/empire/register-token", registerBody()));
+  await new Promise((r) => setTimeout(r, 30));
+  assert.equal(typeof econ().token_launch_claimed_at, "string");
+  assert.equal(econ().token_address, undefined);
+  // A retry while the first call is stuck (or after the platform killed it) is refused.
+  assert.equal((await POST(req("/api/empire/register-token", registerBody()))).status, 409);
+});
+
+test("H1: the Empire call now has a time limit, so a hang ends instead of holding the claim", async () => {
+  const realFetch = globalThis.fetch;
+  // AbortSignal.timeout does not keep Node's event loop alive (Node 22 ends the test file
+  // early without this); a ref'd timer does, until the call settles.
+  const keepAlive = setInterval(() => {}, 1000);
+  process.env.EMPIRE_API_KEY = "test-only-not-a-key";
+  globalThis.fetch = ((_url: unknown, init?: RequestInit) =>
+    new Promise((_res, rej) => init?.signal?.addEventListener("abort", () => rej(init.signal?.reason)))) as typeof fetch;
+  try {
+    const { registerTokenEmpire } = await import("@/lib/empire/client");
+    await assert.rejects(
+      registerTokenEmpire({ baseToken: TOKEN, name: "Zoostr", owner: ME, txHash: TX, symbol: "ZOOSTR" }, { timeoutMs: 20 }),
+    );
+  } finally {
+    clearInterval(keepAlive);
+    globalThis.fetch = realFetch;
+    delete process.env.EMPIRE_API_KEY;
+  }
+});
+
+test("H1: an Empire time-out keeps the claim and says not to retry (Empire may still be registering)", async () => {
+  db.state.hearth.economic_config = { pending_deploy_tx: TX, token_launch_lock_by: ME.toLowerCase() };
+  launchDeps.registerTokenEmpire = async () => {
+    empireCalls++;
+    throw new DOMException("The operation was aborted due to timeout", "TimeoutError");
+  };
+  const { POST } = await import("./register-token/route");
+  const res = await POST(req("/api/empire/register-token", registerBody()));
+  assert.equal(res.status, 504);
+  assert.match((await res.json()).error, /Do not press Finish launch again/);
+  assert.equal(typeof econ().token_launch_claimed_at, "string");
+  assert.equal((await POST(req("/api/empire/register-token", registerBody()))).status, 409);
+  assert.equal(empireCalls, 1);
+});
+
+test("H1: Empire says yes but the save fails: plain 500, Empire asked once, claim kept so it is never asked twice", async () => {
+  db.state.hearth.economic_config = { pending_deploy_tx: TX, token_launch_lock_by: ME.toLowerCase() };
+  db.state.failSave = true;
+  const { POST } = await import("./register-token/route");
+  const res = await POST(req("/api/empire/register-token", registerBody()));
+  assert.equal(res.status, 500);
+  assert.match((await res.json()).error, /Do not launch again/);
+  assert.equal(empireCalls, 1);
+  assert.equal(typeof econ().token_launch_claimed_at, "string");
+  assert.equal(econ().token_address, undefined);
+  db.state.failSave = false;
+  assert.equal((await POST(req("/api/empire/register-token", registerBody()))).status, 409);
+  assert.equal(empireCalls, 1);
+});
+
+test("H1 recovery: the operator releases a stuck claim, and Finish launch then records the coin", async () => {
+  db.state.hearth.economic_config = {
+    pending_deploy_tx: TX, token_launch_lock_by: ME.toLowerCase(), token_launch_claimed_at: "2026-11-25T00:00:00.000Z",
+  };
+  const { POST: release } = await import("./register-token/release/route");
+  const rel = await release(req("/api/empire/register-token/release", { hearth_id: HEARTH }));
+  assert.equal(rel.status, 200);
+  assert.equal(econ().token_launch_claimed_at, undefined);
+  assert.equal(econ().pending_deploy_tx, TX); // the same launch, so no second coin
+  const { POST } = await import("./register-token/route");
+  assert.equal((await POST(req("/api/empire/register-token", registerBody()))).status, 201);
+  assert.equal(econ().token_address, TOKEN);
+});
+
+test("release: not the operator is 401, and nothing changes", async () => {
+  launchDeps.isAdmin = () => false;
+  db.state.hearth.economic_config = { pending_deploy_tx: TX, token_launch_claimed_at: "2026-11-25T00:00:00.000Z" };
+  const { POST: release } = await import("./register-token/release/route");
+  assert.equal((await release(req("/api/empire/register-token/release", { hearth_id: HEARTH }))).status, 401);
+  assert.equal(econ().token_launch_claimed_at, "2026-11-25T00:00:00.000Z");
+});
+
+test("release: a Hearth whose coin is recorded, or with nothing stuck, is 409", async () => {
+  const { POST: release } = await import("./register-token/release/route");
+  db.state.hearth.economic_config = { token_address: TOKEN, token_launch_claimed_at: "2026-11-25T00:00:00.000Z" };
+  assert.equal((await release(req("/api/empire/register-token/release", { hearth_id: HEARTH }))).status, 409);
+  db.state.hearth.economic_config = { pending_deploy_tx: TX };
+  assert.equal((await release(req("/api/empire/register-token/release", { hearth_id: HEARTH }))).status, 409);
 });

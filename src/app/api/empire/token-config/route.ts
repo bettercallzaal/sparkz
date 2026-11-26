@@ -11,6 +11,9 @@ import type { Hearth } from "@/lib/supabase/types";
 // the operator's EMPIRE_API_KEY, which never leaves the server. The owner's wallet then
 // deploys it in the browser and calls /api/empire/register-token with the tx hash.
 // Nothing goes on-chain here.
+// Empire's get-token-config stops at 25 seconds; room to reach that limit and answer.
+export const maxDuration = 60;
+
 export async function POST(req: NextRequest) {
   try {
     const crossSite = forbidCrossSite(req);

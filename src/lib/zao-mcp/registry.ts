@@ -6,10 +6,8 @@ import { listZaoProjects } from "./projects";
 // plus one entry here. v1 has exactly two, both read only. There is no write tool: no
 // posting, payout, wallet, bounty, token or database write.
 //
-// FOLLOW-UP, after Zaal's typed OK on the dependency @modelcontextprotocol/server (parked
-// under rule d2c0d9fa): src/app/mcp/route.ts registers each entry below with the SDK's
-// Streamable HTTP transport (WebStandardStreamableHTTPServerTransport), checks Origin, and
-// adds nothing else. Until then these are plain modules with tests.
+// The route is src/app/mcp/route.ts (core in server.ts), built on @modelcontextprotocol/server
+// 2.4.0: it registers each entry below over streamable HTTP, checks Origin, and adds nothing else.
 export type ZaoTool = {
   name: string;
   title: string;

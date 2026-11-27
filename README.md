@@ -277,7 +277,7 @@ Both unchosen drafts and their rejection reason are stored on purpose - what the
 
 ## Data model / the moat
 
-> **TL;DR** Five core Hearth tables plus a waitlist, with RLS on all six. Backing settles into one provider-agnostic table; the accumulating record is the moat. (The `meme_receipts` table belongs to the deprecated Meme Engine.)
+> **TL;DR** Five core Hearth tables plus a waitlist, with RLS on all six. Backing settles into one provider-agnostic table; the accumulating record of Hearths, backing, boosts and Sparks is the moat.
 
 Sparkz has five core Hearth tables plus `waitlist`. RLS is ON everywhere (each `create table` in `supabase/migrations/` is followed by `enable row level security`; `scripts/db-migrate.sh` applies them to Neon or Supabase) with no anon policies - every read and write goes through the server on the service-role key, which bypasses RLS. Types are CHECK constraints, not Postgres enums, so a new type/status/provider is a plain migration.
 
@@ -322,7 +322,7 @@ erDiagram
   }
 ```
 
-**Why this is the moat:** ledger backing is live now; the provider-agnostic model is designed so future on-chain value can settle into the *same* table, keeping the record unified. `meme_receipts` is the campaign record - one per approved response - and `parent_meme_id` gives meme lineage. The more Sparkz runs, the more useful and defensible the record becomes.
+**Why this is the moat:** ledger backing is live now; the provider-agnostic model is designed so future on-chain value can settle into the *same* table, keeping the record unified. Every Hearth, backing, boost and Spark record lands in that one table set, so the record stays unified. The more Sparkz runs, the more useful the record becomes.
 
 ### Hearth lifecycle
 
@@ -520,7 +520,7 @@ Full posture: [SECURITY.md](docs/SECURITY.md).
 
 Every feature passes all four or it stays in the lab:
 
-1. Does it help someone earn, participate, or distribute?
+1. Does it help someone take part, contribute, or share?
 2. Can we measure whether it worked?
 3. Does it strengthen the Hearth's accumulating data?
 4. Can it be tested with a real project within 30 days?
